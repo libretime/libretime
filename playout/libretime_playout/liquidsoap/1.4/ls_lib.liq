@@ -1,5 +1,20 @@
-def appendinfos(streaminfos, fragment_prefix, bandwidth, codec, container)
-    streaminfos := list.append([(fragment_prefix, (bandwidth, codec, container))], !streaminfos)
+def start_hls(input_main_mount, streamsref, servpath, segment_duration, segments, segments_overhead, segment_named, output_source)
+    streams_infos = ref([])
+    #generate dummy stream infos does the trick for 1.4
+    list.iter(fun(item) ->
+        streams_infos := list.append([(fst(item), (0,'',''))], !streams_infos )
+    , streamsref())
+    argstream = !streamsref
+    arginfos = !streams_infos
+    output.file.hls(playlist=input_main_mount,
+                segment_duration=segment_duration,
+                segments=segments,
+                segments_overhead=segments_overhead,
+                streams_info=arginfos,
+                segment_name=segment_named,
+                servpath,
+                argstream,
+                output_source )
 end
 
 def gateway(args)
