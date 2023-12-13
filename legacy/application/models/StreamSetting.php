@@ -73,6 +73,8 @@ class Application_Model_StreamConfig
                 $result = array_merge($result, [
                     $prefix . 'port' => $_SERVER['SERVER_PORT'],
                     $prefix . 'host' => $_SERVER['SERVER_NAME'],
+                    $prefix . 'type' => 'hls',
+                    $prefix . 'bitrate' => '',
                 ]);
             }
         }
@@ -118,8 +120,8 @@ class Application_Model_StreamSetting
             $prefix = $id . '_';
             $streams[$id] = [
                 'url' => $streamData[$prefix . 'public_url'],
-                'codec' => $streamData[$prefix . 'type'] ?? 'hls',
-                'bitrate' => $streamData[$prefix . 'bitrate'] ?? '',
+                'codec' => $streamData[$prefix . 'type'],
+                'bitrate' => $streamData[$prefix . 'bitrate'],
                 'mobile' => $streamData[$prefix . 'mobile'],
             ];
         }
