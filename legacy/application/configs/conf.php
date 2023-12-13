@@ -225,11 +225,8 @@ class Schema implements ConfigurationInterface
             /*  */->integerNode('segment_count')->defaultValue(5)->end()
             /*  */->integerNode('segments_overhead')->defaultValue(5)->end()
             /*  */->booleanNode('enabled')->defaultFalse()->end()
-
             /*  */->enumNode('kind')->values(['hls'])->defaultValue('hls')->end()
             /*  */->scalarNode('public_url')->end()
-            /*  */->scalarNode('host')->defaultValue('localhost')->end()
-            /*  */->integerNode('port')->defaultValue(80)->end()
             /*  */->scalarNode('mount')->cannotBeEmpty()
             /*    */->validate()->ifString()->then($trim_leading_slash)->end()
             /*  */->end()

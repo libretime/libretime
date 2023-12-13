@@ -208,8 +208,6 @@ class HlsOutput(BaseModel):
     kind: Literal["hls"] = "hls"
     enabled: bool = False
     public_url: Optional[AnyUrl] = None
-    host: str = "localhost"
-    port: int = 80
     format: str = "mpegts"
     segment_duration: float = 2.0
     segment_count: int = 5

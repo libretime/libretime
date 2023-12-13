@@ -68,10 +68,11 @@ class Application_Model_StreamConfig
                     $prefix . 'bitrate' => $output['audio']['bitrate'] ?? 128,
                     $prefix . 'type' => $output['audio']['format'],
                 ]);
-            } else {
-                // assume HLS : set web server port
+            } elseif ($output['kind'] == 'hls') {
+                // HLS : set web server host and port
                 $result = array_merge($result, [
                     $prefix . 'port' => $_SERVER['SERVER_PORT'],
+                    $prefix . 'host' => $_SERVER['SERVER_NAME'],
                 ]);
             }
         }

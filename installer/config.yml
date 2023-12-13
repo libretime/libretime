@@ -320,7 +320,7 @@ stream:
     hls:
       - # Whether the output is enabled.
         # > default is false
-        enabled: true
+        enabled: false
         # > must be one of ('mpegts', 'mp3', 'adts', 'mp4')
         # > this field is REQUIRED
         format: mpegts
@@ -333,12 +333,6 @@ stream:
         # Output public url, If not defined, the value will be generated from
         # the [general.public_url] hostname, the output port and mount.
         public_url:
-        # web server host.
-        # > default is localhost
-        host: localhost
-        # webs server server port.
-        # > default is 80
-        port: 80
         # hls mount point
         # > this field is REQUIRED
         mount: hls/main
@@ -346,7 +340,7 @@ stream:
           - # > prefix of generated fragment
             # > this field is REQUIRED
             fragment_prefix: mp3_low
-            # > must be one of ( 'libmp3lame', 'flac', 'aac', 'libopus', 'libvorbis')
+            # > codec must be one of ( 'libmp3lame', 'flac', 'aac', 'libopus', 'libvorbis')
             # > this field is REQUIRED
             codec: libmp3lame
             # > bitrate of the stream
