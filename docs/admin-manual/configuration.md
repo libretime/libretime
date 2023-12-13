@@ -519,11 +519,13 @@ stream:
 
 The `stream.outputs.hls` section configures the HLS output streams.
 
-HLS is an HTTP-based adaptive bitrate streaming protocol. It consists on presenting multiple streams with differents qualities to the client player which select the most fitted to its bandwidth.
+HLS is an HTTP-based adaptive bitrate streaming protocol.
+
+It consists on presenting multiple streams with varying qualities to the client player which select the most fitted to its bandwidth.
 
 To configure hls streams, first describe the container of these streams by its **format**.
 
-Then setup the differents streams composing it with differents **codec**s and **bitrate**s.
+Then setup the composites streams with various **codec**s and **bitrate**s.
 
 :::warning
 
