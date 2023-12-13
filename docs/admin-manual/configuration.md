@@ -371,6 +371,7 @@ stream:
   outputs:
     icecast: # See the [stream.outputs.icecast] section.
     shoutcast: # See the [stream.outputs.shoutcast] section.
+    hls: # See the [stream.outputs.hls] section.
     system: # See the [stream.outputs.system] section.
 ```
 
@@ -508,6 +509,72 @@ stream:
         website: "https://libretime.org"
         # Shoutcast stream genre.
         genre: "various"
+
+        # Whether the stream should be used for mobile devices.
+        # > default is false
+        mobile: false
+```
+
+#### Hls
+
+The `stream.outputs.hls` section configures the HLS output streams.
+
+HLS is an HTTP-based adaptive bitrate streaming protocol. It consists on presenting multiple streams with differents qualities to the client player which select the most fitted to its bandwidth.
+
+To configure hls streams, first describe the container of these streams by its **format**.
+
+Then setup the differents streams composing it with differents **codec**s and **bitrate**s.
+
+:::warning
+
+For security purposes, liquidsoap produces hls files in the webserver mount point **hls/** instead of creating its own.
+
+**mount** setting must then be prefixed with **hls/**.
+
+The hls mount point is defined in /etc/nginx/sites-available/libretime.conf, redefine it to your need.
+
+```yml
+stream:
+  outputs:
+    # Shoutcast output streams.
+    # > max items is 1
+    hls:
+      - # Whether the output is enabled.
+        # > default is false
+        enabled: false
+        # Output public url. If not defined, the value will be generated from
+        # the [general.public_url] hostname and the output port.
+        public_url:
+        # hls server mount point.
+        # > this field is REQUIRED
+        mount: "hls/main.m3u8"
+        # > format of the container must be one of ('mpegts', 'mp3', 'adts', 'mp4')
+        # > this field is REQUIRED
+        format: mpegts
+        # > segment_duration (default:2.0)
+        segment_duration: 2.0
+        # > segments count: segments count buffered (default:5)
+        segment_count: 5
+        # > segments_overhead: segments count kept past the playlist size for those listeners who are still listening on outdated segments. (default:5)
+        segments_overhead: 5
+        streams:
+          - # > prefix of generated fragment
+            # > this field is REQUIRED
+            fragment_prefix: mp3_low
+            # > codec used for the stream, must be one of ( 'libmp3lame', 'flac', 'aac', 'libopus', 'libvorbis')
+            # > this field is REQUIRED
+            codec: libmp3lame
+            # > bitrate of the stream
+            # > this field is REQUIRED
+            bitrate: 32k
+            # > sampling rate (default: 44100Hz)
+            sample_rate: 44100
+          - fragment_prefix: mp3_med
+            codec: libmp3lame
+            bitrate: 128k
+          - fragment_prefix: mp3_hifi
+            codec: libmp3lame
+            bitrate: 256k
 
         # Whether the stream should be used for mobile devices.
         # > default is false
