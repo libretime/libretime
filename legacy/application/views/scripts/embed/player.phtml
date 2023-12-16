@@ -4,6 +4,7 @@
 <head>
     <link rel="stylesheet" href="<?php echo $this->css ?>" type="text/css">
     <script src="<?php echo $this->playerhtml5_js ?>" type="text/javascript"></script>
+    <script src="/js/hls.js" type="text/javascript"></script>
     <script src="<?php echo $this->jquery ?>" type="text/javascript"></script>
 
     <script src="<?php echo $this->jquery_i18n ?>" type="text/javascript"></script>
@@ -13,6 +14,7 @@
         $.i18n.setDictionary(general_dict);
 
         var MAX_MOBILE_SCREEN_WIDTH = 760;
+        var hls;
 
         var Html5Player = function() {
             var id_element = getRandomIdPlayer(3000);
@@ -54,9 +56,21 @@
                 $("p.station_name").html(player_title);
             }
 
+            if (this.settings.codec == 'x-mpegurl') {
+                if(Hls.isSupported()) {
+                    hls = new Hls();
+                    hls.loadSource(this.settings.url);
+                    hls.attachMedia(playerhtml5_audio);
+                }
+                else if (audio.canPlayType('application/vnd.apple.mpegurl')) {
+                    playerhtml5_audio.src = html5Player.settings.url;
+                }
+            }
+
             attachStreamMetadataToPlayer();
 
-            // detects events in HTML5 mode
+            if (navigator.getAutoplayPolicy("mediaelement") === "allowed")
+                this.play();
 
         };
         Html5Player.prototype.mobileDetect = function() {
@@ -109,7 +123,10 @@
 
         Html5Player.prototype.play = function() {
             console.log('play');
-            playerhtml5_audio.src = this.settings.url;
+            if(hls)
+                hls.loadSource(this.settings.url);
+            else
+                playerhtml5_audio.src = this.settings.url;
             playerhtml5_audio.play();
             togglePlayStopButton();
         };
@@ -139,6 +156,7 @@
 
         // variables for updating the player's metadata
         var time_to_next_track_starts = 0;
+        var current_track_end_time; var current_track_start_time;
         var metadataTimer = null;
 
         // Fetches the streams metadata from the Airtime live-info API
@@ -146,65 +164,91 @@
         //
         // The metadata is fetched when the current track is about to end.
         function attachStreamMetadataToPlayer() {
-            $.ajax({
-                url: "<?php echo $this->metadata_api_url ?>",
-                data: {
-                    type: "interval",
-                    limit: "5"
-                },
-                dataType: "jsonp",
-                success: function(data) {
-
-                    if (data.current === null) {
-                        if (data.currentShow != null && data.currentShow.length > 0) {
-                            //Master/show source have no current track but they do have a current show.
-                            $("p.now_playing").html($.i18n._("On Air") + "<span>" + data.currentShow[0].name + "</span>");
-                        } else {
-                            $("p.now_playing").html($.i18n._("Off Air") + "<span>" + $.i18n._("Offline") + "</span>");
-                        }
-                        time_to_next_track_starts = 20000;
+            let metadataxhr = new XMLHttpRequest();
+            metadataxhr.open('GET', "<?php echo $this->metadata_api_url ?>");
+            metadataxhr.onload = function() {
+                if (metadataxhr.status != 200) { metadataxhr.onerror(); return; }
+                let data = JSON.parse(this.response);
+                var rcursor = document.getElementById("radio_cursor");
+                var current_time = new Date();
+                var streamdelay = self.html5Player.settings.codec == 'x-mpegurl' ? 9000 : 0; //timeoffset: hls stream is late on calendar
+                //convert current_time to UTC to match the timezone of time_to_next_track_starts
+                var current_time = new Date(current_time.getTime() - streamdelay + current_time.getTimezoneOffset() * 60 * 1000);
+                if (data.current === null) {
+                    if (data.currentShow != null && data.currentShow.length > 0) {
+                        //Master/show source have no current track but they do have a current show.
+                        $("div.now_playing").html($.i18n._("On Air") + "<span>" + data.currentShow[0].name + "</span>");
                     } else {
-                        var artist = data.current.name.split(" - ")[0];
-                        var track = data.current.name.split(" - ")[1];
-                        var nowPlayingHtml = "";
-                        if (artist) {
-                            nowPlayingHtml += artist;
-                        }
-                        if (track) {
-                            nowPlayingHtml += "<span>" + track + "</span>";
-                        }
-                        $("p.now_playing").html(nowPlayingHtml);
-
-                        var current_track_end_time = new Date(data.current.ends);
-                        if (current_track_end_time == "Invalid Date" || isNaN(current_track_end_time)) {
-                            // If the conversion didn't work (since the String is not in ISO format)
-                            // then change it to be ISO-compliant. This is somewhat hacky and may break
-                            // if the date string format in live-info changes!
-                            current_track_end_time = new Date((data.current.ends).replace(" ", "T"));
-                        }
-                        var current_time = new Date();
-                        //convert current_time to UTC to match the timezone of time_to_next_track_starts
-                        current_time = new Date(current_time.getTime() + current_time.getTimezoneOffset() * 60 * 1000);
-                        time_to_next_track_starts = current_track_end_time - current_time;
+                        $("div.now_playing").html($.i18n._("Off Air") + "<span>" + $.i18n._("Offline") + "</span>");
                     }
+                    time_to_next_track_starts = 20000;
+                } else {
+                    var artist = data.current.metadata.artist_name;
+                    var track = data.current.metadata.track_title;
+                    var nowPlayingHtml = "";
+                    if (artist) { nowPlayingHtml += artist + " - "; }
+                    if (track) { nowPlayingHtml += track; }
+                    $("div.now_playing").html(nowPlayingHtml);
+                    console.log(nowPlayingHtml);
+                    current_track_end_time = new Date(data.current.ends);
+                    var artwork_url = data.current.metadata.artwork_url;
+                    artwork_url = artwork_url.replace('&amp;','&');
+                    document.getElementById('artwork_image').src = artwork_url;
 
-                    if (data.next === null) {
-                        $("ul.schedule_list").find("li").html($.i18n._("Nothing scheduled"));
-                    } else {
-                        $("ul.schedule_list").find("li").html(data.next.name);
+                    if (current_track_end_time == "Invalid Date" || isNaN(current_track_end_time)) {
+                        // If the conversion didn't work (since the String is not in ISO format)
+                        // then change it to be ISO-compliant. This is somewhat hacky and may break
+                        // if the date string format in live-info changes!
+                        current_track_end_time = new Date((data.current.ends).replace(" ", "T"));
                     }
+                    current_track_start_time = new Date((data.current.starts).replace(" ", "T"));
+                    time_to_next_track_starts = current_track_end_time - current_time;
                 }
-            });
 
-            //Preventative code if the local and remote clocks are out of sync.
-            if (isNaN(time_to_next_track_starts) || time_to_next_track_starts < 0) {
-                time_to_next_track_starts = 0;
+                let schedule_list = document.getElementsByClassName('schedule_list');
+                if (data.next === null) {
+                    $("ul.schedule_list").find("li").html($.i18n._("Nothing scheduled"));
+                } else {
+                    var artist = data.next.metadata.artist_name;
+                    var track = data.next.metadata.track_title;
+                    var nextPlayingHtml = "";
+                    if (artist) { nextPlayingHtml += artist + " - "; }
+                    if (track) { nextPlayingHtml += track; }
+                    $("ul.schedule_list").find("li").html(nextPlayingHtml);
+                }
+                 //Preventative code if the local and remote clocks are out of sync.
+                if (isNaN(time_to_next_track_starts) || time_to_next_track_starts < 0) {
+                    time_to_next_track_starts = 0;
+                }
+
+                if (current_track_end_time != undefined )
+                    time_to_next_track_starts = current_track_end_time - current_time;
+
+                var cursor_ratio = rcursor.clientWidth/rcursor.parentNode.clientWidth; //cursor size in perc of its parent
+                var time_from_start_time = (current_time-current_track_start_time)/(current_track_end_time-current_track_start_time);
+                console.log(time_from_start_time); //hoping perc
+                time_from_start_time = time_from_start_time*(1.0-cursor_ratio);
+                var transl = (1.0-cursor_ratio)/cursor_ratio;
+
+                const cursoranimate = [
+                    { transform: "translate(" + (time_from_start_time*100/cursor_ratio) + "%)" },
+                    { transform: "translate(" + transl*100 + "%)" },
+                ];
+                const cursoranimateTiming = {
+                 duration: Math.max(time_to_next_track_starts, 0),
+                 iterations: 1,
+                };
+                rcursor.animate(cursoranimate, cursoranimateTiming);
+
+                metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts);
             }
 
-            // Add 3 seconds to the timeout so Airtime has time to update the metadata before we fetch it
-            metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts + 3000);
+            metadataxhr.onerror = function() {
+                console.log("Metadata request failed, relaunching in 5 sec");
+                metadataTimer= setTimeout(attachStreamMetadataToPlayer, 5000);
+            };
 
-
+            metadataxhr.send();
         }
     </script>
 
@@ -219,6 +263,21 @@
             width: 0;
             height: 0;
             overflow: hidden;
+        }
+        #time_bar{
+            width:100%;
+            overflow:hidden;
+            height: 20px;
+            display:inline-block;
+        }
+        #radio_cursor
+        {
+            width:3%;
+            position:relative;
+            display: block;
+            height: 100%;
+            background-color: #787878;
+            opacity:0.5;
         }
     </style>
 
@@ -235,12 +294,17 @@
             </div>
 
             <div class="airtime_box">
-
+                <span id="artwork">
+                <img id="artwork_image" src="/css/images/maintenance.png" onerror='this.src="/css/images/maintenance.png"' style="width: 50px;padding-left:15px;" />
+                </span>
                 <div class="airtime_button">
                     <span id="play_button" class="play_button" onclick="html5Player.play()"></span>
                     <span id="stop_button" class="stop_button hide_button" onclick="html5Player.stop()"></span>
                 </div>
-                <p class="now_playing"></p>
+                <div id="div_playing">
+                <div class="now_playing" style></div>
+                <div id="time_bar"><div id="radio_cursor"/></div>
+                </div>
 
             </div>
 
@@ -271,7 +335,7 @@
 
     <div id="html5player_skin">
         <script type="text/javascript">
-            var html5Player = new Html5Player();
+        var html5Player = new Html5Player();
         </script>
     </div>
 
