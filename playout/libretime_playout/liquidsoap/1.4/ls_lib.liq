@@ -3,7 +3,7 @@ def start_hls(input_main_mount, streamsref, servpath, segment_duration, segments
     #generate dummy stream infos does the trick for 1.4
     list.iter(fun(item) ->
         streams_infos := list.append([(fst(item), (list.length(!streams_infos)+1,'',''))], !streams_infos )
-    , streamsref())
+    , !streamsref)
     argstream = !streamsref
     arginfos = !streams_infos
     output.file.hls(playlist=input_main_mount,

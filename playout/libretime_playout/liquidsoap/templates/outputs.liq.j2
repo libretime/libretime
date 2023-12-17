@@ -52,6 +52,17 @@ output_hls_{{ output_id }}_source = s
 
 streams = ref([])
 
+{% for stream in output.streams -%}
+
+    streamout = %ffmpeg(format="{{output.format}}" ,
+                            codec="{{stream.codec}}",
+                            channels=2,
+                            ar={{stream.sample_rate}},
+                            b="{{stream.bitrate}}")
+    streams := list.append([("{{stream.fragment_prefix}}", streamout)], !streams)
+
+{% endfor -%}
+
 def segment_name(~position,~extname, stream_name) =
   timestamp = int_of_float(time())
   duration = {{output.segment_duration}}
