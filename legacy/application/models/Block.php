@@ -1652,12 +1652,12 @@ SQL;
                         if (isset($criteria['extra'])) {
                             $spCriteriaExtra = $criteria['extra'] * 1000;
                         }
-                        /*
-                        * If user is searching for an exact match of length we need to
-                        * search as if it starts with the specified length because the
-                        * user only sees the rounded version (i.e. 4:02.7 is 4:02.761625
-                        * in the database)
-                        */
+                    /*
+                    * If user is searching for an exact match of length we need to
+                    * search as if it starts with the specified length because the
+                    * user only sees the rounded version (i.e. 4:02.7 is 4:02.761625
+                    * in the database)
+                    */
                     } elseif (in_array($spCriteria, ['length', 'cuein', 'cueout']) && $spCriteriaModifier == 'is') {
                         $spCriteriaModifier = 'starts with';
                         $spCriteria .= '::text';
