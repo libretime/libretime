@@ -69,6 +69,31 @@ TEST_STREAM_CONFIGS: List[Config] = [
     ),
     make_config_with_stream(
         outputs={
+            "hls": [
+                {
+                    "enabled": True,
+                    "mount": "hls/main",
+                    "format": "mpegts",
+                    "streams": [
+                        {
+                            "fragment_prefix": "mp3low",
+                            "format": "mpegts",
+                            "codec": "libmp3lame",
+                            "bitrate": "64k",
+                        },
+                        {
+                            "fragment_prefix": "mp3high",
+                            "format": "mpegts",
+                            "codec": "libmp3lame",
+                            "bitrate": "128k",
+                        },
+                    ],
+                }
+            ],
+        }
+    ),
+    make_config_with_stream(
+        outputs={
             "icecast": [
                 {
                     "enabled": True,
@@ -83,6 +108,27 @@ TEST_STREAM_CONFIGS: List[Config] = [
                     "source_password": "hackme",
                     "audio": {"format": "mp3", "bitrate": 256},
                 },
+            ],
+            "hls": [
+                {
+                    "enabled": True,
+                    "mount": "hls/main",
+                    "format": "mpegts",
+                    "streams": [
+                        {
+                            "fragment_prefix": "mp3low",
+                            "format": "mpegts",
+                            "codec": "libmp3lame",
+                            "bitrate": "64k",
+                        },
+                        {
+                            "fragment_prefix": "mp3high",
+                            "format": "mpegts",
+                            "codec": "libmp3lame",
+                            "bitrate": "128k",
+                        },
+                    ],
+                }
             ],
         }
     ),
