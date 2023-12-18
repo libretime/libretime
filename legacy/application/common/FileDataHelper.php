@@ -32,6 +32,10 @@ class FileDataHelper
         $mimes = self::getAudioMimeTypeArray();
         unset($mimes['audio/x-ms-wma']);
 
+        // audio/opus is not a real mime type, we only set it here to allow uploading
+        // .opus files
+        $mimes['audio/opus'] = 'opus';
+
         return $mimes;
     }
 
