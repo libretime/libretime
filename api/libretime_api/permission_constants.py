@@ -1,4 +1,4 @@
-from .core.models import Role
+from .core.models.role import Role
 
 GUEST_PERMISSIONS = [
     "view_schedule",
