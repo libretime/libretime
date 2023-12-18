@@ -71,10 +71,11 @@ class Application_Model_StreamConfig
             } elseif ($output['kind'] == 'hls') {
                 // HLS : set web server host and port
                 $result = array_merge($result, [
-                    $prefix . 'port' => $_SERVER['SERVER_PORT'],
-                    $prefix . 'host' => $_SERVER['SERVER_NAME'],
-                    $prefix . 'type' => 'hls',
+                    $prefix . 'port' => Config::get('general.public_url_raw')->getPort(),
+                    $prefix . 'type' => 'x-mpegurl',
                     $prefix . 'bitrate' => '',
+                    #prefix manifest with webserver hls mount point
+                    $prefix . 'mount' => 'hls/'.$output['manifest'],
                 ]);
             }
         }
