@@ -66,6 +66,7 @@ Options:
 
   --user USER, -u USER          User used to run LibreTime.
   --listen-port PORT, -p PORT   Listen port for LibreTime.
+  --hls-output-path PATH        custom path where hls manifest will be produced
 
   --in-place, -i                Install LibreTime in place.
 
@@ -123,6 +124,9 @@ LIBRETIME_UPDATE_NGINX=${LIBRETIME_UPDATE_NGINX:-false}
 # > Comma separated list of sections to exclude from packages list.
 LIBRETIME_PACKAGES_EXCLUDES=${LIBRETIME_PACKAGES_EXCLUDES:-}
 
+# > Alternative path to the hls web server mount point
+LIBRETIME_HLS_CUSTOM_OUTPUT=""
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --user | -u)
@@ -157,6 +161,10 @@ while [[ $# -gt 0 ]]; do
       LIBRETIME_PACKAGES_EXCLUDES=$2
       shift 2
       ;;
+    --hls-output-path)
+      LIBRETIME_HLS_CUSTOM_OUTPUT=$2
+      shift 2
+      ;;
     --help | -h)
       usage
       exit 0
@@ -189,6 +197,12 @@ WORKING_DIR="/var/lib/libretime"
 LOG_DIR="/var/log/libretime"
 STORAGE_DIR="/srv/libretime"
 LEGACY_WEB_ROOT="/usr/share/libretime/legacy"
+
+if [[ -z "$LIBRETIME_HLS_CUSTOM_OUTPUT" ]]; then
+  HLS_PLAYOUT_OUTPUT="$WORKING_DIR/playout/hls"
+else
+  HLS_PLAYOUT_OUTPUT="$LIBRETIME_HLS_CUSTOM_OUTPUT"
+fi
 
 SERVICE_DIR="/usr/lib/systemd/system"
 
@@ -309,7 +323,8 @@ install_service() {
       -e "s|@@CONFIG_DIR@@|${CONFIG_DIR}|g" \
       -e "s|@@CONFIG_FILEPATH@@|${CONFIG_FILEPATH}|g" \
       -e "s|@@LOG_DIR@@|${LOG_DIR}|g" \
-      -e "s|@@WORKING_DIR@@|${WORKING_DIR}|g"
+      -e "s|@@WORKING_DIR@@|${WORKING_DIR}|g" \
+      -e "s|@@HLS_PLAYOUT_OUTPUT@@|${HLS_PLAYOUT_OUTPUT}|g"
 
   chmod 0644 "$service_dest"
   chown root:root "$service_dest"
@@ -628,7 +643,9 @@ link_python_app libretime-playout-notify
 
 info "creating libretime-playout working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/playout"
-mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/playout/hls"
+
+info "creating libretime-playout hls output directory"
+mkdir_and_chown "$LIBRETIME_USER" "$HLS_PLAYOUT_OUTPUT"
 
 install_service "libretime-liquidsoap.service" "$SCRIPT_DIR/playout/install/systemd/libretime-liquidsoap.service"
 install_service "libretime-playout.service" "$SCRIPT_DIR/playout/install/systemd/libretime-playout.service"
@@ -757,6 +774,7 @@ nginx_config_template_args=(
     sed
     -e "s|@@LISTEN_PORT@@|${LIBRETIME_LISTEN_PORT}|g"
     -e "s|@@LEGACY_WEB_ROOT@@|${LEGACY_WEB_ROOT}|g"
+    -e "s|@@HLS_PLAYOUT_OUTPUT@@|${HLS_PLAYOUT_OUTPUT}|g"
 )
 
 if $is_first_install || $LIBRETIME_UPDATE_NGINX; then

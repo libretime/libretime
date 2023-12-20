@@ -1,8 +1,8 @@
-def start_hls(input_main_mount, streamsref, servpath, segment_duration, segments, segments_overhead, segment_named, output_source)
+def start_hls(input_main_mount, segment_duration, segments, segments_overhead, segment_named, servpath, streamsref, output_source)
     streams_infos = ref([])
-    #generate dummy stream infos does the trick for 1.4
+    #generate dummy stream infos does the trick for 1.4 (just setup ascending bitrate for player can select)
     list.iter(fun(item) ->
-        streams_infos := list.append([(fst(item), (list.length(!streams_infos)+1,'',''))], !streams_infos )
+        streams_infos := list.append([(fst(item), (list.length(!streamsref)-list.length(!streams_infos)+1,'',''))], !streams_infos )
     , !streamsref)
     argstream = !streamsref
     arginfos = !streams_infos

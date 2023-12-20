@@ -19,12 +19,14 @@ templates.filters["quote"] = quote
 
 def generate_entrypoint(
     log_filepath: Optional[Path],
+    hls_output_path: Optional[Path],
     config: Config,
     preferences: StreamPreferences,
     info: Info,
     version: Tuple[int, int, int],
 ) -> str:
     paths = {}
+    paths["hls_output_path"] = hls_output_path.resolve()
     paths["lib_filepath"] = here / f"{version[0]}.{version[1]}/ls_script.liq"
 
     if log_filepath is not None:

@@ -59,3 +59,30 @@ def cli_config_options(
         return func
 
     return decorator
+
+
+def cli_output_options(
+    required: bool = False,
+    default: Optional[Any] = None,
+) -> Callable:
+    def decorator(func: Callable) -> Callable:
+        """
+        Decorator function to add output directory options to a click application.
+
+        This decorator add the following arguments:
+        - output_path: Optional[Path] or Path
+        """
+
+        func = click.option(
+            "--o",
+            "--output",
+            "output_path",
+            type=click.Path(path_type=Path),
+            help="Path to output.",
+            required=required,
+            default=default,
+        )(func)
+
+        return func
+
+    return decorator
