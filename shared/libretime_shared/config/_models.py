@@ -262,8 +262,20 @@ class SystemOutput(BaseModel):
     kind: SystemOutputKind = SystemOutputKind.ALSA
 
 
+class HLSOutput(BaseModel):
+    enabled: bool = False
+    kind: Literal["hls"] = "hls"
+
+    path: str = "hls"
+    playlist: str = "main.m3u8"
+    segment_duration: float = 5.0
+    segments: int = 30
+    segments_overhead: int = 5
+
+
 # pylint: disable=too-few-public-methods
 class Outputs(BaseModel):
+    hls: List[HLSOutput] = Field([], max_items=1)
     icecast: List[IcecastOutput] = Field([], max_items=3)
     shoutcast: List[ShoutcastOutput] = Field([], max_items=1)
     system: List[SystemOutput] = Field([], max_items=1)

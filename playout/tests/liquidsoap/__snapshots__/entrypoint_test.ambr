@@ -107,6 +107,70 @@
   
   %include "/fake/1.4/ls_script.liq"
   
+  # hls:1
+  output_hls_1_source = s
+  output_hls_1_lofi = %ffmpeg(format="mpegts", codec="aac", channels=2, ar=44100, b="32k")
+  output_hls_1_midfi = %ffmpeg(format="mpegts", codec="aac", channels=2, ar=44100, b="96k")
+  output_hls_1_hifi = %ffmpeg(format="mpegts", codec="aac", channels=2, ar=44100, b="192k")
+  output.file.hls(
+      playlist="main.m3u8",
+      segment_duration=5.0,
+      segments=30,
+      segments_overhead=5,
+      streams_info=[
+          # stream_name, (bandwidth, codec, extname)
+          ("aac_lofi", (40000, "mp4a.40.29", "ts")),
+          ("aac_midfi", (110000, "mp4a.40.2", "ts")),
+          ("aac_hifi", (220000, "mp4a.40.2", "ts")),
+      ],
+      persist=true,
+      persist_at="hls.conf",
+      "hls",
+      [
+          ("aac_lofi", output_hls_1_lofi),
+          ("aac_midfi", output_hls_1_midfi),
+          ("aac_hifi", output_hls_1_hifi),
+      ],
+      output_hls_1_source,
+  )
+  
+  
+  
+  gateway("started")
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config2-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_show_mount = "show"
+  input_show_port = 8002
+  
+  # Settings
+  auth_path = "/fake/liquidsoap_auth.py"
+  
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
   # icecast:1
   output_icecast_1_source = s
   # Disable ogg metadata

@@ -13,6 +13,7 @@ def config():
             },
             "stream": {
                 "outputs": {
+                    "hls": [{"enabled": True}],
                     "icecast": [
                         {
                             "enabled": True,
@@ -30,7 +31,7 @@ def config():
                             "source_password": "hackme",
                             "audio": {"format": "mp3", "bitrate": 256},
                         },
-                    ]
+                    ],
                 }
             },
         }

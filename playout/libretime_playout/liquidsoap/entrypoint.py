@@ -30,6 +30,10 @@ def generate_entrypoint(
     if log_filepath is not None:
         paths["log_filepath"] = log_filepath.resolve()
 
+    for o in config.stream.outputs.hls:
+        if o.enabled:
+            Path(o.path).mkdir(exist_ok=True)
+
     return templates.get_template("entrypoint.liq.j2").render(
         config=config.copy(),
         preferences=preferences,
