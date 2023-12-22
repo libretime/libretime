@@ -6,47 +6,17 @@ title: Releases
 
 This guide walks you through the steps required to release a new version of LibreTime.
 
-:::caution
+### 1. Inspect the release pull request
 
-This guide is still a work in progress, and doesn't cover every use cases. Depending on
-the version bump, some steps might be wrong. For example, in case of a patch release,
-the documentation requires different changes.
+A release pull request is maintained by [`release-please`](https://github.com/googleapis/release-please). `release-please` guesses the next version to release based on the commit history, and will generate a changelog for that release.
 
-:::
-
-Before releasing a new version, make sure linter don't fail and tests are passing.
-
-Start by cleaning the repository and make sure you don't have uncommitted changes:
-
-```
-git checkout main
-make clean
-git status
-```
-
-Choose the next version based the our [versioning schema](#versioning-schema):
+Once a release is desired, checkout the release branch:
 
 ```bash
-export VERSION=3.0.0-beta.0
-```
-
-Create a new `release-$VERSION` branch and release commit to prepare a release pull request:
-
-```bash
-git checkout -b "release-$VERSION"
-export COMMIT_MESSAGE="chore: release $VERSION"
-git commit --allow-empty --message="$COMMIT_MESSAGE"
-```
-
-### 1. Version bump
-
-Write the new `$VERSION` to the VERSION file, and bump the python packages version:
-
-```bash
-bash tools/bump-python-version.sh "$VERSION"
-
-git add .
-git commit --fixup ":/$COMMIT_MESSAGE"
+# For a release on the main branch
+git checkout release-please--branches--main--components--libretime
+# For a release on the stable branch
+git checkout release-please--branches--stable--components--libretime
 ```
 
 ### 2. Release note
@@ -72,48 +42,16 @@ Reset and clean the `docs/releases/unreleased.md` file for a future version.
 Commit the release note changes:
 
 ```bash
-git add .
-git commit --fixup ":/$COMMIT_MESSAGE"
+git add docs/releases
+git commit -m "docs: add release note"
 ```
 
-### 3. Create a new pull request
+### 4. Merge the release pull request
 
-Squash the changes and open a pull request for others to review:
+Push any changes that we previously made to the release branch:
 
 ```bash
-git rebase --autosquash --interactive main
+git push
 ```
 
-Merge the pull request when it's reviewed and ready.
-
-### 4. Create and push a tag
-
-Pull the merged release commit:
-
-```bash
-git checkout main
-git pull upstream main
-```
-
-Make sure `HEAD` is the previously merged release commit and tag it with the new version:
-
-```bash
-git show --quiet
-
-git tag -a -m "$VERSION" "$VERSION"
-```
-
-Generate the changelog for the newly tagged version:
-
-```bash
-make changelog
-
-git add .
-git commit -m "chore: generate changelog for $VERSION"
-```
-
-Push the tag upstream to finalize the release process:
-
-```bash
-git push upstream main --follow-tags
-```
+Once the pull request CI succeeded and everything is ready, merge the release pull request. `release-please` will create a tag and a release, which will trigger the final release pipeline that will upload the tarball as release assets.

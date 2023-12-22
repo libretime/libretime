@@ -1,0 +1,20 @@
+name: Release-Please
+
+on:
+  push:
+    branches:
+      - main
+      - stable
+
+jobs:
+  release-please:
+    # Do not run on forks.
+    if: github.repository == 'libretime/libretime'
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        with:
+          config-file: .github/release-please-config.json
+          manifest-file: .github/release-please-manifest.json
+          target-branch: ${{ github.ref_name }}
