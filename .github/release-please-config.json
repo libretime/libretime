@@ -6,6 +6,7 @@
   "packages": {
     ".": {
       "release-type": "simple",
+      "package-name": "libretime",
       "extra-files": [
         "analyzer/setup.py",
         "api/setup.py",
