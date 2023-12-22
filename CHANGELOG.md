@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.2.1](https://github.com/libretime/libretime/compare/3.2.0...3.2.1) (2023-12-22)
+
+
+### Bug Fixes
+
+* add parent function name in setValue exception ([#2777](https://github.com/libretime/libretime/issues/2777)) ([c764a5a](https://github.com/libretime/libretime/commit/c764a5a648ac6cf6c1f63cd9be6de9fe07c40988))
+* **api:** enum schema description ([#2803](https://github.com/libretime/libretime/issues/2803)) ([976b70e](https://github.com/libretime/libretime/commit/976b70ed32a0e774cc0b72b8332372be32799ed1))
+* **legacy:** allow uploading opus files ([#2804](https://github.com/libretime/libretime/issues/2804)) ([1206252](https://github.com/libretime/libretime/commit/1206252faadaa8ca61c7cb7becb36a7dd306d05f))
+
 ## [3.2.0](https://github.com/libretime/libretime/compare/3.1.0...3.2.0) (2023-10-16)
 
 - [Release note](https://libretime.org/docs/releases/3.2.0/)
