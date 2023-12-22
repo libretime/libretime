@@ -22,12 +22,9 @@ jobs:
       - name: Build tarball
         run: make tarball
 
-      - name: Create Release
+      - name: Upload tarball
         uses: softprops/action-gh-release@v1
         with:
-          body_path: docs/releases/${{ github.ref_name }}.md
-          draft: true
-          prerelease: true
           files: |
             libretime-*.tar.gz
             sha256sums.txt

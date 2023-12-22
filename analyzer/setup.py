@@ -1,8 +1,10 @@
 from setuptools import find_packages, setup
 
+version = "3.2.0"  # x-release-please-version
+
 setup(
     name="libretime-analyzer",
-    version="3.2.0",
+    version=version,
     description="Libretime Analyzer",
     author="LibreTime Contributors",
     url="https://github.com/libretime/libretime",
