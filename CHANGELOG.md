@@ -1,4 +1,4 @@
-<a name="3.2.0"></a>
+# Changelog
 
 ## [3.2.0](https://github.com/libretime/libretime/compare/3.1.0...3.2.0) (2023-10-16)
 
@@ -37,8 +37,6 @@
 ### Tests
 
 - **playout:** check unsupported liquidsoap aac output
-
-<a name="3.1.0"></a>
 
 ## [3.1.0](https://github.com/libretime/libretime/compare/3.0.2...3.1.0) (2023-05-26)
 
@@ -230,8 +228,6 @@
 
 - chore(api): install django-rest-framework from git ([#2518](https://github.com/libretime/libretime/issues/2518))
 
-<a name="3.0.2"></a>
-
 ## [3.0.2](https://github.com/libretime/libretime/compare/3.0.1...3.0.2) (2023-02-21)
 
 - [Release note](https://libretime.org/docs/releases/3.0.2/)
@@ -263,8 +259,6 @@
 - don't squash commits during docs sync
 - test project weekly
 
-<a name="3.0.1"></a>
-
 ## [3.0.1](https://github.com/libretime/libretime/compare/3.0.0...3.0.1) (2022-12-20)
 
 - [Release note](https://libretime.org/docs/releases/3.0.1/)
@@ -293,8 +287,6 @@
 - sync docs with libretime/website repository
 - pin vale version to v2.21.3
 
-<a name="3.0.0"></a>
-
 ## [3.0.0](https://github.com/libretime/libretime/compare/3.0.0-beta.2...3.0.0) (2022-10-10)
 
 - [Release note](https://libretime.org/docs/releases/3.0.0/)
@@ -314,8 +306,6 @@
 ### Tests
 
 - **analyzer:** fix wrong bit_rate values
-
-<a name="3.0.0-beta.2"></a>
 
 ## [3.0.0-beta.2](https://github.com/libretime/libretime/compare/3.0.0-beta.1...3.0.0-beta.2) (2022-10-03)
 
@@ -344,8 +334,6 @@
 
 - allow failure when linting /docs/releases
 - use github.ref_name to get tag
-
-<a name="3.0.0-beta.1"></a>
 
 ## [3.0.0-beta.1](https://github.com/libretime/libretime/compare/3.0.0-beta.0...3.0.0-beta.1) (2022-09-23)
 
@@ -378,8 +366,6 @@
 - ignore changelog for closed reference notifier
 - don't check github.com/libretime/libretime/(issues|pulls) links
 - run docs workflow on vale files changes
-
-<a name="3.0.0-beta.0"></a>
 
 ## [3.0.0-beta.0](https://github.com/libretime/libretime/compare/3.0.0-alpha.13...3.0.0-beta.0) (2022-09-16)
 
@@ -529,8 +515,6 @@
 - enable containers concurrency group
 - improve containers build caching
 - add container tags
-
-<a name="3.0.0-alpha.13"></a>
 
 ## [3.0.0-alpha.13](https://github.com/libretime/libretime/compare/3.0.0-alpha.12...3.0.0-alpha.13) (2022-07-15)
 
@@ -692,8 +676,6 @@
 - disable codecov project status check
 - disable codecov patch status check
 
-<a name="3.0.0-alpha.12"></a>
-
 ## [3.0.0-alpha.12](https://github.com/libretime/libretime/compare/3.0.0-alpha.11...3.0.0-alpha.12) (2022-03-29)
 
 - [Release note](https://libretime.org/docs/releases/3.0.0-alpha.12/)
@@ -707,8 +689,6 @@
 
 - add missing data to release note
 - fix and update links ([#1714](https://github.com/libretime/libretime/issues/1714))
-
-<a name="3.0.0-alpha.11"></a>
 
 ## [3.0.0-alpha.11](https://github.com/libretime/libretime/compare/3.0.0-alpha.10...3.0.0-alpha.11) (2022-03-28)
 

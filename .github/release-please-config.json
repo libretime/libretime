@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bootstrap-sha": "26737abad231d96fc198fbf12c043f2d867be79c",
+  "include-component-in-tag": false,
+  "include-v-in-tag": false,
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "package-name": "libretime",
+      "extra-files": [
+        "analyzer/setup.py",
+        "api/setup.py",
+        "api-client/setup.py",
+        "playout/setup.py",
+        "shared/setup.py",
+        "worker/setup.py"
+      ]
+    }
+  }
+}
