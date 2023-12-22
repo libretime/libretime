@@ -2,6 +2,7 @@
 
 ## [3.2.1](https://github.com/libretime/libretime/compare/3.2.0...3.2.1) (2023-12-22)
 
+- [Release note](https://libretime.org/docs/releases/3.2.1/)
 
 ### Bug Fixes
 
