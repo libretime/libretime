@@ -44,7 +44,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
 
       - name: Upload metadata bake file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: meta-${{ matrix.target }}
           path: ${{ steps.meta.outputs.bake-file }}
@@ -76,7 +76,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Download all metadata bake files
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
+        with:
+          pattern: meta-*
 
       - name: Guess LIBRETIME_VERSION
         run: |
