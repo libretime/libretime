@@ -140,7 +140,7 @@ class EnvLoader:
 
         return mapping
 
-    # pylint: disable=too-many-return-statements
+    # pylint: disable=too-many-return-statements,too-many-branches
     def _get(
         self,
         env_name: str,
@@ -160,7 +160,13 @@ class EnvLoader:
         if "$ref" in schema:
             schema = self._resolve_ref(schema["$ref"])
 
+        if "const" in schema:
+            return self._env.get(env_name, None)
+
         if "type" in schema:
+            if schema["type"] == "null":
+                return None
+
             if schema["type"] in ("string", "integer", "boolean"):
                 return self._env.get(env_name, None)
 
