@@ -1689,18 +1689,18 @@ SQL;
                         // need to pull in the current time and subtract the value or figure out how to make it relative
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
-                        $spCriteriaValue = "COALESCE({$spCriteria}, DATE '0001-01-01') <= '{$dt}'";
+                        $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') <= '{$dt}'";
                     } elseif ($spCriteriaModifier == 'after') {
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
-                        $spCriteriaValue = "COALESCE({$spCriteria}, DATE '0001-01-01') >= '{$dt}'";
+                        $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') >= '{$dt}'";
                     } elseif ($spCriteriaModifier == 'between') {
                         $fromrelativedate = new DateTime($spCriteriaValue);
                         $fdt = $fromrelativedate->format(DateTime::ISO8601);
 
                         $torelativedate = new DateTime($spCriteriaExtra);
                         $tdt = $torelativedate->format(DateTime::ISO8601);
-                        $spCriteriaValue = "COALESCE({$spCriteria}, DATE '0001-01-01') >= '{$fdt}' AND COALESCE({$spCriteria}, DATE '0001-01-01') <= '{$tdt}'";
+                        $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') >= '{$fdt}' AND COALESCE({$spCriteria}, DATE '-infinity') <= '{$tdt}'";
                     }
 
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
