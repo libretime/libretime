@@ -1689,30 +1689,21 @@ SQL;
                         // need to pull in the current time and subtract the value or figure out how to make it relative
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
-                        // Logging::info($spCriteriaValue);
-                        $spCriteriaValue = "{$spCriteria} <= '{$dt}'";
+                        $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') <= '{$dt}'";
                     } elseif ($spCriteriaModifier == 'after') {
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
-                        // Logging::info($spCriteriaValue);
-                        $spCriteriaValue = "{$spCriteria} >= '{$dt}'";
+                        $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') >= '{$dt}'";
                     } elseif ($spCriteriaModifier == 'between') {
                         $fromrelativedate = new DateTime($spCriteriaValue);
                         $fdt = $fromrelativedate->format(DateTime::ISO8601);
-                        // Logging::info($fdt);
 
                         $torelativedate = new DateTime($spCriteriaExtra);
                         $tdt = $torelativedate->format(DateTime::ISO8601);
-                        // Logging::info($tdt);
-                        $spCriteriaValue = "{$spCriteria} >= '{$fdt}' AND {$spCriteria} <= '{$tdt}'";
+                        $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') >= '{$fdt}' AND COALESCE({$spCriteria}, DATE '-infinity') <= '{$tdt}'";
                     }
-                    //                 logging::info('before');
-                    //                 logging::info($spCriteriaModifier);
 
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
-
-                    //                 logging::info('after');
-                    //                 logging::info($spCriteriaModifier);
 
                     try {
                         if ($spCriteria == 'owner_id') {
