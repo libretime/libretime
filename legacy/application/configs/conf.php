@@ -35,7 +35,7 @@ class Schema implements ConfigurationInterface
             ->arrayNode('general')->addDefaultsIfNotSet()->children()
             /**/->scalarNode('public_url')->cannotBeEmpty()->end()
             /**/->scalarNode('api_key')->cannotBeEmpty()->end()
-            /**/->scalarNode('secret_key')->end()
+            /**/->scalarNode('secret_key')->cannotBeEmpty()->end()
             /**/->arrayNode('allowed_cors_origins')->scalarPrototype()->defaultValue([])->end()->end()
             /**/->scalarNode('timezone')->cannotBeEmpty()->defaultValue("UTC")
             /*  */->validate()->ifNotInArray(DateTimeZone::listIdentifiers())
