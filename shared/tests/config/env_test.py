@@ -89,7 +89,7 @@ class FixtureConfig(BaseConfig):
     a_list_of_union_obj: List[Union[FirstChildConfig, SecondChildConfig]]
 
 
-ENV_SCHEMA = FixtureConfig.schema()
+ENV_SCHEMA = FixtureConfig.model_json_schema()
 
 
 @pytest.mark.parametrize(
