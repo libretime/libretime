@@ -1,5 +1,4 @@
 from os import getenv
-from warnings import warn
 
 # pylint: disable=unused-import
 from ._internal import (
