@@ -207,7 +207,7 @@ class Schema implements ConfigurationInterface
             // System outputs
             /**/->arrayNode('system')->arrayPrototype()->children()
             /*  */->booleanNode('enabled')->defaultFalse()->end()
-            /*  */->scalarNode('kind')->defaultValue('alsa')
+            /*  */->scalarNode('kind')->defaultValue('pulseaudio')
             /*    */->validate()->ifNotInArray(["alsa", "ao", "oss", "portaudio", "pulseaudio"])
             /*    */->thenInvalid('invalid stream.outputs.system.kind %s')
             /*  */->end()->end()

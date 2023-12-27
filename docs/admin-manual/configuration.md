@@ -529,8 +529,8 @@ stream:
         enabled: false
         # System output kind.
         # > must be one of (alsa, ao, oss, portaudio, pulseaudio)
-        # > default is alsa
-        kind: "alsa"
+        # > default is pulseaudio
+        kind: "pulseaudio"
 ```
 
 ## LDAP

@@ -226,7 +226,7 @@ class SystemOutputKind(str, Enum):
 
 class SystemOutput(BaseModel):
     enabled: bool = False
-    kind: SystemOutputKind = SystemOutputKind.ALSA
+    kind: SystemOutputKind = SystemOutputKind.PULSEAUDIO
 
 
 # pylint: disable=too-few-public-methods
