@@ -9,6 +9,7 @@ def make_config(**kwargs) -> Config:
             "general": {
                 "public_url": "http://localhost:8080",
                 "api_key": "some_api_key",
+                "secret_key": "some_secret_key",
             },
             **kwargs,
         }

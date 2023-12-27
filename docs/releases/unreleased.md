@@ -26,6 +26,10 @@ Please follow this **before the upgrade procedure**.
 
 ## :arrow_up: Upgrading
 
+### The `general.secret_key` configuration field is required
+
+The `general.secret_key` field in the [configuration file](../admin-manual/configuration.md#general) is now **required**, to prevent reusing the `general.api_key` for cryptographic usage.
+
 ## :warning: Known issues
 
 The following issues may need a workaround for the time being. Please search the [issues](https://github.com/libretime/libretime/issues) before reporting problems not listed below.

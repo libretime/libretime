@@ -21,7 +21,7 @@ else:
 class GeneralConfig(BaseModel):
     public_url: AnyHttpUrlStr
     api_key: str
-    secret_key: Optional[str] = None
+    secret_key: str
 
     timezone: str = "UTC"
 
