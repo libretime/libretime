@@ -59,6 +59,7 @@ def podcast_download(
         Status of the podcast download as JSON string.
     """
     result: Dict[str, Any] = {"episodeid": episode_id}
+    tmp_file = None
 
     try:
         # Download podcast episode file
