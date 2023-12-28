@@ -13,15 +13,16 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2023-12-25 01:55+0000\n"
-"PO-Revision-Date: 2023-08-05 10:05+0000\n"
+"PO-Revision-Date: 2023-12-27 23:06+0000\n"
 "Last-Translator: Maurizio Castelvetro <castelvetro@gmail.com>\n"
-"Language-Team: Italian <https://hosted.weblate.org/projects/libretime/legacy/it/>\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/libretime/legacy/"
+"it/>\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -40,7 +41,7 @@ msgstr "%s:%s:%s non è un ora valida"
 
 #: application/common/LocaleHelper.php:21
 msgid "English"
-msgstr ""
+msgstr "Inglese"
 
 #: application/common/LocaleHelper.php:22
 msgid "Afar"
@@ -60,7 +61,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:26
 msgid "Arabic"
-msgstr ""
+msgstr "Arabo"
 
 #: application/common/LocaleHelper.php:27
 msgid "Assamese"
@@ -72,7 +73,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:29
 msgid "Azerbaijani"
-msgstr ""
+msgstr "Azerbaijano"
 
 #: application/common/LocaleHelper.php:30
 msgid "Bashkir"
@@ -80,11 +81,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:31
 msgid "Belarusian"
-msgstr ""
+msgstr "Bielorusso"
 
 #: application/common/LocaleHelper.php:32
 msgid "Bulgarian"
-msgstr ""
+msgstr "Bulgaro"
 
 #: application/common/LocaleHelper.php:33
 msgid "Bihari"
@@ -96,39 +97,39 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:35
 msgid "Bengali/Bangla"
-msgstr ""
+msgstr "Bengalese"
 
 #: application/common/LocaleHelper.php:36
 msgid "Tibetan"
-msgstr ""
+msgstr "Tibetano"
 
 #: application/common/LocaleHelper.php:37
 msgid "Breton"
-msgstr ""
+msgstr "Bretone"
 
 #: application/common/LocaleHelper.php:38
 msgid "Catalan"
-msgstr ""
+msgstr "Catalano"
 
 #: application/common/LocaleHelper.php:39
 msgid "Corsican"
-msgstr ""
+msgstr "Corso"
 
 #: application/common/LocaleHelper.php:40
 msgid "Czech"
-msgstr ""
+msgstr "Ceco"
 
 #: application/common/LocaleHelper.php:41
 msgid "Welsh"
-msgstr ""
+msgstr "Gallese"
 
 #: application/common/LocaleHelper.php:42
 msgid "Danish"
-msgstr ""
+msgstr "Danese"
 
 #: application/common/LocaleHelper.php:43
 msgid "German"
-msgstr ""
+msgstr "Tedesco"
 
 #: application/common/LocaleHelper.php:44
 msgid "Bhutani"
@@ -136,31 +137,31 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:45
 msgid "Greek"
-msgstr ""
+msgstr "Greco"
 
 #: application/common/LocaleHelper.php:46
 msgid "Esperanto"
-msgstr ""
+msgstr "Esperanto"
 
 #: application/common/LocaleHelper.php:47
 msgid "Spanish"
-msgstr ""
+msgstr "Spagnolo"
 
 #: application/common/LocaleHelper.php:48
 msgid "Estonian"
-msgstr ""
+msgstr "Estone"
 
 #: application/common/LocaleHelper.php:49
 msgid "Basque"
-msgstr ""
+msgstr "Basco"
 
 #: application/common/LocaleHelper.php:50
 msgid "Persian"
-msgstr ""
+msgstr "Persiano"
 
 #: application/common/LocaleHelper.php:51
 msgid "Finnish"
-msgstr ""
+msgstr "Finlandese"
 
 #: application/common/LocaleHelper.php:52
 msgid "Fiji"
@@ -172,7 +173,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:54
 msgid "French"
-msgstr ""
+msgstr "Francese"
 
 #: application/common/LocaleHelper.php:55
 msgid "Frisian"
@@ -180,15 +181,15 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:56
 msgid "Irish"
-msgstr ""
+msgstr "Irlandese"
 
 #: application/common/LocaleHelper.php:57
 msgid "Scots/Gaelic"
-msgstr ""
+msgstr "Scozzese/Gaelico"
 
 #: application/common/LocaleHelper.php:58
 msgid "Galician"
-msgstr ""
+msgstr "Galiziano"
 
 #: application/common/LocaleHelper.php:59
 msgid "Guarani"
@@ -208,19 +209,19 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:63
 msgid "Croatian"
-msgstr ""
+msgstr "Croato"
 
 #: application/common/LocaleHelper.php:64
 msgid "Hungarian"
-msgstr ""
+msgstr "Ungherese"
 
 #: application/common/LocaleHelper.php:65
 msgid "Armenian"
-msgstr ""
+msgstr "Armeno"
 
 #: application/common/LocaleHelper.php:66
 msgid "Interlingua"
-msgstr ""
+msgstr "Interlingua"
 
 #: application/common/LocaleHelper.php:67
 msgid "Interlingue"
@@ -232,7 +233,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:69
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonesiano"
 
 #: application/common/LocaleHelper.php:70
 msgid "Icelandic"
@@ -240,19 +241,19 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:71
 msgid "Italian"
-msgstr ""
+msgstr "Italiano"
 
 #: application/common/LocaleHelper.php:72
 msgid "Hebrew"
-msgstr ""
+msgstr "Ebraico"
 
 #: application/common/LocaleHelper.php:73
 msgid "Japanese"
-msgstr ""
+msgstr "Giapponese"
 
 #: application/common/LocaleHelper.php:74
 msgid "Yiddish"
-msgstr ""
+msgstr "Yiddish"
 
 #: application/common/LocaleHelper.php:75
 msgid "Javanese"
@@ -260,11 +261,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:76
 msgid "Georgian"
-msgstr ""
+msgstr "Georgiano"
 
 #: application/common/LocaleHelper.php:77
 msgid "Kazakh"
-msgstr ""
+msgstr "Kazako"
 
 #: application/common/LocaleHelper.php:78
 msgid "Greenlandic"
@@ -272,7 +273,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:79
 msgid "Cambodian"
-msgstr ""
+msgstr "Cambogiano"
 
 #: application/common/LocaleHelper.php:80
 msgid "Kannada"
@@ -280,7 +281,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:81
 msgid "Korean"
-msgstr ""
+msgstr "Coreano"
 
 #: application/common/LocaleHelper.php:82
 msgid "Kashmiri"
@@ -288,15 +289,15 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:83
 msgid "Kurdish"
-msgstr ""
+msgstr "Curdo"
 
 #: application/common/LocaleHelper.php:84
 msgid "Kirghiz"
-msgstr ""
+msgstr "Kirghizo"
 
 #: application/common/LocaleHelper.php:85
 msgid "Latin"
-msgstr ""
+msgstr "Latino"
 
 #: application/common/LocaleHelper.php:86
 msgid "Lingala"
@@ -304,11 +305,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:87
 msgid "Laothian"
-msgstr ""
+msgstr "Laotiano"
 
 #: application/common/LocaleHelper.php:88
 msgid "Lithuanian"
-msgstr ""
+msgstr "Lituano"
 
 #: application/common/LocaleHelper.php:89
 msgid "Latvian/Lettish"
@@ -320,11 +321,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:91
 msgid "Maori"
-msgstr ""
+msgstr "Maori"
 
 #: application/common/LocaleHelper.php:92
 msgid "Macedonian"
-msgstr ""
+msgstr "Macedone"
 
 #: application/common/LocaleHelper.php:93
 msgid "Malayalam"
@@ -332,11 +333,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:94
 msgid "Mongolian"
-msgstr ""
+msgstr "Mongolo"
 
 #: application/common/LocaleHelper.php:95
 msgid "Moldavian"
-msgstr ""
+msgstr "Moldavo"
 
 #: application/common/LocaleHelper.php:96
 msgid "Marathi"
@@ -348,7 +349,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:98
 msgid "Maltese"
-msgstr ""
+msgstr "Maltese"
 
 #: application/common/LocaleHelper.php:99
 msgid "Burmese"
@@ -360,19 +361,19 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:101
 msgid "Nepali"
-msgstr ""
+msgstr "Nepalese"
 
 #: application/common/LocaleHelper.php:102
 msgid "Dutch"
-msgstr ""
+msgstr "Olandese"
 
 #: application/common/LocaleHelper.php:103
 msgid "Norwegian"
-msgstr ""
+msgstr "Norvegese"
 
 #: application/common/LocaleHelper.php:104
 msgid "Occitan"
-msgstr ""
+msgstr "Occitano"
 
 #: application/common/LocaleHelper.php:105
 msgid "(Afan)/Oromoor/Oriya"
@@ -384,7 +385,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:107
 msgid "Polish"
-msgstr ""
+msgstr "Polacco"
 
 #: application/common/LocaleHelper.php:108
 msgid "Pashto/Pushto"
@@ -392,11 +393,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:109
 msgid "Portuguese"
-msgstr ""
+msgstr "Portoghese"
 
 #: application/common/LocaleHelper.php:110
 msgid "Quechua"
-msgstr ""
+msgstr "Quechua"
 
 #: application/common/LocaleHelper.php:111
 msgid "Rhaeto-Romance"
@@ -408,11 +409,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:113
 msgid "Romanian"
-msgstr ""
+msgstr "Rumeno"
 
 #: application/common/LocaleHelper.php:114
 msgid "Russian"
-msgstr ""
+msgstr "Russo"
 
 #: application/common/LocaleHelper.php:115
 msgid "Kinyarwanda"
@@ -420,7 +421,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:116
 msgid "Sanskrit"
-msgstr ""
+msgstr "Sanscrito"
 
 #: application/common/LocaleHelper.php:117
 msgid "Sindhi"
@@ -432,23 +433,23 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:119
 msgid "Serbo-Croatian"
-msgstr ""
+msgstr "Serbo-croato"
 
 #: application/common/LocaleHelper.php:120
 msgid "Singhalese"
-msgstr ""
+msgstr "Cingalese"
 
 #: application/common/LocaleHelper.php:121
 msgid "Slovak"
-msgstr ""
+msgstr "Slovacco"
 
 #: application/common/LocaleHelper.php:122
 msgid "Slovenian"
-msgstr ""
+msgstr "Sloveno"
 
 #: application/common/LocaleHelper.php:123
 msgid "Samoan"
-msgstr ""
+msgstr "Samoano"
 
 #: application/common/LocaleHelper.php:124
 msgid "Shona"
@@ -456,15 +457,15 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:125
 msgid "Somali"
-msgstr ""
+msgstr "Somalo"
 
 #: application/common/LocaleHelper.php:126
 msgid "Albanian"
-msgstr ""
+msgstr "Albanese"
 
 #: application/common/LocaleHelper.php:127
 msgid "Serbian"
-msgstr ""
+msgstr "Serbo"
 
 #: application/common/LocaleHelper.php:128
 msgid "Siswati"
@@ -480,15 +481,15 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:131
 msgid "Swedish"
-msgstr ""
+msgstr "Svedese"
 
 #: application/common/LocaleHelper.php:132
 msgid "Swahili"
-msgstr ""
+msgstr "Swahili"
 
 #: application/common/LocaleHelper.php:133
 msgid "Tamil"
-msgstr ""
+msgstr "Tamil"
 
 #: application/common/LocaleHelper.php:134
 msgid "Tegulu"
@@ -500,7 +501,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:136
 msgid "Thai"
-msgstr ""
+msgstr "Tailandese"
 
 #: application/common/LocaleHelper.php:137
 msgid "Tigrinya"
@@ -508,7 +509,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:138
 msgid "Turkmen"
-msgstr ""
+msgstr "Turkmeno"
 
 #: application/common/LocaleHelper.php:139
 msgid "Tagalog"
@@ -524,7 +525,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:142
 msgid "Turkish"
-msgstr ""
+msgstr "Turco"
 
 #: application/common/LocaleHelper.php:143
 msgid "Tsonga"
@@ -532,7 +533,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:144
 msgid "Tatar"
-msgstr ""
+msgstr "Tataro"
 
 #: application/common/LocaleHelper.php:145
 msgid "Twi"
@@ -540,19 +541,19 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:146
 msgid "Ukrainian"
-msgstr ""
+msgstr "Ucraino"
 
 #: application/common/LocaleHelper.php:147
 msgid "Urdu"
-msgstr ""
+msgstr "Urdu"
 
 #: application/common/LocaleHelper.php:148
 msgid "Uzbek"
-msgstr ""
+msgstr "Uzbeko"
 
 #: application/common/LocaleHelper.php:149
 msgid "Vietnamese"
-msgstr ""
+msgstr "Vietnamita"
 
 #: application/common/LocaleHelper.php:150
 msgid "Volapuk"
@@ -572,11 +573,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:154
 msgid "Chinese"
-msgstr ""
+msgstr "Cinese"
 
 #: application/common/LocaleHelper.php:155
 msgid "Zulu"
-msgstr ""
+msgstr "Zulu"
 
 #: application/common/Timezone.php:21
 msgid "Use station default"
@@ -584,25 +585,29 @@ msgstr ""
 
 #: application/common/UsabilityHints.php:65
 msgid "Upload some tracks below to add them to your library!"
-msgstr ""
+msgstr "Carica qui sotto alcune tracce per aggiungerle alla tua libreria!"
 
 #: application/common/UsabilityHints.php:69
 #, php-format
 msgid "It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."
 msgstr ""
+"Sembra che tu non abbia ancora caricato nessun file audio. %sCarica un file "
+"ora%s."
 
 #: application/common/UsabilityHints.php:76
 msgid "Click the 'New Show' button and fill out the required fields."
-msgstr ""
+msgstr "Premi il bottone 'Nuovo Show' e compila i campi richiesti."
 
 #: application/common/UsabilityHints.php:80
 #, php-format
 msgid "It looks like you don't have any shows scheduled. %sCreate a show now%s."
-msgstr ""
+msgstr "Sembra che non ci sia nessuno show programmato. %sCrea uno show ora%s."
 
 #: application/common/UsabilityHints.php:89
 msgid "To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'."
 msgstr ""
+"Per iniziare a trasmettere, cancella lo show attualmente collegato cliccando "
+"su di esso e selezionando 'Cancella show'."
 
 #: application/common/UsabilityHints.php:92
 #, php-format
@@ -610,32 +615,42 @@ msgid ""
 "Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.\n"
 "                    %sCreate an unlinked show now%s."
 msgstr ""
+"Lo show collegato richiede di essere riempito di tracce per poter iniziare. "
+"Per iniziare la trasmissione cancella lo show attualmente collegato e "
+"programma uno show non collegato. \n"
+"\t\t\t\t\t\t%sCrea uno show non collegato%s."
 
 #: application/common/UsabilityHints.php:96
 msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
 msgstr ""
+"Per iniziare a trasmettere, premi lo show in corso e seleziona 'Programma le "
+"tracce'"
 
 #: application/common/UsabilityHints.php:100
 #, php-format
 msgid "It looks like the current show needs more tracks. %sAdd tracks to your show now%s."
 msgstr ""
+"Sembra che lo show richieda l'inserimento di ulteriori tracce. %sAggiungi "
+"tracce allo show%s."
 
 #: application/common/UsabilityHints.php:107
 msgid "Click on the show starting next and select 'Schedule Tracks'"
-msgstr ""
+msgstr "Premi sullo show previsto e selezione 'Programma le tracce'"
 
 #: application/common/UsabilityHints.php:111
 #, php-format
 msgid "It looks like the next show is empty. %sAdd tracks to your show now%s."
-msgstr ""
+msgstr "sembra che il prossimo show sia vuoto. %s.Aggiungi tracce allo show%s."
 
 #: application/configs/config-check.php:167
 msgid "LibreTime media analyzer service"
-msgstr ""
+msgstr "LibreTime - Servizio analisi dei media"
 
 #: application/configs/config-check.php:174
 msgid "Check that the libretime-analyzer service is installed correctly in "
 msgstr ""
+"Controlla che il servizio di analisi di LibreTime sia installato "
+"correttamente in "
 
 #: application/configs/config-check.php:175
 #: application/configs/config-check.php:194
@@ -643,7 +658,7 @@ msgstr ""
 #: application/configs/config-check.php:232
 #: application/configs/config-check.php:251
 msgid " and ensure that it's running with "
-msgstr ""
+msgstr " e assicurati che sia in funzione con "
 
 #: application/configs/config-check.php:177
 #: application/configs/config-check.php:196
@@ -651,15 +666,17 @@ msgstr ""
 #: application/configs/config-check.php:234
 #: application/configs/config-check.php:253
 msgid "If not, try "
-msgstr ""
+msgstr "Se no, prova "
 
 #: application/configs/config-check.php:187
 msgid "LibreTime playout service"
-msgstr ""
+msgstr "Servizio di playout di LibreTime"
 
 #: application/configs/config-check.php:193
 msgid "Check that the libretime-playout service is installed correctly in "
 msgstr ""
+"Controlla che il servizio di playolut di LibreTime sia installato "
+"correttamente in "
 
 #: application/configs/config-check.php:205
 msgid "LibreTime liquidsoap service"
@@ -679,11 +696,12 @@ msgstr ""
 
 #: application/configs/config-check.php:243
 msgid "LibreTime API service"
-msgstr ""
+msgstr "Servizio librerie API LibreTime"
 
 #: application/configs/config-check.php:250
 msgid "Check that the libretime-api service is installed correctly in "
 msgstr ""
+"Controlla che il servizio LibreTime API sia installato correttamente in "
 
 #: application/configs/navigation.php:28
 msgid "Radio Page"
@@ -703,19 +721,19 @@ msgstr ""
 
 #: application/configs/navigation.php:59
 msgid "Weekly Schedule"
-msgstr ""
+msgstr "Programmazione della settimana"
 
 #: application/configs/navigation.php:67
 msgid "Settings"
-msgstr ""
+msgstr "Settaggi"
 
 #: application/configs/navigation.php:75
 msgid "General"
-msgstr ""
+msgstr "Generale"
 
 #: application/configs/navigation.php:81
 msgid "My Profile"
-msgstr ""
+msgstr "Il mio profilo"
 
 #: application/configs/navigation.php:86
 msgid "Users"
@@ -736,7 +754,7 @@ msgstr "Stato"
 
 #: application/configs/navigation.php:115
 msgid "Analytics"
-msgstr ""
+msgstr "Analytics"
 
 #: application/configs/navigation.php:124
 msgid "Playout History"
@@ -752,7 +770,7 @@ msgstr "Statistiche ascoltatori"
 
 #: application/configs/navigation.php:145
 msgid "Show Listener Stats"
-msgstr ""
+msgstr "Mostra statistiche ascoltatori"
 
 #: application/configs/navigation.php:154
 msgid "Help"
@@ -768,7 +786,7 @@ msgstr "Manuale utente"
 
 #: application/configs/navigation.php:174
 msgid "Get Help Online"
-msgstr ""
+msgstr "Ottieni Aiuto Online"
 
 #: application/configs/navigation.php:179
 msgid "Contribute to LibreTime"
@@ -2164,15 +2182,15 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:341
 msgid "Manage their own library content"
-msgstr ""
+msgstr "Gestisci il contenuto della loro libreria"
 
 #: application/controllers/LocaleController.php:342
 msgid "Program Managers can do the following:"
-msgstr ""
+msgstr "I Gestori Programma possono fare le seguenti cose:"
 
 #: application/controllers/LocaleController.php:343
 msgid "View and manage show content"
-msgstr ""
+msgstr "Osserva e gestisci il contenuto dello show"
 
 #: application/controllers/LocaleController.php:344
 msgid "Schedule shows"
@@ -2180,19 +2198,19 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:345
 msgid "Manage all library content"
-msgstr ""
+msgstr "Gestisci tutti i contenuti della libreria"
 
 #: application/controllers/LocaleController.php:346
 msgid "Admins can do the following:"
-msgstr ""
+msgstr "Gli Amministratori possono fare le seguenti cose:"
 
 #: application/controllers/LocaleController.php:347
 msgid "Manage preferences"
-msgstr ""
+msgstr "Gestisci le preferenze"
 
 #: application/controllers/LocaleController.php:348
 msgid "Manage users"
-msgstr ""
+msgstr "Gestisci gli utenti"
 
 #: application/controllers/LocaleController.php:349
 msgid "Manage watched folders"
@@ -2204,7 +2222,7 @@ msgstr "Invia supporto feedback:"
 
 #: application/controllers/LocaleController.php:351
 msgid "View system status"
-msgstr ""
+msgstr "Osserva lo stato di sistema"
 
 #: application/controllers/LocaleController.php:352
 msgid "Access playout history"
@@ -2212,7 +2230,7 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:353
 msgid "View listener stats"
-msgstr ""
+msgstr "Osserva le statistiche dI ascolto"
 
 #: application/controllers/LocaleController.php:355
 msgid "Show / hide columns"
@@ -2220,7 +2238,7 @@ msgstr "Mostra/nascondi colonne"
 
 #: application/controllers/LocaleController.php:356
 msgid "Columns"
-msgstr ""
+msgstr "Colonne"
 
 #: application/controllers/LocaleController.php:358
 msgid "From {from} to {to}"
@@ -2289,72 +2307,72 @@ msgstr "Completato"
 
 #: application/controllers/LocaleController.php:379
 msgid "Select files"
-msgstr ""
+msgstr "Seleziona i files"
 
 #: application/controllers/LocaleController.php:380
 msgid "Add files to the upload queue and click the start button."
-msgstr ""
+msgstr "Aggiungi i file alla richiesta di upload e premi il bottone di avvio."
 
 #: application/controllers/LocaleController.php:381
 msgid "Filename"
-msgstr ""
+msgstr "Nome del file"
 
 #: application/controllers/LocaleController.php:383
 msgid "Size"
-msgstr ""
+msgstr "Dimensioni"
 
 #: application/controllers/LocaleController.php:384
 msgid "Add Files"
-msgstr ""
+msgstr "Aggiungi files"
 
 #: application/controllers/LocaleController.php:385
 msgid "Stop Upload"
-msgstr ""
+msgstr "Interrompi l'upload"
 
 #: application/controllers/LocaleController.php:386
 msgid "Start upload"
-msgstr ""
+msgstr "Avvia l'upload"
 
 #: application/controllers/LocaleController.php:387
 msgid "Start Upload"
-msgstr ""
+msgstr "Avvia l'upload"
 
 #: application/controllers/LocaleController.php:388
 msgid "Add files"
-msgstr ""
+msgstr "Aggiungi file"
 
 #: application/controllers/LocaleController.php:389
 msgid "Stop current upload"
-msgstr ""
+msgstr "Interrompi l'upload in corso"
 
 #: application/controllers/LocaleController.php:390
 msgid "Start uploading queue"
-msgstr ""
+msgstr "Avvia la richiesta di upload"
 
 #: application/controllers/LocaleController.php:391
 #, php-format
 msgid "Uploaded %d/%d files"
-msgstr ""
+msgstr "Caricati %d/%d file"
 
 #: application/controllers/LocaleController.php:392
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #: application/controllers/LocaleController.php:393
 msgid "Drag files here."
-msgstr ""
+msgstr "Trascina i file qui."
 
 #: application/controllers/LocaleController.php:394
 msgid "File extension error."
-msgstr ""
+msgstr "Errore di estensione del file"
 
 #: application/controllers/LocaleController.php:395
 msgid "File size error."
-msgstr ""
+msgstr "Errore di dimensione del file."
 
 #: application/controllers/LocaleController.php:396
 msgid "File count error."
-msgstr ""
+msgstr "Errore nel conteggio dei file."
 
 #: application/controllers/LocaleController.php:397
 msgid "Init error."
@@ -2362,24 +2380,24 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:398
 msgid "HTTP Error."
-msgstr ""
+msgstr "Errore HTTP."
 
 #: application/controllers/LocaleController.php:399
 msgid "Security error."
-msgstr ""
+msgstr "Errore di sicurezza."
 
 #: application/controllers/LocaleController.php:400
 msgid "Generic error."
-msgstr ""
+msgstr "Errore generico."
 
 #: application/controllers/LocaleController.php:401
 msgid "IO error."
-msgstr ""
+msgstr "Errore di Input/Output"
 
 #: application/controllers/LocaleController.php:402
 #, php-format
 msgid "File: %s"
-msgstr ""
+msgstr "File: %s"
 
 #: application/controllers/LocaleController.php:404
 #, php-format
@@ -2388,19 +2406,19 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:405
 msgid "File: %f, size: %s, max file size: %m"
-msgstr ""
+msgstr "File: %f - dimensione: %s - max diimensione file: %m"
 
 #: application/controllers/LocaleController.php:406
 msgid "Upload URL might be wrong or doesn't exist"
-msgstr ""
+msgstr "URL caricata potrebbe essere errata o non esistere"
 
 #: application/controllers/LocaleController.php:407
 msgid "Error: File too large: "
-msgstr ""
+msgstr "Errore: File troppo grande "
 
 #: application/controllers/LocaleController.php:408
 msgid "Error: Invalid file extension: "
-msgstr ""
+msgstr "Errore: estensione del file non valida. "
 
 #: application/controllers/LocaleController.php:410
 msgid "Set Default"
@@ -2417,7 +2435,7 @@ msgstr ""
 #: application/controllers/LocaleController.php:413
 #: application/forms/EditHistoryItem.php:57
 msgid "No Show"
-msgstr ""
+msgstr "Nessuno show"
 
 #: application/controllers/LocaleController.php:415
 #, php-format
@@ -2428,22 +2446,24 @@ msgstr ""
 #, php-format
 msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
 msgstr ""
+"%sFinestra di stampa%sSi prega di usare la funzione di stampa del tuo "
+"browser per stampare questa tavola. Premi \"escape\" appena terminato."
 
 #: application/controllers/LocaleController.php:417
 msgid "New Show"
-msgstr ""
+msgstr "Nuovo show"
 
 #: application/controllers/LocaleController.php:418
 msgid "New Log Entry"
-msgstr ""
+msgstr "Nuov inserimento log"
 
 #: application/controllers/LocaleController.php:420
 msgid "No data available in table"
-msgstr ""
+msgstr "Nessuna informazione disponibile"
 
 #: application/controllers/LocaleController.php:421
 msgid "(filtered from _MAX_ total entries)"
-msgstr ""
+msgstr "(filtrato da _MAX_ inserimenti totali)"
 
 #: application/controllers/LocaleController.php:427
 msgid "First"
