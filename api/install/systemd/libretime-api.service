@@ -26,6 +26,7 @@ KillMode=mixed
 ExecStart=@@VENV_DIR@@/bin/gunicorn \
         --workers 4 \
         --worker-class uvicorn.workers.UvicornWorker \
+        --lifespan off \
         --log-file - \
         --bind unix:/run/libretime-api.sock \
         libretime_api.asgi
