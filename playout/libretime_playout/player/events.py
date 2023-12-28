@@ -1,17 +1,14 @@
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, Literal, Optional, Union
+from typing import Dict, Literal, Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import BaseModel, Field, parse_obj_as, validator
+from pydantic import BaseModel, BeforeValidator, Field, parse_obj_as
 from typing_extensions import Annotated
 
 from ..config import CACHE_DIR
 from ..utils import mime_guess_extension
-
-if TYPE_CHECKING:
-    from pydantic.typing import AnyClassMethod
 
 EVENT_KEY_FORMAT = "%Y-%m-%d-%H-%M-%S"
 
@@ -41,16 +38,12 @@ class EventKind(str, Enum):
     WEB_STREAM_OUTPUT_END = "stream_output_end"
 
 
-def event_datetime_validator(prop: str) -> "AnyClassMethod":
-    return validator(prop, pre=True, allow_reuse=True)(event_key_to_datetime)
+EventKeyDatetime = Annotated[datetime, BeforeValidator(event_key_to_datetime)]
 
 
 class BaseEvent(BaseModel):
-    start: datetime
-    end: datetime
-
-    _start_validator = event_datetime_validator("start")
-    _end_validator = event_datetime_validator("end")
+    start: EventKeyDatetime
+    end: EventKeyDatetime
 
     @property
     def start_key(self) -> str:
