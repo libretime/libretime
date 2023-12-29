@@ -1001,7 +1001,7 @@ SQL;
      * Enter description here ...
      *
      * @param       $dir_id - if this is not provided, it returns all files with full
-     *                      path constructed
+     *                     path constructed
      * @param mixed $all
      */
     public static function listAllFiles($dir_id = null, $all = true)
