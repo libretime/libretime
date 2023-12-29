@@ -326,3 +326,7 @@ stream:
         # > must be one of (alsa, ao, oss, portaudio, pulseaudio)
         # > default is pulseaudio
         kind: pulseaudio
+
+        # System output device.
+        # > only available for kind=(alsa, pulseaudio)
+        device:
