@@ -3,7 +3,7 @@ import os
 from django.conf import settings
 from django.http import FileResponse, HttpResponse
 from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.serializers import IntegerField
 
@@ -30,7 +30,10 @@ class FileViewSet(viewsets.ModelViewSet):
 
         file = get_object_or_404(File, pk=pk)
         path = os.path.join(settings.CONFIG.storage.path, file.filepath)
-        if os.path.isfile(path):
-            os.remove(path)
+        try:
+            if os.path.isfile(path):
+                os.remove(path)
+        except OSError:
+            return HttpResponse(status=404)
         file.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(status=204)
