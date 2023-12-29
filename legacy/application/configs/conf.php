@@ -211,6 +211,7 @@ class Schema implements ConfigurationInterface
             /*    */->validate()->ifNotInArray(["alsa", "ao", "oss", "portaudio", "pulseaudio"])
             /*    */->thenInvalid('invalid stream.outputs.system.kind %s')
             /*  */->end()->end()
+            /*  */->scalarNode('device')->end()
             /**/->end()->end()->end()
 
             ->end()->end()
