@@ -166,8 +166,7 @@ WORKDIR /app
 
 CMD ["/usr/local/bin/gunicorn", \
     "--workers=4", \
-    "--worker-class=uvicorn.workers.UvicornWorker", \
-    "--lifespan", "off", \
+    "--worker-class=libretime_api.gunicorn.Worker", \
     "--log-file", "-", \
     "--bind=0.0.0.0:9001", \
     "libretime_api.asgi"]
