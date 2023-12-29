@@ -36,12 +36,6 @@ flowchart LR
 
 :::warning
 
-By default, the installer configures nginx to listen on port 80, so you need to run the installer with the `--listen-port 8080` option to set the desired port.
-
-:::
-
-:::warning
-
 The current input and output streams are Icecast based protocols and doesn't support being behind a reverse proxy. **Don't attempt** to [reverse proxy Icecast](#icecast) or the Liquidsoap harbor inputs.
 
 You can [secure the Icecast output streams](#securing-the-icecast-output-streams) by adding an additional Icecast socket and reusing the TLS certificates used to secure LibreTime.
@@ -57,8 +51,6 @@ Modern protocols such as [HLS](https://en.wikipedia.org/wiki/HTTP_Live_Streaming
 In this documentation, we will use `libretime.example.org` as domain name pointing to your server, and `localhost:8080` as location for the LibreTime web server.
 
 :::
-
-If LibreTime is running on the same host as the reverse proxy, you need to change the LibreTime web server default listening port because the reverse proxy needs to listen on the `80`and `443` ports.
 
 Be sure that your firewall and network allows communications from the reverse proxy to the services. You can use `ping`, `telnet` and `curl` to check that communication is working.
 

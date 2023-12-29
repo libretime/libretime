@@ -79,7 +79,6 @@ Vagrant.configure('2') do |config|
     LIBRETIME_POSTGRESQL_PASSWORD=libretime \
     LIBRETIME_RABBITMQ_PASSWORD=libretime \
     bash install \
-      --listen-port 8080 \
       --in-place \
       http://192.168.10.100:8080
 
