@@ -73,8 +73,6 @@ Options:
   --no-setup-postgresql         Do not setup Postgresql.
   --no-setup-rabbitmq           Do not setup RabbitMQ.
 
-  --update-nginx                Update nginx files during upgrades.
-
 Environment variables:
 
   Advanced options can be changed using environment variables (flags will take
@@ -117,9 +115,6 @@ LIBRETIME_SETUP_POSTGRESQL=${LIBRETIME_SETUP_POSTGRESQL:-true}
 # > Create a default rabbitmq user with a random password.
 LIBRETIME_SETUP_RABBITMQ=${LIBRETIME_SETUP_RABBITMQ:-true}
 
-# > Update nginx files during upgrades.
-LIBRETIME_UPDATE_NGINX=${LIBRETIME_UPDATE_NGINX:-false}
-
 # > Comma separated list of sections to exclude from packages list.
 LIBRETIME_PACKAGES_EXCLUDES=${LIBRETIME_PACKAGES_EXCLUDES:-}
 
@@ -138,8 +133,7 @@ while [[ $# -gt 0 ]]; do
       shift 1
       ;;
     --update-nginx)
-      LIBRETIME_UPDATE_NGINX=true
-      shift 1
+      error "the '--update-nginx' option was removed in 4.0.0"
       ;;
     --no-setup-icecast)
       LIBRETIME_SETUP_ICECAST=false
@@ -743,35 +737,25 @@ template_file cp_if_different \
 
 section "Nginx"
 
-if $is_first_install || $LIBRETIME_UPDATE_NGINX; then
+if $is_first_install; then
   install_packages nginx
 
   info "disabling nginx default site"
   rm -f "/etc/nginx/sites-enabled/default"
 fi
 
-nginx_config_template_args=(
-  "${SCRIPT_DIR}/installer/nginx/libretime.conf"
-  "/etc/nginx/sites-available/libretime.conf"
-    sed
-    -e "s|@@LISTEN_PORT@@|${LIBRETIME_LISTEN_PORT}|g"
-    -e "s|@@LEGACY_WEB_ROOT@@|${LEGACY_WEB_ROOT}|g"
-)
+info "deploying libretime nginx config"
+template_file cp_if_different \
+  "${SCRIPT_DIR}/installer/nginx/libretime.conf" \
+  "/etc/nginx/sites-available/libretime.conf" \
+  sed \
+  -e "s|@@LISTEN_PORT@@|${LIBRETIME_LISTEN_PORT}|g" \
+  -e "s|@@LEGACY_WEB_ROOT@@|${LEGACY_WEB_ROOT}|g"
 
-if $is_first_install || $LIBRETIME_UPDATE_NGINX; then
-  info "deploying libretime nginx config"
-  template_file cp_if_different "${nginx_config_template_args[@]}"
-else
-  info "printing libretime nginx config differences"
-  template_file diff_if_exists "${nginx_config_template_args[@]}"
-fi
-
-if $is_first_install || $LIBRETIME_UPDATE_NGINX; then
-  info "enabling libretime nginx config"
-  ln -s --force \
-    "/etc/nginx/sites-available/libretime.conf" \
-    "/etc/nginx/sites-enabled/libretime.conf"
-fi
+info "enabling libretime nginx config"
+ln -s --force \
+  "/etc/nginx/sites-available/libretime.conf" \
+  "/etc/nginx/sites-enabled/libretime.conf"
 
 # Finalize
 ########################################################################################
