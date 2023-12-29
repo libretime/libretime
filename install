@@ -99,7 +99,7 @@ EOF
 # > User used to run LibreTime.
 LIBRETIME_USER=${LIBRETIME_USER:-"libretime"}
 # > Listen port for LibreTime.
-LIBRETIME_LISTEN_PORT=${LIBRETIME_LISTEN_PORT:-"80"}
+LIBRETIME_LISTEN_PORT=${LIBRETIME_LISTEN_PORT:-"8080"}
 # > Public URL for LibreTime.
 LIBRETIME_PUBLIC_URL=${LIBRETIME_PUBLIC_URL:-}
 # > Timezone for LibreTime.
