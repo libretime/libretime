@@ -533,7 +533,7 @@ stream:
         kind: "pulseaudio"
 
         # System output device.
-        # > only available for kind=pulseaudio or kind=alsa
+        # > only available for kind=(alsa, pulseaudio)
         device: "alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink"
 ```
 

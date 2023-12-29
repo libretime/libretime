@@ -328,5 +328,5 @@ stream:
         kind: pulseaudio
 
         # System output device.
-        # > only available for kind=pulseaudio or kind=alsa
+        # > only available for kind=(alsa, pulseaudio)
         device:
