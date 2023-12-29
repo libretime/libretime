@@ -754,8 +754,8 @@ SQL;
      * Enter description here ...
      *
      * @param       $daysRemoved array of days (days of the week) removed
-     *                           (days of the week are represented numerically
-     *                           0=>sunday, 1=>monday, 2=>tuesday, etc.)
+     *                          (days of the week are represented numerically
+     *                          0=>sunday, 1=>monday, 2=>tuesday, etc.)
      * @param       $showDays    array of ccShowDays objects
      * @param mixed $showId
      */
