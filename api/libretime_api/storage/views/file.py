@@ -1,9 +1,9 @@
 import os
 
 from django.conf import settings
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.serializers import IntegerField
 
@@ -23,3 +23,14 @@ class FileViewSet(viewsets.ModelViewSet):
         file = get_object_or_404(File, pk=pk)
         path = os.path.join(settings.CONFIG.storage.path, file.filepath)
         return FileResponse(open(path, "rb"), content_type=file.mime)
+
+    @action(detail=True, methods=["DELETE"])
+    def delete_file(self, request, pk=None):  # pylint: disable=invalid-name
+        pk = IntegerField().to_internal_value(data=pk)
+
+        file = get_object_or_404(File, pk=pk)
+        path = os.path.join(settings.CONFIG.storage.path, file.filepath)
+        if os.path.isfile(path):
+            os.remove(path)
+        file.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
