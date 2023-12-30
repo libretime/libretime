@@ -750,7 +750,8 @@ template_file cp_if_different \
   "/etc/nginx/sites-available/libretime.conf" \
   sed \
   -e "s|@@LISTEN_PORT@@|${LIBRETIME_LISTEN_PORT}|g" \
-  -e "s|@@LEGACY_WEB_ROOT@@|${LEGACY_WEB_ROOT}|g"
+  -e "s|@@LEGACY_WEB_ROOT@@|${LEGACY_WEB_ROOT}|g" \
+  -e "s|@@STORAGE_DIR@@|${STORAGE_DIR}|g"
 
 info "enabling libretime nginx config"
 ln -s --force \
