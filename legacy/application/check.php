@@ -1,5 +1,7 @@
 <?php
 
+use PhpAmqpLib\Exception\AMQPRuntimeException;
+
 function booleanReduce($a, $b)
 {
     return $a && $b;
@@ -125,7 +127,7 @@ function checkRMQConnection()
         );
 
         return isset($conn);
-    } catch (\PhpAmqpLib\Exception\AMQPRuntimeException $exc) {
+    } catch (AMQPRuntimeException $exc) {
         Logging::error($exc->getMessage());
 
         return false;
