@@ -108,6 +108,7 @@ services:
       - legacy
     volumes:
       - libretime_assets:/var/www/html:ro
+      - libretime_storage:/srv/libretime:ro
       - ${NGINX_CONFIG_FILEPATH:-./nginx.conf}:/etc/nginx/conf.d/default.conf:ro
 
   icecast:

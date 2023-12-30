@@ -1,7 +1,6 @@
 import os
 
-from django.conf import settings
-from django.http import FileResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -21,5 +20,8 @@ class FileViewSet(viewsets.ModelViewSet):
         pk = IntegerField().to_internal_value(data=pk)
 
         file = get_object_or_404(File, pk=pk)
-        path = os.path.join(settings.CONFIG.storage.path, file.filepath)
-        return FileResponse(open(path, "rb"), content_type=file.mime)
+
+        response = HttpResponse()
+        response["Content-Type"] = file.mime
+        response["X-Accel-Redirect"] = os.path.join("/api/_media", file.filepath)
+        return response

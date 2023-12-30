@@ -31,7 +31,8 @@ general:
   auth: local
 
 storage:
-  # Path of the storage directory.
+  # Path of the storage directory. Make sure to update the Nginx configuration after
+  # updating the storage path.
   # > default is /srv/libretime
   path: /srv/libretime
 

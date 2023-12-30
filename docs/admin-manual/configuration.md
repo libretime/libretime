@@ -72,10 +72,31 @@ The `storage` section configure the project storage.
 
 ```yml
 storage:
-  # Path of the storage directory.
+  # Path of the storage directory. Make sure to update the Nginx configuration after
+  # updating the storage path.
   # > default is /srv/libretime
   path: "/srv/libretime"
 ```
+
+:::caution
+
+After editing the `storage.path` field, make sure to update the LibreTime Nginx configuration file with the new value.
+
+In the example below, we are changing the path from `/srv/libretime` to `/mnt/data`:
+
+```patch
+  ...
+
+  # Internal path for serving media files from the API.
+  location /api/_media {
+    internal;
+    # This alias path must match the 'storage.path' configuration field.
+-   alias /srv/libretime;
++   alias /mnt/data;
+  }
+```
+
+:::
 
 ## Database
 
