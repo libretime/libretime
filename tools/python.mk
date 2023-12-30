@@ -13,7 +13,7 @@ install: $(VENV)
 $(VENV):
 	python3 -m venv $(VENV)
 	$(VENV)/bin/pip install --upgrade pip setuptools wheel
-	$(VENV)/bin/pip install \
+	$(VENV)/bin/pip install --prefer-binary \
 		--requirement ../tools/python-requirements.txt \
 		$(PIP_INSTALL)
 
