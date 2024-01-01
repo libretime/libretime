@@ -23,7 +23,6 @@ class FileViewSet(viewsets.ModelViewSet):
         file = get_object_or_404(File, pk=pk)
 
         response = HttpResponse()
-        response["Content-Type"] = file.mime
 
         # HTTP headers must be USASCII encoded, or Nginx might not find the file and
         # will return a 404.
