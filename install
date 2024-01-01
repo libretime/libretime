@@ -66,6 +66,7 @@ Options:
 
   --user USER, -u USER          User used to run LibreTime.
   --listen-port PORT, -p PORT   Listen port for LibreTime.
+  --storage-path PATH, -s PATH  Storage path for LibreTime.
 
   --in-place, -i                Install LibreTime in place.
 
@@ -104,6 +105,8 @@ LIBRETIME_LISTEN_PORT=${LIBRETIME_LISTEN_PORT:-"8080"}
 LIBRETIME_PUBLIC_URL=${LIBRETIME_PUBLIC_URL:-}
 # > Timezone for LibreTime.
 LIBRETIME_TIMEZONE=${LIBRETIME_TIMEZONE:-}
+# > Storage path for LibreTime.
+LIBRETIME_STORAGE_PATH=${LIBRETIME_STORAGE_PATH:-"/srv/libretime"}
 
 # > Install LibreTime in editable mode.
 # > Will keep working files in the project directory.
@@ -126,6 +129,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --listen-port | -p)
       LIBRETIME_LISTEN_PORT=$2
+      shift 2
+      ;;
+    --storage-path | -s)
+      LIBRETIME_STORAGE_PATH=$2
       shift 2
       ;;
     --in-place | -i)
@@ -181,7 +188,6 @@ CONFIG_TMP_FILEPATH="$CONFIG_DIR/config.yml.tmp"
 CONFIG_EXAMPLE_FILEPATH="$SCRIPT_DIR/installer/config.yml"
 WORKING_DIR="/var/lib/libretime"
 LOG_DIR="/var/log/libretime"
-STORAGE_DIR="/srv/libretime"
 LEGACY_WEB_ROOT="/usr/share/libretime/legacy"
 
 SERVICE_DIR="/usr/lib/systemd/system"
@@ -249,15 +255,29 @@ template_file() {
   rm "$tmp_file"
 }
 
+# get_config <key...>
+get_config() {
+  query="/^${1}:/\n"
+  while [[ $# -gt 1 ]]; do
+    shift
+    query+="/ \+${1}:/\n"
+  done
+  query+="q"
+
+  echo -e "$query" | ed --quiet "$CONFIG_FILEPATH" |
+    tail -n 2 |
+    grep "$1" |
+    awk -F ': ' '{ print $2 }'
+}
+
 # set_config <value> <key...>
 set_config() {
   value="${1}" && shift
 
-  # Build sed query
   query="/^${1}:/\n"
   while [[ $# -gt 1 ]]; do
     shift
-    query+="/${1}:/\n"
+    query+="/ \+${1}:/\n"
   done
   query+="s|\(${1}:\).*|\1 ${value}|\n"
   query+="wq"
@@ -453,8 +473,15 @@ if $is_first_install; then
     set_config "$LIBRETIME_TIMEZONE"  general timezone
   fi
 
-  mkdir_and_chown "$LIBRETIME_USER" "$STORAGE_DIR"
-  set_config "$STORAGE_DIR" storage path
+  mkdir_and_chown "$LIBRETIME_USER" "$LIBRETIME_STORAGE_PATH"
+  set_config "$LIBRETIME_STORAGE_PATH" storage path
+else
+  if [[ "$LIBRETIME_STORAGE_PATH" != "$(get_config storage path)" ]]; then
+    error \
+      "configuration mismatch between" \
+      "the installer storage path option ('$LIBRETIME_STORAGE_PATH') and" \
+      "the configuration file 'storage.path' field ('$(get_config storage path)')"
+  fi
 fi
 
 # PostgreSQL
@@ -751,7 +778,7 @@ template_file cp_if_different \
   sed \
   -e "s|@@LISTEN_PORT@@|${LIBRETIME_LISTEN_PORT}|g" \
   -e "s|@@LEGACY_WEB_ROOT@@|${LEGACY_WEB_ROOT}|g" \
-  -e "s|@@STORAGE_DIR@@|${STORAGE_DIR}|g"
+  -e "s|@@STORAGE_PATH@@|${LIBRETIME_STORAGE_PATH}|g"
 
 info "enabling libretime nginx config"
 ln -s --force \
