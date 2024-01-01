@@ -53,7 +53,7 @@ class PypoFile(Thread):
             with file_event.local_filepath.open("wb") as file_fd:
                 try:
                     response = self.api_client.download_file(file_event.id, stream=True)
-                    for chunk in response.iter_content(chunk_size=2048):
+                    for chunk in response.iter_content(chunk_size=8192):
                         file_fd.write(chunk)
 
                 except requests.exceptions.HTTPError as exception:
