@@ -2,7 +2,7 @@ import os
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from django.utils.encoding import iri_to_uri
+from django.utils.encoding import filepath_to_uri
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.serializers import IntegerField
@@ -26,6 +26,6 @@ class FileViewSet(viewsets.ModelViewSet):
 
         # HTTP headers must be USASCII encoded, or Nginx might not find the file and
         # will return a 404.
-        redirect_uri = iri_to_uri(os.path.join("/api/_media", file.filepath))
+        redirect_uri = filepath_to_uri(os.path.join("/api/_media", file.filepath))
         response["X-Accel-Redirect"] = redirect_uri
         return response
