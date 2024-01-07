@@ -18,7 +18,7 @@ DOCKER_BUILDKIT=1 docker-compose build
 
 # Setup
 make dev-certs
-docker-compose run --rm legacy make build
+docker-compose run --user=root --rm legacy make build
 docker-compose run --rm api libretime-api migrate
 
 # Run
