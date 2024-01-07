@@ -1,5 +1,6 @@
 <?php
 
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Exception\AMQPRuntimeException;
 
 function booleanReduce($a, $b)
@@ -118,7 +119,7 @@ function checkRMQConnection()
     $config = Config::getConfig();
 
     try {
-        $conn = new \PhpAmqpLib\Connection\AMQPStreamConnection(
+        $conn = new AMQPStreamConnection(
             $config['rabbitmq']['host'],
             $config['rabbitmq']['port'],
             $config['rabbitmq']['user'],
