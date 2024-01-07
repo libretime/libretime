@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-version = "3.2.0"  # x-release-please-version
+version = "4.0.0"  # x-release-please-version
 
 setup(
     name="libretime-playout",
