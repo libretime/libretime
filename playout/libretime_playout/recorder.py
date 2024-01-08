@@ -11,6 +11,7 @@ from queue import Queue
 from subprocess import PIPE, Popen
 from threading import Thread
 from typing import Any, Dict
+from .liquidsoap.client import LiquidsoapClient
 
 import mutagen
 from libretime_api_client.v1 import ApiClient as LegacyClient
@@ -41,6 +42,8 @@ def getDateTimeObj(time):
     return datetime.datetime(
         date[0], date[1], date[2], my_time[0], my_time[1], my_time[2], 0, None
     )
+
+
 
 
 class ShowRecorder(Thread):
@@ -77,34 +80,42 @@ class ShowRecorder(Thread):
         c = self.config.playout.record_channels
         ss = self.config.playout.record_sample_size
 
+        liq_client = LiquidsoapClient(
+            host=self.config.playout.liquidsoap_host,
+            port=self.config.playout.liquidsoap_port,
+        )
+        # args = f'{{"filename" : "{filepath}", "length" : "{length}"}}'
+        liq_client.start_recording(dict(filename = filepath, length = f"{length}"))
+        delay = int(length) +10
+        time.sleep(delay)
         # -f:16,2,44100
         # -b:256
-        command = "ecasound -f:{},{},{} -i alsa -o {},{}000 -t:{}".format(
-            ss,
-            c,
-            sr,
-            filepath,
-            br,
-            length,
-        )
-        args = command.split(" ")
+        # command = "ecasound -f:{},{},{} -i alsa -o {},{}000 -t:{}".format(
+        #     ss,
+        #     c,
+        #     sr,
+        #     filepath,
+        #     br,
+        #     length,
+        # )
+        # args = command.split(" ")
 
-        logger.info("starting record")
-        logger.info("command %s", command)
+        # logger.info("starting record")
+        # logger.info("command %s", command)
 
-        self.p = Popen(args, stdout=PIPE, stderr=PIPE)
+        # self.p = Popen(args, stdout=PIPE, stderr=PIPE)
 
-        # blocks at the following line until the child process
-        # quits
-        self.p.wait()
-        outmsgs = self.p.stdout.readlines()
-        for msg in outmsgs:
-            m = re.search("^ERROR", msg)
-            if not m == None:
-                logger.info("Recording error is found: %s", outmsgs)
-        logger.info("finishing record, return code %s", self.p.returncode)
-        code = self.p.returncode
-
+        # # blocks at the following line until the child process
+        # # quits
+        # self.p.wait()
+        # outmsgs = self.p.stdout.readlines()
+        # for msg in outmsgs:
+        #     m = re.search("^ERROR", msg)
+        #     if not m == None:
+        #         logger.info("Recording error is found: %s", outmsgs)
+        # logger.info("finishing record, return code %s", self.p.returncode)
+        # code = self.p.returncode
+        code = 0
         self.p = None
 
         return code, filepath
@@ -150,7 +161,7 @@ class ShowRecorder(Thread):
                 self.show_name, full_date, full_time
             )
             # You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
-            recorded_file["tracknumber"] = self.show_instance
+            # recorded_file["tracknumber"] = self.show_instance
             recorded_file.save()
 
         except Exception as exception:
@@ -220,6 +231,7 @@ class Recorder(Thread):
 
     def process_recorder_schedule(self, m):
         logger.info("Parsing recording show schedules...")
+        logger.info(print(m))        
         temp_shows_to_record = {}
         shows = m["shows"]
         for show in shows:

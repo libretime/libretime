@@ -200,6 +200,7 @@ end
 def start_recording(arguments)
     #E.g. {"filename" : "/app/recorder/test2.ogg", "length" : "25"}
     args = of_json(default= [("error","fail")],arguments)
+    log("sources.start_recording #{args}")
     recording_length = float_of_string(default=0.,args["length"])
     recording = max_duration(recording_length,s)
     output.file(%vorbis, args["filename"],fallible=true, recording)
