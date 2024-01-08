@@ -197,6 +197,14 @@ else
     s
 end
 
+def start_recording(arguments)
+    #E.g. {"filename" : "/app/recorder/test2.ogg", "length" : "25"}
+    args = of_json(default= [("error","fail")],arguments)
+    recording_length = float_of_string(default=0.,args["length"])
+    recording = max_duration(recording_length,s)
+    output.file(%vorbis, args["filename"],fallible=true, recording)
+end
+
 server.register(namespace="sources",
     description="Stop main input source.",
     usage="stop_input_main",
@@ -227,3 +235,8 @@ server.register(namespace="sources",
     usage="start_schedule",
     "start_schedule",
     fun (s) -> begin log("sources.start_schedule") start_schedule() "Done." end)
+server.register(namespace="sources",
+    description="Start recording.",
+    usage="start_recording {\"filename\" : \"name\", \"length\" : \"seconds\" }.",
+    "start_recording",
+    fun (json) -> begin log("sources.start_recording") start_recording(json) "Done." end)
