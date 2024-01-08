@@ -180,7 +180,7 @@ class Recorder(Thread):
 
     def __init__(
         self,
-        recorder_queue: Queue[Dict[str, Any]],
+        recorder_queue: "Queue[Dict[str, Any]]",
         config: Config,
         legacy_client: LegacyClient,
     ):
