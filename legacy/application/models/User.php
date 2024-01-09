@@ -265,7 +265,7 @@ class Application_Model_User
      * uses it to figure out who to reassign the deleted users files to.
      *
      * @param $ignoreUser String optional userid of a user that shall be ignored when
-     *                     when looking for the "first" admin
+     *                    when looking for the "first" admin
      *
      * @return null|CcSubj
      */

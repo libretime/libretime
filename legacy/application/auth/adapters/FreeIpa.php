@@ -118,7 +118,7 @@ class LibreTime_Auth_Adaptor_FreeIpa implements Zend_Auth_Adapter_Interface
      */
     public function getResultRowObject()
     {
-        $o = new \stdClass();
+        $o = new stdClass();
         $o->id = $this->user->getId();
         $o->username = $this->user->getLogin();
         $o->password = $this->user->getPassword();
