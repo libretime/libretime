@@ -29,3 +29,18 @@ class FileViewSet(viewsets.ModelViewSet):
         redirect_uri = filepath_to_uri(os.path.join("/api/_media", file.filepath))
         response["X-Accel-Redirect"] = redirect_uri
         return response
+
+    @action(detail=True, methods=["DELETE"])
+    def delete_file(self, request, pk=None):  # pylint: disable=invalid-name
+        pk = IntegerField().to_internal_value(data=pk)
+
+        file = get_object_or_404(File, pk=pk)
+        path = file.filepath
+
+        try:
+            if os.path.isfile(path):
+                os.remove(path)
+        except OSError:
+            return HttpResponse(status=404)
+        file.delete()
+        return HttpResponse(status=204)
