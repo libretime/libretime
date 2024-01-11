@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.2.2](https://github.com/libretime/libretime/compare/3.2.1...3.2.2) (2024-01-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency friendsofphp/php-cs-fixer to &lt;3.42.1 (stable) ([#2837](https://github.com/libretime/libretime/issues/2837)) ([7fa2149](https://github.com/libretime/libretime/commit/7fa21498ec62a37fc3f2f5637b9d930c1b4b142c))
+* **deps:** update dependency friendsofphp/php-cs-fixer to &lt;3.43.2 (stable) ([#2849](https://github.com/libretime/libretime/issues/2849)) ([0d632e8](https://github.com/libretime/libretime/commit/0d632e897067264a1e1879ea6ae12c8986dea6ef))
+* **deps:** update dependency friendsofphp/php-cs-fixer to &lt;3.45.1 (stable) ([#2857](https://github.com/libretime/libretime/issues/2857)) ([c0a1dd4](https://github.com/libretime/libretime/commit/c0a1dd4da46313b536f39934cd09d5539f71bfb0))
+* **deps:** update dependency friendsofphp/php-cs-fixer to &lt;3.46.1 (stable) ([#2869](https://github.com/libretime/libretime/issues/2869)) ([d5b05f8](https://github.com/libretime/libretime/commit/d5b05f81509c65e7444fc84b4badf6d52575db98))
+
 ## [3.2.1](https://github.com/libretime/libretime/compare/3.2.0...3.2.1) (2023-12-22)
 
 
