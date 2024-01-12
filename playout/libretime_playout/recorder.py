@@ -1,11 +1,14 @@
 import datetime
 import logging
+from pathlib import Path
 import math
 import os
 import re
 import signal
 import sys
 import time
+import requests
+
 from datetime import timezone
 from queue import Queue
 from subprocess import PIPE, Popen
@@ -74,6 +77,7 @@ class ShowRecorder(Thread):
 
         joined_path = os.path.join(RECORD_DIR, filename)
         filepath = f"{joined_path}.{self.config.playout.record_file_format}"
+    
 
         br = self.config.playout.record_bitrate
         sr = self.config.playout.record_samplerate
@@ -130,17 +134,35 @@ class ShowRecorder(Thread):
     def is_recording(self):
         return self.p is not None
 
-    def upload_file(self, filepath):
+    def upload_file(self, filepath) -> None:
+        
         filename = os.path.split(filepath)[1]
 
-        # files is what requests actually expects
-        files = {
-            "file": open(filepath, "rb"),
-            "name": filename,
-            "show_instance": self.show_instance,
-        }
+        try:
+            resp = requests.post(
+                f"{self.config.general.public_url}/rest/media",
+                auth=(self.config.general.api_key, ""),
+                files=[
+                    # ("file", (filepath.name, filepath.open("rb"))),
+                    ("file", (filename, open(filepath, "rb"))),
+                ],
+                timeout=30,
+                
+            )
+            resp.raise_for_status()
 
-        self.legacy_client.upload_recorded_show(files, self.show_instance)
+        except requests.exceptions.HTTPError as exception:
+            raise RuntimeError(f"could not upload {filepath}") from exception        
+
+        # # files is what requests actually expects
+        # files = {
+        #     "file": open(filepath, "rb"),
+        #     "name": filename,
+        #     "show_instance": self.show_instance,
+        # }
+
+        # # self.legacy_client.upload_recorded_show(files, self.show_instance)
+        # self.legacy_client.upload_recorded_show(files)
 
     def set_metadata_and_save(self, filepath):
         """

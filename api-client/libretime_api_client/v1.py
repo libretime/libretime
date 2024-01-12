@@ -63,25 +63,18 @@ class BaseApiClient(AbstractApiClient):
             **kwargs,
         )
 
-    def upload_recorded(self, media_id, fileid, showinstanceid, **kwargs) -> Response:
-        return self._request(
-            "GET",
-            "/api/upload_recorded",
-            params={"media_id": media_id,"fileid": fileid, "showinstanceid": showinstanceid},
-            **kwargs,
-        )
-
     def get_shows_to_record(self,  **kwargs) -> Response:
         return self._request(
             "GET",
             "/api/recorded-shows",
             **kwargs,
         )
-
-    def upload_file_url(self,  **kwargs) -> Response:
+   
+    def upload_files(self, files, **kwargs) -> Response:
         return self._request(
             "GET",
-            "/api/upload_file_url",
+            "/rest/media",
+            params={"files": files},
             **kwargs,
         )
 
@@ -199,63 +192,14 @@ class ApiClient:
             logger.exception(exception)
             return None
 
-    def upload_recorded_show(self, files, show_id):
-        response = ""
-
-        retries = self.UPLOAD_RETRIES
-        retries_wait = self.UPLOAD_WAIT
-
-        url = self.construct_rest_url("upload_file_url")
-
-        logger.debug(url)
-
-        for i in range(0, retries):
-            logger.debug("Upload attempt: %s", i + 1)
-            logger.debug(files)
-            logger.debug(ApiRequest.API_HTTP_REQUEST_TIMEOUT)
-
-            try:
-                request = requests.post(
-                    url, files=files, timeout=float(ApiRequest.API_HTTP_REQUEST_TIMEOUT)
-                )
-                response = request.json()
-                logger.debug(response)
-
-                # FIXME: We need to tell LibreTime that the uploaded track was recorded
-                # for a specific show
-                #
-                # My issue here is that response does not yet have an id. The id gets
-                # generated at the point where analyzer is done with it's work. We
-                # probably need to do what is below in analyzer and also make sure that
-                # the show instance id is routed all the way through.
-                #
-                # It already gets uploaded by this but the RestController does not seem
-                # to care about it. In the end analyzer doesn't have the info in it's
-                # rabbitmq message and imports the show as a regular track.
-                #
-                # logger.info("uploaded show result as file id %s", response.id)
-                #
-                # url = self.construct_url("upload_recorded") url =
-                # url.replace('%%fileid%%', response.id) url =
-                # url.replace('%%showinstanceid%%', show_id) request.get(url)
-                # logger.info("associated uploaded file %s with show instance %s",
-                # response.id, show_id)
-                break
-
-            except requests.exceptions.HTTPError as exception:
-                logger.error("Http error code: %s", exception.response.status_code)
-                logger.exception(exception)
-
-            except requests.exceptions.ConnectionError as exception:
-                logger.exception("Server is down: %s", exception)
-
-            except Exception as exception:
-                logger.exception(exception)
-
-            # wait some time before next retry
-            time.sleep(retries_wait)
-
-        return response        
+    def upload_recorded_show(self, files):
+        try:
+            resp=self._base_client.upload_files(files)
+            payload = resp.json()
+            return payload
+        except Exception as exception:
+            logger.exception(exception)
+            return None
 
     def register_component(self, component):
         """
