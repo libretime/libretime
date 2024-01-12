@@ -183,7 +183,7 @@ class ShowRecorder(Thread):
                 self.show_name, full_date, full_time
             )
             # You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
-            # recorded_file["tracknumber"] = self.show_instance
+            recorded_file["tracknumber"] = str(self.show_instance)
             recorded_file.save()
 
         except Exception as exception:

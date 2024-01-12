@@ -63,6 +63,14 @@ class BaseApiClient(AbstractApiClient):
             **kwargs,
         )
 
+    def get_shows_to_record(self,  **kwargs) -> Response:
+        return self._request(
+            "GET",
+            "/api/recorded-shows",
+            **kwargs,
+        )
+
+
     def update_liquidsoap_status(self, msg, stream_id, boot_time, **kwargs) -> Response:
         return self._request(
             "POST",
@@ -87,6 +95,13 @@ class BaseApiClient(AbstractApiClient):
             params={"username": username, "password": password, "djtype": djtype},
             **kwargs,
         )
+    
+    def get_shows_to_record(self,  **kwargs) -> Response:
+        return self._request(
+            "GET",
+            "/api/recorded-shows",
+            **kwargs,
+    )
 
     def notify_webstream_data(self, media_id, data, **kwargs) -> Response:
         return self._request(
@@ -166,6 +181,16 @@ class ApiClient:
             )
         except RequestException:
             return {}
+
+    def get_shows_to_record(self):
+        try:
+            resp=self._base_client.get_shows_to_record()
+            payload = resp.json()
+            return payload
+        except Exception as exception:
+            logger.exception(exception)
+            return None
+
 
     def register_component(self, component):
         """
