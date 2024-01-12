@@ -63,22 +63,6 @@ class BaseApiClient(AbstractApiClient):
             **kwargs,
         )
 
-    def get_shows_to_record(self,  **kwargs) -> Response:
-        return self._request(
-            "GET",
-            "/api/recorded-shows",
-            **kwargs,
-        )
-   
-    def upload_files(self, files, **kwargs) -> Response:
-        return self._request(
-            "GET",
-            "/rest/media",
-            params={"files": files},
-            **kwargs,
-        )
-
-
     def update_liquidsoap_status(self, msg, stream_id, boot_time, **kwargs) -> Response:
         return self._request(
             "POST",
@@ -182,24 +166,6 @@ class ApiClient:
             )
         except RequestException:
             return {}
-
-    def get_shows_to_record(self):
-        try:
-            resp=self._base_client.get_shows_to_record()
-            payload = resp.json()
-            return payload
-        except Exception as exception:
-            logger.exception(exception)
-            return None
-
-    def upload_recorded_show(self, files):
-        try:
-            resp=self._base_client.upload_files(files)
-            payload = resp.json()
-            return payload
-        except Exception as exception:
-            logger.exception(exception)
-            return None
 
     def register_component(self, component):
         """
