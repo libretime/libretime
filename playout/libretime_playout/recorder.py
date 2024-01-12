@@ -145,6 +145,7 @@ class ShowRecorder(Thread):
                 files=[
                     # ("file", (filepath.name, filepath.open("rb"))),
                     ("file", (filename, open(filepath, "rb"))),
+                    ("show_instance", str(self.show_instance))
                 ],
                 timeout=30,
                 
