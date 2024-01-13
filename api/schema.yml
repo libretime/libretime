@@ -298,6 +298,24 @@ paths:
       responses:
         "204":
           description: No response body
+  /api/v2/files/{id}/delete_file:
+    delete:
+      operationId: files_delete_file_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this file.
+          required: true
+      tags:
+        - files
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+      responses:
+        "204":
+          description: No response body
   /api/v2/files/{id}/download:
     get:
       operationId: files_download_retrieve
