@@ -40,7 +40,8 @@ class FileViewSet(viewsets.ModelViewSet):
         try:
             if os.path.isfile(path):
                 os.remove(path)
-        except OSError:
+        except OSError as exception:
+            logger.error(f"Could not delete file from storage: {exception}")
             return HttpResponse(status=404)
         file.delete()
         return HttpResponse(status=204)
