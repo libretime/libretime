@@ -7,7 +7,7 @@ title: Development workflows
 LibreTime uses [Github pull requests to manage changes](https://docs.github.com/en/get-started/quickstart/contributing-to-projects). The workflow looks like this:
 
 - [Create a fork of the project](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
-- Check out the `main` branch. If you're making a minor or small documentation change you can check out the `stable` branch.
+- Check out the `main` branch.
 - Create a new branch based on the checked out branch.
 - Work on your changes locally. Try to keep each commit small to make reviews easier.
 - Lint and test the codebase, for example using the `make lint` or `make test` commands inside the app folder you want to check.
