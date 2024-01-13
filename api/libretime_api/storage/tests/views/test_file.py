@@ -36,7 +36,7 @@ class TestFileViewSet(APITestCase):
         response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
 
-    def test_delete_file(self):
+    def test_destroy(self):
         file = baker.make(
             "storage.File",
             mime="audio/mp3",
