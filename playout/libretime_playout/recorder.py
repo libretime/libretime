@@ -1,25 +1,25 @@
 import datetime
 import logging
-from pathlib import Path
 import math
 import os
 import re
 import signal
 import sys
 import time
-import requests
-
 from datetime import timezone
+from pathlib import Path
 from queue import Queue
 from subprocess import PIPE, Popen
 from threading import Thread
 from typing import Any, Dict
-from .liquidsoap.client import LiquidsoapClient
 
 import mutagen
+import requests
 from libretime_api_client.v1 import ApiClient as LegacyClient
 
 from libretime_playout.config import PUSH_INTERVAL, RECORD_DIR, Config
+
+from .liquidsoap.client import LiquidsoapClient
 
 if sys.version_info < (3, 9):
     from backports.zoneinfo import ZoneInfo
@@ -45,8 +45,6 @@ def getDateTimeObj(time):
     return datetime.datetime(
         date[0], date[1], date[2], my_time[0], my_time[1], my_time[2], 0, None
     )
-
-
 
 
 class ShowRecorder(Thread):
@@ -77,7 +75,6 @@ class ShowRecorder(Thread):
 
         joined_path = os.path.join(RECORD_DIR, filename)
         filepath = f"{joined_path}.{self.config.playout.record_file_format}"
-    
 
         br = self.config.playout.record_bitrate
         sr = self.config.playout.record_samplerate
@@ -89,8 +86,8 @@ class ShowRecorder(Thread):
             port=self.config.playout.liquidsoap_port,
         )
         # args = f'{{"filename" : "{filepath}", "length" : "{length}"}}'
-        liq_client.start_recording(dict(filename = filepath, length = f"{length}"))
-        delay = int(length) +10
+        liq_client.start_recording(dict(filename=filepath, length=f"{length}"))
+        delay = int(length) + 10
         time.sleep(delay)
         # -f:16,2,44100
         # -b:256
@@ -135,7 +132,6 @@ class ShowRecorder(Thread):
         return self.p is not None
 
     def upload_file(self, filepath) -> None:
-        
         filename = os.path.split(filepath)[1]
 
         try:
@@ -145,15 +141,14 @@ class ShowRecorder(Thread):
                 files=[
                     # ("file", (filepath.name, filepath.open("rb"))),
                     ("file", (filename, open(filepath, "rb"))),
-                    ("show_instance", str(self.show_instance))
+                    ("show_instance", str(self.show_instance)),
                 ],
                 timeout=30,
-                
             )
             resp.raise_for_status()
 
         except requests.exceptions.HTTPError as exception:
-            raise RuntimeError(f"could not upload {filepath}") from exception        
+            raise RuntimeError(f"could not upload {filepath}") from exception
 
         # # files is what requests actually expects
         # files = {
@@ -254,7 +249,7 @@ class Recorder(Thread):
 
     def process_recorder_schedule(self, m):
         logger.info("Parsing recording show schedules...")
-        logger.info(print(m))        
+        logger.info(print(m))
         temp_shows_to_record = {}
         shows = m["shows"]
         for show in shows:

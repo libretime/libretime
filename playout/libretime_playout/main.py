@@ -142,10 +142,10 @@ def cli(
     ).start()
 
     PypoPush(push_queue, liquidsoap, config).start()
-    
+
     Recorder(recorder_queue, config, legacy_client).start()
 
     StatsCollectorThread(config, legacy_client).start()
-    
+
     message_listener = MessageListener(config, fetch_queue, recorder_queue)
     message_listener.run_forever()
