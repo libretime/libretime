@@ -15,8 +15,8 @@ Once a release is desired, checkout the release branch:
 ```bash
 # For a release on the main branch
 git checkout release-please--branches--main--components--libretime
-# For a release on the stable branch
-git checkout release-please--branches--stable--components--libretime
+# For a release on the stable-4.x branch
+git checkout release-please--branches--stable-4.x--components--libretime
 ```
 
 ### 2. Release note

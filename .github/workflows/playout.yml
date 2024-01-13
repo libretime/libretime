@@ -3,7 +3,7 @@ name: Playout
 on:
   workflow_dispatch:
   push:
-    branches: [main, stable]
+    branches: [main, stable-*]
     paths:
       - .github/workflows/_python.yml
       - .github/workflows/playout.yml
@@ -13,7 +13,7 @@ on:
       - tools/python*
 
   pull_request:
-    branches: [main, stable]
+    branches: [main, stable-*]
     paths:
       - .github/workflows/_python.yml
       - .github/workflows/playout.yml
