@@ -1,5 +1,7 @@
+import logging
 import os
 
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.encoding import filepath_to_uri
@@ -9,6 +11,8 @@ from rest_framework.serializers import IntegerField
 
 from ..models import File
 from ..serializers import FileSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -35,13 +39,13 @@ class FileViewSet(viewsets.ModelViewSet):
         pk = IntegerField().to_internal_value(data=pk)
 
         file = get_object_or_404(File, pk=pk)
-        path = file.filepath
+        path = os.path.join(settings.CONFIG.storage.path, file.filepath)
 
         try:
             if os.path.isfile(path):
                 os.remove(path)
         except OSError as exception:
             logger.error(f"Could not delete file from storage: {exception}")
-            return HttpResponse(status=404)
+            return HttpResponse(status=500)
         file.delete()
         return HttpResponse(status=204)
