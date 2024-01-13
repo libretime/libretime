@@ -39,7 +39,7 @@
                 $url = $streamData["${id}_public_url"];
                 $type = $streamData["${id}_type"];
                 $serverType = $streamData["${id}_output"];
-                if ($type == "ogg")
+                if ($type == "ogg" || $type == "opus")
                     $type = "oga";
                 if ($type == "aac")
                     $type = "m4a";
@@ -73,7 +73,7 @@
                     $url = $streamData["${id}_public_url"];
                     $type = $streamData["${id}_type"];
                     $serverType = $streamData["${id}_output"];
-                    if ($type == "ogg")
+                    if ($type == "ogg" || $type == "opus")
                         $type = "oga";
                     if ($type == "aac")
                         $type = "m4a";
