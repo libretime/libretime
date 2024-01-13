@@ -9,6 +9,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.serializers import IntegerField
 
+from ...schedule.models import Schedule
 from ..models import File
 from ..serializers import FileSerializer
 
@@ -34,18 +35,23 @@ class FileViewSet(viewsets.ModelViewSet):
         response["X-Accel-Redirect"] = redirect_uri
         return response
 
-    @action(detail=True, methods=["DELETE"])
-    def delete_file(self, request, pk=None):  # pylint: disable=invalid-name
+    def destroy(self, request, *args, **kwargs):  # pylint: disable=invalid-name
+        pk = kwargs.get("pk", None)
         pk = IntegerField().to_internal_value(data=pk)
 
         file = get_object_or_404(File, pk=pk)
+
+        # Check if the file is scheduled to be played in the future
+        if Schedule.is_file_scheduled_in_the_future(file_id=pk) is True:
+            return HttpResponse(status=409)
+
         path = os.path.join(settings.CONFIG.storage.path, file.filepath)
 
         try:
             if os.path.isfile(path):
                 os.remove(path)
         except OSError as exception:
-            logger.error(f"Could not delete file from storage: {exception}")
+            logger.error("Could not delete file from storage: %s", exception)
             return HttpResponse(status=500)
-        file.delete()
+        self.perform_destroy(file)
         return HttpResponse(status=204)

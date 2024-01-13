@@ -115,6 +115,13 @@ class Schedule(models.Model):
             return self.instance.ends_at
         return self.ends_at
 
+    @staticmethod
+    def is_file_scheduled_in_the_future(file_id):
+        count = Schedule.objects.filter(
+            file_id=file_id, ends__gt=models.DateTimeField.now()
+        ).count()
+        return count > 0
+
     class Meta:
         managed = False
         db_table = "cc_schedule"
