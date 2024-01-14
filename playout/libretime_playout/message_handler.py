@@ -64,7 +64,7 @@ class MessageHandler(ConsumerMixin):
                 "update_recorder_schedule",
                 "cancel_recording",
             ):
-                self.recorder_queue.put(payload)                
+                self.recorder_queue.put(payload)
 
             else:
                 logger.warning("invalid command: %s", command)

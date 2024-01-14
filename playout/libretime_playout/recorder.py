@@ -1,25 +1,25 @@
 import datetime
 import logging
-from pathlib import Path
 import math
 import os
 import re
 import signal
 import sys
 import time
-import requests
-
 from datetime import timezone
+from pathlib import Path
 from queue import Queue
 from subprocess import PIPE, Popen
 from threading import Thread
 from typing import Any, Dict
-from .liquidsoap.client import LiquidsoapClient
 
 import mutagen
+import requests
 from libretime_api_client.v1 import ApiClient as LegacyClient
 
 from libretime_playout.config import PUSH_INTERVAL, RECORD_DIR, Config
+
+from .liquidsoap.client import LiquidsoapClient
 
 if sys.version_info < (3, 9):
     from backports.zoneinfo import ZoneInfo
