@@ -143,7 +143,7 @@ def cli(
 
     PypoPush(push_queue, liquidsoap, config).start()
     
-    Recorder(recorder_queue, config, legacy_client).start()
+    Recorder(recorder_queue, config, legacy_client, liq_client).start()
 
     StatsCollectorThread(config, legacy_client).start()
     
