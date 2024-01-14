@@ -844,4 +844,33 @@ SQL;
     {
         return $this->getShow()->isRepeating();
     }
+
+    public function trimOverbooked()
+    {
+        // iterate through all of the showinstance items and delete those with start time greater than endtime of the show
+        $showEnd = new DateTime($this->getShowInstanceEnd(), new DateTimeZone('UTC'));
+        foreach ($this->getShowListContent('UTC') as $item) {
+            $itemStart = new DateTime($item['starts'], new DateTimeZone('UTC'));
+            if ($itemStart->getTimestamp() > $showEnd->getTimestamp()) {
+                $this->removeItem($item['item_id'], $item['starts']);
+            }
+        }
+    }
+
+    public function removeItem($itemId, $starts)
+    {
+        $sql = <<<'SQL'
+        DELETE FROM cc_schedule
+         WHERE file_id = :itemId
+           AND starts::varchar(19) = :starts
+           AND instance_id = :instance_id
+           AND playout_status >= 0
+        SQL;
+
+        return Application_Common_Database::prepareAndExecute($sql, [
+            ':itemId' => $itemId,
+            ':starts' => $starts,
+            ':instance_id' => $this->_instanceId,
+        ], 'execute');
+    }
 }
