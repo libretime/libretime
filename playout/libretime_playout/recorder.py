@@ -47,8 +47,6 @@ def getDateTimeObj(time):
     )
 
 
-
-
 class ShowRecorder(Thread):
     name = "show_recorder"
 
@@ -60,9 +58,11 @@ class ShowRecorder(Thread):
         start_time,
         config: Config,
         legacy_client: LegacyClient,
+        liq_client: LiquidsoapClient,
     ):
         Thread.__init__(self)
         self.legacy_client = legacy_client
+        self.liq_client = liq_client
         self.config = config
         self.filelength = filelength
         self.start_time = start_time
@@ -74,51 +74,17 @@ class ShowRecorder(Thread):
         length = str(self.filelength)
         filename = self.start_time
         filename = filename.replace(" ", "-")
+        
+        record_file_format = self.config.playout.record_file_format
 
         joined_path = os.path.join(RECORD_DIR, filename)
-        filepath = f"{joined_path}.{self.config.playout.record_file_format}"
-    
-
-        br = self.config.playout.record_bitrate
-        sr = self.config.playout.record_samplerate
-        c = self.config.playout.record_channels
-        ss = self.config.playout.record_sample_size
-
-        liq_client = LiquidsoapClient(
-            host=self.config.playout.liquidsoap_host,
-            port=self.config.playout.liquidsoap_port,
+        filepath = f"{joined_path}.{record_file_format}"
+        self.liq_client.start_recording(
+            dict(format=record_file_format, filename=filepath, length=f"{length}")
         )
-        # args = f'{{"filename" : "{filepath}", "length" : "{length}"}}'
-        liq_client.start_recording(dict(filename = filepath, length = f"{length}"))
-        delay = int(length) +10
+        delay = int(length) + 10
         time.sleep(delay)
-        # -f:16,2,44100
-        # -b:256
-        # command = "ecasound -f:{},{},{} -i alsa -o {},{}000 -t:{}".format(
-        #     ss,
-        #     c,
-        #     sr,
-        #     filepath,
-        #     br,
-        #     length,
-        # )
-        # args = command.split(" ")
 
-        # logger.info("starting record")
-        # logger.info("command %s", command)
-
-        # self.p = Popen(args, stdout=PIPE, stderr=PIPE)
-
-        # # blocks at the following line until the child process
-        # # quits
-        # self.p.wait()
-        # outmsgs = self.p.stdout.readlines()
-        # for msg in outmsgs:
-        #     m = re.search("^ERROR", msg)
-        #     if not m == None:
-        #         logger.info("Recording error is found: %s", outmsgs)
-        # logger.info("finishing record, return code %s", self.p.returncode)
-        # code = self.p.returncode
         code = 0
         self.p = None
 
@@ -135,7 +101,6 @@ class ShowRecorder(Thread):
         return self.p is not None
 
     def upload_file(self, filepath) -> None:
-        
         filename = os.path.split(filepath)[1]
 
         try:
@@ -143,27 +108,15 @@ class ShowRecorder(Thread):
                 f"{self.config.general.public_url}/rest/media",
                 auth=(self.config.general.api_key, ""),
                 files=[
-                    # ("file", (filepath.name, filepath.open("rb"))),
                     ("file", (filename, open(filepath, "rb"))),
-                    ("show_instance", str(self.show_instance))
+                    ("show_instance", str(self.show_instance)),
                 ],
                 timeout=30,
-                
             )
             resp.raise_for_status()
 
         except requests.exceptions.HTTPError as exception:
-            raise RuntimeError(f"could not upload {filepath}") from exception        
-
-        # # files is what requests actually expects
-        # files = {
-        #     "file": open(filepath, "rb"),
-        #     "name": filename,
-        #     "show_instance": self.show_instance,
-        # }
-
-        # # self.legacy_client.upload_recorded_show(files, self.show_instance)
-        # self.legacy_client.upload_recorded_show(files)
+            raise RuntimeError(f"could not upload {filepath}") from exception
 
     def set_metadata_and_save(self, filepath):
         """
@@ -217,9 +170,11 @@ class Recorder(Thread):
         recorder_queue: "Queue[Dict[str, Any]]",
         config: Config,
         legacy_client: LegacyClient,
+        liq_client: LiquidsoapClient,
     ):
         Thread.__init__(self)
         self.legacy_client = legacy_client
+        self.liq_client =liq_client
         self.config = config
         self.sr = None
         self.shows_to_record = {}
@@ -254,7 +209,7 @@ class Recorder(Thread):
 
     def process_recorder_schedule(self, m):
         logger.info("Parsing recording show schedules...")
-        logger.info(print(m))        
+        logger.info(print(m))
         temp_shows_to_record = {}
         shows = m["shows"]
         for show in shows:
@@ -350,6 +305,7 @@ class Recorder(Thread):
                             start_time_formatted,
                             self.config,
                             self.legacy_client,
+                            self.liq_client
                         )
                         self.sr.start()
                         break
