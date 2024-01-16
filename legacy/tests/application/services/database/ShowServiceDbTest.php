@@ -20,7 +20,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     private $_connectionMock;
     // private $_nowDT;
 
-    public function setUp()
+    public function setUp(): void
     {
         TestHelper::installTestDatabase();
         TestHelper::setupZendBootstrap();
@@ -52,7 +52,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      */
     public function getDataSet()
     {
-        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(
+        return new PHPUnit\DbUnit\DataSet\YamlDataSet(
             __DIR__ . '/datasets/seed_show_service.yml'
         );
     }
@@ -87,7 +87,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show', 'select * from cc_show');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_ccShowInsertedIntoDatabase.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_ccShowInsertedIntoDatabase.yml'),
             $ds
         );
     }
@@ -114,7 +114,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createNoRepeatNoRRShow.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_createNoRepeatNoRRShow.yml'),
             $ds
         );
     }
@@ -141,7 +141,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createWeeklyRepeatNoEndNoRRShow.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_createWeeklyRepeatNoEndNoRRShow.yml'),
             $ds
         );
     }
@@ -166,7 +166,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createBiWeeklyRepeatNoEndNoRRShow.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_createBiWeeklyRepeatNoEndNoRRShow.yml'),
             $ds
         );
     }
@@ -191,7 +191,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createTriWeeklyRepeatNoEndNoRRShow.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_createTriWeeklyRepeatNoEndNoRRShow.yml'),
             $ds
         );
     }
@@ -216,7 +216,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createQuadWeeklyRepeatNoEndNoRRShow.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_createQuadWeeklyRepeatNoEndNoRRShow.yml'),
             $ds
         );
     }
@@ -241,7 +241,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createMonthlyMonthlyRepeatNoEndNoRRShow.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_createMonthlyMonthlyRepeatNoEndNoRRShow.yml'),
             $ds
         );
     }
@@ -266,7 +266,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createMonthlyWeeklyRepeatNoEndNoRRShow.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_createMonthlyWeeklyRepeatNoEndNoRRShow.yml'),
             $ds
         );
     }
@@ -292,7 +292,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_deleteShowInstance.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_deleteShowInstance.yml'),
             $ds
         );
     }
@@ -326,7 +326,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_deleteShowInstanceAndAllFollowing.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_deleteShowInstanceAndAllFollowing.yml'),
             $ds
         );
     }
@@ -356,7 +356,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_editRepeatingShowInstance.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_editRepeatingShowInstance.yml'),
             $ds
         );
     }
@@ -384,7 +384,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_deleteRepeatingShow.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_deleteRepeatingShow.yml'),
             $ds
         );
     }
@@ -413,7 +413,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_repeatShowCreationWhenUserMovesForwardInCalendar.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_repeatShowCreationWhenUserMovesForwardInCalendar.yml'),
             $ds
         );
     }
@@ -439,7 +439,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createLinkedShow.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_createLinkedShow.yml'),
             $ds
         );
     }
@@ -463,7 +463,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createNoRepeatRRShow.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_createNoRepeatRRShow.yml'),
             $ds
         );
     }
@@ -495,7 +495,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_editRepeatingShowChangeNoEndOption.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_editRepeatingShowChangeNoEndOption.yml'),
             $ds
         );
     }
@@ -557,7 +557,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_schedule', 'select id, starts, ends, file_id, clip_length, fade_in, fade_out, cue_in, cue_out, instance_id, playout_status from cc_schedule');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_removeFirstRepeatShowDayUpdatesScheduleCorrectly.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_removeFirstRepeatShowDayUpdatesScheduleCorrectly.yml'),
             $ds
         );
     }
@@ -614,7 +614,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_schedule', 'select id, starts, ends, file_id, clip_length, fade_in, fade_out, cue_in, cue_out, instance_id, playout_status from cc_schedule');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_changeRepeatDayUpdatesScheduleCorrectly.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_changeRepeatDayUpdatesScheduleCorrectly.yml'),
             $ds
         );
     }
@@ -644,7 +644,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_weeklyToNoRepeat.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_weeklyToNoRepeat.yml'),
             $ds
         );
     }
@@ -674,7 +674,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_weeklyToBiWeekly.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_weeklyToBiWeekly.yml'),
             $ds
         );
     }

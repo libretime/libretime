@@ -20,6 +20,10 @@
     },
     {
       "type": "vcs",
+      "url": "https://github.com/mp3butcher/zend-test"
+    },
+    {
+      "type": "vcs",
       "url": "https://github.com/mp3butcher/dbunit"
     },
     {
@@ -63,7 +67,7 @@
   },
   "require-dev": {
     "phpunit/dbunit": "dev-master",
-    "phpunit/phpunit": ">4.0",
-    "zf1s/zend-test": "^1.13"
+    "phpunit/phpunit": "~8.0",
+    "zf1s/zend-test": "dev-master"
   }
 }
