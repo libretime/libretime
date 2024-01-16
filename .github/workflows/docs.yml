@@ -2,14 +2,14 @@ name: Docs
 
 on:
   push:
-    branches: [main, stable]
+    branches: [main, stable-*]
     paths:
       - .github/vale/**
       - .github/workflows/docs.yml
       - docs/**
 
   pull_request:
-    branches: [main, stable]
+    branches: [main, stable-*]
     paths:
       - .github/vale/**
       - .github/workflows/docs.yml

@@ -22,7 +22,7 @@ class InfoView(APIView):
     def get(self, request):
         data = Preference.get_site_preferences()
         return Response(
-            data.dict(
+            data.model_dump(
                 include={
                     "station_name",
                 }

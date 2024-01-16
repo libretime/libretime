@@ -46,7 +46,7 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      *
      * @param $fileId       int    CcFiles identifier
      * @param $brokerTaskId int    broker task identifier to so we can asynchronously
-     *                       receive completed task messages
+     *                      receive completed task messages
      * @param $taskName     string broker task name
      *
      * @return CeleryTasks the created task

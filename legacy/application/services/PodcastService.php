@@ -139,7 +139,7 @@ class Application_Service_PodcastService
 
     /**
      * @param       $title   passed in directly from web UI input
-     *                       This will automatically create a smartblock and playlist for this podcast
+     *                      This will automatically create a smartblock and playlist for this podcast
      * @param mixed $podcast
      */
     public static function createPodcastSmartblockAndPlaylist($podcast, $title = null)

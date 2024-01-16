@@ -8,16 +8,12 @@ CPU_CORES := $(shell N=$$(nproc); echo $$(( $$N > 4 ? 4 : $$N )))
 # BANDIT_ARG =
 # PYTEST_ARG =
 
-# SETUPTOOLS_ENABLE_FEATURES=legacy-editable is required to work
-# around https://github.com/PyCQA/pylint/issues/7306
 VENV = .venv
 install: $(VENV)
 $(VENV):
 	python3 -m venv $(VENV)
 	$(VENV)/bin/pip install --upgrade pip setuptools wheel
-
-	SETUPTOOLS_ENABLE_FEATURES=legacy-editable \
-	$(VENV)/bin/pip install \
+	$(VENV)/bin/pip install --prefer-binary \
 		--requirement ../tools/python-requirements.txt \
 		$(PIP_INSTALL)
 

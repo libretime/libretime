@@ -39,8 +39,10 @@
                 $url = $streamData["${id}_public_url"];
                 $type = $streamData["${id}_type"];
                 $serverType = $streamData["${id}_output"];
-                if ($type == "ogg")
+                if ($type == "ogg" || $type == "opus")
                     $type = "oga";
+                if ($type == "aac")
+                    $type = "m4a";
                 echo "setjPlayer('$url', '$type', '$serverType');";
             }
             ?>
@@ -71,8 +73,10 @@
                     $url = $streamData["${id}_public_url"];
                     $type = $streamData["${id}_type"];
                     $serverType = $streamData["${id}_output"];
-                    if ($type == "ogg")
+                    if ($type == "ogg" || $type == "opus")
                         $type = "oga";
+                    if ($type == "aac")
+                        $type = "m4a";
 
                     $label = "(" . $streamData["${id}_host"] . ") " . $streamData["${id}_description"] . " - " . $streamData["${id}_bitrate"] . " kbit/s";
                     echo sprintf("<option class='stream' value='%s' data-url='%s' data-type='%s' server-type='%s'>%s</option>", $id, $url, $type, $serverType, $label);

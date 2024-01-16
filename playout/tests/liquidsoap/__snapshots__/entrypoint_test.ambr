@@ -315,7 +315,10 @@
   log("output.pulseaudio is not defined!")
   %endif
   %ifdef output.pulseaudio
-  output.pulseaudio(id="pulseaudio:1", s)
+  output.pulseaudio(
+    id="pulseaudio:1",
+    s
+  )
   %endif
   
   
@@ -325,6 +328,55 @@
   '''
 # ---
 # name: test_generate_entrypoint[stream_config6-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_main_secure = false
+  input_show_mount = "show"
+  input_show_port = 8002
+  input_show_secure = false
+  
+  # Settings
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  # pulseaudio:1
+  %ifndef output.pulseaudio
+  log("output.pulseaudio is not defined!")
+  %endif
+  %ifdef output.pulseaudio
+  output.pulseaudio(
+    id="pulseaudio:1",
+    device="alsa_output.pci-0000_00_sink",
+    s
+  )
+  %endif
+  
+  
+  
+  gateway("started")
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config7-1.4]
   '''
   # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
   ###########################################################

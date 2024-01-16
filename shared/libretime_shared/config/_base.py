@@ -38,7 +38,7 @@ class BaseConfig(BaseModel):
         if _filepath is not None:
             _filepath = Path(_filepath)
 
-        env_loader = EnvLoader(_self.schema(), _env_prefix, _env_delimiter)
+        env_loader = EnvLoader(_self.model_json_schema(), _env_prefix, _env_delimiter)
 
         values = deep_merge_dict(
             kwargs,

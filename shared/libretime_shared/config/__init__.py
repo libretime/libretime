@@ -1,4 +1,5 @@
 from ._base import DEFAULT_CONFIG_FILEPATH, DEFAULT_ENV_PREFIX, BaseConfig
+from ._fields import AnyHttpUrlStr, AnyUrlStr, StrNoLeadingSlash, StrNoTrailingSlash
 from ._models import (
     AudioChannels,
     AudioFormat,
@@ -11,6 +12,4 @@ from ._models import (
     StorageConfig,
     StreamConfig,
     SystemOutput,
-    no_leading_slash_validator,
-    no_trailing_slash_validator,
 )

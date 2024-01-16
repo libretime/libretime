@@ -33,7 +33,7 @@ repos:
     hooks:
       - id: prettier
         files: \.(md|mdx|yml|yaml|js|jsx|ts|tsx|json|css)$
-        exclude: ^legacy/public(?!/js/airtime)
+        exclude: ^(legacy/public(?!/js/airtime)|CHANGELOG.md$|.github/release-please-manifest.json)
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.15.0
@@ -48,13 +48,13 @@ repos:
         args: [--target-version, "4.2"]
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
+    rev: 5.13.2
     hooks:
       - id: isort
         args: [--resolve-all-configs]
 
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 23.11.0
+    rev: 23.12.1
     hooks:
       - id: black
 

@@ -17,6 +17,7 @@ ProtectKernelTunables=true
 ProtectProc=invisible
 ProtectSystem=full
 
+Environment=PYTHONOPTIMIZE=2
 Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
 Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/liquidsoap.log
 WorkingDirectory=@@WORKING_DIR@@/playout
