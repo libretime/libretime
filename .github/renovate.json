@@ -10,7 +10,7 @@
     "automerge": true,
     "automergeType": "branch"
   },
-  "baseBranches": ["main", "stable"],
+  "baseBranches": ["main"],
   "labels": ["dependencies"],
   "packageRules": [
     {
