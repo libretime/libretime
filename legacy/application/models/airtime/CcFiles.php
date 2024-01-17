@@ -150,7 +150,7 @@ class CcFiles extends BaseCcFiles
             try {
                 $artwork = FileDataHelper::saveArtworkData($filePath, $originalFilename, $importedStorageDir, $importedDbPath);
             } catch (Exception $e) {
-                error_log("saveArtworkData FAILED for" . $filePath);
+                error_log('Unable to save thumbnail artwork for ' . $filePath);
             }
             $trackTypeId = FileDataHelper::saveTrackType();
 
