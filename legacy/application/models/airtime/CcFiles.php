@@ -146,7 +146,12 @@ class CcFiles extends BaseCcFiles
 
             $importedStorageDir = Config::getStoragePath() . 'imported/' . self::getOwnerId() . '/';
             $importedDbPath = 'imported/' . self::getOwnerId() . '/';
-            $artwork = FileDataHelper::saveArtworkData($filePath, $originalFilename, $importedStorageDir, $importedDbPath);
+            $artwork = '';
+            try {
+                $artwork = FileDataHelper::saveArtworkData($filePath, $originalFilename, $importedStorageDir, $importedDbPath);
+            } catch (Exception $e) {
+                error_log("saveArtworkData FAILED for" . $filePath);
+            }
             $trackTypeId = FileDataHelper::saveTrackType();
 
             $file->fromArray($fileArray);
