@@ -1399,14 +1399,14 @@ class Application_Model_Preference
         self::setValue('radio_page_display_login_button', $value);
     }
 
-    public static function getSmartblockTrimOverbooked()
+    public static function getScheduleTrimOverbooked()
     {
-        return self::getValue('smartblock_trim_overbooked');
+        return self::getValue('schedule_trim_overbooked');
     }
 
-    public static function setSmartblockTrimOverbooked($value)
+    public static function setScheduleTrimOverbooked($value)
     {
-        self::setValue('smartblock_trim_overbooked', $value);
+        self::setValue('schedule_trim_overbooked', $value);
     }
 
     public static function getLangTimezoneSetupComplete()

@@ -150,20 +150,20 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         ]);
         $this->addElement($podcast_auto_smartblock);
 
-        $smartblockTrimOverbooked = new Zend_Form_Element_Checkbox('smartblockTrimOverbooked');
-        $smartblockTrimOverbooked->setDecorators([
+        $scheduleTrimOverbooked = new Zend_Form_Element_Checkbox('scheduleTrimOverbooked');
+        $scheduleTrimOverbooked->setDecorators([
             'ViewHelper',
             'Errors',
             'Label',
         ]);
-        $displaySmartblockTrimOverbookedValue = Application_Model_Preference::getSmartblockTrimOverbooked();
-        if ($displaySmartblockTrimOverbookedValue == '') {
-            $displaySmartblockTrimOverbookedValue = false;
+        $displayScheduleTrimOverbookedValue = Application_Model_Preference::getScheduleTrimOverbooked();
+        if ($displayScheduleTrimOverbookedValue == '') {
+            $displayScheduleTrimOverbookedValue = false;
         }
-        $smartblockTrimOverbooked->addDecorator('Label', ['class' => 'enable-tunein']);
-        $smartblockTrimOverbooked->setLabel(_('Trim overbooked shows after autoloading?'));
-        $smartblockTrimOverbooked->setValue($displaySmartblockTrimOverbookedValue);
-        $this->addElement($smartblockTrimOverbooked);
+        $scheduleTrimOverbooked->addDecorator('Label', ['class' => 'enable-tunein']);
+        $scheduleTrimOverbooked->setLabel(_('Trim overbooked shows after autoloading?'));
+        $scheduleTrimOverbooked->setValue($displayScheduleTrimOverbookedValue);
+        $this->addElement($scheduleTrimOverbooked);
 
         // TODO add and insert Podcast Smartblock and Playlist autogenerate options
 
