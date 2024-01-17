@@ -3557,12 +3557,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mp3butcher/dbunit.git",
-                "reference": "5cccbb8aa8d5f65fce4d089a107d8dc9adc81496"
+                "reference": "3b858a9d57ed6d4812d124847363e95bd4589567"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mp3butcher/dbunit/zipball/5cccbb8aa8d5f65fce4d089a107d8dc9adc81496",
-                "reference": "5cccbb8aa8d5f65fce4d089a107d8dc9adc81496",
+                "url": "https://api.github.com/repos/mp3butcher/dbunit/zipball/3b858a9d57ed6d4812d124847363e95bd4589567",
+                "reference": "3b858a9d57ed6d4812d124847363e95bd4589567",
                 "shasum": ""
             },
             "require": {
@@ -3605,7 +3605,7 @@
                 "issues": "https://github.com/sebastianbergmann/dbunit/issues",
                 "source": "https://github.com/mp3butcher/dbunit/tree/master"
             },
-            "time": "2024-01-16T20:52:57+00:00"
+            "time": "2024-01-17T01:02:25+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4909,12 +4909,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mp3butcher/zend-test.git",
-                "reference": "ad9dcdfac3991242887c422a36ab1fe169f03b61"
+                "reference": "1ed44b24ef85c32c298b441cc75eb2beacd1fd04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mp3butcher/zend-test/zipball/ad9dcdfac3991242887c422a36ab1fe169f03b61",
-                "reference": "ad9dcdfac3991242887c422a36ab1fe169f03b61",
+                "url": "https://api.github.com/repos/mp3butcher/zend-test/zipball/1ed44b24ef85c32c298b441cc75eb2beacd1fd04",
+                "reference": "1ed44b24ef85c32c298b441cc75eb2beacd1fd04",
                 "shasum": ""
             },
             "require": {
@@ -4958,7 +4958,7 @@
             "support": {
                 "source": "https://github.com/mp3butcher/zend-test/tree/master"
             },
-            "time": "2024-01-16T22:43:23+00:00"
+            "time": "2024-01-17T00:30:09+00:00"
         }
     ],
     "aliases": [],
