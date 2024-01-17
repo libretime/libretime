@@ -150,6 +150,21 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         ]);
         $this->addElement($podcast_auto_smartblock);
 
+        $smartblockTrimOverbooked = new Zend_Form_Element_Checkbox('smartblockTrimOverbooked');
+        $smartblockTrimOverbooked->setDecorators([
+            'ViewHelper',
+            'Errors',
+            'Label',
+        ]);
+        $displaySmartblockTrimOverbookedValue = Application_Model_Preference::getSmartblockTrimOverbooked();
+        if ($displaySmartblockTrimOverbookedValue == '') {
+            $displaySmartblockTrimOverbookedValue = false;
+        }
+        $smartblockTrimOverbooked->addDecorator('Label', ['class' => 'enable-tunein']);
+        $smartblockTrimOverbooked->setLabel(_('Trim overbooked shows after autoloading?'));
+        $smartblockTrimOverbooked->setValue($displaySmartblockTrimOverbookedValue);
+        $this->addElement($smartblockTrimOverbooked);
+
         // TODO add and insert Podcast Smartblock and Playlist autogenerate options
 
         $third_party_api = new Zend_Form_Element_Radio('thirdPartyApi');

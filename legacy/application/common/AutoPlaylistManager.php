@@ -81,8 +81,11 @@ class AutoPlaylistManager
                 $si->addPlaylistToShow($outroplaylistid, false);
             }
             $si->setAutoPlaylistBuilt(true);
+
             // now trim excessively overbooked shows so the display isn't cluttered with myriads of red off-time blocks
-            $si->trimOverbooked();
+            if (Application_Model_Preference::getSmartblockTrimOverbooked()) {
+                $si->trimOverbooked();
+            }
         }
         Application_Model_Preference::setAutoPlaylistPollLock(microtime(true));
     }
