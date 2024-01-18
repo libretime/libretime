@@ -1399,6 +1399,16 @@ class Application_Model_Preference
         self::setValue('radio_page_display_login_button', $value);
     }
 
+    public static function getRadioPageDisabled()
+    {
+        return self::getValue('radio_page_disabled');
+    }
+
+    public static function setRadioPageDisabled($value)
+    {
+        self::setValue('radio_page_disabled', $value);
+    }
+
     public static function getLangTimezoneSetupComplete()
     {
         return self::getValue('lang_tz_setup_complete');

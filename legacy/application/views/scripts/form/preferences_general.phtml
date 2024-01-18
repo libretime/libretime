@@ -46,6 +46,9 @@
         <?php echo $this->element->getElement('thirdPartyApi')->render() ?>
 
         <?php echo $this->element->getElement('radioPageLoginButton')->renderViewHelper() ?>
-        <?php echo $this->element->getElement('radioPageLoginButton')->renderLabel() ?>
+        <?php echo $this->element->getElement('radioPageLoginButton')->renderLabel() . '<p/>' ?>
+
+        <?php echo $this->element->getElement('radioPageDisabled')->renderViewHelper() ?>
+        <?php echo $this->element->getElement('radioPageDisabled')->renderLabel() ?>
     </dl>
 </fieldset>

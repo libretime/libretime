@@ -207,6 +207,22 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $radioPageLoginButton->setValue($displayRadioPageLoginButtonValue);
         $this->addElement($radioPageLoginButton);
 
+        // add a checkbox for completely disabling the radio page
+        $radioPageDisabled = new Zend_Form_Element_Checkbox('radioPageDisabled');
+        $radioPageDisabled->setDecorators([
+            'ViewHelper',
+            'Errors',
+            'Label',
+        ]);
+        $radioPageDisabledValue = Application_Model_Preference::getRadioPageDisabled();
+        if ($radioPageDisabledValue == '') {
+            $radioPageDisabledValue = false;
+        }
+        $radioPageDisabled->addDecorator('Label', ['class' => 'enable-tunein']);
+        $radioPageDisabled->setLabel(_('Disable your public Radio Page and redirect to login?'));
+        $radioPageDisabled->setValue($radioPageDisabledValue);
+        $this->addElement($radioPageDisabled);
+
         $feature_preview_mode = new Zend_Form_Element_Radio('featurePreviewMode');
         $feature_preview_mode->setLabel(_('Feature Previews'));
         $feature_preview_mode->setMultiOptions([
