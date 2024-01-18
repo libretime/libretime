@@ -4,6 +4,12 @@ title: How to update liquidsoap to support AAC streaming
 
 This tutorials walks you though the steps required to replace the liquidsoap package with a version that supports AAC streaming.
 
+:::warning
+
+Replacing the liquidsoap package has security implications, since this will remove the package from the system's package manager. This means that the package manager will not be able to update the liquidsoap package in the future. This includes backports of security fixes.
+
+Libretime is NOT compatible with Liquidsoap 2.x at the time of this writing. Future versions of Libretime will support Liquidsoap 2.x which will render these instructions obsolete.
+
 :::info
 
 Lets assume you already [installed LibreTime using the native OS installer](../install/install-using-the-installer/). Execute the following commands as the libretime user.
