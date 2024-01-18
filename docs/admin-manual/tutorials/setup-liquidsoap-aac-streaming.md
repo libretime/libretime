@@ -49,6 +49,6 @@ sudo systemctl restart libretime.target
 
 :::warning
 
-If you want to update LibreTime in the future, you'll need to re-run the installer schript. This will replace the liquidsoap package with the version that doesn't support AAC streaming. Add --packages-excludes liquidsoap to the installer command to prevent this from happening.
+If you want to update LibreTime in the future, you'll need to re-run the installer schript. This will replace the liquidsoap package with the version that doesn't support AAC streaming. Add `--packages-excludes liquidsoap` to the installer command to prevent this from happening.
 
 :::
