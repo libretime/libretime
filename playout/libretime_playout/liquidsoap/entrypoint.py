@@ -1,3 +1,4 @@
+import dataclasses
 from pathlib import Path
 from typing import Optional, Tuple
 
@@ -17,14 +18,25 @@ templates = Environment(  # nosec
 templates.filters["quote"] = quote
 
 
+@dataclasses.dataclass
+class InfoVersion:
+    info: Info
+    version: Tuple[int, int, int]
+
+    def __init__(self, inf: Info, ver: Tuple[int, int, int]):
+        self.info = inf
+        self.version = ver
+
+
 def generate_entrypoint(
     log_filepath: Optional[Path],
-    hls_output_path: Optional[Path],
+    hls_output_path: Path,
     config: Config,
     preferences: StreamPreferences,
-    info: Info,
-    version: Tuple[int, int, int],
+    infoversion: InfoVersion,
 ) -> str:
+    info = infoversion.info
+    version = infoversion.version
     paths = {}
     paths["hls_output_path"] = hls_output_path.resolve()
     paths["lib_filepath"] = here / f"{version[0]}.{version[1]}/ls_script.liq"

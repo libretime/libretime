@@ -14,7 +14,7 @@ from libretime_shared.config import DEFAULT_ENV_PREFIX
 from libretime_shared.logging import setup_logger
 
 from ..config import Config
-from .entrypoint import generate_entrypoint
+from .entrypoint import InfoVersion, generate_entrypoint
 from .models import Info, StreamPreferences
 from .version import get_liquidsoap_version
 
@@ -56,8 +56,7 @@ def cli(
             output_path,
             config,
             preferences,
-            info,
-            version,
+            InfoVersion(info, version),
         ),
         encoding="utf-8",
     )
