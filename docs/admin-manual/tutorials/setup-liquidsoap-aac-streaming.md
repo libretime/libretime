@@ -12,7 +12,7 @@ Libretime is NOT compatible with Liquidsoap 2.x at the time of this writing. Fut
 
 :::info
 
-Lets assume you already [installed LibreTime using the native OS installer](../install/install-using-the-installer/). Execute the following commands as the libretime user.
+Lets assume you already [installed LibreTime using the native OS installer](../install/install-using-the-installer.md). Execute the following commands as the libretime user.
 
 :::
 
