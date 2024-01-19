@@ -73,20 +73,21 @@ TEST_STREAM_CONFIGS: List[Config] = [
             "hls": [
                 {
                     "enabled": True,
-                    "mount": "hls/main",
-                    "format": "mpegts",
+                    "manifest": "main",
                     "streams": [
                         {
-                            "fragment_prefix": "mp3low",
+                            "segments_prefix": "mp3low",
                             "format": "mpegts",
                             "codec": "libmp3lame",
-                            "bitrate": "64k",
+                            "bitrate": "32k",
+                            "sample_rate": "44100",
                         },
                         {
-                            "fragment_prefix": "mp3high",
+                            "segments_prefix": "mp3high",
                             "format": "mpegts",
                             "codec": "libmp3lame",
                             "bitrate": "128k",
+                            "sample_rate": "44100",
                         },
                     ],
                 }
@@ -113,20 +114,21 @@ TEST_STREAM_CONFIGS: List[Config] = [
             "hls": [
                 {
                     "enabled": True,
-                    "mount": "hls/main",
-                    "format": "mpegts",
+                    "manifest": "main",
                     "streams": [
                         {
-                            "fragment_prefix": "mp3low",
+                            "segments_prefix": "mp3low",
                             "format": "mpegts",
                             "codec": "libmp3lame",
-                            "bitrate": "64k",
+                            "bitrate": "32k",
+                            "sample_rate": "44100",
                         },
                         {
-                            "fragment_prefix": "mp3high",
+                            "segments_prefix": "mp3high",
                             "format": "mpegts",
                             "codec": "libmp3lame",
                             "bitrate": "128k",
+                            "sample_rate": "44100",
                         },
                     ],
                 }
