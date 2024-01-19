@@ -177,14 +177,12 @@ class HLSStream(BaseModel):
 class HLSOutput(BaseModel):
     kind: Literal["hls"] = "hls"
     enabled: bool = False
-    public_url: Optional[AnyUrl] = None
+    public_url: Optional[AnyUrlStr] = None
     segment_duration: float = 2.0
     segment_count: int = 5
     segments_overhead: int = 5
-    streams: List[HLSStream] = Field([], max_items=10)
+    streams: List[HLSStream] = Field([], max_length=10)
     manifest: str
-
-    _mount_no_leading_slash = no_leading_slash_validator("manifest")
 
 
 class IcecastOutput(BaseModel):

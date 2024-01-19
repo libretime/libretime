@@ -74,8 +74,8 @@ class Application_Model_StreamConfig
                     $prefix . 'port' => Config::get('general.public_url_raw')->getPort(),
                     $prefix . 'type' => 'x-mpegurl',
                     $prefix . 'bitrate' => '',
-                    #prefix manifest with webserver hls mount point
-                    $prefix . 'mount' => 'hls/'.$output['manifest'],
+                    // prefix manifest with webserver hls mount point
+                    $prefix . 'mount' => 'hls/' . $output['manifest'],
                 ]);
             }
         }
