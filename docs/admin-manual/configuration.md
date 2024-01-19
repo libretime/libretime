@@ -531,10 +531,6 @@ Then setup the composites streams with various **codec**s and **bitrate**s.
 
 For security purposes, liquidsoap produces hls files in the webserver mount point **hls/** instead of creating its own.
 
-**mount** setting must then be prefixed with **hls/**.
-
-The hls mount point is defined in /etc/nginx/sites-available/libretime.conf, redefine it to your need.
-
 ```yml
 stream:
   outputs:
@@ -543,27 +539,27 @@ stream:
     hls:
       - # Whether the output is enabled.
         # > default is false
-        enabled: false
-        # Output public url. If not defined, the value will be generated from
-        # the [general.public_url] hostname and the output port.
-        public_url:
-        # hls server mount point.
-        # > this field is REQUIRED
-        mount: "hls/main.m3u8"
-        # > format of the container must be one of ('mpegts', 'mp3', 'adts', 'mp4')
-        # > this field is REQUIRED
-        format: mpegts
-        # > segment_duration (default:2.0)
+        enabled: true
+        # > segment_duration  (default:2.0)
         segment_duration: 2.0
-        # > segments count: segments count buffered (default:5)
+        # > segments count  (default:5)
         segment_count: 5
-        # > segments_overhead: segments count kept past the playlist size for those listeners who are still listening on outdated segments. (default:5)
+        # > segments_overhead (default:5)
         segments_overhead: 5
+        # Output public url, If not defined, the value will be generated from
+        # the [general.public_url] hostname, the output port and mount.
+        public_url:
+        # hls mount point
+        # > this field is REQUIRED
+        manifest: main.m3u8
         streams:
           - # > prefix of generated fragment
             # > this field is REQUIRED
-            fragment_prefix: mp3_low
-            # > codec used for the stream, must be one of ( 'libmp3lame', 'flac', 'aac', 'libopus', 'libvorbis')
+            segments_prefix: mp3_low
+            # > must be one of ('mpegts', 'adts')
+            # > this field is REQUIRED
+            format: mpegts
+            # > codec must be one of ('libmp3lame', 'aac')
             # > this field is REQUIRED
             codec: libmp3lame
             # > bitrate of the stream
@@ -571,16 +567,11 @@ stream:
             bitrate: 32k
             # > sampling rate (default: 44100Hz)
             sample_rate: 44100
-          - fragment_prefix: mp3_med
-            codec: libmp3lame
-            bitrate: 128k
-          - fragment_prefix: mp3_hifi
+          - segments_prefix: mp3_hifi
+            format: mpegts
             codec: libmp3lame
             bitrate: 256k
-
-        # Whether the stream should be used for mobile devices.
-        # > default is false
-        mobile: false
+            sample_rate: 44100
 ```
 
 #### System

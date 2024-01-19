@@ -43,7 +43,7 @@ stream:
 
     icecast:
       - <<: *default_icecast_output
-        enabled: true
+        enabled: false
         mount: main.ogg
         public_url: https://localhost:8443/main.ogg
         audio:
@@ -51,7 +51,7 @@ stream:
           bitrate: 256
 
       - <<: *default_icecast_output
-        enabled: true
+        enabled: false
         mount: main.opus
         public_url: https://localhost:8443/main.opus
         audio:
@@ -59,7 +59,7 @@ stream:
           bitrate: 256
 
       - <<: *default_icecast_output
-        enabled: true
+        enabled: false
         mount: main.mp3
         public_url: https://localhost:8443/main.mp3
         audio:
@@ -67,45 +67,28 @@ stream:
           bitrate: 256
 
     hls:
-      - # Whether the output is enabled.
-        # > default is false
-        enabled: false
-        # > must be one of ('mpegts', 'mp3', 'adts', 'mp4')
-        # > this field is REQUIRED
-        format: mpegts
-        # > segment_duration  (default:2.0)
+      - enabled: true
         segment_duration: 2.0
-        # > segments count  (default:5)
         segment_count: 5
-        # > segments_overhead (default:5)
         segments_overhead: 5
-        # Output public url, If not defined, the value will be generated from
-        # the [general.public_url] hostname, the output port and mount.
         public_url:
-        # hls mount point
-        # > this field is REQUIRED
-        mount: hls/main
+        manifest: main.m3u8
         streams:
-          - # > prefix of generated fragment
-            # > this field is REQUIRED
-            fragment_prefix: mp3_low
-            # > codec must be one of ( 'libmp3lame', 'flac', 'aac', 'libopus', 'libvorbis')
-            # > this field is REQUIRED
+          - segments_prefix: mp3_low
             codec: libmp3lame
-            # > bitrate of the stream
-            # > this field is REQUIRED
             bitrate: 32k
-            # > sampling rate (default: 44100Hz)
             sample_rate: 44100
-          - fragment_prefix: mp3_med
+            format: mpegts
+          - segments_prefix: mp3_med
+            format: mpegts
             codec: libmp3lame
             bitrate: 128k
-          - fragment_prefix: mp3_hifi
+            sample_rate: 44100
+          - segments_prefix: mp3_hifi
+            format: mpegts
             codec: libmp3lame
             bitrate: 256k
-        # Whether the stream should be used for mobile devices.
-        # > default is false
-        mobile: false
+            sample_rate: 44100
 
     system:
       - enabled: false

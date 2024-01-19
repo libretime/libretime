@@ -7,9 +7,8 @@ general:
   # The internal API authentication key.
   # > this field is REQUIRED
   api_key: some_secret_api_key
-  # The Django API secret key. If not defined, the value of [general.api_key] will be
-  # used as fallback.
-  # > this field will be REQUIRED starting with LibreTime 4.0.0
+  # The Django API secret key.
+  # > this field is REQUIRED
   secret_key:
 
   # List of origins allowed to access resources on the server, the public url
@@ -32,7 +31,8 @@ general:
   auth: local
 
 storage:
-  # Path of the storage directory.
+  # Path of the storage directory. Make sure to update the Nginx configuration after
+  # updating the storage path.
   # > default is /srv/libretime
   path: /srv/libretime
 
@@ -320,10 +320,7 @@ stream:
     hls:
       - # Whether the output is enabled.
         # > default is false
-        enabled: false
-        # > must be one of ('mpegts', 'mp3', 'adts', 'mp4')
-        # > this field is REQUIRED
-        format: mpegts
+        enabled: true
         # > segment_duration  (default:2.0)
         segment_duration: 2.0
         # > segments count  (default:5)
@@ -335,12 +332,15 @@ stream:
         public_url:
         # hls mount point
         # > this field is REQUIRED
-        mount: hls/main
+        manifest: main.m3u8
         streams:
           - # > prefix of generated fragment
             # > this field is REQUIRED
-            fragment_prefix: mp3_low
-            # > codec must be one of ( 'libmp3lame', 'flac', 'aac', 'libopus', 'libvorbis')
+            segments_prefix: mp3_low
+            # > must be one of ('mpegts', 'adts')
+            # > this field is REQUIRED
+            format: mpegts
+            # > codec must be one of ('libmp3lame', 'aac')
             # > this field is REQUIRED
             codec: libmp3lame
             # > bitrate of the stream
@@ -348,15 +348,16 @@ stream:
             bitrate: 32k
             # > sampling rate (default: 44100Hz)
             sample_rate: 44100
-          - fragment_prefix: mp3_med
+          - segments_prefix: mp3_med
+            format: mpegts
             codec: libmp3lame
             bitrate: 128k
-          - fragment_prefix: mp3_hifi
+            sample_rate: 44100
+          - segments_prefix: mp3_hifi
+            format: mpegts
             codec: libmp3lame
             bitrate: 256k
-        # Whether the stream should be used for mobile devices.
-        # > default is false
-        mobile: false
+            sample_rate: 44100
 
     # System outputs.
     # > max items is 1
@@ -366,5 +367,9 @@ stream:
         enabled: false
         # System output kind.
         # > must be one of (alsa, ao, oss, portaudio, pulseaudio)
-        # > default is alsa
-        kind: alsa
+        # > default is pulseaudio
+        kind: pulseaudio
+
+        # System output device.
+        # > only available for kind=(alsa, pulseaudio)
+        device:
