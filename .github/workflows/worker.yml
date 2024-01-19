@@ -3,7 +3,7 @@ name: Worker
 on:
   workflow_dispatch:
   push:
-    branches: [main, stable]
+    branches: [main, stable-*]
     paths:
       - .github/workflows/_python.yml
       - .github/workflows/worker.yml
@@ -11,7 +11,7 @@ on:
       - tools/python*
 
   pull_request:
-    branches: [main, stable]
+    branches: [main, stable-*]
     paths:
       - .github/workflows/_python.yml
       - .github/workflows/worker.yml

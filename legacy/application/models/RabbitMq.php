@@ -1,5 +1,8 @@
 <?php
 
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
+
 class Application_Model_RabbitMq
 {
     public static $doPush = false;
@@ -16,7 +19,7 @@ class Application_Model_RabbitMq
     {
         $CC_CONFIG = Config::getConfig();
 
-        $conn = new \PhpAmqpLib\Connection\AMQPStreamConnection(
+        $conn = new AMQPStreamConnection(
             $CC_CONFIG['rabbitmq']['host'],
             $CC_CONFIG['rabbitmq']['port'],
             $CC_CONFIG['rabbitmq']['user'],
@@ -41,7 +44,7 @@ class Application_Model_RabbitMq
         // the way it is just so I don't accidentally break anything when I add the Analyzer code in. -- Albert, March 13, 2014
         $channel->exchange_declare($exchange, $exchangeType, false, true, $autoDeleteExchange);
 
-        $msg = new \PhpAmqpLib\Message\AMQPMessage($data, ['content_type' => 'text/plain']);
+        $msg = new AMQPMessage($data, ['content_type' => 'text/plain']);
 
         $channel->basic_publish($msg, $exchange);
         $channel->close();
@@ -97,7 +100,7 @@ class Application_Model_RabbitMq
     ) {
         $config = Config::getConfig();
 
-        $conn = new \PhpAmqpLib\Connection\AMQPStreamConnection(
+        $conn = new AMQPStreamConnection(
             $config['rabbitmq']['host'],
             $config['rabbitmq']['port'],
             $config['rabbitmq']['user'],
@@ -144,7 +147,7 @@ class Application_Model_RabbitMq
         // the way it is just so I don't accidentally break anything when I add the Analyzer code in. -- Albert, March 13, 2014
         $channel->exchange_declare($exchange, $exchangeType, false, true, $autoDeleteExchange);
 
-        $msg = new \PhpAmqpLib\Message\AMQPMessage($jsonData, ['content_type' => 'text/plain']);
+        $msg = new AMQPMessage($jsonData, ['content_type' => 'text/plain']);
 
         $channel->basic_publish($msg, $exchange);
         $channel->close();

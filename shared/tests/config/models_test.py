@@ -15,6 +15,7 @@ def test_general_config_timezone():
     defaults = {
         "public_url": "http://localhost:8080",
         "api_key": "api_key",
+        "secret_key": "secret_key",
     }
     GeneralConfig(**defaults, timezone="UTC")
     GeneralConfig(**defaults, timezone="Europe/Berlin")

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-09-11 01:51+0000\n"
+"POT-Creation-Date: 2023-12-25 01:55+0000\n"
 "PO-Revision-Date: 2022-07-14 09:18+0000\n"
 "Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/libretime/legacy/en_GB/>\n"
@@ -3910,12 +3910,12 @@ msgstr "Upload Time"
 msgid "None"
 msgstr "None"
 
-#: application/models/Preference.php:536
+#: application/models/Preference.php:538
 #, php-format
 msgid "Powered by %s"
 msgstr "Powered by %s"
 
-#: application/models/Preference.php:655
+#: application/models/Preference.php:657
 msgid "Select Country"
 msgstr "Select Country"
 

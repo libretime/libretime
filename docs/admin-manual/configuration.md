@@ -42,8 +42,8 @@ general:
   # The internal API authentication key.
   # > this field is REQUIRED
   api_key: "some_random_generated_secret!"
-  # The Django API secret key. If not defined, the value of [general.api_key] will be
-  # used as fallback.
+  # The Django API secret key.
+  # > this field is REQUIRED
   secret_key: "some_random_generated_secret!"
 
   # List of origins allowed to access resources on the server,
@@ -72,10 +72,31 @@ The `storage` section configure the project storage.
 
 ```yml
 storage:
-  # Path of the storage directory.
+  # Path of the storage directory. Make sure to update the Nginx configuration after
+  # updating the storage path.
   # > default is /srv/libretime
   path: "/srv/libretime"
 ```
+
+:::caution
+
+After editing the `storage.path` field, make sure to update the LibreTime Nginx configuration file with the new value.
+
+In the example below, we are changing the path from `/srv/libretime` to `/mnt/data`:
+
+```patch
+  ...
+
+  # Internal path for serving media files from the API.
+  location /api/_media {
+    internal;
+    # This alias path must match the 'storage.path' configuration field.
+-   alias /srv/libretime;
++   alias /mnt/data;
+  }
+```
+
+:::
 
 ## Database
 
@@ -526,11 +547,15 @@ stream:
     system:
       - # Whether the output is enabled.
         # > default is false
-        enabled: false
+        enabled: true
         # System output kind.
         # > must be one of (alsa, ao, oss, portaudio, pulseaudio)
-        # > default is alsa
-        kind: "alsa"
+        # > default is pulseaudio
+        kind: "pulseaudio"
+
+        # System output device.
+        # > only available for kind=(alsa, pulseaudio)
+        device: "alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink"
 ```
 
 ## LDAP
