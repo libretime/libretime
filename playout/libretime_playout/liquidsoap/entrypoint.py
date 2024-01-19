@@ -45,7 +45,7 @@ def generate_entrypoint(
         paths["log_filepath"] = log_filepath.resolve()
 
     return templates.get_template("entrypoint.liq.j2").render(
-        config=config.copy(),
+        config=config.model_copy(),
         preferences=preferences,
         info=info,
         paths=paths,

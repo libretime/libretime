@@ -9,6 +9,7 @@ def make_config(**kwargs) -> Config:
             "general": {
                 "public_url": "http://localhost:8080",
                 "api_key": "some_api_key",
+                "secret_key": "some_secret_key",
             },
             **kwargs,
         }
@@ -135,6 +136,17 @@ TEST_STREAM_CONFIGS: List[Config] = [
     make_config_with_stream(
         outputs={
             "system": [{"enabled": True, "kind": "pulseaudio"}],
+        }
+    ),
+    make_config_with_stream(
+        outputs={
+            "system": [
+                {
+                    "enabled": True,
+                    "kind": "pulseaudio",
+                    "device": "alsa_output.pci-0000_00_sink",
+                }
+            ],
         }
     ),
     make_config_with_stream(

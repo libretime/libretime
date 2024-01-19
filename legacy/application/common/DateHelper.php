@@ -461,9 +461,9 @@ class Application_Common_DateHelper
      * if no start or end parameter is passed start will be set to 1
      * in the past and end to now.
      *
-     * @param  string  startTimestamp Y-m-d H:i:s
-     * @param  string  endTImestamp Y-m-d H:i:s
-     * @param  string  timezone (ex UTC) of the start and end parameters
+     * @param string  startTimestamp Y-m-d H:i:s
+     * @param string  endTImestamp Y-m-d H:i:s
+     * @param string  timezone (ex UTC) of the start and end parameters
      * @param mixed $startTimestamp
      * @param mixed $endTimestamp
      * @param mixed $timezone

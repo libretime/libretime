@@ -13,8 +13,8 @@ LibreTime development workflows follow the standardized [C4 development process]
 - [2.4. Development Process](https://rfc.zeromq.org/spec/42/#24-development-process)
   - `16.` Maintainers MAY NOT merge incorrect patches.
 - [2.5. Branches and Releases](https://rfc.zeromq.org/spec/42/#25-branches-and-releases)
-  - `1.` The project SHALL have a development branch (`main`) that always holds the latest in-progress version and SHOULD always build. The project MAY have a bug fixes only branch (`stable`) that always holds the current stable version and SHOULD always build.
-  - `3.` To make a stable release a Maintainer shall tag the repository. Stable releases SHALL always be released from the repository `main` or `stable` branches.
+  - `1.` The project SHALL have a development branch (`main`) that always holds the latest in-progress version and SHOULD always build. The project MAY have a bug fixes only branch (`stable-*`) that always holds the current stable version and SHOULD always build.
+  - `3.` To make a stable release a Maintainer shall tag the repository. Stable releases SHALL always be released from the repository `main` or `stable-*` branches.
 
 ## Contribute financially
 

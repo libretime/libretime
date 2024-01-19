@@ -66,15 +66,15 @@ Options:
 
   --user USER, -u USER          User used to run LibreTime.
   --listen-port PORT, -p PORT   Listen port for LibreTime.
+
   --hls-output-path PATH        custom path where hls manifest will be produced
+  --storage-path PATH, -s PATH  Storage path for LibreTime.
 
   --in-place, -i                Install LibreTime in place.
 
   --no-setup-icecast            Do not setup Icecast.
   --no-setup-postgresql         Do not setup Postgresql.
   --no-setup-rabbitmq           Do not setup RabbitMQ.
-
-  --update-nginx                Update nginx files during upgrades.
 
 Environment variables:
 
@@ -102,11 +102,13 @@ EOF
 # > User used to run LibreTime.
 LIBRETIME_USER=${LIBRETIME_USER:-"libretime"}
 # > Listen port for LibreTime.
-LIBRETIME_LISTEN_PORT=${LIBRETIME_LISTEN_PORT:-"80"}
+LIBRETIME_LISTEN_PORT=${LIBRETIME_LISTEN_PORT:-"8080"}
 # > Public URL for LibreTime.
 LIBRETIME_PUBLIC_URL=${LIBRETIME_PUBLIC_URL:-}
 # > Timezone for LibreTime.
 LIBRETIME_TIMEZONE=${LIBRETIME_TIMEZONE:-}
+# > Storage path for LibreTime.
+LIBRETIME_STORAGE_PATH=${LIBRETIME_STORAGE_PATH:-"/srv/libretime"}
 
 # > Install LibreTime in editable mode.
 # > Will keep working files in the project directory.
@@ -117,9 +119,6 @@ LIBRETIME_SETUP_ICECAST=${LIBRETIME_SETUP_ICECAST:-true}
 LIBRETIME_SETUP_POSTGRESQL=${LIBRETIME_SETUP_POSTGRESQL:-true}
 # > Create a default rabbitmq user with a random password.
 LIBRETIME_SETUP_RABBITMQ=${LIBRETIME_SETUP_RABBITMQ:-true}
-
-# > Update nginx files during upgrades.
-LIBRETIME_UPDATE_NGINX=${LIBRETIME_UPDATE_NGINX:-false}
 
 # > Comma separated list of sections to exclude from packages list.
 LIBRETIME_PACKAGES_EXCLUDES=${LIBRETIME_PACKAGES_EXCLUDES:-}
@@ -137,13 +136,16 @@ while [[ $# -gt 0 ]]; do
       LIBRETIME_LISTEN_PORT=$2
       shift 2
       ;;
+    --storage-path | -s)
+      LIBRETIME_STORAGE_PATH=$2
+      shift 2
+      ;;
     --in-place | -i)
       LIBRETIME_INSTALL_IN_PLACE=true
       shift 1
       ;;
     --update-nginx)
-      LIBRETIME_UPDATE_NGINX=true
-      shift 1
+      error "the '--update-nginx' option was removed in 4.0.0"
       ;;
     --no-setup-icecast)
       LIBRETIME_SETUP_ICECAST=false
@@ -195,7 +197,6 @@ CONFIG_TMP_FILEPATH="$CONFIG_DIR/config.yml.tmp"
 CONFIG_EXAMPLE_FILEPATH="$SCRIPT_DIR/installer/config.yml"
 WORKING_DIR="/var/lib/libretime"
 LOG_DIR="/var/log/libretime"
-STORAGE_DIR="/srv/libretime"
 LEGACY_WEB_ROOT="/usr/share/libretime/legacy"
 
 if [[ -z "$LIBRETIME_HLS_CUSTOM_OUTPUT" ]]; then
@@ -269,15 +270,29 @@ template_file() {
   rm "$tmp_file"
 }
 
+# get_config <key...>
+get_config() {
+  query="/^${1}:/\n"
+  while [[ $# -gt 1 ]]; do
+    shift
+    query+="/ \+${1}:/\n"
+  done
+  query+="q"
+
+  echo -e "$query" | ed --quiet "$CONFIG_FILEPATH" |
+    tail -n 2 |
+    grep "$1" |
+    awk -F ': ' '{ print $2 }'
+}
+
 # set_config <value> <key...>
 set_config() {
   value="${1}" && shift
 
-  # Build sed query
   query="/^${1}:/\n"
   while [[ $# -gt 1 ]]; do
     shift
-    query+="/${1}:/\n"
+    query+="/ \+${1}:/\n"
   done
   query+="s|\(${1}:\).*|\1 ${value}|\n"
   query+="wq"
@@ -474,8 +489,15 @@ if $is_first_install; then
     set_config "$LIBRETIME_TIMEZONE"  general timezone
   fi
 
-  mkdir_and_chown "$LIBRETIME_USER" "$STORAGE_DIR"
-  set_config "$STORAGE_DIR" storage path
+  mkdir_and_chown "$LIBRETIME_USER" "$LIBRETIME_STORAGE_PATH"
+  set_config "$LIBRETIME_STORAGE_PATH" storage path
+else
+  if [[ "$LIBRETIME_STORAGE_PATH" != "$(get_config storage path)" ]]; then
+    error \
+      "configuration mismatch between" \
+      "the installer storage path option ('$LIBRETIME_STORAGE_PATH') and" \
+      "the configuration file 'storage.path' field ('$(get_config storage path)')"
+  fi
 fi
 
 # PostgreSQL
@@ -761,36 +783,27 @@ template_file cp_if_different \
 
 section "Nginx"
 
-if $is_first_install || $LIBRETIME_UPDATE_NGINX; then
+if $is_first_install; then
   install_packages nginx
 
   info "disabling nginx default site"
   rm -f "/etc/nginx/sites-enabled/default"
 fi
 
-nginx_config_template_args=(
-  "${SCRIPT_DIR}/installer/nginx/libretime.conf"
-  "/etc/nginx/sites-available/libretime.conf"
-    sed
-    -e "s|@@LISTEN_PORT@@|${LIBRETIME_LISTEN_PORT}|g"
-    -e "s|@@LEGACY_WEB_ROOT@@|${LEGACY_WEB_ROOT}|g"
-    -e "s|@@HLS_PLAYOUT_OUTPUT@@|${HLS_PLAYOUT_OUTPUT}|g"
-)
+info "deploying libretime nginx config"
+template_file cp_if_different \
+  "${SCRIPT_DIR}/installer/nginx/libretime.conf" \
+  "/etc/nginx/sites-available/libretime.conf" \
+  sed \
+  -e "s|@@LISTEN_PORT@@|${LIBRETIME_LISTEN_PORT}|g" \
+  -e "s|@@LEGACY_WEB_ROOT@@|${LEGACY_WEB_ROOT}|g" \
+  -e "s|@@STORAGE_PATH@@|${LIBRETIME_STORAGE_PATH}|g" \
+  -e "s|@@HLS_PLAYOUT_OUTPUT@@|${HLS_PLAYOUT_OUTPUT}|g"
 
-if $is_first_install || $LIBRETIME_UPDATE_NGINX; then
-  info "deploying libretime nginx config"
-  template_file cp_if_different "${nginx_config_template_args[@]}"
-else
-  info "printing libretime nginx config differences"
-  template_file diff_if_exists "${nginx_config_template_args[@]}"
-fi
-
-if $is_first_install || $LIBRETIME_UPDATE_NGINX; then
-  info "enabling libretime nginx config"
-  ln -s --force \
-    "/etc/nginx/sites-available/libretime.conf" \
-    "/etc/nginx/sites-enabled/libretime.conf"
-fi
+info "enabling libretime nginx config"
+ln -s --force \
+  "/etc/nginx/sites-available/libretime.conf" \
+  "/etc/nginx/sites-enabled/libretime.conf"
 
 # Finalize
 ########################################################################################

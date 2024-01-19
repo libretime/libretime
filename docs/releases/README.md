@@ -30,3 +30,4 @@ New releases target the current stable distributions release, and development sh
 | Versions     |              |            |              |             |
 | 3.0.x        |  deprecated  | deprecated | recommended  | recommended |
 | 3.1.x        |              |            | recommended  | recommended |
+| 4.0.x        |              |            | recommended  | recommended |

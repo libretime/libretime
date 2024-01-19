@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-09-11 01:51+0000\n"
+"POT-Creation-Date: 2023-12-25 01:55+0000\n"
 "PO-Revision-Date: 2015-09-05 08:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Czech (Czech Republic)\n"
@@ -3893,12 +3893,12 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: application/models/Preference.php:536
+#: application/models/Preference.php:538
 #, php-format
 msgid "Powered by %s"
 msgstr ""
 
-#: application/models/Preference.php:655
+#: application/models/Preference.php:657
 msgid "Select Country"
 msgstr "Vyberte zemi"
 

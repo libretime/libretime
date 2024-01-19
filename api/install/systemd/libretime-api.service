@@ -18,6 +18,7 @@ ProtectKernelTunables=true
 ProtectProc=invisible
 ProtectSystem=full
 
+Environment=PYTHONOPTIMIZE=2
 Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
 Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/api.log
 
@@ -25,7 +26,7 @@ Type=notify
 KillMode=mixed
 ExecStart=@@VENV_DIR@@/bin/gunicorn \
         --workers 4 \
-        --worker-class uvicorn.workers.UvicornWorker \
+        --worker-class libretime_api.gunicorn.Worker \
         --log-file - \
         --bind unix:/run/libretime-api.sock \
         libretime_api.asgi

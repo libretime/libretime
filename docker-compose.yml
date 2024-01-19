@@ -31,7 +31,7 @@ services:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
       - libretime_playout:/app
     environment:
-      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
 
   liquidsoap:
     image: ghcr.io/libretime/libretime-playout:${LIBRETIME_VERSION:-latest}
@@ -49,7 +49,7 @@ services:
       - libretime_playout:/app
       - libretime_playout_hls:/var/playout/hls
     environment:
-      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
 
   analyzer:
     image: ghcr.io/libretime/libretime-analyzer:${LIBRETIME_VERSION:-latest}
@@ -62,7 +62,7 @@ services:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
       - libretime_storage:/srv/libretime
     environment:
-      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
 
   worker:
     image: ghcr.io/libretime/libretime-worker:${LIBRETIME_VERSION:-latest}
@@ -74,7 +74,7 @@ services:
     volumes:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
     environment:
-      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
 
   api:
     image: ghcr.io/libretime/libretime-api:${LIBRETIME_VERSION:-latest}
@@ -104,7 +104,7 @@ services:
   nginx:
     image: nginx
     ports:
-      - 8080:80
+      - 8080:8080
     depends_on:
       - legacy
     volumes:

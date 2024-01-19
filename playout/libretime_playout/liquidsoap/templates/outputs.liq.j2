@@ -156,15 +156,36 @@ output.shoutcast(
 )
 {%- endmacro -%}
 
-{% for output in config.stream.outputs.system -%}
-{% if output.enabled -%}
-# {{ output.kind.value }}:{{ loop.index }}
+{#-
+  Build a system output configuration.
+#}
+{%- macro output_system(output_id, output) -%}
+# {{ output.kind.value }}:{{ output_id }}
 %ifndef output.{{ output.kind.value }}
 log("output.{{ output.kind.value }} is not defined!")
 %endif
 %ifdef output.{{ output.kind.value }}
-output.{{ output.kind.value }}(id="{{ output.kind.value }}:{{ loop.index }}", s)
+output.{{ output.kind.value }}(
+  id="{{ output.kind.value }}:{{ output_id }}",
+{%- if output.kind.value == "alsa" %}
+{%- if output.device is not none %}
+  device="{{ output.device }}",
+{%- endif %}
+{%- elif output.kind.value == "pulseaudio" %}
+{%- if output.device is not none %}
+  device="{{ output.device }}",
+{%- endif %}
+{%- endif %}
+  s
+)
 %endif
+{%- endmacro -%}
+
+{# ############################### #}
+
+{%- for output in config.stream.outputs.system -%}
+{% if output.enabled -%}
+{{ output_system(loop.index, output) }}
 
 {% endif -%}
 {% endfor -%}
@@ -177,6 +198,7 @@ output.{{ output.kind.value }}(id="{{ output.kind.value }}:{{ loop.index }}", s)
 {% endfor -%}
 
 {% for output in config.stream.outputs.icecast -%}
+
 {% if output.enabled -%}
 {{ output_icecast(loop.index, output) }}
 
