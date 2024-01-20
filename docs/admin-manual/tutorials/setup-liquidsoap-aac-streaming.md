@@ -10,6 +10,8 @@ Replacing the liquidsoap package has security implications, since this will remo
 
 Libretime is NOT compatible with Liquidsoap 2.x at the time of this writing. Future versions of Libretime will support Liquidsoap 2.x which will render these instructions obsolete.
 
+:::
+
 :::info
 
 Lets assume you already [installed LibreTime using the native OS installer](../install/install-using-the-installer.md). Execute the following commands as the libretime user.
