@@ -157,9 +157,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'Label',
         ]);
         $displayScheduleTrimOverbookedValue = Application_Model_Preference::getScheduleTrimOverbooked();
-        if ($displayScheduleTrimOverbookedValue == '') {
-            $displayScheduleTrimOverbookedValue = false;
-        }
         $scheduleTrimOverbooked->addDecorator('Label', ['class' => 'enable-tunein']);
         $scheduleTrimOverbooked->setLabel(_('Trim overbooked shows after autoloading?'));
         $scheduleTrimOverbooked->setValue($displayScheduleTrimOverbookedValue);

@@ -1401,7 +1401,11 @@ class Application_Model_Preference
 
     public static function getScheduleTrimOverbooked()
     {
-        return self::getValue('schedule_trim_overbooked');
+        $displayScheduleTrimOverbookedValue = self::getValue('schedule_trim_overbooked');
+        if ($displayScheduleTrimOverbookedValue == '') {
+            $displayScheduleTrimOverbookedValue = false;
+        }
+        return $displayScheduleTrimOverbookedValue;
     }
 
     public static function setScheduleTrimOverbooked($value)
