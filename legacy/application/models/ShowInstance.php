@@ -853,10 +853,10 @@ SQL;
         foreach ($this->getShowListContent('UTC') as $item) {
             $itemStart = new DateTime($item['starts'], new DateTimeZone('UTC'));
             if ($itemStart->getTimestamp() > $showEnd->getTimestamp()) {
-                $removeItems[] = $item['id']; 
+                $removeItems[] = $item['id'];
             }
         }
-        
+
         // now remove the items
         $sql = <<<'SQL'
         DELETE FROM cc_schedule
