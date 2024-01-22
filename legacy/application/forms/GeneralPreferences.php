@@ -215,9 +215,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'Label',
         ]);
         $radioPageDisabledValue = Application_Model_Preference::getRadioPageDisabled();
-        if ($radioPageDisabledValue == '') {
-            $radioPageDisabledValue = false;
-        }
         $radioPageDisabled->addDecorator('Label', ['class' => 'enable-tunein']);
         $radioPageDisabled->setLabel(_('Disable the public radio page and redirect to the login page?'));
         $radioPageDisabled->setValue($radioPageDisabledValue);

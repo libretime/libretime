@@ -1401,7 +1401,11 @@ class Application_Model_Preference
 
     public static function getRadioPageDisabled()
     {
-        return self::getValue('radio_page_disabled');
+        $radioPageDisabledValue = self::getValue('radio_page_disabled');
+        if ($radioPageDisabledValue == '') {
+            $radioPageDisabledValue = false;
+        }
+        return $radioPageDisabledValue;
     }
 
     public static function setRadioPageDisabled($value)
