@@ -1405,6 +1405,7 @@ class Application_Model_Preference
         if ($displayScheduleTrimOverbookedValue == '') {
             $displayScheduleTrimOverbookedValue = false;
         }
+
         return $displayScheduleTrimOverbookedValue;
     }
 
