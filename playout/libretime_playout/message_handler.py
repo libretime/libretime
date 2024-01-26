@@ -21,7 +21,7 @@ class MessageHandler(ConsumerMixin):
         self,
         connection: Connection,
         fetch_queue: "ThreadQueue[Dict[str, Any]]",
-        recorder_queue: ThreadQueue[Dict[str, Any]],
+        recorder_queue: "ThreadQueue[Dict[str, Any]]",
     ):
         self.connection = connection
 
