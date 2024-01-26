@@ -7,7 +7,7 @@ class RabbitMqPlugin extends Zend_Controller_Plugin_Abstract
         if (Application_Model_RabbitMq::$doPush) {
             $md = ['schedule' => Application_Model_Schedule::getSchedule()];
             Application_Model_RabbitMq::SendMessageToPypo('update_schedule', $md);
-            Application_Model_RabbitMq::SendMessageToShowRecorder("update_recorder_schedule");
+            Application_Model_RabbitMq::SendMessageToShowRecorder('update_recorder_schedule');
         }
 
         if (memory_get_peak_usage() > 30 * 2 ** 20) {

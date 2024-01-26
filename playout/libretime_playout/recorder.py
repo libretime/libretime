@@ -74,7 +74,7 @@ class ShowRecorder(Thread):
         length = str(self.filelength)
         filename = self.start_time
         filename = filename.replace(" ", "-")
-        
+
         record_file_format = self.config.playout.record_file_format
 
         joined_path = os.path.join(RECORD_DIR, filename)
@@ -174,7 +174,7 @@ class Recorder(Thread):
     ):
         Thread.__init__(self)
         self.legacy_client = legacy_client
-        self.liq_client =liq_client
+        self.liq_client = liq_client
         self.config = config
         self.sr = None
         self.shows_to_record = {}
@@ -305,7 +305,7 @@ class Recorder(Thread):
                             start_time_formatted,
                             self.config,
                             self.legacy_client,
-                            self.liq_client
+                            self.liq_client,
                         )
                         self.sr.start()
                         break

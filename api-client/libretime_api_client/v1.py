@@ -95,13 +95,6 @@ class BaseApiClient(AbstractApiClient):
             **kwargs,
         )
 
-    def get_shows_to_record(self, **kwargs) -> Response:
-        return self._request(
-            "GET",
-            "/api/recorded-shows",
-            **kwargs,
-        )
-
     def notify_webstream_data(self, media_id, data, **kwargs) -> Response:
         return self._request(
             "POST",

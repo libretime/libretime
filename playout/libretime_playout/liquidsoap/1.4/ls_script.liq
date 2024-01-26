@@ -204,7 +204,7 @@ def start_recording(arguments)
     log("sources.start_recording #{args}")
     recording_length = float_of_string(default=0.,args["length"])
     recording = max_duration(recording_length,s)
-        
+
     def enc()
         if args["format"] == "mp3" then
             %mp3
@@ -213,7 +213,7 @@ def start_recording(arguments)
         end
     end
     enc = enc()
-    
+
     output.file(enc, args["filename"],fallible=true, recording)
 end
 
