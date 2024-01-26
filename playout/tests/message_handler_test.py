@@ -5,4 +5,4 @@ from libretime_playout.message_handler import MessageListener
 
 
 def test_message_listener(config: Config):
-    MessageListener(config, Queue())
+    MessageListener(config, Queue(), Queue())
