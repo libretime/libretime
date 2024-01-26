@@ -1268,6 +1268,32 @@ class Application_Model_Preference
         self::setValue('replay_gain_modifier', $rg_modifier, true);
     }
 
+    public static function GetMasterMePreset()
+    {
+        return self::getValue('master_me_preset');
+    }
+
+    public static function SetMasterMePreset($preset)
+    {
+        self::setValue('master_me_preset', $preset);
+    }
+
+    public static function GetMasterMeLufs()
+    {
+        $mm_lufs = self::getValue('master_me_lufs');
+
+        if ($mm_lufs === '') {
+            return '0';
+        }
+
+        return $mm_lufs;
+    }
+
+    public static function SetMasterMeLufs($mm_lufs)
+    {
+        self::setValue('master_me_lufs', $mm_lufs);
+    }
+
     public static function SetHistoryItemTemplate($value)
     {
         self::setValue('history_item_template', $value);

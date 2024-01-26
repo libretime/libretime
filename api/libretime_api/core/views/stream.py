@@ -19,6 +19,8 @@ class StreamPreferencesView(views.APIView):
                     "input_fade_transition",
                     "message_format",
                     "message_offline",
+                    "master_me_preset",
+                    "master_me_lufs",
                 }
             )
         )
