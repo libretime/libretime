@@ -398,6 +398,8 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
             "input_fade_transition": 2.0,
             "message_format": 0,
             "message_offline": "",
+            "master_me_lufs": -16,
+            "master_me_preset": 0,
         },
     )
 

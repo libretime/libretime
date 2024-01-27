@@ -33,6 +33,8 @@ def test_generate_entrypoint(stream_config: Config, version, snapshot):
                 input_fade_transition=0.0,
                 message_format=0,
                 message_offline="LibreTime - offline",
+                master_me_lufs=-16,
+                master_me_preset=0,
             ),
             info=Info(
                 station_name="LibreTime",
