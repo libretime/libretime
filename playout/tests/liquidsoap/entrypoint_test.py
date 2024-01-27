@@ -65,6 +65,8 @@ def test_liquidsoap_syntax(tmp_path: Path, stream_config):
                 input_fade_transition=0.0,
                 message_format=0,
                 message_offline="LibreTime - offline",
+                master_me_lufs=-16,
+                master_me_preset=0,
             ),
             info=Info(
                 station_name="LibreTime",
@@ -104,6 +106,8 @@ def test_liquidsoap_unsupported_output_aac(tmp_path: Path):
                 input_fade_transition=0.0,
                 message_format=0,
                 message_offline="LibreTime - offline",
+                master_me_lufs=-16,
+                master_me_preset=0,
             ),
             info=Info(
                 station_name="LibreTime",
