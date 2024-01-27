@@ -9,6 +9,8 @@ def test_stream_preferences_get(db, api_client: APIClient):
         "input_fade_transition": 0.0,
         "message_format": 0,
         "message_offline": "LibreTime - offline",
+        "master_me_lufs": -16,
+        "master_me_preset": 0,
     }
 
 
