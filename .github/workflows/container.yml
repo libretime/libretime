@@ -24,14 +24,18 @@ jobs:
 
       - name: Update Docker Hub description
         if: github.event_name == 'push'
-        uses: peter-evans/dockerhub-description@v3
+        uses: peter-evans/dockerhub-description@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: libretime/libretime-${{ matrix.target }}
           readme-filepath: ./README.md
 
-      - uses: docker/metadata-action@v5
+      # This cannot be upgraded until we develop a workaround for medata-action
+      # appending cwd:// to the bake-file output. 5.5 is not compatible with
+      # upload-artifact
+      # https://github.com/docker/metadata-action/issues/381
+      - uses: docker/metadata-action@v5.4.0
         id: meta
         with:
           bake-target: ${{ matrix.target }}
