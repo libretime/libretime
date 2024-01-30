@@ -156,6 +156,11 @@ class PreferenceController extends Zend_Controller_Action
         $setting = Application_Model_StreamSetting::getStreamSetting();
         $form->setSetting($setting);
 
+        if ($num_of_stream > MAX_NUM_STREAMS) {
+            Logging::error('Your streams count (' . $num_of_stream . ') exceed the maximum, some of them will not be displayed');
+            $num_of_stream = MAX_NUM_STREAMS;
+        }
+
         for ($i = 1; $i <= $num_of_stream; ++$i) {
             $subform = new Application_Form_StreamSettingSubForm();
             $subform->setPrefix($i);
