@@ -34,6 +34,7 @@ jobs:
       # This cannot be upgraded until we develop a workaround for medata-action
       # appending cwd:// to the bake-file output. 5.5 is not compatible with
       # upload-artifact
+      # https://github.com/docker/metadata-action/issues/381
       - uses: docker/metadata-action@v5.4
         id: meta
         with:
