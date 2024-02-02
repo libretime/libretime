@@ -472,7 +472,6 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             if (!empty($file) && $file['import_status'] == CcFiles::IMPORT_STATUS_PENDING) {
                 $ingested = -1;
             }
-            $itemdesc = $item->get_description() ? $item->get_description() : '';
 
             array_push($episodesArray, [
                 'podcast_id' => $podcast->getDbId(),
