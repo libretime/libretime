@@ -150,6 +150,18 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         ]);
         $this->addElement($podcast_auto_smartblock);
 
+        $scheduleTrimOverbooked = new Zend_Form_Element_Checkbox('scheduleTrimOverbooked');
+        $scheduleTrimOverbooked->setDecorators([
+            'ViewHelper',
+            'Errors',
+            'Label',
+        ]);
+        $displayScheduleTrimOverbookedValue = Application_Model_Preference::getScheduleTrimOverbooked();
+        $scheduleTrimOverbooked->addDecorator('Label');
+        $scheduleTrimOverbooked->setLabel(_('Trim overbooked shows after autoloading?'));
+        $scheduleTrimOverbooked->setValue($displayScheduleTrimOverbookedValue);
+        $this->addElement($scheduleTrimOverbooked);
+
         // TODO add and insert Podcast Smartblock and Playlist autogenerate options
 
         $third_party_api = new Zend_Form_Element_Radio('thirdPartyApi');
