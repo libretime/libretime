@@ -4,6 +4,7 @@ URL Configuration
 For more information on this file, see
 https://docs.djangoproject.com/en/3.2/topics/http/urls/
 """
+
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
