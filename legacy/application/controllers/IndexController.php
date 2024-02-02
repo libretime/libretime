@@ -10,10 +10,17 @@ class IndexController extends Zend_Controller_Action
         $baseUrl = Config::getBasePath();
         if (Application_Model_Preference::getRadioPageDisabled()) {
             $this->_helper->redirector->gotoUrl($baseUrl . 'login');
-        } else {
-            $this->view->headTitle(Application_Model_Preference::GetHeadTitle());
-            $this->view->headScript()->appendFile(Assets::url('js/libs/jquery-1.8.3.min.js'), 'text/javascript');
 
+            return;
+        }
+
+        $this->view->headTitle(Application_Model_Preference::GetHeadTitle());
+        $this->view->headScript()->appendFile(Assets::url('js/libs/jquery-1.8.3.min.js'), 'text/javascript');
+
+        $this->view->headScript()->appendFile(Assets::url('js/i18n/jquery.i18n.js'), 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl . 'locale/general-translation-table', 'text/javascript');
+        $this->view->headScript()->appendScript('$.i18n.setDictionary(general_dict)');
+        $this->view->headScript()->appendScript("var baseUrl='{$baseUrl}'");
             $this->view->headScript()->appendFile(Assets::url('js/i18n/jquery.i18n.js'), 'text/javascript');
             $this->view->headScript()->appendFile($baseUrl . 'locale/general-translation-table', 'text/javascript');
             $this->view->headScript()->appendScript('$.i18n.setDictionary(general_dict)');

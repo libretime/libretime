@@ -17,6 +17,12 @@ Setting a higher bitrate for your output stream will only benefit your listeners
 
 :::
 
+:::caution
+
+The liquidsoap playout handler version 1.4.3 shipped in Debian Bullseye and 1.4.1 shipped in Ubuntu Focal doesn't support AAC streaming output. If you want to stream AAC, you will need to replace the liquidsoap package with a version that supports AAC. See this [tutorial](./tutorials/setup-liquidsoap-aac-streaming.md) for more information.
+
+:::
+
 ## Icecast
 
 ### UTF-8 metadata in Icecast MP3 streams
