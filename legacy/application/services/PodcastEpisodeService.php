@@ -292,7 +292,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      */
     public static function getStuckPendingImports()
     {
-        $timeout = gmdate(DEFAULT_TIMESTAMP_FORMAT, intval(microtime(true)) - self::PENDING_EPISODE_TIMEOUT_SECONDS);
+        $timeout = gmdate(DEFAULT_TIMESTAMP_FORMAT, time() - self::PENDING_EPISODE_TIMEOUT_SECONDS);
         $episodes = PodcastEpisodesQuery::create()
             ->filterByDbFileId()
             ->find();
@@ -482,7 +482,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
                 // From the RSS spec best practices:
                 // 'An item's author element provides the e-mail address of the person who wrote the item'
                 'author' => $this->_buildAuthorString($item),
-                'description' => htmlspecialchars($itemdesc),
+                'description' => htmlspecialchars($item->get_description() ?? ''),
                 'pub_date' => $item->get_gmdate(),
                 'link' => $url,
                 'enclosure' => $enclosure,
