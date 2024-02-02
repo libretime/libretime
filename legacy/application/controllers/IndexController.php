@@ -21,10 +21,6 @@ class IndexController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl . 'locale/general-translation-table', 'text/javascript');
         $this->view->headScript()->appendScript('$.i18n.setDictionary(general_dict)');
         $this->view->headScript()->appendScript("var baseUrl='{$baseUrl}'");
-        $this->view->headScript()->appendFile(Assets::url('js/i18n/jquery.i18n.js'), 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'locale/general-translation-table', 'text/javascript');
-        $this->view->headScript()->appendScript('$.i18n.setDictionary(general_dict)');
-        $this->view->headScript()->appendScript("var baseUrl='{$baseUrl}'");
 
         // jplayer
         $this->view->headScript()->appendFile(Assets::url('js/jplayer/jquery.jplayer.min.js'), 'text/javascript');
