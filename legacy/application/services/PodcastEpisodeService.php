@@ -292,7 +292,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      */
     public static function getStuckPendingImports()
     {
-        $timeout = gmdate(DEFAULT_TIMESTAMP_FORMAT, time() - self::PENDING_EPISODE_TIMEOUT_SECONDS);
+        $timeout = gmdate(DEFAULT_TIMESTAMP_FORMAT, intval(microtime(true)) - self::PENDING_EPISODE_TIMEOUT_SECONDS);
         $episodes = PodcastEpisodesQuery::create()
             ->filterByDbFileId()
             ->find();
