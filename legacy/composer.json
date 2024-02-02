@@ -59,7 +59,7 @@
   },
   "require-dev": {
     "phpunit/dbunit": "^2.0",
-    "phpunit/phpunit": "^5.7",
+    "phpunit/phpunit": "^11.0",
     "zf1s/zend-test": "^1.13"
   }
 }
