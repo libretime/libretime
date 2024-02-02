@@ -844,4 +844,33 @@ SQL;
     {
         return $this->getShow()->isRepeating();
     }
+
+    public function trimOverbooked()
+    {
+        // Remove all scheduled items that start time after the show has ended
+        $sql = <<<'SQL'
+        delete
+        from
+            cc_schedule
+        where
+            id in (
+            select
+                s.id
+            from
+                cc_schedule s
+            left join cc_show_instances si on
+                s.instance_id = si.id
+            where
+                si.id = :instance_id
+                and si.ends < s.starts
+                and s.playout_status = 0 -- playout_status = 0 double check that si.ends < s.starts
+        );
+        SQL;
+
+        return Application_Common_Database::prepareAndExecute(
+            $sql,
+            [':instance_id' => $this->_instanceId],
+            'execute'
+        );
+    }
 }

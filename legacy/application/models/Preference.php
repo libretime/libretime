@@ -1399,6 +1399,26 @@ class Application_Model_Preference
         self::setValue('radio_page_display_login_button', $value);
     }
 
+    public static function getScheduleTrimOverbooked()
+    {
+        return boolval(self::getValue('schedule_trim_overbooked', false));
+    }
+
+    public static function setScheduleTrimOverbooked($value)
+    {
+        self::setValue('schedule_trim_overbooked', $value);
+    }
+
+    public static function getRadioPageDisabled()
+    {
+        return boolval(self::getValue('radio_page_disabled', false));
+    }
+
+    public static function setRadioPageDisabled($value)
+    {
+        self::setValue('radio_page_disabled', $value);
+    }
+
     public static function getLangTimezoneSetupComplete()
     {
         return self::getValue('lang_tz_setup_complete');
