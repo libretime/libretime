@@ -1,6 +1,7 @@
 """
 Python part of radio playout (pypo)
 """
+
 import logging
 import os
 import sys
