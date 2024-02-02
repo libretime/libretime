@@ -36,7 +36,7 @@ def probe_replaygain(filepath: Path) -> Optional[float]:
     """
     Probe replaygain will probe the given audio file and return the replaygain if available.
     """
-    cmd = _ffprobe("-i", filepath)
+    cmd = _ffprobe("-i", filepath, errors="backslashreplace")
 
     track_gain_match = _PROBE_REPLAYGAIN_RE.search(cmd.stderr)
 
