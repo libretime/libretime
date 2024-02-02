@@ -23,10 +23,7 @@ to Sunday.
 
 :::note
 
-The **Station Timezone** setting can not be modified here and is set in the master
-config file. Please consult
-[this admin manual section](../admin-manual/configuration/#general) on how to
-change it.
+The **Station Timezone** setting can not be modified on this page. It is set in the [configuration file](../admin-manual/configuration/#general).
 
 :::
 
@@ -71,10 +68,7 @@ _Advanced Configuration_ section of this book).
 
 :::note
 
-The **Allowed CORS URLs** you can still see in this screenshot was moved to the
-master config file. Please consult
-[this admin manual section](../admin-manual/configuration/#general) on how to
-change it.
+The **Allowed CORS URLs** you can still see in this screenshot was moved to the [configuration file](../admin-manual/configuration/#general).
 
 :::
 
