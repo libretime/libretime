@@ -45,16 +45,16 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract
         $isPreRelease = $isGitRelease || array_key_exists(4, $currentParts);
 
         // we are always interested in a major when we pre-release, hence the isPreRelease part
-        $majorCandidates = SemVer::satisfiedBy($latest, sprintf('>=%1$s-stable', $currentParts[0] + ($isPreRelease ? 0 : 1)));
-        $minorCandidates = SemVer::satisfiedBy($latest, sprintf('~%1$s.%2$s', $currentParts[0], $currentParts[1] + 1));
-        $patchCandidates = SemVer::satisfiedBy($latest, sprintf('>=%1$s.%2$s.%3$s <%1$s.%3$s', $currentParts[0], $currentParts[1], $currentParts[2] + 1));
+        $majorCandidates = Semver::satisfiedBy($latest, sprintf('>=%1$s-stable', $currentParts[0] + ($isPreRelease ? 0 : 1)));
+        $minorCandidates = Semver::satisfiedBy($latest, sprintf('~%1$s.%2$s', $currentParts[0], $currentParts[1] + 1));
+        $patchCandidates = Semver::satisfiedBy($latest, sprintf('>=%1$s.%2$s.%3$s <%1$s.%3$s', $currentParts[0], $currentParts[1], $currentParts[2] + 1));
         $hasMajor = !empty($majorCandidates);
         $hasMinor = !empty($minorCandidates);
         $hasPatch = !empty($patchCandidates);
         $hasMultiMajor = count($majorCandidates) > 1;
 
         if ($isPreRelease) {
-            $stableVersions = SemVer::satisfiedBy($latest, sprintf('>=%1$s.%2$s.%3$s-stable', $currentParts[0], $currentParts[1], $currentParts[2]));
+            $stableVersions = Semver::satisfiedBy($latest, sprintf('>=%1$s.%2$s.%3$s-stable', $currentParts[0], $currentParts[1], $currentParts[2]));
             // git releases are never interested in a stable version :P
             $hasStable = !empty($stableVersions) && !$isGitRelease;
             // no warning if no major release available, orange warning if you are on unreleased code
@@ -71,7 +71,7 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract
         } else {
             $class = 'uptodate';
         }
-        $latest = SemVer::rsort($latest);
+        $latest = Semver::rsort($latest);
         $highestVersion = $latest[0];
 
         $data = (object) [
