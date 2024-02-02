@@ -100,12 +100,12 @@ def cli(
     logger.info("UTC time: %s", datetime.utcnow())
 
     api_client = ApiClient(
-        base_url=config.general.public_url,
+        base_url=config.playout.internal_url or config.general.public_url,
         api_key=config.general.api_key,
     )
 
     legacy_client = LegacyClient(
-        base_url=config.general.public_url,
+        base_url=config.playout.internal_url or config.general.public_url,
         api_key=config.general.api_key,
     )
     wait_for_legacy(legacy_client)
