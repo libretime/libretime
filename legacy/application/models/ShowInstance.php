@@ -847,27 +847,30 @@ SQL;
 
     public function trimOverbooked()
     {
-        // iterate through all of the showinstance items and delete those with start time greater than endtime of the show
-        $showEnd = new DateTime($this->getShowInstanceEnd(), new DateTimeZone('UTC'));
-        $removeItems = [];
-        foreach ($this->getShowListContent('UTC') as $item) {
-            $itemStart = new DateTime($item['starts'], new DateTimeZone('UTC'));
-            if ($itemStart->getTimestamp() > $showEnd->getTimestamp()) {
-                $removeItems[] = $item['id'];
-            }
-        }
-
-        // now remove the items
+        // Remove all scheduled items that start time after the show has ended
         $sql = <<<'SQL'
-        DELETE FROM cc_schedule
-         WHERE id in (:ids)
-           AND instance_id = :instance_id
-           AND playout_status >= 0
+        delete
+        from
+            cc_schedule
+        where
+            id in (
+            select
+                s.id
+            from
+                cc_schedule s
+            left join cc_show_instances si on
+                s.instance_id = si.id
+            where
+                si.id = :instance_id
+                and si.ends < s.starts
+                and s.playout_status = 0 -- playout_status = 0 double check that si.ends < s.starts
+        );
         SQL;
 
-        return Application_Common_Database::prepareAndExecute($sql, [
-            ':ids' => implode($removeItems, ','),
-            ':instance_id' => $this->_instanceId,
-        ], 'execute');
+        return Application_Common_Database::prepareAndExecute(
+            $sql,
+            [':instance_id' => $this->_instanceId],
+            'execute'
+        );
     }
 }
