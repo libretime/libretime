@@ -23,25 +23,25 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 2048]),
             ]);
-        $file_id->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
-        $file_id->removeDecorator('Label');
-        $file_id->setAttrib('class', 'artwork');
+        $artwork->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
+        $artwork->removeDecorator('Label');
+        $artwork->setAttrib('class', 'artwork');
         $this->addElement($artwork);
 
         // Set artwork hidden field
         $set_artwork = new Zend_Form_Element_Hidden('set_artwork');
         $set_artwork->class = 'input_text set_artwork_' . $p_id;
-        $file_id->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
-        $file_id->removeDecorator('Label');
-        $file_id->setAttrib('class', 'set_artwork');
+        $set_artwork->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
+        $set_artwork->removeDecorator('Label');
+        $set_artwork->setAttrib('class', 'set_artwork');
         $this->addElement($set_artwork);
 
         // Remove artwork hidden field
         $remove_artwork = new Zend_Form_Element_Hidden('remove_artwork');
         $remove_artwork->class = 'input_text remove_artwork_' . $p_id;
-        $file_id->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
-        $file_id->removeDecorator('Label');
-        $file_id->setAttrib('class', 'remove_artwork');
+        $remove_artwork->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
+        $remove_artwork->removeDecorator('Label');
+        $remove_artwork->setAttrib('class', 'remove_artwork');
         $this->addElement($remove_artwork);
 
         // Add title field
