@@ -24,7 +24,7 @@ def create_liquidsoap_annotation(file_event: FileEvent) -> str:
     }
 
     if file_event.replay_gain is not None:
-        annotations["replay_gain"] = f"{file_event.replay_gain} dB"
+        annotations["replay_gain"] = f"{file_event.replay_gain}"
 
     # Override the the artist/title that Liquidsoap extracts from a file's metadata with
     # the metadata we get from LibreTime. (You can modify metadata in LibreTime's library,
