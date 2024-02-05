@@ -41,6 +41,8 @@ def create_source()
     source_id := !source_id + 1
 end
 
+enable_replaygain_metadata()
+
 create_source()
 create_source()
 create_source()
