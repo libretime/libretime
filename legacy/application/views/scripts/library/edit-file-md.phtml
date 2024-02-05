@@ -1,4 +1,13 @@
-<?php $get_artwork = FileDataHelper::getArtworkData($this->artwork, 256); ?>
+<?php $get_artwork = FileDataHelper::getArtworkData($this->artwork, 256);
+
+$baseUrl = Config::getBasePath();
+
+$get_replay_gain = Application_Model_Preference::getReplayGainModifier();
+if (!Application_Model_Preference::GetEnableReplayGain() ) {
+    $get_replay_gain = 0;
+}
+$analogMeter = true;
+?>
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong edit-md-dialog">
     <div class="track-edit-header" style="top:15px">
         <?php if ($this->permissionDenied) { ?> <h3><?php echo _("You do not have permission to edit this track.") ?></h3> <?php } ?>
@@ -36,4 +45,192 @@
     </div>
     <div style="height: 160px;"></div>
     <?php echo $this->form; ?>
+    <div style="width:500px">
+          <div class="controls">
+              <div class="row">
+                  <div class="col-sm-7">
+                      <div class="btn-toolbar track-toolbar">
+                            <div class="btn-group" title="Play Controls">
+                              <button class="btn btn-control-player btn-new control-play-btn" id="track-play-<?php echo $this->id; ?>" onClick="wavesurfer['t<?php echo $this->id; ?>'].playPause();" style="background-color:#555555; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                                <i class="icon-white icon-play"></i>
+                              </button>
+                              <button class="btn btn-control-player btn-new control-playedit-btn" id="track-playedit-<?php echo $this->id; ?>"
+                                onClick="" style="background-color:#555555; border-top-right-radius: 5px; border-bottom-right-radius: 5px">
+                                <i class="icon-white icon-step-backward"></i>
+                              </button>
+                            </div>
+                            <div class="btn-group" title="Playhead"> <!-- TODO: support for typing it in -->
+                              <div class="btn track-timer" style="border-radius: 5px">
+                                <input class="track-timer-input" id="tracktimerinput-<?php echo $this->id; ?>" val="0.000" style="font-size:15px; font-weight:500;"/>
+                              </div>
+                            </div>
+
+                            <div class="btn-group" title="Cue Controls">
+                              <img src="<?php echo $baseUrl.'css/img/icon_cut_white.png';?>" style="top:6px;margin-right:5px;">
+                              <button class="btn btn-control-player btn-new" id="cuein-set-<?php echo $this->id; ?>"
+                                style="background-color:#00e640; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                                <i class="icon-white icon-chevron-right"></i>
+                              </button>
+                              <button class="btn btn-control-player btn-new" id="cueout-set-<?php echo $this->id; ?>"
+                                style="background-color:#f22613; border-top-right-radius: 5px; border-bottom-right-radius: 5px">
+                                <i class="icon-white icon-chevron-left"></i>
+                              </button>
+                            </div>
+
+                            <div class="btn-group pull-right zoom-container" title="Zoom">
+                              <i class="icon-white icon-zoom-out" style="margin-top: -24px;"></i>
+                              <input id="zoom-slider-<?php echo $this->id; ?>" class="input-slider" data-height="26" data-width="120" data-action="zoom-<?php echo $this->id; ?>" type="range"  min="20" max="290" data-sprites="50" data-src="<?php echo $baseUrl.'css/images/slider.png'; ?>" value="0" />
+                              <i class="icon-white icon-zoom-in" style="margin-top: -24px;"></i>
+                            </div>
+                            <br><br>
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                    <div id="track-waveform-<?php echo $this->id; ?>"></div>
+                    <div id="timeline-<?php echo $this->id; ?>"></div>
+              </div>
+              <div class="row gain-row">
+                    <div class="gain-inner-section">
+                          <div class="gain-col-knob">
+                                  <div title="Gain">
+                                    <div class="knob-controls">
+                                      <div style="margin-left:13px; font-size:11px;"><span>GAIN</span></div>
+                                      <input id="replay_gain_knob_<?php echo $this->id; ?>" type="range"
+                                      class="input-knob"
+                                      data-src="<?php echo $baseUrl.'css/images/knob_2x.png'; ?>"
+                                      data-sprites="100"
+                                      style="width: 52px; height: 52px; background-image: url(<?php echo $baseUrl.'css/images/knob_2x.png'; ?>); background-size: 100% 10100%; background-position: 0px 0px;"
+                                      value="0">
+                                      <div class="knob-labels" style="margin-left:13px"><span id="gain-val-<?php echo $this->id; ?>"><?php echo $this->replay_gain; ?></span></div>
+                                      <input type="hidden" id="volume-<?php echo $this->id; ?>" type="range" min="0" max="1" value="1" step="0.1">
+                                    </div>
+                                  </div>
+                          </div>
+                          <div class="gain-col-meter">
+                                  <?php if($analogMeter == true){ ?>
+                                      <div style="position: relative; left: 0; top: 0;" >
+                                        <img src="<?php echo $baseUrl.'css/images/meterbg.png'; ?>" class="meterbg" style="width:200px" />
+                                        <div class="meterwrappercont">
+                                            <div id="meterwrapper-<?php echo $this->id; ?>" style="height:220px;width:220px;">
+                                                <img id="meter_needle-<?php echo $this->id; ?>" class="meter_needle" src="<?php echo $baseUrl.'css/images/meterneedle.svg'; ?>">
+                                            </div>
+                                        </div>
+                                        <input class="testgain" id="testgain-<?php echo $this->id; ?>" val=""/>
+                                        <div class="db-letters">dB</div>
+
+                                      </div>
+                                <?php } ?>
+                          </div>
+                          <div class="gain-col-meter2">
+                                <button id="gain-clipping-<?php echo $this->id; ?>" class="btn btn-small btn-new" style="background-color:rgb(101,	0,	0)">
+                                    <span></span>
+                                </button>
+                                <br><span style="font-size:8px">Todo: adjust clipping to default gain in LT.</span>
+                          </div>
+                          <div class="clear"></div>
+                    </div>
+              </div>
+    </div>
+  </div>
 </div>
+           <script>
+        //waveform
+        var track_id      = <?php echo $this->id; ?>;
+        var selector_id   = "#track-waveform-"+<?php echo $this->id; ?>;
+        var url           = baseUrl + 'api/get-media/file/<?php echo $this->id; ?>';
+        var cuein         = '<?php echo $this->cuein; ?>';
+        var cueout        = '<?php echo $this->cueout; ?>';
+        var gain_level    = deciSteps(<?php echo $this->replay_gain; ?>);
+        var default_gain  = <?php echo $get_replay_gain; ?>;
+        var eTrack = renderWaveform(track_id, selector_id, url, cuein, cueout, gain_level, default_gain);
+
+        $(document).ready(function() {
+
+            // Counter field edit
+            $(document).on('change', '#tracktimerinput-<?php echo $this->id; ?>', 'input', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                var val = $(this).val();
+                eTrack.setCurrentTime(val);
+            }).on('keypress keydown', '#tracktimerinput-<?php echo $this->id; ?>', 'input', function(event) {
+                if (event.key === 'Enter' || event.keyCode === 13 || event.keyCode === 10) {
+                    var val = $(this).val();
+                    eTrack.setCurrentTime(val);
+                    event.preventDefault();
+                    event.stopPropagation();
+                    event.stopImmediatePropagation();
+                    return false;
+                }
+            })
+
+            //Gain Knob
+            $("#replay_gain_knob_<?php echo $this->id; ?>").val(deciNum(<?php echo $this->replay_gain; ?>));
+            $("#volume-<?php echo $this->id; ?>").val(deciSteps(<?php echo $this->replay_gain; ?>));
+
+            $(document).on('mouseleave', '#replay_gain_knob_<?php echo $this->id; ?>', 'input', function() {
+                var val = $(this).val();
+                $("#gain-val-<?php echo $this->id; ?>").text(gainNum(val));
+            });
+
+            $(document).on('change', '.replay_gain_<?php echo $this->id; ?>', 'input', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                var val = $(this).val();
+                $("input#replay_gain_knob_<?php echo $this->id; ?>").val(deciNum(val));
+            }).on('keyup', '.replay_gain_<?php echo $this->id; ?>', 'input', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                var val = $(this).val();
+                $("input#replay_gain_knob_<?php echo $this->id; ?>").val(deciNum(val));
+            });
+
+            $(document).on('change', '.cuein_<?php echo $this->id; ?>', 'input', function(event) {
+                console.log('cuein input');
+                event.preventDefault();
+                event.stopPropagation();
+                var val = $(this).val();
+                var a = val.split(':');
+                var startseconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+                console.log(startseconds);
+                var region = eTrack.regions.list[track_id];
+                region.update({start: startseconds});
+                $('#track-playedit-'+track_id).attr('onClick', 'wavesurfer["t'+ track_id +'"].play('+ region.start +', '+ region.end +');');
+            });
+
+            $(document).on('change', '.cueout_<?php echo $this->id; ?>', 'input', function(event) {
+              console.log('cueout input');
+                event.preventDefault();
+                event.stopPropagation();
+                var val = $(this).val();
+                var b = val.split(':');
+                var endseconds = (+b[0]) * 60 * 60 + (+b[1]) * 60 + (+b[2]);
+                var region = eTrack.regions.list[track_id];
+                region.update({end: endseconds});
+                $('#track-playedit-'+track_id).attr('onClick', 'wavesurfer["t'+ track_id +'"].play('+ region.start +', '+ region.end +');');
+            });
+
+            $(document).on('click', '#cuein-set-<?php echo $this->id; ?>', 'button', function(event) {
+              console.log('cuein button');
+                event.preventDefault();
+                event.stopPropagation();
+                var val = eTrack.getCurrentTime();
+                var region = eTrack.regions.list[track_id];
+                region.update({start: val});
+                document.getElementsByClassName("cuein_"+track_id)[0].value = toHHMMSS(region.start);
+                $('#track-playedit-'+track_id).attr('onClick', 'wavesurfer["t'+ track_id +'"].play('+ region.start +', '+ region.end +');');
+            });
+
+            $(document).on('click', '#cueout-set-<?php echo $this->id; ?>', 'button', function(event) {
+              console.log('cueout button')
+                event.preventDefault();
+                event.stopPropagation();
+                var val = eTrack.getCurrentTime();
+                var region = eTrack.regions.list[track_id];
+                region.update({end: val});
+                document.getElementsByClassName("cueout_"+track_id)[0].value = toHHMMSS(region.end);
+                $('#track-playedit-'+track_id).attr('onClick', 'wavesurfer["t'+ track_id +'"].play('+ region.start +', '+ region.end +');');
+            });
+
+        });
+    </script>
