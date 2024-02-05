@@ -21,6 +21,8 @@ def create_source()
 
     l = audio_to_stereo(id="queue_src", l)
     l = cue_cut(l)
+
+    enable_replaygain_metadata()
     l = amplify(1., override="replay_gain", l)
 
     # Fade the tracks to avoid hard cuts in between two tracks and at the end of the shows.
