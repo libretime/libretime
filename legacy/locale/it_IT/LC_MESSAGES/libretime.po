@@ -12,11 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-12-25 01:55+0000\n"
+"POT-Creation-Date: 2024-02-05 01:52+0000\n"
 "PO-Revision-Date: 2023-12-27 23:06+0000\n"
 "Last-Translator: Maurizio Castelvetro <castelvetro@gmail.com>\n"
-"Language-Team: Italian <https://hosted.weblate.org/projects/libretime/legacy/"
-"it/>\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/libretime/legacy/it/>\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -590,9 +589,7 @@ msgstr "Carica qui sotto alcune tracce per aggiungerle alla tua libreria!"
 #: application/common/UsabilityHints.php:69
 #, php-format
 msgid "It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."
-msgstr ""
-"Sembra che tu non abbia ancora caricato nessun file audio. %sCarica un file "
-"ora%s."
+msgstr "Sembra che tu non abbia ancora caricato nessun file audio. %sCarica un file ora%s."
 
 #: application/common/UsabilityHints.php:76
 msgid "Click the 'New Show' button and fill out the required fields."
@@ -605,9 +602,7 @@ msgstr "Sembra che non ci sia nessuno show programmato. %sCrea uno show ora%s."
 
 #: application/common/UsabilityHints.php:89
 msgid "To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'."
-msgstr ""
-"Per iniziare a trasmettere, cancella lo show attualmente collegato cliccando "
-"su di esso e selezionando 'Cancella show'."
+msgstr "Per iniziare a trasmettere, cancella lo show attualmente collegato cliccando su di esso e selezionando 'Cancella show'."
 
 #: application/common/UsabilityHints.php:92
 #, php-format
@@ -615,23 +610,17 @@ msgid ""
 "Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.\n"
 "                    %sCreate an unlinked show now%s."
 msgstr ""
-"Lo show collegato richiede di essere riempito di tracce per poter iniziare. "
-"Per iniziare la trasmissione cancella lo show attualmente collegato e "
-"programma uno show non collegato. \n"
+"Lo show collegato richiede di essere riempito di tracce per poter iniziare. Per iniziare la trasmissione cancella lo show attualmente collegato e programma uno show non collegato. \n"
 "\t\t\t\t\t\t%sCrea uno show non collegato%s."
 
 #: application/common/UsabilityHints.php:96
 msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
-msgstr ""
-"Per iniziare a trasmettere, premi lo show in corso e seleziona 'Programma le "
-"tracce'"
+msgstr "Per iniziare a trasmettere, premi lo show in corso e seleziona 'Programma le tracce'"
 
 #: application/common/UsabilityHints.php:100
 #, php-format
 msgid "It looks like the current show needs more tracks. %sAdd tracks to your show now%s."
-msgstr ""
-"Sembra che lo show richieda l'inserimento di ulteriori tracce. %sAggiungi "
-"tracce allo show%s."
+msgstr "Sembra che lo show richieda l'inserimento di ulteriori tracce. %sAggiungi tracce allo show%s."
 
 #: application/common/UsabilityHints.php:107
 msgid "Click on the show starting next and select 'Schedule Tracks'"
@@ -648,9 +637,7 @@ msgstr "LibreTime - Servizio analisi dei media"
 
 #: application/configs/config-check.php:174
 msgid "Check that the libretime-analyzer service is installed correctly in "
-msgstr ""
-"Controlla che il servizio di analisi di LibreTime sia installato "
-"correttamente in "
+msgstr "Controlla che il servizio di analisi di LibreTime sia installato correttamente in "
 
 #: application/configs/config-check.php:175
 #: application/configs/config-check.php:194
@@ -674,9 +661,7 @@ msgstr "Servizio di playout di LibreTime"
 
 #: application/configs/config-check.php:193
 msgid "Check that the libretime-playout service is installed correctly in "
-msgstr ""
-"Controlla che il servizio di playolut di LibreTime sia installato "
-"correttamente in "
+msgstr "Controlla che il servizio di playolut di LibreTime sia installato correttamente in "
 
 #: application/configs/config-check.php:205
 msgid "LibreTime liquidsoap service"
@@ -700,8 +685,7 @@ msgstr "Servizio librerie API LibreTime"
 
 #: application/configs/config-check.php:250
 msgid "Check that the libretime-api service is installed correctly in "
-msgstr ""
-"Controlla che il servizio LibreTime API sia installato correttamente in "
+msgstr "Controlla che il servizio LibreTime API sia installato correttamente in "
 
 #: application/configs/navigation.php:28
 msgid "Radio Page"
@@ -875,12 +859,12 @@ msgstr ""
 msgid "An internal application error has occurred."
 msgstr ""
 
-#: application/controllers/IndexController.php:86
+#: application/controllers/IndexController.php:92
 #, php-format
 msgid "%s Podcast"
 msgstr ""
 
-#: application/controllers/IndexController.php:87
+#: application/controllers/IndexController.php:93
 msgid "No tracks have been published yet."
 msgstr ""
 
@@ -1884,37 +1868,37 @@ msgid "Month"
 msgstr ""
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:230
+#: application/forms/GeneralPreferences.php:255
 msgid "Sunday"
 msgstr "Domenica"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:231
+#: application/forms/GeneralPreferences.php:256
 msgid "Monday"
 msgstr "LunedÃ¬"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:232
+#: application/forms/GeneralPreferences.php:257
 msgid "Tuesday"
 msgstr "MartedÃ¬"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:233
+#: application/forms/GeneralPreferences.php:258
 msgid "Wednesday"
 msgstr "MercoledÃ¬"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:234
+#: application/forms/GeneralPreferences.php:259
 msgid "Thursday"
 msgstr "GiovedÃ¬"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:235
+#: application/forms/GeneralPreferences.php:260
 msgid "Friday"
 msgstr "VenerdÃ¬"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:236
+#: application/forms/GeneralPreferences.php:261
 msgid "Saturday"
 msgstr "Sabato"
 
@@ -2445,9 +2429,7 @@ msgstr ""
 #: application/controllers/LocaleController.php:416
 #, php-format
 msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
-msgstr ""
-"%sFinestra di stampa%sSi prega di usare la funzione di stampa del tuo "
-"browser per stampare questa tavola. Premi \"escape\" appena terminato."
+msgstr "%sFinestra di stampa%sSi prega di usare la funzione di stampa del tuo browser per stampare questa tavola. Premi \"escape\" appena terminato."
 
 #: application/controllers/LocaleController.php:417
 msgid "New Show"
@@ -2601,8 +2583,8 @@ msgstr ""
 #: application/forms/AddTracktype.php:50
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
-#: application/forms/GeneralPreferences.php:160
-#: application/forms/GeneralPreferences.php:214
+#: application/forms/GeneralPreferences.php:172
+#: application/forms/GeneralPreferences.php:239
 msgid "Enabled"
 msgstr "Abilitato"
 
@@ -2610,8 +2592,8 @@ msgstr "Abilitato"
 #: application/forms/AddTracktype.php:49
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
-#: application/forms/GeneralPreferences.php:159
-#: application/forms/GeneralPreferences.php:213
+#: application/forms/GeneralPreferences.php:171
+#: application/forms/GeneralPreferences.php:238
 msgid "Disabled"
 msgstr "Disattivato"
 
@@ -2776,23 +2758,23 @@ msgstr "Blocco intelligente senza nome"
 msgid "Unknown Playlist"
 msgstr "Playlist sconosciuta"
 
-#: application/controllers/PreferenceController.php:69
+#: application/controllers/PreferenceController.php:71
 msgid "Preferences updated."
 msgstr "Preferenze aggiornate."
 
-#: application/controllers/PreferenceController.php:201
+#: application/controllers/PreferenceController.php:208
 msgid "Stream Setting Updated."
 msgstr "Aggiornamento impostazioni Stream."
 
-#: application/controllers/PreferenceController.php:246
+#: application/controllers/PreferenceController.php:253
 msgid "path should be specified"
 msgstr "il percorso deve essere specificato"
 
-#: application/controllers/PreferenceController.php:289
+#: application/controllers/PreferenceController.php:296
 msgid "Problem with Liquidsoap..."
 msgstr "Problemi con Liquidsoap..."
 
-#: application/controllers/PreferenceController.php:332
+#: application/controllers/PreferenceController.php:339
 msgid "Request method not accepted"
 msgstr ""
 
@@ -3327,42 +3309,50 @@ msgstr ""
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:156
+#: application/forms/GeneralPreferences.php:161
+msgid "Trim overbooked shows after autoloading?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:168
 msgid "Public LibreTime API"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:157
+#: application/forms/GeneralPreferences.php:169
 msgid "Required for embeddable schedule widget."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:163
+#: application/forms/GeneralPreferences.php:175
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:175
+#: application/forms/GeneralPreferences.php:187
 msgid "Default Language"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:182
+#: application/forms/GeneralPreferences.php:194
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:190
+#: application/forms/GeneralPreferences.php:202
 msgid "Week Starts On"
 msgstr "La settimana inizia il"
 
-#: application/forms/GeneralPreferences.php:206
+#: application/forms/GeneralPreferences.php:218
 msgid "Display login button on your Radio Page?"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:211
+#: application/forms/GeneralPreferences.php:231
+msgid "Disable the public radio page and redirect to the login page?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:236
 msgid "Feature Previews"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:217
+#: application/forms/GeneralPreferences.php:242
 msgid "Enable this to opt-in to test new features."
 msgstr ""
 
