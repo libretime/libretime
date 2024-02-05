@@ -1160,8 +1160,8 @@ var AIRTIME = (function (AIRTIME) {
     });
 
     newTab.wrapper.find(".edit-md-dialog").on("keyup", function (event) {
-      // Don't submit if the user hits enter in a textarea (description)
-      if ($(event.target).is("input") && event.keyCode === 13) {
+      // Don't submit if the user hits enter in a textarea (description) or in the waveform editor
+      if ($(event.target).is("form input") && event.keyCode === 13) {
         newTab.wrapper.find(".md-save").click();
       }
     });
