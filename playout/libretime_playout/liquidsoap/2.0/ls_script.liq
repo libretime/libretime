@@ -29,7 +29,9 @@ def create_source()
     l = fade.out(l)
 
     l = map_metadata(notify_queue,l)
-    l =cross_http(http_input_id="http",l)
+    l = cross_http(http_input_id="http",l)
+    l = http_fallback(http_input_id="http", http=l, default=l)
+    l = map_metadata(id="map_metadata:schedule", update=false, append_title, l)
     sources := list.append([l], !sources)
     server.register(namespace="queues",
                 "s#{this_source_id}_skip",
@@ -40,6 +42,8 @@ def create_source()
     source_id := !source_id + 1
 end
 
+enable_replaygain_metadata()
+
 create_source()
 create_source()
 create_source()
@@ -47,16 +51,14 @@ create_source()
 
 queue = add(!sources)#, normalize=false)
 queue = insert_metadata(queue)
-dynamic_metadata_callback := queue.insert_metadata
+dynamic_metadata_callback := queue.insert_metadata   
 
 output.dummy(fallible=true, queue)
 
-http = input.http_restart(id="http")
-output.dummy(fallible=true, http)
-stream_queue = http_fallback(http_input_id="http", http=http, default=queue)
-stream_queue = map_metadata(id="map_metadata:schedule", update=false, append_title, stream_queue)
+#http = input.http_restart(id="http")
+#output.dummy(fallible=true, http)
 
-ignore(output.dummy(stream_queue, fallible=true))
+ignore(output.dummy(queue, fallible=true))
 
 def web_stream_set_id(value)
     web_stream_id := value
@@ -137,7 +139,7 @@ end
 s = switch(id="switch:blank+schedule",
             track_sensitive=false,
             transitions=[transition_default, transition],
-            [({!schedule_streaming}, stream_queue), ({true}, default)]
+            [({!schedule_streaming}, queue), ({true}, default)]
     )
 
 s = if input_show_port != 0 and input_show_mount != "" then
