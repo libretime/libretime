@@ -51,7 +51,7 @@ create_source()
 
 queue = add(!sources)#, normalize=false)
 queue = insert_metadata(queue)
-dynamic_metadata_callback := queue.insert_metadata   
+dynamic_metadata_callback := queue.insert_metadata
 
 output.dummy(fallible=true, queue)
 
