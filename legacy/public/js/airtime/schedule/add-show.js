@@ -294,6 +294,18 @@ function setAddShowEvents(form) {
     $("#add_show_playlist_dropdown").show();
   }
 
+  if (!form.find("#add_show_override_intro_playlist").attr("checked")) {
+    form.find("#add_show_override_intro_playlist_dropdown").hide();
+  } else {
+    $("#add_show_override_intro_playlist_dropdown").show();
+  }
+
+  if (!form.find("#add_show_override_outro_playlist").attr("checked")) {
+    form.find("#add_show_override_outro_playlist_dropdown").hide();
+  } else {
+    $("#add_show_override_outro_playlist_dropdown").show();
+  }
+
   if (!form.find("#add_show_repeats").attr("checked")) {
     form.find("#schedule-show-when > fieldset:last").hide();
     $("#add_show_rebroadcast_relative").hide();
@@ -326,6 +338,16 @@ function setAddShowEvents(form) {
     $(this).blur();
     form.find("#add_show_playlist_dropdown").toggle();
     form.find("#add_show_autoplaylist_repeat").toggle();
+  });
+
+  form.find("#add_show_override_intro_playlist").click(function () {
+    $(this).blur();
+    form.find("#add_show_override_intro_playlist_dropdown").toggle();
+  });
+
+  form.find("#add_show_override_outro_playlist").click(function () {
+    $(this).blur();
+    form.find("#add_show_override_outro_playlist_dropdown").toggle();
   });
 
   form.find("#add_show_repeats").click(function () {

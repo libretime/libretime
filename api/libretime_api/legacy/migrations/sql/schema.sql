@@ -126,6 +126,10 @@ CREATE TABLE "cc_show"
     "has_autoplaylist" BOOLEAN DEFAULT 'f' NOT NULL,
     "autoplaylist_id" INTEGER,
     "autoplaylist_repeat" BOOLEAN DEFAULT 'f' NOT NULL,
+    "override_intro_playlist" BOOLEAN DEFAULT 'f' NOT NULL,
+    "intro_playlist_id" INTEGER,
+    "override_outro_playlist" BOOLEAN DEFAULT 'f' NOT NULL,
+    "outro_playlist_id" INTEGER,
     PRIMARY KEY ("id")
 );
 
@@ -715,6 +719,16 @@ ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_track_type_fkey"
 
 ALTER TABLE "cc_show" ADD CONSTRAINT "cc_playlist_autoplaylist_fkey"
     FOREIGN KEY ("autoplaylist_id")
+    REFERENCES "cc_playlist" ("id")
+    ON DELETE SET NULL;
+
+ALTER TABLE "cc_show" ADD CONSTRAINT "cc_show_intro_playlist_fkey"
+    FOREIGN KEY ("intro_playlist_id")
+    REFERENCES "cc_playlist" ("id")
+    ON DELETE SET NULL;
+
+ALTER TABLE "cc_show" ADD CONSTRAINT "cc_show_outro_playlist_fkey"
+    FOREIGN KEY ("outro_playlist_id")
     REFERENCES "cc_playlist" ("id")
     ON DELETE SET NULL;
 

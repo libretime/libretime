@@ -34,6 +34,36 @@ class Application_Form_AddShowAutoPlaylist extends Zend_Form_SubForm
             'class' => 'input_text',
             'decorators' => ['ViewHelper'],
         ]);
+
+        // Add override intro playlist checkbox element
+        $this->addElement('checkbox', 'add_show_override_intro_playlist', [
+            'label' => _('Override Intro Playlist ?'),
+            'required' => false,
+            'class' => 'input_text',
+            'decorators' => ['ViewHelper'],
+        ]);
+
+        $introPlaylistSelect = new Zend_Form_Element_Select('add_show_intro_playlist_id');
+        $introPlaylistSelect->setLabel(_('Select Intro Playlist'));
+        $introPlaylistSelect->setMultiOptions(Application_Model_Library::getPlaylistNames(true));
+        $introPlaylistSelect->setValue(null);
+        $introPlaylistSelect->setDecorators(['ViewHelper']);
+        $this->addElement($introPlaylistSelect);
+
+        // Add override outro playlist checkbox element
+        $this->addElement('checkbox', 'add_show_override_outro_playlist', [
+            'label' => _('Override Outro Playlist ?'),
+            'required' => false,
+            'class' => 'input_text',
+            'decorators' => ['ViewHelper'],
+        ]);
+
+        $outroPlaylistSelect = new Zend_Form_Element_Select('add_show_outro_playlist_id');
+        $outroPlaylistSelect->setLabel(_('Select Outro Playlist'));
+        $outroPlaylistSelect->setMultiOptions(Application_Model_Library::getPlaylistNames(true));
+        $outroPlaylistSelect->setValue(null);
+        $outroPlaylistSelect->setDecorators(['ViewHelper']);
+        $this->addElement($outroPlaylistSelect);
     }
 
     public function disable()
