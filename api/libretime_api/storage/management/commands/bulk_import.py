@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 from typing import List, Optional
 
@@ -52,7 +53,10 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        url = settings.CONFIG.general.public_url
+        url = os.environ.get(
+            'LIBRETIME_GENERAL_PUBLIC_URL',
+            settings.CONFIG.general.public_url
+        )
         auth_key = settings.CONFIG.general.api_key
 
         delete_after_upload = options.get("delete_after_upload", False)
