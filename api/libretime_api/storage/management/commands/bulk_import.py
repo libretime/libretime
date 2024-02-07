@@ -54,7 +54,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         url = os.environ.get(
-            'LIBRETIME_GENERAL_PUBLIC_URL',
+            "LIBRETIME_GENERAL_PUBLIC_URL",
             settings.CONFIG.general.public_url
         )
         auth_key = settings.CONFIG.general.api_key
