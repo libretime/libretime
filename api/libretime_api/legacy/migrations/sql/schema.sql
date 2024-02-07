@@ -722,12 +722,12 @@ ALTER TABLE "cc_show" ADD CONSTRAINT "cc_playlist_autoplaylist_fkey"
     REFERENCES "cc_playlist" ("id")
     ON DELETE SET NULL;
 
-ALTER TABLE "cc_show" ADD CONSTRAINT "cc_show_intro_playlist_fkey"
+ALTER TABLE "cc_show" ADD CONSTRAINT "cc_playlist_intro_playlist_fkey"
     FOREIGN KEY ("intro_playlist_id")
     REFERENCES "cc_playlist" ("id")
     ON DELETE SET NULL;
 
-ALTER TABLE "cc_show" ADD CONSTRAINT "cc_show_outro_playlist_fkey"
+ALTER TABLE "cc_show" ADD CONSTRAINT "cc_playlist_outro_playlist_fkey"
     FOREIGN KEY ("outro_playlist_id")
     REFERENCES "cc_playlist" ("id")
     ON DELETE SET NULL;

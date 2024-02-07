@@ -7,10 +7,10 @@ from ._migrations import legacy_migration_factory
 UP = """
 ALTER TABLE cc_show ADD COLUMN override_intro_playlist boolean default 'f' NOT NULL;
 ALTER TABLE cc_show ADD COLUMN intro_playlist_id integer DEFAULT NULL;
-ALTER TABLE cc_show ADD CONSTRAINT cc_playlist_intro_playlist_fkey FOREIGN KEY (intro_playlist_id) REFERENCES cc_playlist (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE SET NULL;
+ALTER TABLE cc_show ADD CONSTRAINT cc_playlist_intro_playlist_fkey FOREIGN KEY (intro_playlist_id) REFERENCES cc_playlist (id) ON DELETE SET NULL;
 ALTER TABLE cc_show ADD COLUMN override_outro_playlist boolean default 'f' NOT NULL;
 ALTER TABLE cc_show ADD COLUMN outro_playlist_id integer DEFAULT NULL;
-ALTER TABLE cc_show ADD CONSTRAINT cc_playlist_outro_playlist_fkey FOREIGN KEY (outro_playlist_id) REFERENCES cc_playlist (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE SET NULL;
+ALTER TABLE cc_show ADD CONSTRAINT cc_playlist_outro_playlist_fkey FOREIGN KEY (outro_playlist_id) REFERENCES cc_playlist (id) ON DELETE SET NULL;
 """
 
 DOWN = """
