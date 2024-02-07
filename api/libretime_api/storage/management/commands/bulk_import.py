@@ -54,8 +54,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         url = os.environ.get(
-            "LIBRETIME_GENERAL_PUBLIC_URL",
-            settings.CONFIG.general.public_url
+            "LIBRETIME_GENERAL_PUBLIC_URL", settings.CONFIG.general.public_url
         )
         auth_key = settings.CONFIG.general.api_key
 
@@ -66,9 +65,7 @@ class Command(BaseCommand):
         library = options.get("library", None)
         allowed_extensions = options.get("allowed_extensions")
 
-        importer = Importer(
-            url, auth_key, delete_after_upload, delete_if_exists
-        )
+        importer = Importer(url, auth_key, delete_after_upload, delete_if_exists)
         importer.import_dir(Path(path).resolve(), library, allowed_extensions)
 
 
