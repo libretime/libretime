@@ -66,7 +66,9 @@ class Command(BaseCommand):
         library = options.get("library", None)
         allowed_extensions = options.get("allowed_extensions")
 
-        importer = Importer(url, auth_key, delete_after_upload, delete_if_exists)
+        importer = Importer(
+            url, auth_key, delete_after_upload, delete_if_exists
+        )
         importer.import_dir(Path(path).resolve(), library, allowed_extensions)
 
 
