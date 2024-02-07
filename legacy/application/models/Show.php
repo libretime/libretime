@@ -173,13 +173,13 @@ class Application_Model_Show
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
 
-        return $show->getDbHasOverrideIntroPlaylist();
+        return $show->getDbOverrideIntroPlaylist();
     }
 
     public function setHasOverrideIntroPlaylist($value)
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
-        $show->setDbHasOverrideIntroPlaylist($value);
+        $show->setDbOverrideIntroPlaylist($value);
     }
 
     public function getIntroPlaylistId()
@@ -199,13 +199,13 @@ class Application_Model_Show
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
 
-        return $show->getDbHasOverrideOutroPlaylist();
+        return $show->getDbOverrideOutroPlaylist();
     }
 
     public function setHasOverrideOutroPlaylist($value)
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
-        $show->setDbHasOverrideOutroPlaylist($value);
+        $show->setDbOverrideOutroPlaylist($value);
     }
 
     public function getOutroPlaylistId()
