@@ -70,18 +70,18 @@ class Preference(models.Model):
     def get_site_preferences(cls) -> SitePreferences:
         entries = dict(cls.site.values_list("key", "value"))
         return SitePreferences(
-            station_name=entries.get("station_name") or "LibreTime",
+            station_name=entries.get("station_name", "LibreTime"),
         )
 
     @classmethod
     def get_stream_preferences(cls) -> StreamPreferences:
         entries = dict(cls.site.values_list("key", "value"))
         return StreamPreferences(
-            input_fade_transition=float(entries.get("default_transition_fade") or 0.0),
+            input_fade_transition=float(entries.get("default_transition_fade", 0.0)),
             message_format=MessageFormatKind(
-                int(entries.get("stream_label_format") or 0)
+                int(entries.get("stream_label_format", 0))
             ),
-            message_offline=entries.get("off_air_meta") or "Offline",
+            message_offline=entries.get("off_air_meta", "Offline"),
         )
 
     @classmethod
