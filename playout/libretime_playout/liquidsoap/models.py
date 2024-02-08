@@ -17,6 +17,8 @@ class StreamPreferences(BaseModel):
     input_fade_transition: float
     message_format: MessageFormatKind
     message_offline: str
+    replay_gain_enabled: bool
+    replay_gain_offset: float
 
 
 class StreamState(BaseModel):
