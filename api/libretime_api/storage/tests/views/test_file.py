@@ -1,4 +1,5 @@
 import os
+import sys
 
 from django.conf import settings
 from model_bakery import baker
@@ -43,7 +44,7 @@ class TestFileViewSet(APITestCase):
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
         )
-        path = self.path.format(id=str(file.pk))
+        path = path.format(id=str(file.pk))
         self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         response = self.client.delete(path)
         self.assertEqual(response.status_code, 204)
