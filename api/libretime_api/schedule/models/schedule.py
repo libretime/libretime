@@ -120,7 +120,7 @@ class Schedule(models.Model):
     @staticmethod
     def is_file_scheduled_in_the_future(file_id):
         count = Schedule.objects.filter(
-            file_id=file_id, ends__gt=datetime.now()
+            file_id=file_id, ends_at__gt=datetime.now()
         ).count()
         return count > 0
 
