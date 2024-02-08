@@ -166,6 +166,25 @@ class AudioOpus(BaseAudio):
     format: Literal[AudioFormat.OPUS] = AudioFormat.OPUS
 
 
+class HLSStream(BaseModel):
+    segments_prefix: str
+    format: str
+    codec: str
+    sample_rate: int
+    bitrate: str
+
+
+class HLSOutput(BaseModel):
+    kind: Literal["hls"] = "hls"
+    enabled: bool = False
+    public_url: Optional[AnyUrlStr] = None
+    segment_duration: float = 2.0
+    segment_count: int = 5
+    segments_overhead: int = 5
+    streams: List[HLSStream] = Field([], max_length=10)
+    manifest: str
+
+
 class IcecastOutput(BaseModel):
     kind: Literal["icecast"] = "icecast"
     enabled: bool = False
@@ -266,6 +285,7 @@ AnySystemOutput = Annotated[
 class Outputs(BaseModel):
     icecast: List[IcecastOutput] = Field([], max_length=3)
     shoutcast: List[ShoutcastOutput] = Field([], max_length=1)
+    hls: List[HLSOutput] = Field([], max_length=1)
     system: List[AnySystemOutput] = Field([], max_length=1)
 
     @property

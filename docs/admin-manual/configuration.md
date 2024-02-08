@@ -392,6 +392,7 @@ stream:
   outputs:
     icecast: # See the [stream.outputs.icecast] section.
     shoutcast: # See the [stream.outputs.shoutcast] section.
+    hls: # See the [stream.outputs.hls] section.
     system: # See the [stream.outputs.system] section.
 ```
 
@@ -533,6 +534,65 @@ stream:
         # Whether the stream should be used for mobile devices.
         # > default is false
         mobile: false
+```
+
+#### Hls
+
+The `stream.outputs.hls` section configures the HLS output streams.
+
+HLS is an HTTP-based adaptive bitrate streaming protocol.
+
+It consists on presenting multiple streams with varying qualities to the client player which select the most fitted to its bandwidth.
+
+To configure hls streams, first describe the container of these streams by its **format**.
+
+Then setup the composites streams with various **codec**s and **bitrate**s.
+
+:::warning
+
+For security purposes, liquidsoap produces hls files in the webserver mount point **hls/** instead of creating its own.
+
+```yml
+stream:
+  outputs:
+    # Shoutcast output streams.
+    # > max items is 1
+    hls:
+      - # Whether the output is enabled.
+        # > default is false
+        enabled: true
+        # > segment_duration  (default:2.0)
+        segment_duration: 2.0
+        # > segments count  (default:5)
+        segment_count: 5
+        # > segments_overhead (default:5)
+        segments_overhead: 5
+        # Output public url, If not defined, the value will be generated from
+        # the [general.public_url] hostname, the output port and mount.
+        public_url:
+        # hls mount point
+        # > this field is REQUIRED
+        manifest: main.m3u8
+        streams:
+          - # > prefix of generated fragment
+            # > this field is REQUIRED
+            segments_prefix: mp3_low
+            # > must be one of ('mpegts', 'adts')
+            # > this field is REQUIRED
+            format: mpegts
+            # > codec must be one of ('libmp3lame', 'aac')
+            # > this field is REQUIRED
+            codec: libmp3lame
+            # > bitrate of the stream
+            # > this field is REQUIRED
+            bitrate: 32k
+            # > sampling rate (default: 44100Hz)
+            sample_rate: 44100
+          - segments_prefix: mp3_hifi
+            format: mpegts
+            codec: libmp3lame
+            bitrate: 256k
+            sample_rate: 44100
 ```
 
 #### System

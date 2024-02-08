@@ -204,6 +204,33 @@ class Schema implements ConfigurationInterface
             /*  */->booleanNode('mobile')->defaultFalse()->end()
             /**/->end()->end()->end()
 
+            // Hls outputs
+            /**/->arrayNode('hls')->arrayPrototype()->children()
+            /*  */->arrayNode('streams')->arrayPrototype()->children()
+            /*       */->scalarNode('segments_prefix')->end()
+            /*  */->scalarNode('format')->cannotBeEmpty()
+            /*        */->validate()->ifNotInArray(['mpegts', 'adts'])
+            /*        */->thenInvalid('invalid stream.outputs.hls.format %s')
+            /*        */->end()
+            /*    */->end()
+            /*       */->scalarNode('codec')->cannotBeEmpty()
+            /*        */->validate()->ifNotInArray(['aac', 'libmp3lame'])
+            /*        */->thenInvalid('invalid stream.outputs.hls.streams.codec %s')
+            /*        */->end()
+            /*    */->end()
+            /*       */->IntegerNode('sample_rate')->end()
+            /*       */->scalarNode('bitrate')->isRequired()->end()
+            /*  */->end()->end()->end()
+            /*  */->floatNode('segment_duration')->defaultValue(2.0)->end()
+            /*  */->integerNode('segment_count')->defaultValue(5)->end()
+            /*  */->integerNode('segments_overhead')->defaultValue(5)->end()
+            /*  */->booleanNode('enabled')->defaultFalse()->end()
+            /*  */->enumNode('kind')->values(['hls'])->defaultValue('hls')->end()
+            /*  */->scalarNode('public_url')->end()
+            /*  */->scalarNode('manifest')->cannotBeEmpty()
+            /*    */->validate()->ifString()->then($trim_leading_slash)->end()
+            /*  */->end()
+            /**/->end()->end()->end()
             // System outputs
             /**/->arrayNode('system')->arrayPrototype()->children()
             /*  */->booleanNode('enabled')->defaultFalse()->end()
@@ -271,7 +298,8 @@ class Config
         // Merge Icecast and Shoutcast outputs
         $values['stream']['outputs']['merged'] = array_merge(
             $values['stream']['outputs']['icecast'],
-            $values['stream']['outputs']['shoutcast']
+            $values['stream']['outputs']['shoutcast'],
+            $values['stream']['outputs']['hls']
         );
 
         self::$values = $values;

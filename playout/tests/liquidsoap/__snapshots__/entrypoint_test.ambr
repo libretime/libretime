@@ -227,6 +227,113 @@
   
   %include "/fake/1.4/ls_script.liq"
   
+  # hls:1
+  
+  output_hls_1_source = s
+  
+  streams = ref([])
+  
+  streamout = %ffmpeg(format="mpegts" ,
+                              codec="libmp3lame",
+                              channels=2,
+                              ar=44100,
+                              b="32k")
+      streams := list.append([("mp3low", streamout)], !streams)
+  
+  streamout = %ffmpeg(format="mpegts" ,
+                              codec="libmp3lame",
+                              channels=2,
+                              ar=44100,
+                              b="128k")
+      streams := list.append([("mp3high", streamout)], !streams)
+  
+  def segment_name(~position,~extname, stream_name) =
+    timestamp = int_of_float(time())
+    duration = 2.0
+    "#{stream_name}_#{duration}_#{timestamp}_#{position}.#{extname}"
+  end
+  
+  start_hls("main",
+            2.0,
+            5,
+            5,
+            segment_name,
+            "/__w/libretime/libretime/playout",
+            streams,
+            output_hls_1_source)
+  
+  
+  
+  gateway("started")
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config5-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_main_secure = false
+  input_show_mount = "show"
+  input_show_port = 8002
+  input_show_secure = false
+  
+  # Settings
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  # hls:1
+  
+  output_hls_1_source = s
+  
+  streams = ref([])
+  
+  streamout = %ffmpeg(format="mpegts" ,
+                              codec="libmp3lame",
+                              channels=2,
+                              ar=44100,
+                              b="32k")
+      streams := list.append([("mp3low", streamout)], !streams)
+  
+  streamout = %ffmpeg(format="mpegts" ,
+                              codec="libmp3lame",
+                              channels=2,
+                              ar=44100,
+                              b="128k")
+      streams := list.append([("mp3high", streamout)], !streams)
+  
+  def segment_name(~position,~extname, stream_name) =
+    timestamp = int_of_float(time())
+    duration = 2.0
+    "#{stream_name}_#{duration}_#{timestamp}_#{position}.#{extname}"
+  end
+  
+  start_hls("main",
+            2.0,
+            5,
+            5,
+            segment_name,
+            "/__w/libretime/libretime/playout",
+            streams,
+            output_hls_1_source)
+  
   # icecast:1
   output_icecast_1_source = s
   # Disable ogg metadata
@@ -279,7 +386,7 @@
   
   '''
 # ---
-# name: test_generate_entrypoint[stream_config5-1.4]
+# name: test_generate_entrypoint[stream_config6-1.4]
   '''
   # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
   ###########################################################
@@ -327,7 +434,7 @@
   
   '''
 # ---
-# name: test_generate_entrypoint[stream_config6-1.4]
+# name: test_generate_entrypoint[stream_config7-1.4]
   '''
   # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
   ###########################################################
@@ -376,7 +483,7 @@
   
   '''
 # ---
-# name: test_generate_entrypoint[stream_config7-1.4]
+# name: test_generate_entrypoint[stream_config8-1.4]
   '''
   # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
   ###########################################################

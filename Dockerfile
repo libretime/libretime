@@ -33,6 +33,7 @@ RUN set -eux \
     && install --directory --owner=${USER} /etc/libretime /srv/libretime
 
 ENV LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
+ENV LIBRETIME_OUTPUT_PATH=/var/playout/hls
 
 # Shared packages
 COPY tools/packages.py /tmp/packages.py
@@ -123,6 +124,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 COPY playout .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --editable .[sentry]
+
+RUN mkdir -p $LIBRETIME_OUTPUT_PATH
+RUN chown ${USER}:${USER} $LIBRETIME_OUTPUT_PATH
 
 # Run
 USER ${UID}:${GID}

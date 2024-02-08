@@ -1,3 +1,22 @@
+def start_hls(input_main_mount, segment_duration, segments, segments_overhead, segment_named, servpath, streamsref, output_source)
+    streams_infos = ref([])
+    #generate dummy stream infos does the trick for 1.4 (just setup ascending bitrate for player can select)
+    list.iter(fun(item) ->
+        streams_infos := list.append([(fst(item), (list.length(!streamsref)-list.length(!streams_infos)+1,'',''))], !streams_infos )
+    , !streamsref)
+    argstream = !streamsref
+    arginfos = !streams_infos
+    output.file.hls(playlist=input_main_mount,
+                segment_duration=segment_duration,
+                segments=segments,
+                segments_overhead=segments_overhead,
+                streams_info=arginfos,
+                segment_name=segment_named,
+                servpath,
+                argstream,
+                output_source )
+end
+
 def gateway(args)
   command = "timeout --signal=KILL 45 libretime-playout-notify #{args} &"
   log(command)

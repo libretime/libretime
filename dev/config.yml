@@ -43,7 +43,7 @@ stream:
 
     icecast:
       - <<: *default_icecast_output
-        enabled: true
+        enabled: false
         mount: main.ogg
         public_url: https://localhost:8443/main.ogg
         audio:
@@ -51,7 +51,7 @@ stream:
           bitrate: 256
 
       - <<: *default_icecast_output
-        enabled: true
+        enabled: false
         mount: main.opus
         public_url: https://localhost:8443/main.opus
         audio:
@@ -59,12 +59,36 @@ stream:
           bitrate: 256
 
       - <<: *default_icecast_output
-        enabled: true
+        enabled: false
         mount: main.mp3
         public_url: https://localhost:8443/main.mp3
         audio:
           format: mp3
           bitrate: 256
+
+    hls:
+      - enabled: true
+        segment_duration: 2.0
+        segment_count: 5
+        segments_overhead: 5
+        public_url:
+        manifest: main.m3u8
+        streams:
+          - segments_prefix: mp3_low
+            codec: libmp3lame
+            bitrate: 32k
+            sample_rate: 44100
+            format: mpegts
+          - segments_prefix: mp3_med
+            format: mpegts
+            codec: libmp3lame
+            bitrate: 128k
+            sample_rate: 44100
+          - segments_prefix: mp3_hifi
+            format: mpegts
+            codec: libmp3lame
+            bitrate: 256k
+            sample_rate: 44100
 
     system:
       - enabled: false

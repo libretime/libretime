@@ -70,6 +70,32 @@ TEST_STREAM_CONFIGS: List[Config] = [
     ),
     make_config_with_stream(
         outputs={
+            "hls": [
+                {
+                    "enabled": True,
+                    "manifest": "main",
+                    "streams": [
+                        {
+                            "segments_prefix": "mp3low",
+                            "format": "mpegts",
+                            "codec": "libmp3lame",
+                            "bitrate": "32k",
+                            "sample_rate": "44100",
+                        },
+                        {
+                            "segments_prefix": "mp3high",
+                            "format": "mpegts",
+                            "codec": "libmp3lame",
+                            "bitrate": "128k",
+                            "sample_rate": "44100",
+                        },
+                    ],
+                }
+            ],
+        }
+    ),
+    make_config_with_stream(
+        outputs={
             "icecast": [
                 {
                     "enabled": True,
@@ -84,6 +110,28 @@ TEST_STREAM_CONFIGS: List[Config] = [
                     "source_password": "hackme",
                     "audio": {"format": "mp3", "bitrate": 256},
                 },
+            ],
+            "hls": [
+                {
+                    "enabled": True,
+                    "manifest": "main",
+                    "streams": [
+                        {
+                            "segments_prefix": "mp3low",
+                            "format": "mpegts",
+                            "codec": "libmp3lame",
+                            "bitrate": "32k",
+                            "sample_rate": "44100",
+                        },
+                        {
+                            "segments_prefix": "mp3high",
+                            "format": "mpegts",
+                            "codec": "libmp3lame",
+                            "bitrate": "128k",
+                            "sample_rate": "44100",
+                        },
+                    ],
+                }
             ],
         }
     ),

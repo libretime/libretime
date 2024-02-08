@@ -317,6 +317,48 @@ stream:
         # > default is false
         mobile: false
 
+    hls:
+      - # Whether the output is enabled.
+        # > default is false
+        enabled: true
+        # > segment_duration  (default:2.0)
+        segment_duration: 2.0
+        # > segments count  (default:5)
+        segment_count: 5
+        # > segments_overhead (default:5)
+        segments_overhead: 5
+        # Output public url, If not defined, the value will be generated from
+        # the [general.public_url] hostname, the output port and mount.
+        public_url:
+        # hls mount point
+        # > this field is REQUIRED
+        manifest: main.m3u8
+        streams:
+          - # > prefix of generated fragment
+            # > this field is REQUIRED
+            segments_prefix: mp3_low
+            # > must be one of ('mpegts', 'adts')
+            # > this field is REQUIRED
+            format: mpegts
+            # > codec must be one of ('libmp3lame', 'aac')
+            # > this field is REQUIRED
+            codec: libmp3lame
+            # > bitrate of the stream
+            # > this field is REQUIRED
+            bitrate: 32k
+            # > sampling rate (default: 44100Hz)
+            sample_rate: 44100
+          - segments_prefix: mp3_med
+            format: mpegts
+            codec: libmp3lame
+            bitrate: 128k
+            sample_rate: 44100
+          - segments_prefix: mp3_hifi
+            format: mpegts
+            codec: libmp3lame
+            bitrate: 256k
+            sample_rate: 44100
+
     # System outputs.
     # > max items is 1
     system:

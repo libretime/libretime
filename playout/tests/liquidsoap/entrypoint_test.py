@@ -5,7 +5,7 @@ from unittest import mock
 import pytest
 
 from libretime_playout.config import Config
-from libretime_playout.liquidsoap.entrypoint import generate_entrypoint
+from libretime_playout.liquidsoap.entrypoint import InfoVersion, generate_entrypoint
 from libretime_playout.liquidsoap.models import Info, StreamPreferences
 from libretime_playout.liquidsoap.version import get_liquidsoap_version
 
@@ -28,16 +28,19 @@ def test_generate_entrypoint(stream_config: Config, version, snapshot):
     ):
         found = generate_entrypoint(
             log_filepath=Path("/var/log/radio.log"),
+            hls_output_path=Path.cwd(),
             config=stream_config,
             preferences=StreamPreferences(
                 input_fade_transition=0.0,
                 message_format=0,
                 message_offline="LibreTime - offline",
             ),
-            info=Info(
-                station_name="LibreTime",
+            infoversion=InfoVersion(
+                Info(
+                    station_name="LibreTime",
+                ),
+                version,
             ),
-            version=version,
         )
 
     assert found == snapshot
@@ -58,16 +61,19 @@ def test_liquidsoap_syntax(tmp_path: Path, stream_config):
     entrypoint_filepath.write_text(
         generate_entrypoint(
             log_filepath=log_filepath,
+            hls_output_path=Path.cwd(),
             config=stream_config,
             preferences=StreamPreferences(
                 input_fade_transition=0.0,
                 message_format=0,
                 message_offline="LibreTime - offline",
             ),
-            info=Info(
-                station_name="LibreTime",
+            infoversion=InfoVersion(
+                Info(
+                    station_name="LibreTime",
+                ),
+                get_liquidsoap_version(),
             ),
-            version=get_liquidsoap_version(),
         ),
         encoding="utf-8",
     )
@@ -86,6 +92,7 @@ def test_liquidsoap_unsupported_output_aac(tmp_path: Path):
     entrypoint_filepath.write_text(
         generate_entrypoint(
             log_filepath=log_filepath,
+            hls_output_path=Path.cwd(),
             config=make_config_with_stream(
                 outputs={
                     "icecast": [
@@ -103,10 +110,12 @@ def test_liquidsoap_unsupported_output_aac(tmp_path: Path):
                 message_format=0,
                 message_offline="LibreTime - offline",
             ),
-            info=Info(
-                station_name="LibreTime",
+            infoversion=InfoVersion(
+                Info(
+                    station_name="LibreTime",
+                ),
+                get_liquidsoap_version(),
             ),
-            version=get_liquidsoap_version(),
         ),
         encoding="utf-8",
     )

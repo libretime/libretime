@@ -5,12 +5,16 @@ from typing import Optional
 
 import click
 from libretime_api_client.v2 import ApiClient
-from libretime_shared.cli import cli_config_options, cli_logging_options
+from libretime_shared.cli import (
+    cli_config_options,
+    cli_logging_options,
+    cli_output_options,
+)
 from libretime_shared.config import DEFAULT_ENV_PREFIX
 from libretime_shared.logging import setup_logger
 
 from ..config import Config
-from .entrypoint import generate_entrypoint
+from .entrypoint import InfoVersion, generate_entrypoint
 from .models import Info, StreamPreferences
 from .version import get_liquidsoap_version
 
@@ -22,7 +26,13 @@ here = Path(__file__).parent
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
 @cli_logging_options()
 @cli_config_options()
-def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[Path]):
+@cli_output_options()
+def cli(
+    log_level: str,
+    log_filepath: Optional[Path],
+    config_filepath: Optional[Path],
+    output_path: Path,
+):
     """
     Run liquidsoap.
     """
@@ -43,10 +53,10 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     entrypoint_filepath.write_text(
         generate_entrypoint(
             log_filepath,
+            output_path,
             config,
             preferences,
-            info,
-            version,
+            InfoVersion(info, version),
         ),
         encoding="utf-8",
     )

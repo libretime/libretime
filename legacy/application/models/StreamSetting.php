@@ -55,9 +55,6 @@ class Application_Model_StreamConfig
                 $prefix . 'pass' => $output['source_password'] ?? '',
                 $prefix . 'admin_user' => $output['admin_user'] ?? 'admin',
                 $prefix . 'admin_pass' => $output['admin_password'] ?? '',
-                $prefix . 'channels' => $output['audio']['channels'] ?? 'stereo',
-                $prefix . 'bitrate' => $output['audio']['bitrate'] ?? 128,
-                $prefix . 'type' => $output['audio']['format'],
                 $prefix . 'name' => $output['name'] ?? '',
                 $prefix . 'description' => $output['description'] ?? '',
                 $prefix . 'genre' => $output['genre'] ?? '',
@@ -65,6 +62,22 @@ class Application_Model_StreamConfig
                 $prefix . 'mobile' => $output['mobile'] ?? 'false',
                 // $prefix . 'liquidsoap_error' => 'waiting',
             ];
+            if (array_key_exists('audio', $output)) {
+                $result = array_merge($result, [
+                    $prefix . 'channels' => $output['audio']['channels'] ?? 'stereo',
+                    $prefix . 'bitrate' => $output['audio']['bitrate'] ?? 128,
+                    $prefix . 'type' => $output['audio']['format'],
+                ]);
+            } elseif ($output['kind'] == 'hls') {
+                // HLS : set web server host and port
+                $result = array_merge($result, [
+                    $prefix . 'port' => Config::get('general.public_url_raw')->getPort(),
+                    $prefix . 'type' => 'x-mpegurl',
+                    $prefix . 'bitrate' => '',
+                    // prefix manifest with webserver hls mount point
+                    $prefix . 'mount' => 'hls/' . $output['manifest'],
+                ]);
+            }
         }
 
         if (!$result[$prefix . 'public_url']) {

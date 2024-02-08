@@ -41,6 +41,45 @@
 {%- endif -%}
 {%- endmacro -%}
 
+
+{#-
+  Build an hls output the output configuration.
+#}
+{%- macro output_hls(output_id, output) -%}
+# hls:{{ output_id }}
+
+output_hls_{{ output_id }}_source = s
+
+streams = ref([])
+
+{% for stream in output.streams -%}
+
+    streamout = %ffmpeg(format="{{stream.format}}" ,
+                            codec="{{stream.codec}}",
+                            channels=2,
+                            ar={{stream.sample_rate}},
+                            b="{{stream.bitrate}}")
+    streams := list.append([("{{stream.segments_prefix}}", streamout)], !streams)
+
+{% endfor -%}
+
+def segment_name(~position,~extname, stream_name) =
+  timestamp = int_of_float(time())
+  duration = {{output.segment_duration}}
+  "#{stream_name}_#{duration}_#{timestamp}_#{position}.#{extname}"
+end
+
+start_hls("{{output.manifest}}",
+          {{output.segment_duration}},
+          {{output.segment_count}},
+          {{output.segments_overhead}},
+          segment_name,
+          "{{ paths.hls_output_path }}",
+          streams,
+          output_hls_{{ output_id }}_source)
+
+{%- endmacro -%}
+
 {#-
   Build an icecast output the output configuration.
 #}
@@ -151,7 +190,15 @@ output.{{ output.kind.value }}(
 {% endif -%}
 {% endfor -%}
 
-{%- for output in config.stream.outputs.icecast -%}
+{% for output in config.stream.outputs.hls -%}
+{% if output.enabled -%}
+{{ output_hls(loop.index, output) }}
+
+{% endif -%}
+{% endfor -%}
+
+{% for output in config.stream.outputs.icecast -%}
+
 {% if output.enabled -%}
 {{ output_icecast(loop.index, output) }}
 
