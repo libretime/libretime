@@ -15,7 +15,6 @@ from .events import (
     WebStreamEvent,
     datetime_to_event_key,
     event_isoparse,
-    parse_any_event,
 )
 
 
