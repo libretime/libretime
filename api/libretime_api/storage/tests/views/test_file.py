@@ -1,5 +1,4 @@
 import os
-import sys
 
 from django.conf import settings
 from model_bakery import baker
