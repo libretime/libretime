@@ -45,7 +45,8 @@ $analogMeter = true;
     </div>
     <div style="height: 160px;"></div>
     <?php echo $this->form; ?>
-    <div style="width:500px">
+    <div class="collapsible-header closed"><span class="arrow-icon"></span><?php echo _("Visual Waveform Editor"); ?></div>
+    <div class="visual-waveform-editor" style="clear:both;padding:18px 24px 0 0;">
           <div class="controls">
               <div class="row">
                   <div class="col-sm-7">
@@ -146,6 +147,16 @@ $analogMeter = true;
         var eTrack = renderWaveform(track_id, selector_id, url, cuein, cueout, gain_level, default_gain);
 
         $(document).ready(function() {
+
+          $(".collapsible-header")
+            .off("click")
+            .on("click", function () {
+                $(this).toggleClass("visible");
+                $(".visual-waveform-editor").toggle();
+                $(".editor_pane_wrapper").animate({
+                    scrollTop: $(".collapsible-header").offset().top * 2
+                }, 500);
+            });
 
             // Counter field edit
             $(document).on('change', '#tracktimerinput-<?php echo $this->id; ?>', 'input', function(event) {
