@@ -28,7 +28,7 @@ Please follow this **before the upgrade procedure**.
 
 ### Replay gain modifier preference
 
-The `replay_gain_modifier` preference is now stored as system preference. Please check and save the replay gain modifier preference manually to make sure it is up to date and usable.
+The `replay_gain_modifier` preference is now stored as system preference. Please check and save the replay gain modifier preference manually to make sure the preference is up to date and usable.
 
 ## :warning: Known issues
 
