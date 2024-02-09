@@ -8,7 +8,7 @@ class Application_Form_EditAudioMD extends Zend_Form
     {
         // Set the method for the display form to POST
         $this->setMethod('post');
-        $this->setAttrib('id', "track_edit_".$p_id);
+        $this->setAttrib('id', 'track_edit_' . $p_id);
 
         $file_id = new Zend_Form_Element_Hidden('file_id');
         $file_id->setValue($p_id);
