@@ -7535,10 +7535,19 @@ components:
         message_offline:
           type: string
           readOnly: true
+        replay_gain_enabled:
+          type: boolean
+          readOnly: true
+        replay_gain_offset:
+          type: number
+          format: double
+          readOnly: true
       required:
         - input_fade_transition
         - message_format
         - message_offline
+        - replay_gain_enabled
+        - replay_gain_offset
     StreamState:
       type: object
       properties:

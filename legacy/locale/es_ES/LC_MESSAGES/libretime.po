@@ -14,15 +14,16 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2024-02-05 01:52+0000\n"
-"PO-Revision-Date: 2023-03-21 11:41+0000\n"
+"PO-Revision-Date: 2024-02-07 22:01+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
-"Language-Team: Spanish <https://hosted.weblate.org/projects/libretime/legacy/es/>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/libretime/legacy/"
+"es/>\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -3321,7 +3322,7 @@ msgstr "Si esta opción está activada, se generará un nuevo bloque inteligente
 
 #: application/forms/GeneralPreferences.php:161
 msgid "Trim overbooked shows after autoloading?"
-msgstr ""
+msgstr "¿Recortar programas con overbooking después de la carga automática?"
 
 #: application/forms/GeneralPreferences.php:168
 msgid "Public LibreTime API"
@@ -3359,6 +3360,8 @@ msgstr "¿Mostrar el botón de inicio de sesión en su página de radio?"
 #: application/forms/GeneralPreferences.php:231
 msgid "Disable the public radio page and redirect to the login page?"
 msgstr ""
+"¿Desactivar la página de la radio pública y redirigir a la página de inicio "
+"de sesión?"
 
 #: application/forms/GeneralPreferences.php:236
 msgid "Feature Previews"
