@@ -23,7 +23,6 @@ class StreamPreferencesView(views.APIView):
                     "replay_gain_offset",
                     "master_me_preset",
                     "master_me_lufs",
-
                 }
             )
         )
