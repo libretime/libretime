@@ -47,4 +47,6 @@ def stream_preferences():
         message_offline="LibreTime - offline",
         replay_gain_enabled=True,
         replay_gain_offset=-3.5,
+        master_me_lufs=-16,
+        master_me_preset=0,
     )
