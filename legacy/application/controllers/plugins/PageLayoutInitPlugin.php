@@ -217,8 +217,8 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             ->appendFile(Assets::url('js/airtime/common/common.js'), 'text/javascript')
             ->appendFile(Assets::url('js/airtime/common/audioplaytest.js'), 'text/javascript');
 
-            // include wavesurfer.js for waveform display
-            $view->headScript()->appendFile(Assets::url('js/wavesurfer/wavesurfer.min.js'), 'text/javascript')
+        // include wavesurfer.js for waveform display
+        $view->headScript()->appendFile(Assets::url('js/wavesurfer/wavesurfer.min.js'), 'text/javascript')
             ->appendFile(Assets::url('js/wavesurfer/timeline.min.js'), 'text/javascript')
             ->appendFile(Assets::url('js/wavesurfer/regions.min.js'), 'text/javascript')
             ->appendFile(Assets::url('js/wavesurfer/cursor.min.js'), 'text/javascript')
