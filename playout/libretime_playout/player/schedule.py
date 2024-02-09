@@ -64,15 +64,11 @@ def get_schedule(api_client: ApiClient) -> Events:
         if show["live_enabled"]:
             show_instance["starts_at"] = event_isoparse(show_instance["starts_at"])
             show_instance["ends_at"] = event_isoparse(show_instance["ends_at"])
-            generate_live_events(
-                events,
-                show_instance,
-                stream_preferences.input_fade_transition,
-            )
+            generate_live_events(events, show_instance, stream_preferences)
 
         if item["file"]:
             file = api_client.get_file(item["file"]).json()
-            generate_file_events(events, item, file, show)
+            generate_file_events(events, item, file, show, stream_preferences)
 
         elif item["stream"]:
             webstream = api_client.get_webstream(item["stream"]).json()
@@ -84,9 +80,9 @@ def get_schedule(api_client: ApiClient) -> Events:
 def generate_live_events(
     events: Events,
     show_instance: dict,
-    input_fade_transition: float,
+    stream_preferences: StreamPreferences,
 ):
-    transition = timedelta(seconds=input_fade_transition)
+    transition = timedelta(seconds=stream_preferences.input_fade_transition)
 
     switch_off = show_instance["ends_at"] - transition
     kick_out = show_instance["ends_at"]
@@ -118,6 +114,7 @@ def generate_file_events(
     schedule: dict,
     file: dict,
     show: dict,
+    stream_preferences: StreamPreferences,
 ):
     """
     Generate events for a scheduled file.
@@ -143,6 +140,15 @@ def generate_file_events(
         replay_gain=file["replay_gain"],
         filesize=file["size"],
     )
+
+    if event.replay_gain is None:
+        event.replay_gain = 0.0
+
+    if stream_preferences.replay_gain_enabled:
+        event.replay_gain += stream_preferences.replay_gain_offset
+    else:
+        event.replay_gain = None
+
     insert_event(events, event.start_key, event)
 
 
