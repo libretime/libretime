@@ -1265,7 +1265,7 @@ class Application_Model_Preference
 
     public static function setReplayGainModifier($rg_modifier)
     {
-        self::setValue('replay_gain_modifier', $rg_modifier, true);
+        self::setValue('replay_gain_modifier', $rg_modifier, false);
     }
 
     public static function GetMasterMePreset()

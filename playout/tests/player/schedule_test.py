@@ -4,6 +4,7 @@ from datetime import datetime
 import pytest
 from libretime_api_client.v2 import ApiClient
 
+from libretime_playout.liquidsoap.models import StreamPreferences
 from libretime_playout.player.events import (
     ActionEvent,
     EventKind,
@@ -271,13 +272,13 @@ SCHEDULE = [
 ]
 
 
-def test_generate_live_events():
+def test_generate_live_events(stream_preferences: StreamPreferences):
     show_instance_3 = SHOW_INSTANCE_3.copy()
     show_instance_3["starts_at"] = event_isoparse(show_instance_3["starts_at"])
     show_instance_3["ends_at"] = event_isoparse(show_instance_3["ends_at"])
 
     result = {}
-    generate_live_events(result, show_instance_3, 0.0)
+    generate_live_events(result, show_instance_3, stream_preferences)
     assert result == {
         "2022-09-05-13-00-00": ActionEvent(
             start=datetime(2022, 9, 5, 13, 0),
@@ -288,7 +289,8 @@ def test_generate_live_events():
     }
 
     result = {}
-    generate_live_events(result, show_instance_3, 2.0)
+    stream_preferences.input_fade_transition = 2.0
+    generate_live_events(result, show_instance_3, stream_preferences)
     assert result == {
         "2022-09-05-12-59-58": ActionEvent(
             start=datetime(2022, 9, 5, 12, 59, 58),
@@ -305,13 +307,13 @@ def test_generate_live_events():
     }
 
 
-def test_generate_file_events():
+def test_generate_file_events(stream_preferences: StreamPreferences):
     schedule_1 = SCHEDULE_1.copy()
     schedule_1["starts_at"] = event_isoparse(schedule_1["starts_at"])
     schedule_1["ends_at"] = event_isoparse(schedule_1["ends_at"])
 
     result = {}
-    generate_file_events(result, schedule_1, FILE_2, SHOW_1)
+    generate_file_events(result, schedule_1, FILE_2, SHOW_1, stream_preferences)
     assert result == {
         "2022-09-05-11-00-00": FileEvent(
             start=datetime(2022, 9, 5, 11, 0),
@@ -328,7 +330,32 @@ def test_generate_file_events():
             track_title="My Friend the Forest",
             artist_name="Nils Frahm",
             mime="audio/flac",
-            replay_gain=11.46,
+            replay_gain=11.46 - 3.5,
+            filesize=10000,
+            file_ready=False,
+        )
+    }
+
+    result = {}
+    stream_preferences.replay_gain_enabled = False
+    generate_file_events(result, schedule_1, FILE_2, SHOW_1, stream_preferences)
+    assert result == {
+        "2022-09-05-11-00-00": FileEvent(
+            start=datetime(2022, 9, 5, 11, 0),
+            end=datetime(2022, 9, 5, 11, 5, 2),
+            type=EventKind.FILE,
+            row_id=1,
+            uri=None,
+            id=2,
+            show_name="Show 1",
+            fade_in=500.0,
+            fade_out=500.0,
+            cue_in=13.7008,
+            cue_out=315.845,
+            track_title="My Friend the Forest",
+            artist_name="Nils Frahm",
+            mime="audio/flac",
+            replay_gain=None,
             filesize=10000,
             file_ready=False,
         )
@@ -398,6 +425,8 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
             "input_fade_transition": 2.0,
             "message_format": 0,
             "message_offline": "",
+            "replay_gain_enabled": True,
+            "replay_gain_offset": -3.5,
             "master_me_lufs": -16,
             "master_me_preset": 0,
         },
@@ -436,7 +465,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
             track_title="My Friend the Forest",
             artist_name="Nils Frahm",
             mime="audio/flac",
-            replay_gain=11.46,
+            replay_gain=11.46 - 3.5,
             filesize=10000,
             file_ready=False,
         ),
@@ -455,7 +484,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
             track_title="#2",
             artist_name="Nils Frahm",
             mime="audio/flac",
-            replay_gain=-1.65,
+            replay_gain=-1.65 - 3.5,
             filesize=10000,
             file_ready=False,
         ),
@@ -474,7 +503,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
             track_title="Democracy Now! 2022-09-05 Monday",
             artist_name="Democracy Now! Audio",
             mime="audio/mp3",
-            replay_gain=-1.39,
+            replay_gain=-1.39 - 3.5,
             filesize=10000,
             file_ready=False,
         ),
@@ -493,7 +522,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
             track_title="#2",
             artist_name="Nils Frahm",
             mime="audio/flac",
-            replay_gain=-1.65,
+            replay_gain=-1.65 - 3.5,
             filesize=10000,
             file_ready=False,
         ),
@@ -548,7 +577,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
             track_title="All Melody",
             artist_name="Nils Frahm",
             mime="audio/flac",
-            replay_gain=-2.13,
+            replay_gain=-2.13 - 3.5,
             filesize=10000,
             file_ready=False,
         ),
@@ -567,7 +596,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
             track_title="My Friend the Forest",
             artist_name="Nils Frahm",
             mime="audio/flac",
-            replay_gain=11.46,
+            replay_gain=11.46 - 3.5,
             filesize=10000,
             file_ready=False,
         ),
@@ -586,7 +615,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
             track_title="The Dane",
             artist_name="Nils Frahm",
             mime="audio/flac",
-            replay_gain=4.52,
+            replay_gain=4.52 - 3.5,
             filesize=10000,
             file_ready=False,
         ),
@@ -617,7 +646,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
             track_title="My Friend the Forest",
             artist_name="Nils Frahm",
             mime="audio/flac",
-            replay_gain=11.46,
+            replay_gain=11.46 - 3.5,
             filesize=10000,
             file_ready=False,
         ),
@@ -636,7 +665,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
             track_title="#2",
             artist_name="Nils Frahm",
             mime="audio/flac",
-            replay_gain=-1.65,
+            replay_gain=-1.65 - 3.5,
             filesize=10000,
             file_ready=False,
         ),

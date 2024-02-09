@@ -16,8 +16,12 @@ def test_preference_get_stream_preferences(db):
         "input_fade_transition": 0.0,
         "message_format": 0,
         "message_offline": "LibreTime - offline",
+        "replay_gain_enabled": True,
+        "replay_gain_offset": 0.0,
         "master_me_lufs": -16,
         "master_me_preset": 0,
+        "replay_gain_enabled": True,
+        "replay_gain_offset": 0.0,
     }
 
 
