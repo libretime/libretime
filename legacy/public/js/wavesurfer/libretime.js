@@ -580,10 +580,11 @@ function renderWaveform(track_id, selector_id, url, cuein, cueout, gain_level, d
 
     eTrack.on('audioprocess', function (e) {
         analyser.getFloatFrequencyData(fdataArray);
-        llevel = (fdataArray[0] * 0.05).toFixed(2);
+        var replaygain_mod = parseFloat(document.getElementById('gain-val-'+track_id).value);
+        llevel = (fdataArray[0] * 0.05 + replaygain_mod + default_gain).toFixed(2);
         $("input#testgain-"+track_id).val(llevel);
 
-        if (llevel < "-2.00") {  // TODO: -3.00 is just for testing here
+        if ((fdataArray[0] * 0.05 + replaygain_mod + default_gain) > -2) { // Clipping
             document.getElementById('gain-clipping-'+track_id).style.backgroundColor = "rgba(242, 38, 19, 1)";
         } else {
             document.getElementById('gain-clipping-'+track_id).style.backgroundColor = "rgba(101,	0,	0, 1)";
@@ -591,7 +592,7 @@ function renderWaveform(track_id, selector_id, url, cuein, cueout, gain_level, d
 
         document.getElementById('tracktimerinput-'+track_id).value=(eTrack.getCurrentTime().toFixed(3));
         meter_needle.style.transition = '5ms ease all';
-        meter_needle.style.transform = 'rotate(' + (270 + ((deciNum(fdataArray[0] * 0.05) * 180) / 76.2)) + 'deg)';
+        meter_needle.style.transform = 'rotate(' + (270 + ((deciNum(fdataArray[0] * 0.05 + replaygain_mod + default_gain) * 180) / 76.2)) + 'deg)';
     });
 
     var playPause = document.getElementById('track-play-'+track_id);
@@ -653,8 +654,8 @@ function renderWaveform(track_id, selector_id, url, cuein, cueout, gain_level, d
 
     var onChangeGain = function (e) {
         var gainVal = gainNum(e.target.value);
-        eTrack.setVolume(deciSteps(gainNum(e.target.value)));
-        document.querySelector(".replay_gain_"+ track_id).value =(gainNum(e.target.value));
+        eTrack.setVolume(deciSteps(gainVal));
+        document.querySelector(".replay_gain_"+ track_id).value = gainVal;
 
         if(gainVal === '0.00'){
            document.querySelector("#gain-val-"+ track_id).style.color = "#ff5d1a";
@@ -662,12 +663,12 @@ function renderWaveform(track_id, selector_id, url, cuein, cueout, gain_level, d
           document.querySelector("#gain-val-"+ track_id).style.color = "#ffffff";
         }
         if(gainVal == "-Infinity"){
-            document.querySelector("#gain-val-"+ track_id).innerHTML = "∞";
+            document.querySelector("#gain-val-"+ track_id).value = "∞";
         } else {
-            document.querySelector("#gain-val-"+ track_id).innerHTML = gainVal;
+            document.querySelector("#gain-val-"+ track_id).value = gainVal;
         }
 
-        document.getElementById("volume-"+ track_id).value = gainNum(e.target.value);
+        document.getElementById("volume-"+ track_id).value = gainVal;
     };
     gainInput.addEventListener('input', onChangeGain);
     gainInput.addEventListener('change', onChangeGain);
