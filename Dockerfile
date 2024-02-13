@@ -98,16 +98,27 @@ ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 # Playout                                                                              #
 #======================================================================================#
 FROM python-base-ffmpeg as libretime-playout
+ARG MASTER_ME=1.2.0
 
 COPY tools/packages.py /tmp/packages.py
 COPY playout/packages.ini /tmp/packages.ini
 
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends xz-utils \
     $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
+
+# get master_me soundprocessor plugin from github
+RUN set -eux \
+    && mkdir /tmp/master_me \
+    && mkdir /usr/lib/ladspa \
+    && curl -LJO https://github.com/trummerschlunk/master_me/releases/download/$MASTER_ME/master_me-$MASTER_ME-linux-x86_64.tar.xz \
+    && tar -xf master_me-$MASTER_ME-linux-x86_64.tar.xz -C /tmp/master_me/ \
+    && cp /tmp/master_me/master_me-$MASTER_ME/master_me-ladspa.so /usr/lib/ladspa/ \
+    && rm -rf /tmp/master_me \
+    && rm -f master_me-$MASTER_ME-linux-x86_64.tar.xz
 
 WORKDIR /src
 

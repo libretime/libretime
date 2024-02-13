@@ -53,6 +53,29 @@ class Application_Form_StreamSetting extends Zend_Form
             ->setDecorators(['ViewHelper']);
         $this->addElement($replay_gain);
 
+        $master_me = new Zend_Form_Element_Radio('masterMe');
+        $master_me
+            ->setLabel(_('Master Me Processor Preset:'))
+            ->setMultiOptions([
+                _('Disabled'),
+                _('Speech General (-16 LUFS)'),
+                _('Music General (-16 LUFS)'),
+                _('EBU R128 (-23 LUFS)'),
+                _('Apple Podcasts (-16 LUFS)'),
+                _('YouTube (-14 LUFS)'),
+            ])
+            ->setValue(Application_Model_Preference::GetMasterMePreset())
+            ->setDecorators(['ViewHelper']);
+        $this->addElement($master_me);
+
+        $master_me_lufs = new Zend_Form_Element_Hidden('masterMeLufs');
+        $master_me_lufs
+            ->setLabel(_('Master-Me LUFS'))
+            ->setValue(Application_Model_Preference::getMasterMeLufs())
+            ->setAttribs(['style' => 'border: 0; color: #f6931f; font-weight: bold;'])
+            ->setDecorators(['ViewHelper']);
+        $this->addElement($master_me_lufs);
+
         $output_sound_device = new Zend_Form_Element_Checkbox('output_sound_device');
         $output_sound_device
             ->setLabel(_('Hardware Audio Output:'))
