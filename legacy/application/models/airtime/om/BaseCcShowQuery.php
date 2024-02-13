@@ -23,6 +23,10 @@
  * @method CcShowQuery orderByDbHasAutoPlaylist($order = Criteria::ASC) Order by the has_autoplaylist column
  * @method CcShowQuery orderByDbAutoPlaylistId($order = Criteria::ASC) Order by the autoplaylist_id column
  * @method CcShowQuery orderByDbAutoPlaylistRepeat($order = Criteria::ASC) Order by the autoplaylist_repeat column
+ * @method CcShowQuery orderByDbOverrideIntroPlaylist($order = Criteria::ASC) Order by the override_intro_playlist column
+ * @method CcShowQuery orderByDbIntroPlaylistId($order = Criteria::ASC) Order by the intro_playlist_id column
+ * @method CcShowQuery orderByDbOverrideOutroPlaylist($order = Criteria::ASC) Order by the override_outro_playlist column
+ * @method CcShowQuery orderByDbOutroPlaylistId($order = Criteria::ASC) Order by the outro_playlist_id column
  *
  * @method CcShowQuery groupByDbId() Group by the id column
  * @method CcShowQuery groupByDbName() Group by the name column
@@ -41,6 +45,10 @@
  * @method CcShowQuery groupByDbHasAutoPlaylist() Group by the has_autoplaylist column
  * @method CcShowQuery groupByDbAutoPlaylistId() Group by the autoplaylist_id column
  * @method CcShowQuery groupByDbAutoPlaylistRepeat() Group by the autoplaylist_repeat column
+ * @method CcShowQuery groupByDbOverrideIntroPlaylist() Group by the override_intro_playlist column
+ * @method CcShowQuery groupByDbIntroPlaylistId() Group by the intro_playlist_id column
+ * @method CcShowQuery groupByDbOverrideOutroPlaylist() Group by the override_outro_playlist column
+ * @method CcShowQuery groupByDbOutroPlaylistId() Group by the outro_playlist_id column
  *
  * @method CcShowQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcShowQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -85,6 +93,10 @@
  * @method CcShow findOneByDbHasAutoPlaylist(boolean $has_autoplaylist) Return the first CcShow filtered by the has_autoplaylist column
  * @method CcShow findOneByDbAutoPlaylistId(int $autoplaylist_id) Return the first CcShow filtered by the autoplaylist_id column
  * @method CcShow findOneByDbAutoPlaylistRepeat(boolean $autoplaylist_repeat) Return the first CcShow filtered by the autoplaylist_repeat column
+ * @method CcShow findOneByDbOverrideIntroPlaylist(boolean $override_intro_playlist) Return the first CcShow filtered by the override_intro_playlist column
+ * @method CcShow findOneByDbIntroPlaylistId(int $intro_playlist_id) Return the first CcShow filtered by the intro_playlist_id column
+ * @method CcShow findOneByDbOverrideOutroPlaylist(boolean $override_outro_playlist) Return the first CcShow filtered by the override_outro_playlist column
+ * @method CcShow findOneByDbOutroPlaylistId(int $outro_playlist_id) Return the first CcShow filtered by the outro_playlist_id column
  *
  * @method array findByDbId(int $id) Return CcShow objects filtered by the id column
  * @method array findByDbName(string $name) Return CcShow objects filtered by the name column
@@ -103,6 +115,10 @@
  * @method array findByDbHasAutoPlaylist(boolean $has_autoplaylist) Return CcShow objects filtered by the has_autoplaylist column
  * @method array findByDbAutoPlaylistId(int $autoplaylist_id) Return CcShow objects filtered by the autoplaylist_id column
  * @method array findByDbAutoPlaylistRepeat(boolean $autoplaylist_repeat) Return CcShow objects filtered by the autoplaylist_repeat column
+ * @method array findByDbOverrideIntroPlaylist(boolean $override_intro_playlist) Return CcShow objects filtered by the override_intro_playlist column
+ * @method array findByDbIntroPlaylistId(int $intro_playlist_id) Return CcShow objects filtered by the intro_playlist_id column
+ * @method array findByDbOverrideOutroPlaylist(boolean $override_outro_playlist) Return CcShow objects filtered by the override_outro_playlist column
+ * @method array findByDbOutroPlaylistId(int $outro_playlist_id) Return CcShow objects filtered by the outro_playlist_id column
  *
  * @package    propel.generator.airtime.om
  */
@@ -210,7 +226,7 @@ abstract class BaseCcShowQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "url", "genre", "description", "color", "background_color", "live_stream_using_airtime_auth", "live_stream_using_custom_auth", "live_stream_user", "live_stream_pass", "linked", "is_linkable", "image_path", "has_autoplaylist", "autoplaylist_id", "autoplaylist_repeat" FROM "cc_show" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "url", "genre", "description", "color", "background_color", "live_stream_using_airtime_auth", "live_stream_using_custom_auth", "live_stream_user", "live_stream_pass", "linked", "is_linkable", "image_path", "has_autoplaylist", "autoplaylist_id", "autoplaylist_repeat", "override_intro_playlist", "intro_playlist_id", "override_outro_playlist", "outro_playlist_id" FROM "cc_show" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -806,6 +822,148 @@ abstract class BaseCcShowQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcShowPeer::AUTOPLAYLIST_REPEAT, $dbAutoPlaylistRepeat, $comparison);
+    }
+
+    /**
+     * Filter the query on the override_intro_playlist column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbOverrideIntroPlaylist(true); // WHERE override_intro_playlist = true
+     * $query->filterByDbOverrideIntroPlaylist('yes'); // WHERE override_intro_playlist = true
+     * </code>
+     *
+     * @param     boolean|string $dbOverrideIntroPlaylist The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbOverrideIntroPlaylist($dbOverrideIntroPlaylist = null, $comparison = null)
+    {
+        if (is_string($dbOverrideIntroPlaylist)) {
+            $dbOverrideIntroPlaylist = in_array(strtolower($dbOverrideIntroPlaylist), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(CcShowPeer::OVERRIDE_INTRO_PLAYLIST, $dbOverrideIntroPlaylist, $comparison);
+    }
+
+    /**
+     * Filter the query on the intro_playlist_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbIntroPlaylistId(1234); // WHERE intro_playlist_id = 1234
+     * $query->filterByDbIntroPlaylistId(array(12, 34)); // WHERE intro_playlist_id IN (12, 34)
+     * $query->filterByDbIntroPlaylistId(array('min' => 12)); // WHERE intro_playlist_id >= 12
+     * $query->filterByDbIntroPlaylistId(array('max' => 12)); // WHERE intro_playlist_id <= 12
+     * </code>
+     *
+     * @see       filterByCcPlaylist()
+     *
+     * @param     mixed $dbIntroPlaylistId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbIntroPlaylistId($dbIntroPlaylistId = null, $comparison = null)
+    {
+        if (is_array($dbIntroPlaylistId)) {
+            $useMinMax = false;
+            if (isset($dbIntroPlaylistId['min'])) {
+                $this->addUsingAlias(CcShowPeer::INTRO_PLAYLIST_ID, $dbIntroPlaylistId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbIntroPlaylistId['max'])) {
+                $this->addUsingAlias(CcShowPeer::INTRO_PLAYLIST_ID, $dbIntroPlaylistId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CcShowPeer::INTRO_PLAYLIST_ID, $dbIntroPlaylistId, $comparison);
+    }
+
+    /**
+     * Filter the query on the override_outro_playlist column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbOverrideOutroPlaylist(true); // WHERE override_outro_playlist = true
+     * $query->filterByDbOverrideOutroPlaylist('yes'); // WHERE override_outro_playlist = true
+     * </code>
+     *
+     * @param     boolean|string $dbOverrideOutroPlaylist The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbOverrideOutroPlaylist($dbOverrideOutroPlaylist = null, $comparison = null)
+    {
+        if (is_string($dbOverrideOutroPlaylist)) {
+            $dbOverrideOutroPlaylist = in_array(strtolower($dbOverrideOutroPlaylist), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(CcShowPeer::OVERRIDE_OUTRO_PLAYLIST, $dbOverrideOutroPlaylist, $comparison);
+    }
+
+    /**
+     * Filter the query on the outro_playlist_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbOutroPlaylistId(1234); // WHERE outro_playlist_id = 1234
+     * $query->filterByDbOutroPlaylistId(array(12, 34)); // WHERE outro_playlist_id IN (12, 34)
+     * $query->filterByDbOutroPlaylistId(array('min' => 12)); // WHERE outro_playlist_id >= 12
+     * $query->filterByDbOutroPlaylistId(array('max' => 12)); // WHERE outro_playlist_id <= 12
+     * </code>
+     *
+     * @see       filterByCcPlaylist()
+     *
+     * @param     mixed $dbOutroPlaylistId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbOutroPlaylistId($dbOutroPlaylistId = null, $comparison = null)
+    {
+        if (is_array($dbOutroPlaylistId)) {
+            $useMinMax = false;
+            if (isset($dbOutroPlaylistId['min'])) {
+                $this->addUsingAlias(CcShowPeer::OUTRO_PLAYLIST_ID, $dbOutroPlaylistId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbOutroPlaylistId['max'])) {
+                $this->addUsingAlias(CcShowPeer::OUTRO_PLAYLIST_ID, $dbOutroPlaylistId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CcShowPeer::OUTRO_PLAYLIST_ID, $dbOutroPlaylistId, $comparison);
     }
 
     /**

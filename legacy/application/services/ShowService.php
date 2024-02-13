@@ -1667,6 +1667,14 @@ SQL;
         if ($showData['add_show_autoplaylist_id'] != '') {
             $ccShow->setDbAutoPlaylistId($showData['add_show_autoplaylist_id']);
         }
+        $ccShow->setDbOverrideIntroPlaylist($showData['add_show_override_intro_playlist'] == 1);
+        $ccShow->setDbOverrideOutroPlaylist($showData['add_show_override_outro_playlist'] == 1);
+        if ($showData['add_show_intro_playlist_id'] != '') {
+            $ccShow->setDbIntroPlaylistId($showData['add_show_intro_playlist_id']);
+        }
+        if ($showData['add_show_outro_playlist_id'] != '') {
+            $ccShow->setDbOutroPlaylistId($showData['add_show_outro_playlist_id']);
+        }
 
         // Here a user has edited a show and linked it.
         // We need to grab the existing show instances ids and fill their content
