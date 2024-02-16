@@ -15,12 +15,6 @@ function populateForm(entries) {
   $("#visibility").val(visibility_value);
 
   $("#analyze_cue_points").prop("checked", entries.analyze_cue_points);
-
-  if (entries.id.length != 0) {
-    $("#code").attr("readonly", "readonly");
-  } else {
-    $("#code").removeAttr("readonly");
-  }
 }
 
 function rowClickCallback(row_id) {
@@ -156,6 +150,7 @@ function initTracktypeData() {
     description: "",
     visibility: "1",
     id: "",
+    analyze_cue_points: true,
   };
 
   $("#add_tracktype_button").live("click", function () {
