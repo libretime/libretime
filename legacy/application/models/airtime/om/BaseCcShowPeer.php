@@ -114,11 +114,11 @@ abstract class BaseCcShowPeer
      * e.g. CcShowPeer::$fieldNames[CcShowPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbUrl', 'DbGenre', 'DbDescription', 'DbColor', 'DbBackgroundColor', 'DbLiveStreamUsingAirtimeAuth', 'DbLiveStreamUsingCustomAuth', 'DbLiveStreamUser', 'DbLiveStreamPass', 'DbLinked', 'DbIsLinkable', 'DbImagePath', 'DbHasAutoPlaylist', 'DbAutoPlaylistId', 'DbAutoPlaylistRepeat', 'DbOverrideIntroPlaylist', 'DbIntroPlaylistId', 'DbOverrideOutroPlaylist', 'DbOutroPlaylistId',),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbUrl', 'dbGenre', 'dbDescription', 'dbColor', 'dbBackgroundColor', 'dbLiveStreamUsingAirtimeAuth', 'dbLiveStreamUsingCustomAuth', 'dbLiveStreamUser', 'dbLiveStreamPass', 'dbLinked', 'dbIsLinkable', 'dbImagePath', 'dbHasAutoPlaylist', 'dbAutoPlaylistId', 'dbAutoPlaylistRepeat', 'dbOverrideIntroPlaylist', 'dbIntroPlaylistId', 'dbOverrideOutroPlaylist', 'dbOutroPlaylistId',),
-        BasePeer::TYPE_COLNAME => array (CcShowPeer::ID, CcShowPeer::NAME, CcShowPeer::URL, CcShowPeer::GENRE, CcShowPeer::DESCRIPTION, CcShowPeer::COLOR, CcShowPeer::BACKGROUND_COLOR, CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH, CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH, CcShowPeer::LIVE_STREAM_USER, CcShowPeer::LIVE_STREAM_PASS, CcShowPeer::LINKED, CcShowPeer::IS_LINKABLE, CcShowPeer::IMAGE_PATH, CcShowPeer::HAS_AUTOPLAYLIST, CcShowPeer::AUTOPLAYLIST_ID, CcShowPeer::AUTOPLAYLIST_REPEAT, CCShowPeer::OVERRIDE_INTRO_PLAYLIST, CCShowPeer::INTRO_PLAYLIST_ID, CCShowPeer::OVERRIDE_OUTRO_PLAYLIST, CCShowPeer::OUTRO_PLAYLIST_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'URL', 'GENRE', 'DESCRIPTION', 'COLOR', 'BACKGROUND_COLOR', 'LIVE_STREAM_USING_AIRTIME_AUTH', 'LIVE_STREAM_USING_CUSTOM_AUTH', 'LIVE_STREAM_USER', 'LIVE_STREAM_PASS', 'LINKED', 'IS_LINKABLE', 'IMAGE_PATH', 'HAS_AUTOPLAYLIST', 'AUTOPLAYLIST_ID', 'AUTOPLAYLIST_REPEAT', 'OVERRIDE_INTRO_PLAYLIST', 'INTRO_PLAYLIST_ID', 'OVERRIDE_OUTRO_PLAYLIST', 'OUTRO_PLAYLIST_ID',),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'url', 'genre', 'description', 'color', 'background_color', 'live_stream_using_airtime_auth', 'live_stream_using_custom_auth', 'live_stream_user', 'live_stream_pass', 'linked', 'is_linkable', 'image_path', 'has_autoplaylist', 'autoplaylist_id', 'autoplaylist_repeat', 'override_intro_playlist', 'intro_playlist_id', 'override_outro_playlist', 'outro_playlist_id',),
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbUrl', 'DbGenre', 'DbDescription', 'DbColor', 'DbBackgroundColor', 'DbLiveStreamUsingAirtimeAuth', 'DbLiveStreamUsingCustomAuth', 'DbLiveStreamUser', 'DbLiveStreamPass', 'DbLinked', 'DbIsLinkable', 'DbImagePath', 'DbHasAutoPlaylist', 'DbAutoPlaylistId', 'DbAutoPlaylistRepeat', 'DbOverrideIntroPlaylist', 'DbIntroPlaylistId', 'DbOverrideOutroPlaylist', 'DbOutroPlaylistId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbUrl', 'dbGenre', 'dbDescription', 'dbColor', 'dbBackgroundColor', 'dbLiveStreamUsingAirtimeAuth', 'dbLiveStreamUsingCustomAuth', 'dbLiveStreamUser', 'dbLiveStreamPass', 'dbLinked', 'dbIsLinkable', 'dbImagePath', 'dbHasAutoPlaylist', 'dbAutoPlaylistId', 'dbAutoPlaylistRepeat', 'dbOverrideIntroPlaylist', 'dbIntroPlaylistId', 'dbOverrideOutroPlaylist', 'dbOutroPlaylistId', ),
+        BasePeer::TYPE_COLNAME => array (CcShowPeer::ID, CcShowPeer::NAME, CcShowPeer::URL, CcShowPeer::GENRE, CcShowPeer::DESCRIPTION, CcShowPeer::COLOR, CcShowPeer::BACKGROUND_COLOR, CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH, CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH, CcShowPeer::LIVE_STREAM_USER, CcShowPeer::LIVE_STREAM_PASS, CcShowPeer::LINKED, CcShowPeer::IS_LINKABLE, CcShowPeer::IMAGE_PATH, CcShowPeer::HAS_AUTOPLAYLIST, CcShowPeer::AUTOPLAYLIST_ID, CcShowPeer::AUTOPLAYLIST_REPEAT, CcShowPeer::OVERRIDE_INTRO_PLAYLIST, CcShowPeer::INTRO_PLAYLIST_ID, CcShowPeer::OVERRIDE_OUTRO_PLAYLIST, CcShowPeer::OUTRO_PLAYLIST_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'URL', 'GENRE', 'DESCRIPTION', 'COLOR', 'BACKGROUND_COLOR', 'LIVE_STREAM_USING_AIRTIME_AUTH', 'LIVE_STREAM_USING_CUSTOM_AUTH', 'LIVE_STREAM_USER', 'LIVE_STREAM_PASS', 'LINKED', 'IS_LINKABLE', 'IMAGE_PATH', 'HAS_AUTOPLAYLIST', 'AUTOPLAYLIST_ID', 'AUTOPLAYLIST_REPEAT', 'OVERRIDE_INTRO_PLAYLIST', 'INTRO_PLAYLIST_ID', 'OVERRIDE_OUTRO_PLAYLIST', 'OUTRO_PLAYLIST_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'url', 'genre', 'description', 'color', 'background_color', 'live_stream_using_airtime_auth', 'live_stream_using_custom_auth', 'live_stream_user', 'live_stream_pass', 'linked', 'is_linkable', 'image_path', 'has_autoplaylist', 'autoplaylist_id', 'autoplaylist_repeat', 'override_intro_playlist', 'intro_playlist_id', 'override_outro_playlist', 'outro_playlist_id', ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, )
     );
 
@@ -132,8 +132,8 @@ abstract class BaseCcShowPeer
         BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbUrl' => 2, 'DbGenre' => 3, 'DbDescription' => 4, 'DbColor' => 5, 'DbBackgroundColor' => 6, 'DbLiveStreamUsingAirtimeAuth' => 7, 'DbLiveStreamUsingCustomAuth' => 8, 'DbLiveStreamUser' => 9, 'DbLiveStreamPass' => 10, 'DbLinked' => 11, 'DbIsLinkable' => 12, 'DbImagePath' => 13, 'DbHasAutoPlaylist' => 14, 'DbAutoPlaylistId' => 15, 'DbAutoPlaylistRepeat' => 16, 'DbOverrideIntroPlaylist' => 17, 'DbIntroPlaylistId' => 18, 'DbOverrideOutroPlaylist' => 19, 'DbOutroPlaylistId' => 20, ),
         BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbUrl' => 2, 'dbGenre' => 3, 'dbDescription' => 4, 'dbColor' => 5, 'dbBackgroundColor' => 6, 'dbLiveStreamUsingAirtimeAuth' => 7, 'dbLiveStreamUsingCustomAuth' => 8, 'dbLiveStreamUser' => 9, 'dbLiveStreamPass' => 10, 'dbLinked' => 11, 'dbIsLinkable' => 12, 'dbImagePath' => 13, 'dbHasAutoPlaylist' => 14, 'dbAutoPlaylistId' => 15, 'dbAutoPlaylistRepeat' => 16, 'dbOverrideIntroPlaylist' => 17, 'dbIntroPlaylistId' => 18, 'dbOverrideOutroPlaylist' => 19, 'dbOutroPlaylistId' => 20, ),
         BasePeer::TYPE_COLNAME => array (CcShowPeer::ID => 0, CcShowPeer::NAME => 1, CcShowPeer::URL => 2, CcShowPeer::GENRE => 3, CcShowPeer::DESCRIPTION => 4, CcShowPeer::COLOR => 5, CcShowPeer::BACKGROUND_COLOR => 6, CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH => 7, CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH => 8, CcShowPeer::LIVE_STREAM_USER => 9, CcShowPeer::LIVE_STREAM_PASS => 10, CcShowPeer::LINKED => 11, CcShowPeer::IS_LINKABLE => 12, CcShowPeer::IMAGE_PATH => 13, CcShowPeer::HAS_AUTOPLAYLIST => 14, CcShowPeer::AUTOPLAYLIST_ID => 15, CcShowPeer::AUTOPLAYLIST_REPEAT => 16, CcShowPeer::OVERRIDE_INTRO_PLAYLIST => 17, CcShowPeer::INTRO_PLAYLIST_ID => 18, CcShowPeer::OVERRIDE_OUTRO_PLAYLIST => 19, CcShowPeer::OUTRO_PLAYLIST_ID => 20, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'URL' => 2, 'GENRE' => 3, 'DESCRIPTION' => 4, 'COLOR' => 5, 'BACKGROUND_COLOR' => 6, 'LIVE_STREAM_USING_AIRTIME_AUTH' => 7, 'LIVE_STREAM_USING_CUSTOM_AUTH' => 8, 'LIVE_STREAM_USER' => 9, 'LIVE_STREAM_PASS' => 10, 'LINKED' => 11, 'IS_LINKABLE' => 12, 'IMAGE_PATH' => 13, 'HAS_AUTOPLAYLIST' => 14, 'AUTOPLAYLIST_ID' => 15, 'AUTOPLAYLIST_REPEAT' => 16, 'OVERRIDE_INTRO_PLAYLIST' => 17, 'INTRO_PLAYLIST_ID' => 18, 'OVERRIDE_OUTRO_PLAYLIST' => 19, 'OUTRO_PLAYLIST_ID' => 20,),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'url' => 2, 'genre' => 3, 'description' => 4, 'color' => 5, 'background_color' => 6, 'live_stream_using_airtime_auth' => 7, 'live_stream_using_custom_auth' => 8, 'live_stream_user' => 9, 'live_stream_pass' => 10, 'linked' => 11, 'is_linkable' => 12, 'image_path' => 13, 'has_autoplaylist' => 14, 'autoplaylist_id' => 15, 'autoplaylist_repeat' => 16, 'override_intro_playlist' => 17, 'intro_playlist_id' => 18, 'override_outro_playlist' => 19, 'outro_playlist_id' => 20,),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'URL' => 2, 'GENRE' => 3, 'DESCRIPTION' => 4, 'COLOR' => 5, 'BACKGROUND_COLOR' => 6, 'LIVE_STREAM_USING_AIRTIME_AUTH' => 7, 'LIVE_STREAM_USING_CUSTOM_AUTH' => 8, 'LIVE_STREAM_USER' => 9, 'LIVE_STREAM_PASS' => 10, 'LINKED' => 11, 'IS_LINKABLE' => 12, 'IMAGE_PATH' => 13, 'HAS_AUTOPLAYLIST' => 14, 'AUTOPLAYLIST_ID' => 15, 'AUTOPLAYLIST_REPEAT' => 16, 'OVERRIDE_INTRO_PLAYLIST' => 17, 'INTRO_PLAYLIST_ID' => 18, 'OVERRIDE_OUTRO_PLAYLIST' => 19, 'OUTRO_PLAYLIST_ID' => 20, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'url' => 2, 'genre' => 3, 'description' => 4, 'color' => 5, 'background_color' => 6, 'live_stream_using_airtime_auth' => 7, 'live_stream_using_custom_auth' => 8, 'live_stream_user' => 9, 'live_stream_pass' => 10, 'linked' => 11, 'is_linkable' => 12, 'image_path' => 13, 'has_autoplaylist' => 14, 'autoplaylist_id' => 15, 'autoplaylist_repeat' => 16, 'override_intro_playlist' => 17, 'intro_playlist_id' => 18, 'override_outro_playlist' => 19, 'outro_playlist_id' => 20, ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, )
     );
 
@@ -565,7 +565,7 @@ abstract class BaseCcShowPeer
 
 
     /**
-     * Returns the number of rows matching criteria, joining the related CcPlaylist table
+     * Returns the number of rows matching criteria, joining the related CcPlaylistRelatedByDbAutoPlaylistId table
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
@@ -573,7 +573,7 @@ abstract class BaseCcShowPeer
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
      * @return int Number of matching rows.
      */
-    public static function doCountJoinCcPlaylist(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doCountJoinCcPlaylistRelatedByDbAutoPlaylistId(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         // we're going to modify criteria, so copy it first
         $criteria = clone $criteria;
@@ -601,7 +601,107 @@ abstract class BaseCcShowPeer
         }
 
         $criteria->addJoin(CcShowPeer::AUTOPLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related CcPlaylistRelatedByDbIntroPlaylistId table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinCcPlaylistRelatedByDbIntroPlaylistId(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(CcShowPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            CcShowPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(CcShowPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
         $criteria->addJoin(CcShowPeer::INTRO_PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related CcPlaylistRelatedByDbOutroPlaylistId table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinCcPlaylistRelatedByDbOutroPlaylistId(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(CcShowPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            CcShowPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(CcShowPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
         $criteria->addJoin(CcShowPeer::OUTRO_PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
@@ -626,7 +726,7 @@ abstract class BaseCcShowPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doSelectJoinCcPlaylist(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doSelectJoinCcPlaylistRelatedByDbAutoPlaylistId(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $criteria = clone $criteria;
 
@@ -640,7 +740,139 @@ abstract class BaseCcShowPeer
         CcPlaylistPeer::addSelectColumns($criteria);
 
         $criteria->addJoin(CcShowPeer::AUTOPLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = CcShowPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = CcShowPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = CcShowPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                CcShowPeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = CcPlaylistPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = CcPlaylistPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = CcPlaylistPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    CcPlaylistPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (CcShow) to $obj2 (CcPlaylist)
+                $obj2->addCcShowRelatedByDbAutoPlaylistId($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of CcShow objects pre-filled with their CcPlaylist objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of CcShow objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinCcPlaylistRelatedByDbIntroPlaylistId(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(CcShowPeer::DATABASE_NAME);
+        }
+
+        CcShowPeer::addSelectColumns($criteria);
+        $startcol = CcShowPeer::NUM_HYDRATE_COLUMNS;
+        CcPlaylistPeer::addSelectColumns($criteria);
+
         $criteria->addJoin(CcShowPeer::INTRO_PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = CcShowPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = CcShowPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = CcShowPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                CcShowPeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = CcPlaylistPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = CcPlaylistPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = CcPlaylistPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    CcPlaylistPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (CcShow) to $obj2 (CcPlaylist)
+                $obj2->addCcShowRelatedByDbIntroPlaylistId($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of CcShow objects pre-filled with their CcPlaylist objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of CcShow objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinCcPlaylistRelatedByDbOutroPlaylistId(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(CcShowPeer::DATABASE_NAME);
+        }
+
+        CcShowPeer::addSelectColumns($criteria);
+        $startcol = CcShowPeer::NUM_HYDRATE_COLUMNS;
+        CcPlaylistPeer::addSelectColumns($criteria);
+
         $criteria->addJoin(CcShowPeer::OUTRO_PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -674,7 +906,7 @@ abstract class BaseCcShowPeer
                 } // if obj2 already loaded
 
                 // Add the $obj1 (CcShow) to $obj2 (CcPlaylist)
-                $obj2->addCcShow($obj1);
+                $obj2->addCcShowRelatedByDbOutroPlaylistId($obj1);
 
             } // if joined row was not null
 
@@ -723,7 +955,9 @@ abstract class BaseCcShowPeer
         }
 
         $criteria->addJoin(CcShowPeer::AUTOPLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+
         $criteria->addJoin(CcShowPeer::INTRO_PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+
         $criteria->addJoin(CcShowPeer::OUTRO_PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
@@ -763,8 +997,16 @@ abstract class BaseCcShowPeer
         CcPlaylistPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + CcPlaylistPeer::NUM_HYDRATE_COLUMNS;
 
+        CcPlaylistPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + CcPlaylistPeer::NUM_HYDRATE_COLUMNS;
+
+        CcPlaylistPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + CcPlaylistPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(CcShowPeer::AUTOPLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+
         $criteria->addJoin(CcShowPeer::INTRO_PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+
         $criteria->addJoin(CcShowPeer::OUTRO_PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -799,8 +1041,341 @@ abstract class BaseCcShowPeer
                 } // if obj2 loaded
 
                 // Add the $obj1 (CcShow) to the collection in $obj2 (CcPlaylist)
-                $obj2->addCcShow($obj1);
+                $obj2->addCcShowRelatedByDbAutoPlaylistId($obj1);
             } // if joined row not null
+
+            // Add objects for joined CcPlaylist rows
+
+            $key3 = CcPlaylistPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+            if ($key3 !== null) {
+                $obj3 = CcPlaylistPeer::getInstanceFromPool($key3);
+                if (!$obj3) {
+
+                    $cls = CcPlaylistPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    CcPlaylistPeer::addInstanceToPool($obj3, $key3);
+                } // if obj3 loaded
+
+                // Add the $obj1 (CcShow) to the collection in $obj3 (CcPlaylist)
+                $obj3->addCcShowRelatedByDbIntroPlaylistId($obj1);
+            } // if joined row not null
+
+            // Add objects for joined CcPlaylist rows
+
+            $key4 = CcPlaylistPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+            if ($key4 !== null) {
+                $obj4 = CcPlaylistPeer::getInstanceFromPool($key4);
+                if (!$obj4) {
+
+                    $cls = CcPlaylistPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    CcPlaylistPeer::addInstanceToPool($obj4, $key4);
+                } // if obj4 loaded
+
+                // Add the $obj1 (CcShow) to the collection in $obj4 (CcPlaylist)
+                $obj4->addCcShowRelatedByDbOutroPlaylistId($obj1);
+            } // if joined row not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related CcPlaylistRelatedByDbAutoPlaylistId table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptCcPlaylistRelatedByDbAutoPlaylistId(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(CcShowPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            CcShowPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(CcShowPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related CcPlaylistRelatedByDbIntroPlaylistId table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptCcPlaylistRelatedByDbIntroPlaylistId(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(CcShowPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            CcShowPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(CcShowPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related CcPlaylistRelatedByDbOutroPlaylistId table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptCcPlaylistRelatedByDbOutroPlaylistId(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(CcShowPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            CcShowPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(CcShowPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Selects a collection of CcShow objects pre-filled with all related objects except CcPlaylistRelatedByDbAutoPlaylistId.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of CcShow objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptCcPlaylistRelatedByDbAutoPlaylistId(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(CcShowPeer::DATABASE_NAME);
+        }
+
+        CcShowPeer::addSelectColumns($criteria);
+        $startcol2 = CcShowPeer::NUM_HYDRATE_COLUMNS;
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = CcShowPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = CcShowPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = CcShowPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                CcShowPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of CcShow objects pre-filled with all related objects except CcPlaylistRelatedByDbIntroPlaylistId.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of CcShow objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptCcPlaylistRelatedByDbIntroPlaylistId(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(CcShowPeer::DATABASE_NAME);
+        }
+
+        CcShowPeer::addSelectColumns($criteria);
+        $startcol2 = CcShowPeer::NUM_HYDRATE_COLUMNS;
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = CcShowPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = CcShowPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = CcShowPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                CcShowPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of CcShow objects pre-filled with all related objects except CcPlaylistRelatedByDbOutroPlaylistId.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of CcShow objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptCcPlaylistRelatedByDbOutroPlaylistId(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(CcShowPeer::DATABASE_NAME);
+        }
+
+        CcShowPeer::addSelectColumns($criteria);
+        $startcol2 = CcShowPeer::NUM_HYDRATE_COLUMNS;
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = CcShowPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = CcShowPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = CcShowPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                CcShowPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
 
             $results[] = $obj1;
         }
