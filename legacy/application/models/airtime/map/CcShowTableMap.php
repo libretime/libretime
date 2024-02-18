@@ -68,9 +68,9 @@ class CcShowTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('autoplaylist_id' => 'id', ), 'SET NULL', null);
-        $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('intro_playlist_id' => 'id', ), 'SET NULL', null);
-        $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('outro_playlist_id' => 'id', ), 'SET NULL', null);
+        $this->addRelation('CcPlaylistRelatedByDbAutoPlaylistId', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('autoplaylist_id' => 'id', ), 'SET NULL', null);
+        $this->addRelation('CcPlaylistRelatedByDbIntroPlaylistId', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('intro_playlist_id' => 'id', ), 'SET NULL', null);
+        $this->addRelation('CcPlaylistRelatedByDbOutroPlaylistId', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('outro_playlist_id' => 'id', ), 'SET NULL', null);
         $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null, 'CcShowInstancess');
         $this->addRelation('CcShowDays', 'CcShowDays', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null, 'CcShowDayss');
         $this->addRelation('CcShowRebroadcast', 'CcShowRebroadcast', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null, 'CcShowRebroadcasts');
