@@ -15,12 +15,6 @@ function populateForm(entries) {
   $("#visibility").val(visibility_value);
 
   $("#analyze_cue_points").prop("checked", entries.analyze_cue_points);
-
-  if (entries.id.length != 0) {
-    $("#code").attr("readonly", "readonly");
-  } else {
-    $("#code").removeAttr("readonly");
-  }
 }
 
 function rowClickCallback(row_id) {
