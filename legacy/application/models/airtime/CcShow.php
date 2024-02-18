@@ -327,9 +327,7 @@ class CcShow extends BaseCcShow
         $info['has_autoplaylist'] = $this->getDbHasAutoPlaylist();
         $info['autoplaylist_id'] = $this->getDbAutoPlaylistId();
         $info['autoplaylist_repeat'] = $this->getDbAutoPlaylistRepeat();
-        $info['override_intro_playlist'] = $this->getDbOverrideIntroPlaylist();
         $info['intro_playlist_id'] = $this->getDbIntroPlaylistId();
-        $info['override_outro_playlist'] = $this->getDbOverrideOutroPlaylist();
         $info['outro_playlist_id'] = $this->getDbOutroPlaylistId();
 
         return $info;

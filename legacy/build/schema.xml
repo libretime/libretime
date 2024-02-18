@@ -122,9 +122,7 @@
     <column name="has_autoplaylist" phpName="DbHasAutoPlaylist" type="BOOLEAN" required="true" defaultValue="false" />
     <column name="autoplaylist_id" phpName="DbAutoPlaylistId" type="INTEGER" required="false" />
     <column name="autoplaylist_repeat" phpName="DbAutoPlaylistRepeat" type="BOOLEAN" required="true" defaultValue="false" />
-    <column name="override_intro_playlist" phpName="DbOverrideIntroPlaylist" type="BOOLEAN" required="true" defaultValue="false" />
     <column name="intro_playlist_id" phpName="DbIntroPlaylistId" type="INTEGER" required="false" />
-    <column name="override_outro_playlist" phpName="DbOverrideOutroPlaylist" type="BOOLEAN" required="true" defaultValue="false" />
     <column name="outro_playlist_id" phpName="DbOutroPlaylistId" type="INTEGER" required="false" />
     <foreign-key foreignTable="cc_playlist" name="cc_playlist_autoplaylist_fkey" onDelete="SETNULL">
       <reference local="autoplaylist_id" foreign="id" />
