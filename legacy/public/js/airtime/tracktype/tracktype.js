@@ -150,7 +150,6 @@ function initTracktypeData() {
     description: "",
     visibility: "1",
     id: "",
-    analyze_cue_points: true,
   };
 
   $("#add_tracktype_button").live("click", function () {
