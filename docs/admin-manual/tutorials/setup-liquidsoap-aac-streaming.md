@@ -6,7 +6,7 @@ This tutorials walks you though the steps required to replace the liquidsoap pac
 
 :::warning
 
-Replacing the liquidsoap package has security implications, since this will remove the package from the system's package manager. This means that the package manager will not be able to update the liquidsoap package (and also the necessary fdk-aac1 lib on Debian 11) in the future. This includes backports of security fixes.
+Replacing the liquidsoap package has security implications, since this will remove the package from the system's package manager. This means that the package manager will not be able to update the liquidsoap package in the future. This includes backports of security fixes.
 
 Libretime is NOT compatible with Liquidsoap 2.x at the time of this writing. Future versions of Libretime will support Liquidsoap 2.x which will render these instructions obsolete.
 
@@ -26,32 +26,18 @@ For Ubuntu 20.04 LTS ('focal'), use the following file:
 wget https://github.com/savonet/liquidsoap/releases/download/v1.4.4/liquidsoap-v1.4.4_1.4.4-ubuntu-focal-amd64-1_amd64.deb
 ```
 
-For Debian 11 ('Bullseye'), use the following files: (Debian 11 ships fdk-aac2, so you'll need to download fdk-aac1 from Debian 10)
+For Debian 11 ('Bullseye'), use the following file:
 
 ```bash
-wget https://github.com/savonet/liquidsoap/releases/download/v1.4.4/liquidsoap-v1.4.4_1.4.4-debian-stable-amd64-1_amd64.deb
-wget http://ftp.debian.org/debian/pool/non-free/f/fdk-aac/libfdk-aac1_0.1.6-1_amd64.deb
+wget https://github.com/savonet/liquidsoap/releases/download/v1.4.4/liquidsoap-v1.4.4_1.4.4-debian-testing-amd64-1_amd64.deb
 ```
 
 ## 2. Install and replace the liquidsoap package
 
-Install the package(s) using `apt`:
-
-For Ubuntu 20.04 LTS ('focal'), use the following command:
+Install the package using `apt`, then remove the old liquidsoap dependencies:
 
 ```bash
-sudo apt -y install ./liquidsoap-v1.4.4_1.4.4-ubuntu-focal-amd64-1_amd64.deb
-```
-
-For Debian 11 ('Bullseye'), use the following command:
-
-```bash
-sudo apt -y install ./liquidsoap-v1.4.4_1.4.4-debian-stable-amd64-1_amd64.deb ./libfdk-aac1_0.1.6-1_amd64.deb
-```
-
-Then remove the old liquidsoap dependencies on both distros.
-
-```bash
+sudo apt -y install ./liquidsoap-v1.4.4_1.4.4-*-amd64-1_amd64.deb
 sudo apt -y autoremove
 ```
 
