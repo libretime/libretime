@@ -23,7 +23,7 @@ to Sunday.
 
 :::note
 
-The **Station Timezone** setting can not be modified on this page. It is set in the [configuration file](../admin-manual/configuration/#general).
+The **Station Timezone** setting can not be modified on this page. It is set in the [configuration file](../admin-manual/configuration.md#general).
 
 :::
 
@@ -68,7 +68,7 @@ _Advanced Configuration_ section of this book).
 
 :::note
 
-The **Allowed CORS URLs** you can still see in this screenshot was moved to the [configuration file](../admin-manual/configuration/#general).
+The **Allowed CORS URLs** you can still see in this screenshot was moved to the [configuration file](../admin-manual/configuration.md#general).
 
 :::
 
