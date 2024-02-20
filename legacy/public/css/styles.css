@@ -4351,7 +4351,7 @@ body.droppable .artwork-upload .artwork-preview {
   z-index: 9999;
 }
 
-/* Cue and Gain editor GUI starts here */
+/* Cue editor GUI starts here */
 
 .track-file-details {
     font-size: 14px;
@@ -4401,164 +4401,10 @@ li {
     display: none;
 }
 
-.knob-labels input{
-    font-size: 9px;
-    padding: 4px 1px 1px 1px;
-    border: 1px solid #2d2d2d;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    /*float: left;*/
-    display: block;
-    text-align: center;
-    width: 27px;
-    height: 13px;
-    /*text-indent: 100%;*/
-    white-space: nowrap;
-    /*overflow: hidden;*/
-    background-color: #434343;
-    background: -moz-linear-gradient(top, #555555 0, #434343 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #555555), color-stop(100%, #434343));
-    background: linear-gradient(top, #555555 0, #434343 100%);
-    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
-    -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
-    background-clip: border-box;
-    color:white
-}
-
 .btn-control-player {
     padding: 5px 7px 5px 10px;
     font-size: 14px;
     line-height: 18px;
-}
-
-.meterbg {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 1;
-}
-.testgain {
-    position: absolute;
-    top: 95px;
-    left: 20px;
-    width: 34px;
-    z-index: 2;
-    background: #E5E1D6;
-    border: none;
-    outline-width: 0;
-}
-.db-letters {
-    position: absolute;
-    color: black;
-    top: 98px;
-    left: 52px;
-    width: 38px;
-    z-index: 2;
-    font-size: 10px;
-}
-
-.meterwrappercont {
-    position: absolute;
-    top: 5px;
-    left: 0px;
-    z-index: 3;
-}
-
-/*METER*/
-#meterwrapper {
-    position: relative;
-    margin: auto;
-}
-#meter {
-    width: 100%;
-    height: 100%;
-    transform: rotateX(180deg);
-}
-.circle {
-    fill: none;
-}
-.outline,
-#mask {
-    stroke: #F1F1F1;
-    stroke-width: 65;
-}
-.range {
-    stroke-width: 60;
-}
-#meterslider,
-#lbl {
-    position: absolute;
-}
-#meterslider {
-    cursor: pointer;
-    left: 0;
-    margin: auto;
-    right: 0;
-    top: 58%;
-    width: 94%;
-}
-#lbl {
-    background-color: #4B4C51;
-    border-radius: 2px;
-    color: white;
-    font-family: 'courier new';
-    font-size: 15pt;
-    font-weight: bold;
-    padding: 4px 4px 2px 4px;
-    right: -48px;
-    top: 57%;
-}
-
-.knob-controls {
-    margin-top: 32px;
-    position: relative;
-}
-
-.meter_needle {
-    height: 40%;
-    left: 100px !important;
-    margin: auto;
-    position: absolute;
-    right: 0;
-    top: 21px !important;
-    transform-origin: bottom center;
-    transform: rotate(270deg);
-}
-
-.ease-needle {
-    /* Firefox */
-    -moz-transition: all 1s ease;
-    /* WebKit */
-    -webkit-transition: all 1s ease;
-    /* Opera */
-    -o-transition: all 1s ease;
-    /* Standard */
-    transition: all 1s ease;
-}
-
-.gain-row {
-    padding: 20px 0 0 0;
-}
-.gain-inner-section {
-    background-color: #333333 !important;
-    padding: 14px;
-    height: 116px;
-}
-.gain-col-knob {
-    margin-top: -16px;
-    width: 80px;
-    float: left;
-}
-
-.gain-col-meter {
-    margin-left: 80px; /* Change this to whatever the width of your left column is*/
-}
-.gain-col-meter2 {
-    margin-left: 310px; /* Change this to whatever the width of your left column is*/
-    margin-top: -116px;
-    width: 140px;
 }
 
 .zoom-container {

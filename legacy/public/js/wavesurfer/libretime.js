@@ -569,30 +569,10 @@ function renderWaveform(track_id, selector_id, url, cuein, cueout, gain_level, d
         eTrack.zoom(Number(this.value));
     });
 
-    var meter_needle =  document.querySelector('#meter_needle-'+track_id);
-    var analyser = eTrack.backend.analyser;
-    var box1 = document.getElementById('box');
-    var fdataArray = new Float32Array(analyser.frequencyBinCount);
-    var llevel = (fdataArray[0] * 0.05).toFixed(2);
-    document.getElementById('testgain-'+track_id).value="∞";
-
     document.getElementById('tracktimerinput-'+track_id).value='0.000';
 
     eTrack.on('audioprocess', function (e) {
-        analyser.getFloatFrequencyData(fdataArray);
-        var replaygain_mod = parseFloat(document.getElementById('gain-val-'+track_id).value);
-        llevel = (fdataArray[0] * 0.05 + replaygain_mod + default_gain).toFixed(2);
-        $("input#testgain-"+track_id).val(llevel);
-
-        if ((fdataArray[0] * 0.05 + replaygain_mod + default_gain) > -2) { // Clipping
-            document.getElementById('gain-clipping-'+track_id).style.backgroundColor = "rgba(242, 38, 19, 1)";
-        } else {
-            document.getElementById('gain-clipping-'+track_id).style.backgroundColor = "rgba(101,	0,	0, 1)";
-        }
-
         document.getElementById('tracktimerinput-'+track_id).value=(eTrack.getCurrentTime().toFixed(3));
-        meter_needle.style.transition = '5ms ease all';
-        meter_needle.style.transform = 'rotate(' + (270 + ((deciNum(fdataArray[0] * 0.05 + replaygain_mod + default_gain) * 180) / 76.2)) + 'deg)';
     });
 
     var playPause = document.getElementById('track-play-'+track_id);
@@ -603,13 +583,6 @@ function renderWaveform(track_id, selector_id, url, cuein, cueout, gain_level, d
     eTrack.on('pause', function () {
         //var pauseButton = document.getElementById('track-play-'+track_id);
         playPause.style.backgroundColor = "#555555";
-
-        meter_needle.style.transition = '300ms ease all';
-        meter_needle.style.transform = 'rotate(' + (270 + ((0) / 76)) + 'deg)';
-    });
-    eTrack.on('finish', function () {
-        meter_needle.style.transition = '300ms ease all';
-        meter_needle.style.transform = 'rotate(' + (270 + ((0) / 76)) + 'deg)';
     });
     eTrack.on('error', function(e) {
         console.warn(e);
@@ -649,29 +622,6 @@ function renderWaveform(track_id, selector_id, url, cuein, cueout, gain_level, d
     };
     volumeInput.addEventListener('input', onChangeVolume);
     volumeInput.addEventListener('change', onChangeVolume);
-
-    var gainInput = document.querySelector('input#replay_gain_knob_'+ track_id);
-
-    var onChangeGain = function (e) {
-        var gainVal = gainNum(e.target.value);
-        eTrack.setVolume(deciSteps(gainVal));
-        document.querySelector(".replay_gain_"+ track_id).value = gainVal;
-
-        if(gainVal === '0.00'){
-           document.querySelector("#gain-val-"+ track_id).style.color = "#ff5d1a";
-        } else {
-          document.querySelector("#gain-val-"+ track_id).style.color = "#ffffff";
-        }
-        if(gainVal == "-Infinity"){
-            document.querySelector("#gain-val-"+ track_id).value = "∞";
-        } else {
-            document.querySelector("#gain-val-"+ track_id).value = gainVal;
-        }
-
-        document.getElementById("volume-"+ track_id).value = gainVal;
-    };
-    gainInput.addEventListener('input', onChangeGain);
-    gainInput.addEventListener('change', onChangeGain);
 
     return eTrack;
 }
