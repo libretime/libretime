@@ -29,8 +29,8 @@ wget https://github.com/savonet/liquidsoap/releases/download/v1.4.4/liquidsoap-v
 For Debian 11 ('Bullseye'), first enable non-free package source for libfdk-aac support:
 
 ```bash
-sudo sed -i 's/main/main non-free/' /etc/apt/sources.list
-sudo apt update
+sudo apt install software-properties-common
+sudo apt-add-repository -c non-free
 ```
 
 Then use the following file:
