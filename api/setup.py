@@ -27,7 +27,7 @@ setup(
     },
     install_requires=[
         "django-cors-headers>=3.14.0,<4.4",
-        "django-filter>=2.4.0,<23.6",
+        "django-filter>=2.4.0,<24.2",
         "django>=4.2.0,<4.3",
         "djangorestframework>=3.14.0,<3.15",
         "drf-spectacular>=0.22.1,<0.28",
@@ -37,7 +37,7 @@ setup(
         "prod": [
             "gunicorn>=20.1.0,<21.3",
             "psycopg[c]>=3.1.8,<3.2",
-            "uvicorn[standard]>=0.17.6,<0.28.0",
+            "uvicorn[standard]>=0.17.6,<0.29.0",
         ],
         "dev": [
             "django-coverage-plugin>=3.0.0,<4",
