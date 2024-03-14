@@ -18,7 +18,7 @@ setup(
     package_data={"": ["py.typed"]},
     python_requires=">=3.8",
     install_requires=[
-        "python-dateutil>=2.8.1,<2.9",
+        "python-dateutil>=2.8.1,<2.10",
         "requests>=2.31.0,<2.32",
     ],
     extras_require={
