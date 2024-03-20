@@ -8,4 +8,4 @@ drf-spectacular>=0.22.1,<0.28
 gunicorn>=20.1.0,<21.3
 psycopg[c]>=3.1.8,<3.2
 requests>=2.31.0,<2.32
-uvicorn[standard]>=0.17.6,<0.29.0
+uvicorn[standard]>=0.17.6,<0.30.0
