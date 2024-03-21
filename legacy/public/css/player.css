@@ -1,6 +1,6 @@
 .airtime_player {
     width: 270px;
-    height: 191px;
+    height: 235px;
     position: relative;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
@@ -124,7 +124,6 @@
     display: block;
     font-size: 14px;
     color: #fff;
-    width: 170px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
