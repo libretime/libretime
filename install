@@ -48,6 +48,9 @@ EOF
 
 SCRIPT_DIR="$( cd "$( dirname "$0")" && pwd)"
 
+# version of sound compressor to download
+MASTER_ME="1.2.0"
+
 version() {
   if [ ! -f "$SCRIPT_DIR/VERSION" ]; then
     make VERSION > /dev/null
@@ -73,6 +76,7 @@ Options:
   --no-setup-icecast            Do not setup Icecast.
   --no-setup-postgresql         Do not setup Postgresql.
   --no-setup-rabbitmq           Do not setup RabbitMQ.
+  --setup-master-me             Install master_me liquidsoap plugin.
 
 Environment variables:
 
@@ -117,6 +121,8 @@ LIBRETIME_SETUP_ICECAST=${LIBRETIME_SETUP_ICECAST:-true}
 LIBRETIME_SETUP_POSTGRESQL=${LIBRETIME_SETUP_POSTGRESQL:-true}
 # > Create a default rabbitmq user with a random password.
 LIBRETIME_SETUP_RABBITMQ=${LIBRETIME_SETUP_RABBITMQ:-true}
+# > Optional: install Processor Plugin
+LIBRETIME_SETUP_MASTER_ME=${LIBRETIME_SETUP_MASTER_ME:-false}
 
 # > Comma separated list of sections to exclude from packages list.
 LIBRETIME_PACKAGES_EXCLUDES=${LIBRETIME_PACKAGES_EXCLUDES:-}
@@ -152,6 +158,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --no-setup-rabbitmq)
       LIBRETIME_SETUP_RABBITMQ=false
+      shift 1
+      ;;
+    --setup-master-me)
+      LIBRETIME_SETUP_MASTER_ME=true
       shift 1
       ;;
     --packages-excludes)
@@ -641,6 +651,19 @@ section "Playout"
 
 # shellcheck disable=SC2046
 install_packages $(list_packages "$SCRIPT_DIR/playout")
+
+# install master_me liquidsoap plugin
+if $LIBRETIME_SETUP_MASTER_ME; then
+  install_packages xz-utils
+  info "installing master_me liquidsoap plugin"
+  mkdir /tmp/master_me
+  mkdir /usr/lib/ladspa
+  curl -LJO https://github.com/trummerschlunk/master_me/releases/download/$MASTER_ME/master_me-$MASTER_ME-linux-x86_64.tar.xz
+  tar -xf master_me-$MASTER_ME-linux-x86_64.tar.xz -C /tmp/master_me/
+  cp /tmp/master_me/master_me-$MASTER_ME/master_me-ladspa.so /usr/lib/ladspa/
+  rm -rf /tmp/master_me
+  rm -f master_me-$MASTER_ME-linux-x86_64.tar.xz
+fi
 
 install_python_app "$SCRIPT_DIR/playout"
 link_python_app libretime-liquidsoap
