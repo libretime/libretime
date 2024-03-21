@@ -109,6 +109,8 @@ while ($showTime < $endDate) {
 }
 
 if (Application_Model_RabbitMq::$doPush) {
-    $md = ['schedule' => Application_Model_Schedule::getSchedule()];
-    Application_Model_RabbitMq::SendMessageToPypo('update_schedule', $md);
+    // The side effects of this function are still required to fill the schedule, we
+    // don't use the returned schedule.
+    Application_Model_Schedule::getSchedule();
+    Application_Model_RabbitMq::SendMessageToPypo('update_schedule', []);
 }
