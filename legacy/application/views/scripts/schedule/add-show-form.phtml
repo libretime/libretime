@@ -33,6 +33,12 @@
     <div id="live-stream-override" class="collapsible-content">
         <?php echo $this->live; ?>
     </div>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Record & Rebroadcast")?></h3>
+    <div id="schedule-record-rebroadcast" class="collapsible-content">
+        <?php echo $this->rr; ?>
+        <?php echo $this->absoluteRebroadcast; ?>
+        <?php echo $this->rebroadcast; ?>
+    </div>
     <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Who") ?></h3>
     <div id="schedule-show-who" class="collapsible-content">
         <?php echo $this->who; ?>

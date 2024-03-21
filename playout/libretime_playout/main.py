@@ -30,6 +30,7 @@ from .player.fetch import PypoFetch
 from .player.file import PypoFile
 from .player.liquidsoap import Liquidsoap
 from .player.push import PypoPush
+from .recorder import Recorder
 
 logger = logging.getLogger(__name__)
 
@@ -118,6 +119,7 @@ def cli(
     wait_for_liquidsoap(liq_client)
 
     fetch_queue: "Queue[Dict[str, Any]]" = Queue()
+    recorder_queue: "Queue[Dict[str, Any]]" = Queue()
     push_queue: "Queue[Events]" = Queue()
     # This queue is shared between pypo-fetch and pypo-file, where pypo-file
     # is the consumer. Pypo-fetch will send every schedule it gets to pypo-file
@@ -142,7 +144,9 @@ def cli(
 
     PypoPush(push_queue, liquidsoap, config).start()
 
+    Recorder(recorder_queue, config, legacy_client, liq_client).start()
+
     StatsCollectorThread(config, legacy_client).start()
 
-    message_listener = MessageListener(config, fetch_queue)
+    message_listener = MessageListener(config, fetch_queue, recorder_queue)
     message_listener.run_forever()
