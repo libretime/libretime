@@ -1,5 +1,27 @@
 # Changelog
 
+## [4.1.0](https://github.com/libretime/libretime/compare/4.0.0...4.1.0) (2024-03-27)
+
+
+### Features
+
+* **legacy:** add aac/opus support to dashboard player ([#2881](https://github.com/libretime/libretime/issues/2881)) ([95283ef](https://github.com/libretime/libretime/commit/95283efc1f9a63376a99184ef69b699beba45802))
+* **legacy:** disable public radio page and redirect to login ([#2903](https://github.com/libretime/libretime/issues/2903)) ([170d095](https://github.com/libretime/libretime/commit/170d09545e4fcfeeb95f9fc5c355329764501854))
+* **legacy:** trim overbooked shows after autoloading a playlist ([#2897](https://github.com/libretime/libretime/issues/2897)) ([a95ce3d](https://github.com/libretime/libretime/commit/a95ce3d2296bb864b379dcce14090bd821c1dfc9))
+
+
+### Bug Fixes
+
+* **analyzer:** backslash non utf-8 data when probing replaygain ([#2931](https://github.com/libretime/libretime/issues/2931)) ([29f73e0](https://github.com/libretime/libretime/commit/29f73e0dcb1fd668a79a2ffedc33e16172277376)), closes [#2910](https://github.com/libretime/libretime/issues/2910)
+* apply replay gain preferences on scheduled files ([#2945](https://github.com/libretime/libretime/issues/2945)) ([35d0dec](https://github.com/libretime/libretime/commit/35d0dec4a887cdaea2d73dc9bee60eb6624a2aca))
+* **deps:** update dependency friendsofphp/php-cs-fixer to &lt;3.49.1 ([#2899](https://github.com/libretime/libretime/issues/2899)) ([3e05748](https://github.com/libretime/libretime/commit/3e05748d2d1180b8dad55b6f997e6aa7117735f1))
+* **deps:** update dependency friendsofphp/php-cs-fixer to &lt;3.51.1 ([#2963](https://github.com/libretime/libretime/issues/2963)) ([22c303c](https://github.com/libretime/libretime/commit/22c303cfffdc777177bd74273e2c24da58cf1682))
+* incorrect docker compose version ([#2975](https://github.com/libretime/libretime/issues/2975)) ([634e6e2](https://github.com/libretime/libretime/commit/634e6e236d908994d586c946bbe28bcba8a357fa))
+* **legacy:** allow updating track types code ([#2955](https://github.com/libretime/libretime/issues/2955)) ([270aa08](https://github.com/libretime/libretime/commit/270aa08ae6c7207de1cc3ea552dabeb018bcfe0d))
+* **legacy:** avoid crash when lot of streams in configuration ([#2915](https://github.com/libretime/libretime/issues/2915)) ([12dd477](https://github.com/libretime/libretime/commit/12dd47731290bf539be7a2a81571f8ada223e9c4))
+* **legacy:** fix hidden fields in edit file form ([#2932](https://github.com/libretime/libretime/issues/2932)) ([f4b260f](https://github.com/libretime/libretime/commit/f4b260fdf70c0dd1830166d3856239dae5366599))
+* **legacy:** replay_gain_modifier should be a system preference ([#2943](https://github.com/libretime/libretime/issues/2943)) ([37d1a76](https://github.com/libretime/libretime/commit/37d1a7685e37e45734553a0eb4a4da793ca858cb))
+
 ## [4.0.0](https://github.com/libretime/libretime/compare/3.2.0...4.0.0) (2024-01-07)
 
 
