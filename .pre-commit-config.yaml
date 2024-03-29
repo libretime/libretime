@@ -36,7 +36,7 @@ repos:
         exclude: ^(legacy/public(?!/js/airtime)|CHANGELOG.md$|.github/release-please-manifest.json)
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.1
+    rev: v3.15.2
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
@@ -54,7 +54,7 @@ repos:
         args: [--resolve-all-configs]
 
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 24.2.0
+    rev: 24.3.0
     hooks:
       - id: black
 
