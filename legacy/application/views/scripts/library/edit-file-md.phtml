@@ -36,6 +36,7 @@ $analogMeter = true;
             <div id="artwork-preview" class="artwork-preview">
                 <div class="artwork-preview-<?php echo ($this->id); ?>" id="artworkPreview" style="background-image: url(<?php echo $get_artwork; ?>);">
                 </div>
+              <?php } ?>
             </div>
         </div>
         <div>
@@ -88,43 +89,7 @@ $analogMeter = true;
           <div id="track-waveform-<?php echo $this->id; ?>"></div>
           <div id="timeline-<?php echo $this->id; ?>"></div>
         </div>
-        <div class="row gain-row">
-          <div class="gain-inner-section">
-            <div class="gain-col-knob">
-              <div title="Gain">
-                <div class="knob-controls">
-                  <div style="margin-left:13px; font-size:11px;"><span>GAIN</span></div>
-                  <input id="replay_gain_knob_<?php echo $this->id; ?>" type="range" class="input-knob" data-src="<?php echo $baseUrl.'css/images/knob_2x.png'; ?>" data-sprites="100" style="width: 52px; height: 52px; background-image: url(<?php echo $baseUrl.'css/images/knob_2x.png'; ?>); background-size: 100% 10100%; background-position: 0px 0px;" value="0">
-                  <div class="knob-labels" style="margin-left:13px">
-                    <input type="text" id="gain-val-<?php echo $this->id; ?>" size="6" value="<?php echo $this->replay_gain; ?>" />
-                  </div>
-                  <input type="hidden" id="volume-<?php echo $this->id; ?>" type="range" min="0" max="1" value="1" step="0.1">
-                </div>
-              </div>
-            </div>
-            <div class="gain-col-meter">
-              <?php if($analogMeter == true){ ?>
-                <div style="position: relative; left: 0; top: 0;" >
-                  <img src="<?php echo $baseUrl.'css/images/meterbg.png'; ?>" class="meterbg" style="width:200px" />
-                  <div class="meterwrappercont">
-                    <div id="meterwrapper-<?php echo $this->id; ?>" style="height:220px;width:220px;">
-                      <img id="meter_needle-<?php echo $this->id; ?>" class="meter_needle" src="<?php echo $baseUrl.'css/images/meterneedle.svg'; ?>">
-                    </div>
-                  </div>
-                  <input class="testgain" id="testgain-<?php echo $this->id; ?>" val=""/>
-                  <div class="db-letters">dB</div>
-                </div>
-              <?php } ?>
-            </div>
-            <div class="gain-col-meter2">
-              <button id="gain-clipping-<?php echo $this->id; ?>" class="btn btn-small btn-new" style="background-color:rgb(101,	0,	0)">
-                <span></span>
-              </button>
-              <br><span style="font-size:12px">Clipping Indicator</span>
-            </div>
-            <div class="clear"></div>
-          </div>
-        </div>
+        <input type="hidden" id="volume-<?php echo $this->id; ?>" type="range" min="0" max="1" value="1" step="0.1">
       </div>
     </div>
   </div>
@@ -170,41 +135,7 @@ $analogMeter = true;
     })
 
     //Gain Knob
-    $("#replay_gain_knob_<?php echo $this->id; ?>").val(deciNum(<?php echo $this->replay_gain; ?>));
     $("#volume-<?php echo $this->id; ?>").val(deciSteps(<?php echo $this->replay_gain; ?>));
-
-    $(document).on('mouseleave', '#replay_gain_knob_<?php echo $this->id; ?>', 'input', function() {
-        var val = $(this).val();
-        $("#gain-val-<?php echo $this->id; ?>").value = gainNum(val);
-    });
-
-    $(document).on('change', '#gain-val-<?php echo $this->id; ?>', 'input', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        var val = $(this).val();
-        $("input#replay_gain_knob_<?php echo $this->id; ?>").val(deciNum(val));
-        document.querySelector("input.replay_gain_<?php echo $this->id;?>").value = val;
-        $("#volume-<?php echo $this->id; ?>").val(deciSteps(val));
-    }).on('keyup', '#gain-val-<?php echo $this->id; ?>', 'input', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        var val = $(this).val();
-        $("input#replay_gain_knob_<?php echo $this->id; ?>").val(deciNum(val));
-        document.querySelector("input.replay_gain_<?php echo $this->id;?>").value = val;
-        $("#volume-<?php echo $this->id; ?>").val(deciSteps(val));
-    });
-
-    $(document).on('change', '.replay_gain_<?php echo $this->id; ?>', 'input', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        var val = $(this).val();
-        $("input#replay_gain_knob_<?php echo $this->id; ?>").val(deciNum(val));
-    }).on('keyup', '.replay_gain_<?php echo $this->id; ?>', 'input', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        var val = $(this).val();
-        $("input#replay_gain_knob_<?php echo $this->id; ?>").val(deciNum(val));
-    });
 
     $(document).on('change', '.cuein_<?php echo $this->id; ?>', 'input', function(event) {
         console.log('cuein input');
