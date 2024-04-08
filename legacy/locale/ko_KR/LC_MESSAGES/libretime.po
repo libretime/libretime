@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-05-29 02:11+0000\n"
+"POT-Creation-Date: 2024-02-05 01:52+0000\n"
 "PO-Revision-Date: 2015-09-05 08:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Korean (Korea)\n"
@@ -805,34 +805,34 @@ msgstr ""
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr ""
 
-#: application/controllers/DashboardController.php:34
-#: application/controllers/DashboardController.php:86
+#: application/controllers/DashboardController.php:32
+#: application/controllers/DashboardController.php:84
 msgid "You don't have permission to disconnect source."
 msgstr "소스를 끊을수 있는 권한이 부족합니다"
 
-#: application/controllers/DashboardController.php:36
-#: application/controllers/DashboardController.php:88
+#: application/controllers/DashboardController.php:34
+#: application/controllers/DashboardController.php:86
 msgid "There is no source connected to this input."
 msgstr "연결된 소스가 없습니다"
 
-#: application/controllers/DashboardController.php:83
+#: application/controllers/DashboardController.php:81
 msgid "You don't have permission to switch source."
 msgstr "소스를 바꿀수 있는 권한이 부족합니다"
 
-#: application/controllers/EmbeddablewidgetsController.php:24
+#: application/controllers/EmbeddablewidgetsController.php:22
 msgid ""
 "To configure and use the embeddable player you must:<br><br>\n"
 "            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
 "            2. Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 
-#: application/controllers/EmbeddablewidgetsController.php:37
+#: application/controllers/EmbeddablewidgetsController.php:35
 msgid ""
 "To use the embeddable weekly schedule widget you must:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 
-#: application/controllers/EmbeddablewidgetsController.php:50
+#: application/controllers/EmbeddablewidgetsController.php:48
 msgid ""
 "To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
@@ -854,12 +854,12 @@ msgstr ""
 msgid "An internal application error has occurred."
 msgstr ""
 
-#: application/controllers/IndexController.php:88
+#: application/controllers/IndexController.php:92
 #, php-format
 msgid "%s Podcast"
 msgstr ""
 
-#: application/controllers/IndexController.php:89
+#: application/controllers/IndexController.php:93
 msgid "No tracks have been published yet."
 msgstr ""
 
@@ -877,7 +877,7 @@ msgstr "알수없는 에러."
 #: application/controllers/LibraryController.php:91
 #: application/controllers/LocaleController.php:171
 #: application/controllers/ShowbuilderController.php:131
-#: application/forms/SmartBlockCriteria.php:573
+#: application/forms/SmartBlockCriteria.php:571
 msgid "Preview"
 msgstr "프리뷰"
 
@@ -1227,7 +1227,7 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:97
 #: application/forms/SmartBlockCriteria.php:68
-#: application/forms/StreamSettingSubForm.php:118
+#: application/forms/StreamSettingSubForm.php:116
 #: application/models/Block.php:1440 application/models/Block.php:1538
 #: application/services/HistoryService.php:1055
 msgid "Genre"
@@ -1511,9 +1511,9 @@ msgstr "진행중..."
 #: application/forms/SmartBlockCriteria.php:117
 #: application/forms/SmartBlockCriteria.php:133
 #: application/forms/SmartBlockCriteria.php:198
-#: application/forms/SmartBlockCriteria.php:377
-#: application/forms/SmartBlockCriteria.php:631
-#: application/forms/SmartBlockCriteria.php:688
+#: application/forms/SmartBlockCriteria.php:375
+#: application/forms/SmartBlockCriteria.php:629
+#: application/forms/SmartBlockCriteria.php:686
 #: application/models/Block.php:1462 application/models/Block.php:1560
 msgid "Select modifier"
 msgstr "모디파이어 선택"
@@ -1584,7 +1584,7 @@ msgid "is in the range"
 msgstr "다음 범위 안에 있는 "
 
 #: application/controllers/LocaleController.php:172
-#: application/forms/SmartBlockCriteria.php:575
+#: application/forms/SmartBlockCriteria.php:573
 msgid "Generate"
 msgstr "생성"
 
@@ -1628,7 +1628,7 @@ msgid "The stream is disabled"
 msgstr "스트림이 사용되지 않음"
 
 #: application/controllers/LocaleController.php:184
-#: application/forms/StreamSettingSubForm.php:146
+#: application/forms/StreamSettingSubForm.php:144
 msgid "Getting information from the server..."
 msgstr "서버에서 정보를 받는중..."
 
@@ -1861,37 +1861,37 @@ msgid "Month"
 msgstr ""
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:230
+#: application/forms/GeneralPreferences.php:255
 msgid "Sunday"
 msgstr "일요일"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:231
+#: application/forms/GeneralPreferences.php:256
 msgid "Monday"
 msgstr "월요일"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:232
+#: application/forms/GeneralPreferences.php:257
 msgid "Tuesday"
 msgstr "화요일"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:233
+#: application/forms/GeneralPreferences.php:258
 msgid "Wednesday"
 msgstr "수요일"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:234
+#: application/forms/GeneralPreferences.php:259
 msgid "Thursday"
 msgstr "목요일"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:235
+#: application/forms/GeneralPreferences.php:260
 msgid "Friday"
 msgstr "금요일"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:236
+#: application/forms/GeneralPreferences.php:261
 msgid "Saturday"
 msgstr "토요일"
 
@@ -2034,14 +2034,14 @@ msgstr "아이템 %s개 이동"
 
 #: application/controllers/LocaleController.php:302
 #: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
+#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "저장"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:270 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:268 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "취소"
 
@@ -2487,7 +2487,7 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:438
 #: application/forms/SmartBlockCriteria.php:65
-#: application/forms/StreamSettingSubForm.php:134
+#: application/forms/StreamSettingSubForm.php:132
 #: application/models/Block.php:1437 application/models/Block.php:1535
 msgid "Description"
 msgstr "설명"
@@ -2576,8 +2576,8 @@ msgstr ""
 #: application/forms/AddTracktype.php:50
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
-#: application/forms/GeneralPreferences.php:160
-#: application/forms/GeneralPreferences.php:214
+#: application/forms/GeneralPreferences.php:172
+#: application/forms/GeneralPreferences.php:239
 msgid "Enabled"
 msgstr "사용"
 
@@ -2585,8 +2585,8 @@ msgstr "사용"
 #: application/forms/AddTracktype.php:49
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
-#: application/forms/GeneralPreferences.php:159
-#: application/forms/GeneralPreferences.php:213
+#: application/forms/GeneralPreferences.php:171
+#: application/forms/GeneralPreferences.php:238
 msgid "Disabled"
 msgstr "미사용"
 
@@ -2751,23 +2751,23 @@ msgstr "제목없는 스마트 블록"
 msgid "Unknown Playlist"
 msgstr "모르는 재생목록"
 
-#: application/controllers/PreferenceController.php:69
+#: application/controllers/PreferenceController.php:71
 msgid "Preferences updated."
 msgstr "설정이 업데이트 되었습니다"
 
-#: application/controllers/PreferenceController.php:203
+#: application/controllers/PreferenceController.php:208
 msgid "Stream Setting Updated."
 msgstr "스트림 설정이 업데이트 되었습니다"
 
-#: application/controllers/PreferenceController.php:248
+#: application/controllers/PreferenceController.php:253
 msgid "path should be specified"
 msgstr "경로를 입력해주세요"
 
-#: application/controllers/PreferenceController.php:291
+#: application/controllers/PreferenceController.php:296
 msgid "Problem with Liquidsoap..."
 msgstr "Liquidsoap 문제..."
 
-#: application/controllers/PreferenceController.php:334
+#: application/controllers/PreferenceController.php:339
 msgid "Request method not accepted"
 msgstr ""
 
@@ -2813,11 +2813,11 @@ msgstr "세팅이 성공적으로 업데이트 되었습니다!"
 msgid "Untitled Webstream"
 msgstr "제목없는 웹스트림"
 
-#: application/controllers/WebstreamController.php:156
+#: application/controllers/WebstreamController.php:158
 msgid "Webstream saved."
 msgstr "웹스트림이 저장 되었습니다"
 
-#: application/controllers/WebstreamController.php:164
+#: application/controllers/WebstreamController.php:166
 msgid "Invalid form values."
 msgstr "잘못된 값입니다"
 
@@ -3000,12 +3000,12 @@ msgstr "이름없는 쇼"
 msgid "URL:"
 msgstr ""
 
-#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:131
 msgid "Genre:"
 msgstr "장르:"
 
 #: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
-#: application/forms/EditAudioMD.php:115
+#: application/forms/EditAudioMD.php:113
 msgid "Description:"
 msgstr "설명:"
 
@@ -3156,72 +3156,72 @@ msgstr ""
 msgid "Date Start:"
 msgstr "시작"
 
-#: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
+#: application/forms/EditAudioMD.php:50 application/forms/Player.php:15
 msgid "Title:"
 msgstr "제목:"
 
-#: application/forms/EditAudioMD.php:62
+#: application/forms/EditAudioMD.php:60
 msgid "Creator:"
 msgstr "제작자:"
 
-#: application/forms/EditAudioMD.php:72
+#: application/forms/EditAudioMD.php:70
 msgid "Album:"
 msgstr "앨범:"
 
-#: application/forms/EditAudioMD.php:89
+#: application/forms/EditAudioMD.php:87
 msgid "Owner:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:101
+#: application/forms/EditAudioMD.php:99
 msgid "Select a Type"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:108
+#: application/forms/EditAudioMD.php:106
 msgid "Track Type:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:143
+#: application/forms/EditAudioMD.php:141
 msgid "Year:"
 msgstr "년도:"
 
-#: application/forms/EditAudioMD.php:156
+#: application/forms/EditAudioMD.php:154
 msgid "Label:"
 msgstr "상표:"
 
-#: application/forms/EditAudioMD.php:166
+#: application/forms/EditAudioMD.php:164
 msgid "Composer:"
 msgstr "작곡가:"
 
-#: application/forms/EditAudioMD.php:176
+#: application/forms/EditAudioMD.php:174
 msgid "Conductor:"
 msgstr "지휘자"
 
-#: application/forms/EditAudioMD.php:186
+#: application/forms/EditAudioMD.php:184
 msgid "Mood:"
 msgstr "무드"
 
-#: application/forms/EditAudioMD.php:196
+#: application/forms/EditAudioMD.php:194
 msgid "BPM:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:207
+#: application/forms/EditAudioMD.php:205
 msgid "Copyright:"
 msgstr "저작권:"
 
-#: application/forms/EditAudioMD.php:217
+#: application/forms/EditAudioMD.php:215
 msgid "ISRC Number:"
 msgstr "ISRC 넘버"
 
-#: application/forms/EditAudioMD.php:227
+#: application/forms/EditAudioMD.php:225
 msgid "Website:"
 msgstr "웹사이트"
 
-#: application/forms/EditAudioMD.php:237 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:235 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "언어"
 
-#: application/forms/EditAudioMD.php:290
+#: application/forms/EditAudioMD.php:288
 msgid "Publish..."
 msgstr ""
 
@@ -3302,42 +3302,50 @@ msgstr ""
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:156
+#: application/forms/GeneralPreferences.php:161
+msgid "Trim overbooked shows after autoloading?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:168
 msgid "Public LibreTime API"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:157
+#: application/forms/GeneralPreferences.php:169
 msgid "Required for embeddable schedule widget."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:163
+#: application/forms/GeneralPreferences.php:175
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:175
+#: application/forms/GeneralPreferences.php:187
 msgid "Default Language"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:182
+#: application/forms/GeneralPreferences.php:194
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:190
+#: application/forms/GeneralPreferences.php:202
 msgid "Week Starts On"
 msgstr "주 시작일"
 
-#: application/forms/GeneralPreferences.php:206
+#: application/forms/GeneralPreferences.php:218
 msgid "Display login button on your Radio Page?"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:211
+#: application/forms/GeneralPreferences.php:231
+msgid "Disable the public radio page and redirect to the login page?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:236
 msgid "Feature Previews"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:217
+#: application/forms/GeneralPreferences.php:242
 msgid "Enable this to opt-in to test new features."
 msgstr ""
 
@@ -3510,8 +3518,8 @@ msgid "between"
 msgstr ""
 
 #: application/forms/SmartBlockCriteria.php:152
-#: application/forms/SmartBlockCriteria.php:471
-#: application/forms/SmartBlockCriteria.php:513
+#: application/forms/SmartBlockCriteria.php:469
+#: application/forms/SmartBlockCriteria.php:511
 msgid "Select unit of time"
 msgstr ""
 
@@ -3580,195 +3588,195 @@ msgstr ""
 msgid "Select Track Type"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:268
+#: application/forms/SmartBlockCriteria.php:266
 msgid "Type:"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:271
+#: application/forms/SmartBlockCriteria.php:269
 msgid "Dynamic"
 msgstr "동적(Dynamic)"
 
-#: application/forms/SmartBlockCriteria.php:272
+#: application/forms/SmartBlockCriteria.php:270
 msgid "Static"
 msgstr "정적(Static)"
 
-#: application/forms/SmartBlockCriteria.php:437
+#: application/forms/SmartBlockCriteria.php:435
 msgid "Select track type"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:523
+#: application/forms/SmartBlockCriteria.php:521
 msgid "Allow Repeated Tracks:"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:531
+#: application/forms/SmartBlockCriteria.php:529
 msgid "Allow last track to exceed time limit:"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:540
+#: application/forms/SmartBlockCriteria.php:538
 msgid "Sort Tracks:"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:558
+#: application/forms/SmartBlockCriteria.php:556
 msgid "Limit to:"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:570
+#: application/forms/SmartBlockCriteria.php:568
 msgid "Generate playlist content and save criteria"
 msgstr "재생 목록 내용  생성후 설정 저장"
 
-#: application/forms/SmartBlockCriteria.php:582
+#: application/forms/SmartBlockCriteria.php:580
 msgid "Shuffle playlist content"
 msgstr "재생 목록 내용 셔플하기"
 
-#: application/forms/SmartBlockCriteria.php:584
+#: application/forms/SmartBlockCriteria.php:582
 msgid "Shuffle"
 msgstr "셔플"
 
-#: application/forms/SmartBlockCriteria.php:813
-#: application/forms/SmartBlockCriteria.php:825
+#: application/forms/SmartBlockCriteria.php:811
+#: application/forms/SmartBlockCriteria.php:823
 msgid "Limit cannot be empty or smaller than 0"
 msgstr "길이 제한은 비어두거나 0으로 설정할수 없습니다"
 
-#: application/forms/SmartBlockCriteria.php:818
+#: application/forms/SmartBlockCriteria.php:816
 msgid "Limit cannot be more than 24 hrs"
 msgstr "길이 제한은 24h 보다 클수 없습니다"
 
-#: application/forms/SmartBlockCriteria.php:828
+#: application/forms/SmartBlockCriteria.php:826
 msgid "The value should be an integer"
 msgstr "이 값은 정수(integer) 입니다"
 
-#: application/forms/SmartBlockCriteria.php:831
+#: application/forms/SmartBlockCriteria.php:829
 msgid "500 is the max item limit value you can set"
 msgstr "아이템 곗수의 최대값은 500 입니다"
 
-#: application/forms/SmartBlockCriteria.php:842
+#: application/forms/SmartBlockCriteria.php:840
 msgid "You must select Criteria and Modifier"
 msgstr "기준과 모디파이어를 골라주세요"
 
-#: application/forms/SmartBlockCriteria.php:849
+#: application/forms/SmartBlockCriteria.php:847
 msgid "'Length' should be in '00:00:00' format"
 msgstr "길이는 00:00:00 형태로 입력하세요"
 
-#: application/forms/SmartBlockCriteria.php:858
+#: application/forms/SmartBlockCriteria.php:856
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:863
-#: application/forms/SmartBlockCriteria.php:888
+#: application/forms/SmartBlockCriteria.php:861
+#: application/forms/SmartBlockCriteria.php:886
 msgid "You must select a time unit for a relative datetime."
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:868
-#: application/forms/SmartBlockCriteria.php:893
+#: application/forms/SmartBlockCriteria.php:866
+#: application/forms/SmartBlockCriteria.php:891
 msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
 msgstr "이 값은 timestamp 형태 (e.g. 0000-00-00 or 0000-00-00 00:00:00) 로 입력해주세요"
 
-#: application/forms/SmartBlockCriteria.php:883
+#: application/forms/SmartBlockCriteria.php:881
 msgid "Only non-negative integer numbers are allowed for a relative date time"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:910
+#: application/forms/SmartBlockCriteria.php:908
 msgid "The value has to be numeric"
 msgstr "이 값은 숫자만 허용 됩니다"
 
-#: application/forms/SmartBlockCriteria.php:915
+#: application/forms/SmartBlockCriteria.php:913
 msgid "The value should be less then 2147483648"
 msgstr "이 값은 2147483648보다 작은 수만 허용 됩니다"
 
-#: application/forms/SmartBlockCriteria.php:920
+#: application/forms/SmartBlockCriteria.php:918
 msgid "The value cannot be empty"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:925
+#: application/forms/SmartBlockCriteria.php:923
 #, php-format
 msgid "The value should be less than %s characters"
 msgstr "이 값은 %s 문자보다 작은 길이만 허용 됩니다"
 
-#: application/forms/SmartBlockCriteria.php:932
+#: application/forms/SmartBlockCriteria.php:930
 msgid "Value cannot be empty"
 msgstr "이 값은 비어둘수 없습니다"
 
-#: application/forms/StreamSetting.php:26
+#: application/forms/StreamSetting.php:24
 msgid "Stream Label:"
 msgstr "스트림 레이블"
 
-#: application/forms/StreamSetting.php:28
+#: application/forms/StreamSetting.php:26
 msgid "Artist - Title"
 msgstr "아티스트 - 제목"
 
-#: application/forms/StreamSetting.php:29
+#: application/forms/StreamSetting.php:27
 msgid "Show - Artist - Title"
 msgstr "쇼 - 아티스트 - 제목"
 
-#: application/forms/StreamSetting.php:30
+#: application/forms/StreamSetting.php:28
 msgid "Station name - Show name"
 msgstr "방송국 이름 - 쇼 이름"
 
-#: application/forms/StreamSetting.php:38
+#: application/forms/StreamSetting.php:36
 msgid "Off Air Metadata"
 msgstr "오프 에어 메타데이타"
 
-#: application/forms/StreamSetting.php:45
+#: application/forms/StreamSetting.php:43
 msgid "Enable Replay Gain"
 msgstr "리플레이 게인 활성화"
 
-#: application/forms/StreamSetting.php:52
+#: application/forms/StreamSetting.php:50
 msgid "Replay Gain Modifier"
 msgstr "리플레이 게인 설정"
 
-#: application/forms/StreamSetting.php:60
+#: application/forms/StreamSetting.php:58
 msgid "Hardware Audio Output:"
 msgstr ""
 
-#: application/forms/StreamSetting.php:69
+#: application/forms/StreamSetting.php:67
 msgid "Output Type"
 msgstr ""
 
-#: application/forms/StreamSettingSubForm.php:35
+#: application/forms/StreamSettingSubForm.php:33
 msgid "Enabled:"
 msgstr "사용:"
 
-#: application/forms/StreamSettingSubForm.php:43
+#: application/forms/StreamSettingSubForm.php:41
 msgid "Mobile:"
 msgstr ""
 
-#: application/forms/StreamSettingSubForm.php:51
+#: application/forms/StreamSettingSubForm.php:49
 msgid "Stream Type:"
 msgstr "스트림 타입:"
 
-#: application/forms/StreamSettingSubForm.php:59
+#: application/forms/StreamSettingSubForm.php:57
 msgid "Bit Rate:"
 msgstr "비트 레이트:"
 
-#: application/forms/StreamSettingSubForm.php:67
+#: application/forms/StreamSettingSubForm.php:65
 msgid "Service Type:"
 msgstr "서비스 타입:"
 
-#: application/forms/StreamSettingSubForm.php:75
+#: application/forms/StreamSettingSubForm.php:73
 msgid "Channels:"
 msgstr "채널:"
 
-#: application/forms/StreamSettingSubForm.php:83
+#: application/forms/StreamSettingSubForm.php:81
 msgid "Server"
 msgstr "서버"
 
-#: application/forms/StreamSettingSubForm.php:92
+#: application/forms/StreamSettingSubForm.php:90
 msgid "Port"
 msgstr "포트"
 
-#: application/forms/StreamSettingSubForm.php:100
+#: application/forms/StreamSettingSubForm.php:98
 msgid "Mount Point"
 msgstr "마운트 지점"
 
-#: application/forms/StreamSettingSubForm.php:109
+#: application/forms/StreamSettingSubForm.php:107
 msgid "Name"
 msgstr "이름"
 
-#: application/forms/StreamSettingSubForm.php:125
+#: application/forms/StreamSettingSubForm.php:123
 msgid "URL"
 msgstr ""
 
-#: application/forms/StreamSettingSubForm.php:142
+#: application/forms/StreamSettingSubForm.php:140
 msgid "Stream URL"
 msgstr ""
 
@@ -3890,12 +3898,12 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: application/models/Preference.php:536
+#: application/models/Preference.php:538
 #, php-format
 msgid "Powered by %s"
 msgstr ""
 
-#: application/models/Preference.php:655
+#: application/models/Preference.php:657
 msgid "Select Country"
 msgstr "국가 선택"
 
@@ -4088,7 +4096,7 @@ msgstr ""
 msgid "Played"
 msgstr "방송됨"
 
-#: application/services/PodcastService.php:163
+#: application/services/PodcastService.php:159
 msgid "Auto-generated smartblock for podcast"
 msgstr ""
 

@@ -1,8 +1,10 @@
 from setuptools import find_packages, setup
 
+version = "4.0.0"  # x-release-please-version
+
 setup(
     name="libretime-worker",
-    version="3.1.0",
+    version=version,
     description="LibreTime Worker",
     author="LibreTime Contributors",
     url="https://github.com/libretime/libretime",
@@ -17,16 +19,16 @@ setup(
     install_requires=[
         "celery==4.4.7",
         "kombu==4.6.11",
-        "mutagen>=1.45.1,<1.47",
+        "mutagen>=1.45.1,<1.48",
         "requests>=2.31.0,<2.32",
     ],
     extras_require={
         "dev": [
-            "requests-mock>=1.10.0,<1.12",
-            "types-requests>=2.31.0,<2.32",
+            "requests-mock>=1.10.0,<2",
+            "types-requests>=2.31.0,<3",
         ],
         "sentry": [
-            "sentry-sdk>=1.15.0,<1.27",
+            "sentry-sdk>=1.15.0,<2",
         ],
     },
     zip_safe=False,

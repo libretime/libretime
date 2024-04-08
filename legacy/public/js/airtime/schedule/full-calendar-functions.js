@@ -60,14 +60,14 @@ function dayClick(date, allDay, jsEvent, view) {
         now.getMonth(),
         now.getDate(),
         now.getHours(),
-        now.getMinutes()
+        now.getMinutes(),
       );
       selected = new Date(
         date.getFullYear(),
         date.getMonth(),
         date.getDate(),
         date.getHours(),
-        date.getMinutes()
+        date.getMinutes(),
       );
     }
 
@@ -202,7 +202,7 @@ function viewDisplay(view) {
     var slotMin = view.calendar.options.slotMinutes;
     $('.schedule_change_slots option[value="' + slotMin + '"]').attr(
       "selected",
-      "selected"
+      "selected",
     );
   }
 
@@ -257,7 +257,7 @@ function eventRender(event, element, view) {
           $(element)
             .find(".fc-event-time")
             .before(
-              '<span class="small-icon linked"></span><span class="small-icon show-empty"></span>'
+              '<span class="small-icon linked"></span><span class="small-icon show-empty"></span>',
             );
           // in theory a linked show shouldn't have an automatic playlist so adding this here
         } else if (event.show_has_auto_playlist === true) {
@@ -274,7 +274,7 @@ function eventRender(event, element, view) {
           $(element)
             .find(".fc-event-time")
             .before(
-              '<span class="small-icon linked"></span><span class="small-icon show-partial-filled"></span>'
+              '<span class="small-icon linked"></span><span class="small-icon show-partial-filled"></span>',
             );
         } else if (event.show_has_auto_playlist === true) {
           $(element)
@@ -290,7 +290,7 @@ function eventRender(event, element, view) {
           $(element)
             .find(".fc-event-time")
             .before(
-              '<span class="small-icon linked"></span><span class="small-icon show-overbooked"></span>'
+              '<span class="small-icon linked"></span><span class="small-icon show-overbooked"></span>',
             );
         } else if (event.show_has_auto_playlist === true) {
           $(element)
@@ -320,7 +320,7 @@ function eventRender(event, element, view) {
             .after(
               '<span class="small-icon linked"></span><span title="' +
                 $.i18n._("Show is empty") +
-                '" class="small-icon show-empty"></span>'
+                '" class="small-icon show-empty"></span>',
             );
         } else if (event.show_has_auto_playlist === true) {
           $(element)
@@ -328,7 +328,7 @@ function eventRender(event, element, view) {
             .after(
               '<span title="' +
                 $.i18n._("Show has an automatic playlist") +
-                '"class="small-icon autoplaylist"></span>'
+                '"class="small-icon autoplaylist"></span>',
             );
         } else {
           $(element)
@@ -336,7 +336,7 @@ function eventRender(event, element, view) {
             .after(
               '<span title="' +
                 $.i18n._("Show is empty") +
-                '" class="small-icon show-empty"></span>'
+                '" class="small-icon show-empty"></span>',
             );
         }
       } else if (event.show_partial_filled === true) {
@@ -346,7 +346,7 @@ function eventRender(event, element, view) {
             .after(
               '<span class="small-icon linked"></span><span title="' +
                 $.i18n._("Show is partially filled") +
-                '" class="small-icon show-partial-filled"></span>'
+                '" class="small-icon show-partial-filled"></span>',
             );
         } else if (event.show_has_auto_playlist === true) {
           $(element)
@@ -354,7 +354,7 @@ function eventRender(event, element, view) {
             .after(
               '<span title="' +
                 $.i18n._("Show has an automatic playlist") +
-                '"class="small-icon autoplaylist"></span>'
+                '"class="small-icon autoplaylist"></span>',
             );
         } else {
           $(element)
@@ -362,7 +362,7 @@ function eventRender(event, element, view) {
             .after(
               '<span title="' +
                 $.i18n._("Show is partially filled") +
-                '" class="small-icon show-partial-filled"></span>'
+                '" class="small-icon show-partial-filled"></span>',
             );
         }
       } else if (event.percent > 100) {
@@ -372,9 +372,9 @@ function eventRender(event, element, view) {
             .after(
               '<span class="small-icon linked"></span><span title="' +
                 $.i18n._(
-                  "Shows longer than their scheduled time will be cut off by a following show."
+                  "Shows longer than their scheduled time will be cut off by a following show.",
                 ) +
-                '" class="small-icon show-overbooked"></span>'
+                '" class="small-icon show-overbooked"></span>',
             );
         } else if (event.show_has_auto_playlist === true) {
           $(element)
@@ -382,7 +382,7 @@ function eventRender(event, element, view) {
             .after(
               '<span title="' +
                 $.i18n._("Show has an automatic playlist") +
-                '"class="small-icon autoplaylist"></span>'
+                '"class="small-icon autoplaylist"></span>',
             );
         } else {
           $(element)
@@ -390,9 +390,9 @@ function eventRender(event, element, view) {
             .after(
               '<span title="' +
                 $.i18n._(
-                  "Shows longer than their scheduled time will be cut off by a following show."
+                  "Shows longer than their scheduled time will be cut off by a following show.",
                 ) +
-                '" class="small-icon show-overbooked"></span>'
+                '" class="small-icon show-overbooked"></span>',
             );
         }
       } else {
@@ -450,7 +450,7 @@ function eventDrop(
   revertFunc,
   jsEvent,
   ui,
-  view
+  view,
 ) {
   var url = baseUrl + "Schedule/move-show/format/json";
 
@@ -470,7 +470,7 @@ function eventDrop(
       //time changes in a different way than Airtime does.
       //(Airtime preserves show duration, FullCalendar doesn't.)
       scheduleRefetchEvents(json);
-    }
+    },
   );
 }
 
@@ -481,7 +481,7 @@ function eventResize(
   revertFunc,
   jsEvent,
   ui,
-  view
+  view,
 ) {
   var url = baseUrl + "Schedule/resize-show/format/json";
 
@@ -503,7 +503,7 @@ function eventResize(
       }
 
       scheduleRefetchEvents(json);
-    }
+    },
   );
 }
 
@@ -537,7 +537,7 @@ function getFullCalendarEvents(start, end, callback) {
       function (json) {
         callback(json.events);
         getUsabilityHint();
-      }
+      },
     );
   }
 
@@ -641,7 +641,7 @@ function addQtipsToIcons(ele, id) {
     $(ele).qtip({
       content: {
         text: $.i18n._(
-          "Shows longer than their scheduled time will be cut off by a following show."
+          "Shows longer than their scheduled time will be cut off by a following show.",
         ),
       },
       position: {

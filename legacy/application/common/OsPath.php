@@ -80,7 +80,7 @@ class Application_Common_OsPath
         }
 
         if ($dir[strlen($dir) - 1] != '/') {
-            $dir = $dir . '/';
+            $dir .= '/';
         }
 
         return $dir;

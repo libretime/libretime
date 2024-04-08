@@ -1001,7 +1001,7 @@ SQL;
      * Enter description here ...
      *
      * @param       $dir_id - if this is not provided, it returns all files with full
-     *                      path constructed
+     *                     path constructed
      * @param mixed $all
      */
     public static function listAllFiles($dir_id = null, $all = true)
@@ -1183,12 +1183,6 @@ SQL;
     }
 }
 
-class DeleteScheduledFileException extends Exception
-{
-}
-class FileDoesNotExistException extends Exception
-{
-}
-class FileNoPermissionException extends Exception
-{
-}
+class DeleteScheduledFileException extends Exception {}
+class FileDoesNotExistException extends Exception {}
+class FileNoPermissionException extends Exception {}

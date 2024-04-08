@@ -5312,7 +5312,7 @@ components:
           readOnly: true
         import_status:
           allOf:
-            - $ref: "#/components/schemas/PlaylistContentKindEnum"
+            - $ref: "#/components/schemas/FileImportStatusEnum"
           minimum: -2147483648
           maximum: 2147483647
         filepath:
@@ -5564,6 +5564,16 @@ components:
         - mime
         - name
         - size
+    FileImportStatusEnum:
+      enum:
+        - 0
+        - 1
+        - 2
+      type: integer
+      description: |-
+        * `0` - Success
+        * `1` - Pending
+        * `2` - Failed
     ImportedPodcast:
       type: object
       properties:
@@ -5714,7 +5724,7 @@ components:
           readOnly: true
         import_status:
           allOf:
-            - $ref: "#/components/schemas/PlaylistContentKindEnum"
+            - $ref: "#/components/schemas/FileImportStatusEnum"
           minimum: -2147483648
           maximum: 2147483647
         filepath:
@@ -6857,9 +6867,9 @@ components:
         - 2
       type: integer
       description: |-
-        * `0` - Success
-        * `1` - Pending
-        * `2` - Failed
+        * `0` - File
+        * `1` - Stream
+        * `2` - Block
     PlayoutHistory:
       type: object
       properties:
@@ -7525,10 +7535,19 @@ components:
         message_offline:
           type: string
           readOnly: true
+        replay_gain_enabled:
+          type: boolean
+          readOnly: true
+        replay_gain_offset:
+          type: number
+          format: double
+          readOnly: true
       required:
         - input_fade_transition
         - message_format
         - message_offline
+        - replay_gain_enabled
+        - replay_gain_offset
     StreamState:
       type: object
       properties:

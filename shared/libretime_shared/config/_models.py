@@ -1,39 +1,16 @@
 import sys
 from enum import Enum
-from typing import TYPE_CHECKING, Any, List, Literal, Optional, Union
+from typing import List, Literal, Optional, Union
 
-# pylint: disable=no-name-in-module
-from pydantic import AnyHttpUrl, AnyUrl, BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from typing_extensions import Annotated
+
+from ._fields import AnyHttpUrlStr, AnyUrlStr, StrNoLeadingSlash, StrNoTrailingSlash
 
 if sys.version_info < (3, 9):
     from backports.zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 else:
     from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
-
-
-if TYPE_CHECKING:
-    from pydantic.typing import AnyClassMethod
-
-
-def no_trailing_slash_validator(key: str) -> "AnyClassMethod":
-    # pylint: disable=unused-argument
-    def strip_trailing_slash(cls: Any, value: Any) -> Any:
-        if isinstance(value, str):
-            return value.rstrip("/")
-        return value
-
-    return validator(key, pre=True, allow_reuse=True)(strip_trailing_slash)
-
-
-def no_leading_slash_validator(key: str) -> "AnyClassMethod":
-    # pylint: disable=unused-argument
-    def strip_leading_slash(cls: Any, value: Any) -> Any:
-        if isinstance(value, str):
-            return value.lstrip("/")
-        return value
-
-    return validator(key, pre=True, allow_reuse=True)(strip_leading_slash)
 
 
 # GeneralConfig
@@ -42,18 +19,15 @@ def no_leading_slash_validator(key: str) -> "AnyClassMethod":
 
 # pylint: disable=too-few-public-methods
 class GeneralConfig(BaseModel):
-    public_url: AnyHttpUrl
+    public_url: AnyHttpUrlStr
     api_key: str
-    secret_key: Optional[str] = None
+    secret_key: str
 
     timezone: str = "UTC"
 
-    allowed_cors_origins: List[AnyHttpUrl] = []
+    allowed_cors_origins: List[AnyHttpUrlStr] = []
 
-    # Validators
-    _public_url_no_trailing_slash = no_trailing_slash_validator("public_url")
-
-    @validator("timezone")
+    @field_validator("timezone")
     @classmethod
     def _validate_timezone(cls, value: str) -> str:
         try:
@@ -70,10 +44,7 @@ class GeneralConfig(BaseModel):
 
 # pylint: disable=too-few-public-methods
 class StorageConfig(BaseModel):
-    path: str = "/srv/libretime"
-
-    # Validators
-    _path_no_trailing_slash = no_trailing_slash_validator("path")
+    path: StrNoTrailingSlash = "/srv/libretime"
 
 
 # DatabaseConfig
@@ -122,7 +93,7 @@ class RabbitMQConfig(BaseModel):
 
 class BaseInput(BaseModel):
     enabled: bool = True
-    public_url: Optional[AnyUrl] = None
+    public_url: Optional[AnyUrlStr] = None
 
 
 class InputKind(str, Enum):
@@ -131,11 +102,9 @@ class InputKind(str, Enum):
 
 class HarborInput(BaseInput):
     kind: Literal[InputKind.HARBOR] = InputKind.HARBOR
-    mount: str
+    mount: StrNoLeadingSlash
     port: int
     secure: bool = False
-
-    _mount_no_leading_slash = no_leading_slash_validator("mount")
 
 
 class MainHarborInput(HarborInput):
@@ -162,7 +131,7 @@ class BaseAudio(BaseModel):
     channels: AudioChannels = AudioChannels.STEREO
     bitrate: int
 
-    @validator("bitrate")
+    @field_validator("bitrate")
     @classmethod
     def _validate_bitrate(cls, value: int) -> int:
         # Once the liquidsoap script generation supports it, fine tune
@@ -200,11 +169,11 @@ class AudioOpus(BaseAudio):
 class IcecastOutput(BaseModel):
     kind: Literal["icecast"] = "icecast"
     enabled: bool = False
-    public_url: Optional[AnyUrl] = None
+    public_url: Optional[AnyUrlStr] = None
 
     host: str = "localhost"
     port: int = 8000
-    mount: str
+    mount: StrNoLeadingSlash
     source_user: str = "source"
     source_password: str
     admin_user: str = "admin"
@@ -220,13 +189,13 @@ class IcecastOutput(BaseModel):
     website: Optional[str] = None
     genre: Optional[str] = None
 
-    _mount_no_leading_slash = no_leading_slash_validator("mount")
+    mobile: bool = False
 
 
 class ShoutcastOutput(BaseModel):
     kind: Literal["shoutcast"] = "shoutcast"
     enabled: bool = False
-    public_url: Optional[AnyUrl] = None
+    public_url: Optional[AnyUrlStr] = None
 
     host: str = "localhost"
     port: int = 8000
@@ -244,8 +213,10 @@ class ShoutcastOutput(BaseModel):
     website: Optional[str] = None
     genre: Optional[str] = None
 
+    mobile: bool = False
 
-class SystemOutputKind(str, Enum):
+
+class SystemOutput(str, Enum):
     ALSA = "alsa"
     AO = "ao"
     OSS = "oss"
@@ -253,16 +224,49 @@ class SystemOutputKind(str, Enum):
     PULSEAUDIO = "pulseaudio"
 
 
-class SystemOutput(BaseModel):
+class BaseSystemOutput(BaseModel):
     enabled: bool = False
-    kind: SystemOutputKind = SystemOutputKind.ALSA
+
+
+class ALSASystemOutput(BaseSystemOutput):
+    kind: Literal[SystemOutput.ALSA] = SystemOutput.ALSA
+    device: Optional[str] = None
+
+
+class AOSystemOutput(BaseSystemOutput):
+    kind: Literal[SystemOutput.AO] = SystemOutput.AO
+
+
+class OSSSystemOutput(BaseSystemOutput):
+    kind: Literal[SystemOutput.OSS] = SystemOutput.OSS
+
+
+class PortAudioSystemOutput(BaseSystemOutput):
+    kind: Literal[SystemOutput.PORTAUDIO] = SystemOutput.PORTAUDIO
+
+
+class PulseAudioSystemOutput(BaseSystemOutput):
+    kind: Literal[SystemOutput.PULSEAUDIO] = SystemOutput.PULSEAUDIO
+    device: Optional[str] = None
+
+
+AnySystemOutput = Annotated[
+    Union[
+        ALSASystemOutput,
+        AOSystemOutput,
+        OSSSystemOutput,
+        PortAudioSystemOutput,
+        PulseAudioSystemOutput,
+    ],
+    Field(discriminator="kind", default=SystemOutput.PULSEAUDIO),
+]
 
 
 # pylint: disable=too-few-public-methods
 class Outputs(BaseModel):
-    icecast: List[IcecastOutput] = Field([], max_items=3)
-    shoutcast: List[ShoutcastOutput] = Field([], max_items=1)
-    system: List[SystemOutput] = Field([], max_items=1)
+    icecast: List[IcecastOutput] = Field([], max_length=3)
+    shoutcast: List[ShoutcastOutput] = Field([], max_length=1)
+    system: List[AnySystemOutput] = Field([], max_length=1)
 
     @property
     def merged(self) -> List[Union[IcecastOutput, ShoutcastOutput]]:

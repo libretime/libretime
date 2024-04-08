@@ -21,6 +21,12 @@ time for the convenience of your station staff. You can also set the day of the
 week that you wish to start your station's weekly schedule on, which defaults
 to Sunday.
 
+:::note
+
+The **Station Timezone** setting can not be modified on this page. It is set in the [configuration file](../admin-manual/configuration.md#general).
+
+:::
+
 The **Track Type Default** enables you to select a track type default for uploads.
 
 Initially, the **Default Fade In** and **Default Fade Out** times for automated
@@ -60,14 +66,19 @@ wish. (There is more about this feature in the
 [_Exporting the schedule_](./playout-history.md) chapter, in the
 _Advanced Configuration_ section of this book).
 
-The **Allowed CORS URLs** is intended to deal with situations where you want a
-remote site with a different domain to access the API. This is relevant when
-there is a reverse proxy server in front of LibreTime. If you are using a
-reverse proxy, the URLs that will be used to access it should be added here.
+:::note
+
+The **Allowed CORS URLs** you can still see in this screenshot was moved to the [configuration file](../admin-manual/configuration.md#general).
+
+:::
 
 The **Display login button on your Radio Page?** will determine whether visitors
 to your site see a link to login. If this is disabled, DJs and admins will need
 to goto http://example.org/login to be able to login.
+
+The **Disable the public radio page and redirect to the login page?** will
+switch off the public radio page and redirect all visitors to the login page.
+This is useful if you want to use LibreTime as a backend for a custom website.
 
 The **Tune-In Settings** section is intended for stations that have partnered
 with TuneIn to automatically push their now playing metadata to TuneIn. This

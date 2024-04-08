@@ -49,7 +49,9 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetAllow3rdPartyApi($values['thirdPartyApi']);
                 Application_Model_Preference::SetDefaultLocale($values['locale']);
                 Application_Model_Preference::SetWeekStartDay($values['weekStartDay']);
+                Application_Model_Preference::setScheduleTrimOverbooked($values['scheduleTrimOverbooked']);
                 Application_Model_Preference::setRadioPageDisplayLoginButton($values['radioPageLoginButton']);
+                Application_Model_Preference::setRadioPageDisabled($values['radioPageDisabled']);
                 Application_Model_Preference::SetFeaturePreviewMode($values['featurePreviewMode']);
 
                 $logoUploadElement = $form->getSubForm('preferences_general')->getElement('stationLogo');
@@ -69,7 +71,7 @@ class PreferenceController extends Zend_Controller_Action
                 $this->view->statusMsg = "<div class='success'>" . _('Preferences updated.') . '</div>';
                 $form = new Application_Form_Preferences();
                 $this->view->form = $form;
-                // $this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml')));
+            // $this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml')));
             } else {
                 $this->view->form = $form;
                 // $this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('preference/index.phtml')));
@@ -103,9 +105,7 @@ class PreferenceController extends Zend_Controller_Action
         $this->_helper->json->sendJson(['url' => $url]);
     }
 
-    public function directoryConfigAction()
-    {
-    }
+    public function directoryConfigAction() {}
 
     public function removeLogoAction()
     {
@@ -157,6 +157,11 @@ class PreferenceController extends Zend_Controller_Action
         // get current settings
         $setting = Application_Model_StreamSetting::getStreamSetting();
         $form->setSetting($setting);
+
+        if ($num_of_stream > MAX_NUM_STREAMS) {
+            Logging::error('Your streams count (' . $num_of_stream . ') exceed the maximum, some of them will not be displayed');
+            $num_of_stream = MAX_NUM_STREAMS;
+        }
 
         for ($i = 1; $i <= $num_of_stream; ++$i) {
             $subform = new Application_Form_StreamSettingSubForm();
@@ -250,7 +255,7 @@ class PreferenceController extends Zend_Controller_Action
             $element['isError'] = true;
             $result[$path] = $element;
         } else {
-            $path = $path . '/';
+            $path .= '/';
             $handle = opendir($path);
             if ($handle !== false) {
                 while (false !== ($file = readdir($handle))) {

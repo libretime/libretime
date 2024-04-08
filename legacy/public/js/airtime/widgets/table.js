@@ -28,7 +28,7 @@ var AIRTIME = (function (AIRTIME) {
     bItemSelection,
     toolbarButtons,
     dataTablesOptions,
-    emptyPlaceholder
+    emptyPlaceholder,
   ) {
     var self = this;
 
@@ -69,7 +69,7 @@ var AIRTIME = (function (AIRTIME) {
           bSearchable: false,
           sWidth: "24px",
           sClass: "airtime_table_checkbox",
-        }
+        },
       );
     }
 
@@ -141,7 +141,7 @@ var AIRTIME = (function (AIRTIME) {
     $(this._datatable, "tbody tr").on(
       "dblclick",
       this._SELECTORS.SELECTION_TABLE_ROW,
-      fn
+      fn,
     );
   };
 
@@ -178,7 +178,7 @@ var AIRTIME = (function (AIRTIME) {
             selectionMode = self.SELECTION_MODE.SINGLE;
           }
           self.selectRow(nRow, aData, selectionMode, iDisplayIndex);
-        }
+        },
       );
 
       $(self._datatable, "tbody tr").on(
@@ -196,7 +196,7 @@ var AIRTIME = (function (AIRTIME) {
           self.selectRow($this.parent(), aData, selectionMode, iVisualRowIdx); //Always multiselect for checkboxes
           e.stopPropagation();
           return true;
-        }
+        },
       );
 
       // Clear selection when switching pages
@@ -229,7 +229,7 @@ var AIRTIME = (function (AIRTIME) {
               $.i18n._(" of ") +
               totalRecords +
               $.i18n._(" records")
-          : ""
+          : "",
       );
 
       dt.closest(".dataTables_wrapper")
@@ -266,7 +266,7 @@ var AIRTIME = (function (AIRTIME) {
         btn.title,
         btn.iconClass,
         btn.extraBtnClass,
-        btn.elementId
+        btn.elementId,
       );
       $menu.append(buttonElement);
       btn.element = buttonElement; //Save this guy in case you need it later.
@@ -302,7 +302,7 @@ var AIRTIME = (function (AIRTIME) {
     title,
     iconClass,
     extraBtnClass,
-    elementId
+    elementId,
   ) {
     if (!iconClass) {
       iconClass = "icon-plus";
@@ -358,7 +358,7 @@ var AIRTIME = (function (AIRTIME) {
     nRow,
     aData,
     selectionMode,
-    iVisualRowIdx
+    iVisualRowIdx,
   ) {
     var self = this;
 
@@ -419,7 +419,7 @@ var AIRTIME = (function (AIRTIME) {
           nRow,
           aData,
           self.SELECTION_MODE.SINGLE,
-          iVisualRowIdx
+          iVisualRowIdx,
         );
       }
 
@@ -432,11 +432,11 @@ var AIRTIME = (function (AIRTIME) {
 
       var selectionStartRowIdx = Math.min(
         iVisualRowIdx,
-        self._selectedRowVisualIdxMin
+        self._selectedRowVisualIdxMin,
       );
       var selectionEndRowIdx = Math.min(
         iVisualRowIdx,
-        self._selectedRowVisualIdxMax
+        self._selectedRowVisualIdxMax,
       );
 
       //We can assume there's at least 1 row already selected now.
@@ -476,7 +476,7 @@ var AIRTIME = (function (AIRTIME) {
     if (r.status === 403) {
       $(".dt-process-rel").hide();
       $(".empty_placeholder_text").text(
-        $.i18n._("You don't have permission to view this resource.")
+        $.i18n._("You don't have permission to view this resource."),
       );
       $(".empty_placeholder").show();
     }
@@ -489,7 +489,7 @@ var AIRTIME = (function (AIRTIME) {
     sSource,
     aoData,
     fnCallback,
-    oSettings
+    oSettings,
   ) {
     var self = this;
     var echo = aoData[0].value; //Datatables state tracking. Must be included.
@@ -537,7 +537,7 @@ var AIRTIME = (function (AIRTIME) {
   Table.prototype._datatablesCheckboxDataDelegate = function (
     rowData,
     callType,
-    dataToSave
+    dataToSave,
   ) {
     if (callType == undefined) {
       //Supposed to return the raw data for the type here.

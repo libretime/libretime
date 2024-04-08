@@ -14,11 +14,13 @@ class StreamPreferencesView(views.APIView):
     def get(self, request):
         data = Preference.get_stream_preferences()
         return Response(
-            data.dict(
+            data.model_dump(
                 include={
                     "input_fade_transition",
                     "message_format",
                     "message_offline",
+                    "replay_gain_enabled",
+                    "replay_gain_offset",
                 }
             )
         )
@@ -32,7 +34,7 @@ class StreamStateView(views.APIView):
     def get(self, request):
         data = Preference.get_stream_state()
         return Response(
-            data.dict(
+            data.model_dump(
                 include={
                     "input_main_connected",
                     "input_main_streaming",

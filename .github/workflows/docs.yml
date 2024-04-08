@@ -2,14 +2,14 @@ name: Docs
 
 on:
   push:
-    branches: [main, stable]
+    branches: [main, stable-*]
     paths:
       - .github/vale/**
       - .github/workflows/docs.yml
       - docs/**
 
   pull_request:
-    branches: [main, stable]
+    branches: [main, stable-*]
     paths:
       - .github/vale/**
       - .github/workflows/docs.yml
@@ -24,9 +24,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             /usr/local/bin/vale*
@@ -64,11 +64,11 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: libretime/website
           path: website

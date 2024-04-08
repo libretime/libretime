@@ -36,7 +36,7 @@ function generatePartitions(partitions) {
       spaceUsedGb,
       totalSpaceGb,
       percUsed,
-      percUsed
+      percUsed,
     );
     var tr = $(row);
     lastElement.after(tr);
@@ -71,12 +71,12 @@ function success(data, textStatus, jqXHR) {
       $(children[2]).text(
         sprintf(
           "%(days)sd %(hours)sh %(minutes)sm %(seconds)ss",
-          convertSecondsToDaysHoursMinutesSeconds(s.uptime_seconds)
-        )
+          convertSecondsToDaysHoursMinutesSeconds(s.uptime_seconds),
+        ),
       );
       $(children[3]).text(s.cpu_perc);
       $(children[4]).text(
-        sprintf("%01.1fMB (%s)", parseInt(s.memory_kb) / 1000, s.memory_perc)
+        sprintf("%01.1fMB (%s)", parseInt(s.memory_kb) / 1000, s.memory_perc),
       );
     }
   }
@@ -92,7 +92,7 @@ function updateStatus(getDiskInfo) {
   $.getJSON(
     baseUrl + "api/status/format/json/diskinfo/" + getDiskInfo,
     null,
-    success
+    success,
   );
 }
 

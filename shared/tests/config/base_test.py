@@ -3,17 +3,17 @@ from pathlib import Path
 from typing import List, Union
 from unittest import mock
 
-from pydantic import AnyHttpUrl, BaseModel, Field
+from pydantic import BaseModel, Field
 from pytest import mark, raises
 from typing_extensions import Annotated
 
 from libretime_shared.config import (
+    AnyHttpUrlStr,
     BaseConfig,
     DatabaseConfig,
     IcecastOutput,
     RabbitMQConfig,
     ShoutcastOutput,
-    no_trailing_slash_validator,
 )
 
 AnyOutput = Annotated[
@@ -24,15 +24,357 @@ AnyOutput = Annotated[
 
 # pylint: disable=too-few-public-methods
 class FixtureConfig(BaseConfig):
-    public_url: AnyHttpUrl
+    public_url: AnyHttpUrlStr
     api_key: str
     allowed_hosts: List[str] = []
     database: DatabaseConfig
     rabbitmq: RabbitMQConfig = RabbitMQConfig()
     outputs: List[AnyOutput]
 
-    # Validators
-    _public_url_no_trailing_slash = no_trailing_slash_validator("public_url")
+
+FIXTURE_CONFIG_JSON_SCHEMA = {
+    "$defs": {
+        "AudioAAC": {
+            "properties": {
+                "channels": {
+                    "allOf": [{"$ref": "#/$defs/AudioChannels"}],
+                    "default": "stereo",
+                },
+                "bitrate": {"title": "Bitrate", "type": "integer"},
+                "format": {"const": "aac", "default": "aac", "title": "Format"},
+            },
+            "required": ["bitrate"],
+            "title": "AudioAAC",
+            "type": "object",
+        },
+        "AudioChannels": {
+            "enum": ["stereo", "mono"],
+            "title": "AudioChannels",
+            "type": "string",
+        },
+        "AudioMP3": {
+            "properties": {
+                "channels": {
+                    "allOf": [{"$ref": "#/$defs/AudioChannels"}],
+                    "default": "stereo",
+                },
+                "bitrate": {"title": "Bitrate", "type": "integer"},
+                "format": {"const": "mp3", "default": "mp3", "title": "Format"},
+            },
+            "required": ["bitrate"],
+            "title": "AudioMP3",
+            "type": "object",
+        },
+        "AudioOGG": {
+            "properties": {
+                "channels": {
+                    "allOf": [{"$ref": "#/$defs/AudioChannels"}],
+                    "default": "stereo",
+                },
+                "bitrate": {"title": "Bitrate", "type": "integer"},
+                "format": {"const": "ogg", "default": "ogg", "title": "Format"},
+                "enable_metadata": {
+                    "anyOf": [{"type": "boolean"}, {"type": "null"}],
+                    "default": False,
+                    "title": "Enable Metadata",
+                },
+            },
+            "required": ["bitrate"],
+            "title": "AudioOGG",
+            "type": "object",
+        },
+        "AudioOpus": {
+            "properties": {
+                "channels": {
+                    "allOf": [{"$ref": "#/$defs/AudioChannels"}],
+                    "default": "stereo",
+                },
+                "bitrate": {"title": "Bitrate", "type": "integer"},
+                "format": {
+                    "const": "opus",
+                    "default": "opus",
+                    "title": "Format",
+                },
+            },
+            "required": ["bitrate"],
+            "title": "AudioOpus",
+            "type": "object",
+        },
+        "DatabaseConfig": {
+            "properties": {
+                "host": {
+                    "default": "localhost",
+                    "title": "Host",
+                    "type": "string",
+                },
+                "port": {"default": 5432, "title": "Port", "type": "integer"},
+                "name": {
+                    "default": "libretime",
+                    "title": "Name",
+                    "type": "string",
+                },
+                "user": {
+                    "default": "libretime",
+                    "title": "User",
+                    "type": "string",
+                },
+                "password": {
+                    "default": "libretime",
+                    "title": "Password",
+                    "type": "string",
+                },
+            },
+            "title": "DatabaseConfig",
+            "type": "object",
+        },
+        "IcecastOutput": {
+            "properties": {
+                "kind": {
+                    "const": "icecast",
+                    "default": "icecast",
+                    "title": "Kind",
+                },
+                "enabled": {
+                    "default": False,
+                    "title": "Enabled",
+                    "type": "boolean",
+                },
+                "public_url": {
+                    "anyOf": [
+                        {"type": "string", "format": "uri"},
+                        {"type": "null"},
+                    ],
+                    "default": None,
+                    "title": "Public Url",
+                },
+                "host": {
+                    "default": "localhost",
+                    "title": "Host",
+                    "type": "string",
+                },
+                "port": {"default": 8000, "title": "Port", "type": "integer"},
+                "mount": {"title": "Mount", "type": "string"},
+                "source_user": {
+                    "default": "source",
+                    "title": "Source User",
+                    "type": "string",
+                },
+                "source_password": {
+                    "title": "Source Password",
+                    "type": "string",
+                },
+                "admin_user": {
+                    "default": "admin",
+                    "title": "Admin User",
+                    "type": "string",
+                },
+                "admin_password": {
+                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                    "default": None,
+                    "title": "Admin Password",
+                },
+                "audio": {
+                    "discriminator": {
+                        "mapping": {
+                            "aac": "#/$defs/AudioAAC",
+                            "mp3": "#/$defs/AudioMP3",
+                            "ogg": "#/$defs/AudioOGG",
+                            "opus": "#/$defs/AudioOpus",
+                        },
+                        "propertyName": "format",
+                    },
+                    "oneOf": [
+                        {"$ref": "#/$defs/AudioAAC"},
+                        {"$ref": "#/$defs/AudioMP3"},
+                        {"$ref": "#/$defs/AudioOGG"},
+                        {"$ref": "#/$defs/AudioOpus"},
+                    ],
+                    "title": "Audio",
+                },
+                "name": {
+                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                    "default": None,
+                    "title": "Name",
+                },
+                "description": {
+                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                    "default": None,
+                    "title": "Description",
+                },
+                "website": {
+                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                    "default": None,
+                    "title": "Website",
+                },
+                "genre": {
+                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                    "default": None,
+                    "title": "Genre",
+                },
+                "mobile": {
+                    "default": False,
+                    "title": "Mobile",
+                    "type": "boolean",
+                },
+            },
+            "required": ["mount", "source_password", "audio"],
+            "title": "IcecastOutput",
+            "type": "object",
+        },
+        "RabbitMQConfig": {
+            "properties": {
+                "host": {
+                    "default": "localhost",
+                    "title": "Host",
+                    "type": "string",
+                },
+                "port": {"default": 5672, "title": "Port", "type": "integer"},
+                "user": {
+                    "default": "libretime",
+                    "title": "User",
+                    "type": "string",
+                },
+                "password": {
+                    "default": "libretime",
+                    "title": "Password",
+                    "type": "string",
+                },
+                "vhost": {
+                    "default": "/libretime",
+                    "title": "Vhost",
+                    "type": "string",
+                },
+            },
+            "title": "RabbitMQConfig",
+            "type": "object",
+        },
+        "ShoutcastOutput": {
+            "properties": {
+                "kind": {
+                    "const": "shoutcast",
+                    "default": "shoutcast",
+                    "title": "Kind",
+                },
+                "enabled": {
+                    "default": False,
+                    "title": "Enabled",
+                    "type": "boolean",
+                },
+                "public_url": {
+                    "anyOf": [
+                        {"type": "string", "format": "uri"},
+                        {"type": "null"},
+                    ],
+                    "default": None,
+                    "title": "Public Url",
+                },
+                "host": {
+                    "default": "localhost",
+                    "title": "Host",
+                    "type": "string",
+                },
+                "port": {"default": 8000, "title": "Port", "type": "integer"},
+                "source_user": {
+                    "default": "source",
+                    "title": "Source User",
+                    "type": "string",
+                },
+                "source_password": {
+                    "title": "Source Password",
+                    "type": "string",
+                },
+                "admin_user": {
+                    "default": "admin",
+                    "title": "Admin User",
+                    "type": "string",
+                },
+                "admin_password": {
+                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                    "default": None,
+                    "title": "Admin Password",
+                },
+                "audio": {
+                    "discriminator": {
+                        "mapping": {
+                            "aac": "#/$defs/AudioAAC",
+                            "mp3": "#/$defs/AudioMP3",
+                        },
+                        "propertyName": "format",
+                    },
+                    "oneOf": [
+                        {"$ref": "#/$defs/AudioAAC"},
+                        {"$ref": "#/$defs/AudioMP3"},
+                    ],
+                    "title": "Audio",
+                },
+                "name": {
+                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                    "default": None,
+                    "title": "Name",
+                },
+                "website": {
+                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                    "default": None,
+                    "title": "Website",
+                },
+                "genre": {
+                    "anyOf": [{"type": "string"}, {"type": "null"}],
+                    "default": None,
+                    "title": "Genre",
+                },
+                "mobile": {
+                    "default": False,
+                    "title": "Mobile",
+                    "type": "boolean",
+                },
+            },
+            "required": ["source_password", "audio"],
+            "title": "ShoutcastOutput",
+            "type": "object",
+        },
+    },
+    "properties": {
+        "public_url": {"title": "Public Url", "type": "string", "format": "uri"},
+        "api_key": {"title": "Api Key", "type": "string"},
+        "allowed_hosts": {
+            "default": [],
+            "items": {"type": "string"},
+            "title": "Allowed Hosts",
+            "type": "array",
+        },
+        "database": {"$ref": "#/$defs/DatabaseConfig"},
+        "rabbitmq": {
+            "allOf": [{"$ref": "#/$defs/RabbitMQConfig"}],
+            "default": {
+                "host": "localhost",
+                "port": 5672,
+                "user": "libretime",
+                "password": "libretime",
+                "vhost": "/libretime",
+            },
+        },
+        "outputs": {
+            "items": {
+                "discriminator": {
+                    "mapping": {
+                        "icecast": "#/$defs/IcecastOutput",
+                        "shoutcast": "#/$defs/ShoutcastOutput",
+                    },
+                    "propertyName": "kind",
+                },
+                "oneOf": [
+                    {"$ref": "#/$defs/IcecastOutput"},
+                    {"$ref": "#/$defs/ShoutcastOutput"},
+                ],
+            },
+            "title": "Outputs",
+            "type": "array",
+        },
+    },
+    "required": ["public_url", "api_key", "database", "outputs"],
+    "title": "FixtureConfig",
+    "type": "object",
+}
 
 
 FIXTURE_CONFIG_RAW = """
@@ -80,6 +422,8 @@ def test_base_config(tmp_path: Path):
         },
     ):
         config = FixtureConfig(config_filepath)
+
+        assert config.model_json_schema() == FIXTURE_CONFIG_JSON_SCHEMA
 
         assert config.public_url == "http://libretime.example.org"
         assert config.api_key == "f3bf04fc"

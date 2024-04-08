@@ -154,7 +154,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
             // minutes cannot be over 59. Need to convert anything > 59 minutes into hours.
             $hours += intval($minutes / 60);
-            $minutes = $minutes % 60;
+            $minutes %= 60;
 
             $di = new DateInterval("PT{$hours}H{$minutes}M");
 
@@ -449,6 +449,4 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     }
 }
 
-class WebstreamNoPermissionException extends Exception
-{
-}
+class WebstreamNoPermissionException extends Exception {}

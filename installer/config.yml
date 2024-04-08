@@ -7,9 +7,8 @@ general:
   # The internal API authentication key.
   # > this field is REQUIRED
   api_key:
-  # The Django API secret key. If not defined, the value of [general.api_key] will be
-  # used as fallback.
-  # > this field will be REQUIRED starting with LibreTime 4.0.0
+  # The Django API secret key.
+  # > this field is REQUIRED
   secret_key:
 
   # List of origins allowed to access resources on the server, the public url
@@ -32,7 +31,8 @@ general:
   auth: local
 
 storage:
-  # Path of the storage directory.
+  # Path of the storage directory. Make sure to update the Nginx configuration after
+  # updating the storage path.
   # > default is /srv/libretime
   path: /srv/libretime
 
@@ -264,6 +264,10 @@ stream:
         # Icecast stream genre.
         genre: various
 
+        # Whether the stream should be used for mobile devices.
+        # > default is false
+        mobile: false
+
     # Shoutcast output streams.
     # > max items is 1
     shoutcast:
@@ -309,6 +313,10 @@ stream:
         # Shoutcast stream genre.
         genre: various
 
+        # Whether the stream should be used for mobile devices.
+        # > default is false
+        mobile: false
+
     # System outputs.
     # > max items is 1
     system:
@@ -317,5 +325,9 @@ stream:
         enabled: false
         # System output kind.
         # > must be one of (alsa, ao, oss, portaudio, pulseaudio)
-        # > default is alsa
-        kind: alsa
+        # > default is pulseaudio
+        kind: pulseaudio
+
+        # System output device.
+        # > only available for kind=(alsa, pulseaudio)
+        device:

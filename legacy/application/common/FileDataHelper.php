@@ -32,6 +32,10 @@ class FileDataHelper
         $mimes = self::getAudioMimeTypeArray();
         unset($mimes['audio/x-ms-wma']);
 
+        // audio/opus is not a real mime type, we only set it here to allow uploading
+        // .opus files
+        $mimes['audio/opus'] = 'opus';
+
         return $mimes;
     }
 
@@ -128,7 +132,7 @@ class FileDataHelper
     public static function saveArtworkData($analyzeFile, $filename, $importDir = null, $DbPath = null)
     {
         if (class_exists('getID3')) {
-            $getID3 = new \getID3();
+            $getID3 = new getID3();
             $getFileInfo = $getID3->analyze($analyzeFile);
         } else {
             $getFileInfo = [];
@@ -195,7 +199,7 @@ class FileDataHelper
         $fullpath = $fp . $dbAudioPath;
 
         if (class_exists('getID3')) {
-            $getID3 = new \getID3();
+            $getID3 = new getID3();
             $getFileInfo = $getID3->analyze($fullpath);
         } else {
             $getFileInfo = [];

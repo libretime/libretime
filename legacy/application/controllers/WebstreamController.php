@@ -116,9 +116,11 @@ class WebstreamController extends Zend_Controller_Action
                 /*we are updating a playlist. Ensure that if the user is a
                     host/dj, that he has the correct permission.*/
                 $user = Application_Model_User::getCurrentUser();
+
                 // only allow when webstream belongs to the DJ
                 return $webstream->getDbCreatorId() == $user->getId();
             }
+
             /*we are creating a new stream. Don't need to check whether the
                 DJ/Host owns the stream*/
             return true;

@@ -144,9 +144,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         }
     }
 
-    public function putAction()
-    {
-    }
+    public function putAction() {}
 
     private function getId()
     {

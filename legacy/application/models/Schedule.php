@@ -514,7 +514,7 @@ SQL;
             ':sj_ts_5' => $p_track_start,
             ':sj_ts_6' => $p_track_end,
         ];
-        $paramMap = $paramMap + $map;
+        $paramMap += $map;
 
         $streamSql = str_replace(
             '%%columns%%',
@@ -540,7 +540,7 @@ SQL;
             }
 
             $showPredicate = ' AND show_id IN (' . implode(',', $params) . ')';
-            $paramMap = $paramMap + $map;
+            $paramMap += $map;
         } elseif (count($p_show_instances) > 0) {
             $showPredicate = ' AND si.id IN (' . implode(',', $p_show_instances) . ')';
         }
@@ -584,7 +584,7 @@ SQL;
             ':ts_5' => $p_start_str,
             ':ts_6' => $p_end_str,
         ];
-        $paramMap = $paramMap + $map;
+        $paramMap += $map;
 
         return Application_Common_Database::prepareAndExecute(
             $sql,

@@ -1,5 +1,8 @@
 <?php
 
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Exception\AMQPRuntimeException;
+
 function booleanReduce($a, $b)
 {
     return $a && $b;
@@ -40,6 +43,7 @@ function checkPhpDependencies()
 function checkDatabaseDependencies()
 {
     global $extensions;
+
     // Check the PHP extension list for the Postgres db extensions
     return in_array('pdo_pgsql', $extensions)
         && in_array('pgsql', $extensions);
@@ -115,7 +119,7 @@ function checkRMQConnection()
     $config = Config::getConfig();
 
     try {
-        $conn = new \PhpAmqpLib\Connection\AMQPStreamConnection(
+        $conn = new AMQPStreamConnection(
             $config['rabbitmq']['host'],
             $config['rabbitmq']['port'],
             $config['rabbitmq']['user'],
@@ -124,7 +128,7 @@ function checkRMQConnection()
         );
 
         return isset($conn);
-    } catch (\PhpAmqpLib\Exception\AMQPRuntimeException $exc) {
+    } catch (AMQPRuntimeException $exc) {
         Logging::error($exc->getMessage());
 
         return false;

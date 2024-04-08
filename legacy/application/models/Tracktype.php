@@ -130,7 +130,7 @@ class Application_Model_Tracktype
         $sql .= ' AND code ILIKE :search';
         $params[':search'] = "%{$search}%";
 
-        $sql = $sql . ' ORDER BY id';
+        $sql .= ' ORDER BY id';
 
         return Application_Common_Database::prepareAndExecute($sql, $params, 'all');
     }

@@ -209,7 +209,7 @@ var AIRTIME = (function (AIRTIME) {
             $.i18n._("New") +
             "</span>" +
             "</button>" +
-            "</div>"
+            "</div>",
         )
         .append(
           "<div class='btn-group' title=" +
@@ -221,7 +221,7 @@ var AIRTIME = (function (AIRTIME) {
             $.i18n._("Edit") +
             "</span>" +
             "</button>" +
-            "</div>"
+            "</div>",
         );
     }
 
@@ -232,7 +232,7 @@ var AIRTIME = (function (AIRTIME) {
           "<i class='icon-white icon-plus'></i>" +
           "<span id='lib-plus-text'></span>" +
           "</button>" +
-          "</div>"
+          "</div>",
       )
       .append(
         "<div class='btn-group' title=" +
@@ -244,7 +244,7 @@ var AIRTIME = (function (AIRTIME) {
           $.i18n._("Delete") +
           "</span>" +
           "</button>" +
-          "</div>"
+          "</div>",
       );
 
     if (onDashboard) {
@@ -257,7 +257,7 @@ var AIRTIME = (function (AIRTIME) {
           $.i18n._("Publish") +
           "</span>" +
           "</button>" +
-          "</div>"
+          "</div>",
       );
     }
   };
@@ -538,7 +538,7 @@ var AIRTIME = (function (AIRTIME) {
 
         //Re-enable the delete button
         AIRTIME.button.enableButton("btn-group #sb-delete", false);
-      }
+      },
     );
     mod.selectNone();
   };
@@ -854,7 +854,7 @@ var AIRTIME = (function (AIRTIME) {
           bSearchable: false,
           sWidth: "20px",
           sClass: "library_actions",
-        }
+        },
       );
     }
 
@@ -902,7 +902,7 @@ var AIRTIME = (function (AIRTIME) {
       },
       fnStateLoad: function fnLibStateLoad(oSettings) {
         var settings = JSON.parse(
-          localStorage.getItem(dataTableLocalStorageKey)
+          localStorage.getItem(dataTableLocalStorageKey),
         );
 
         // local storage was empty lets get something from the backend
@@ -917,7 +917,7 @@ var AIRTIME = (function (AIRTIME) {
             success: function (oData) {
               localStorage.setItem(
                 dataTableLocalStorageKey,
-                JSON.stringify(oData)
+                JSON.stringify(oData),
               );
               settings = oData;
             },
@@ -999,7 +999,7 @@ var AIRTIME = (function (AIRTIME) {
                 (data.iTotalRecords - data.iTotalDisplayRecords) +
                 $.i18n._(" of ") +
                 data.iTotalRecords +
-                $.i18n._(" records")
+                $.i18n._(" records"),
             );
             $(".empty_placeholder").hide();
             $libTable.find("tr:has(td.dataTables_empty)").show();
@@ -1010,7 +1010,7 @@ var AIRTIME = (function (AIRTIME) {
             .find('.dataTables_filter input[type="text"]')
             .css(
               "padding-right",
-              $("#advanced-options").find("button").outerWidth()
+              $("#advanced-options").find("button").outerWidth(),
             );
           if (!$('#advanced_search input[type="text"]').is(":focus")) {
             $libContent.find('.dataTables_filter input[type="text"]').focus();
@@ -1061,7 +1061,7 @@ var AIRTIME = (function (AIRTIME) {
                     $(
                       "#au_" +
                         aData.id +
-                        " td.library_track_type div.library_track_type_btn"
+                        " td.library_track_type div.library_track_type_btn",
                     ).qtip({
                       overwrite: false,
                       content: {
@@ -1073,7 +1073,7 @@ var AIRTIME = (function (AIRTIME) {
                         def: false,
                         position: {
                           target: $(
-                            "#au_" + aData.id + " td.library_track_type"
+                            "#au_" + aData.id + " td.library_track_type",
                           ), // my target
                           my: "bottom center",
                           at: "top center",
@@ -1130,7 +1130,7 @@ var AIRTIME = (function (AIRTIME) {
                 $.i18n._("Track preview") +
                 '" src="' +
                 baseUrl +
-                'css/images/icon_audioclip.png">'
+                'css/images/icon_audioclip.png">',
             );
           if (aData.artwork_data) {
             $(nRow)
@@ -1140,7 +1140,7 @@ var AIRTIME = (function (AIRTIME) {
                   aData.id +
                   '" width="28" height="28" src="' +
                   aData.artwork_data +
-                  '">'
+                  '">',
               );
           } else {
             $(nRow)
@@ -1148,7 +1148,7 @@ var AIRTIME = (function (AIRTIME) {
               .html(
                 '<img class="img_small" width="28" height="28" src="' +
                   baseUrl +
-                  'css/images/no-cover.jpg">'
+                  'css/images/no-cover.jpg">',
               );
           }
         } else if (aData.ftype === "playlist") {
@@ -1159,7 +1159,7 @@ var AIRTIME = (function (AIRTIME) {
                 $.i18n._("Playlist preview") +
                 '" src="' +
                 baseUrl +
-                'css/images/icon_playlist.png">'
+                'css/images/icon_playlist.png">',
             );
         } else if (aData.ftype === "block") {
           $(nRow)
@@ -1169,7 +1169,7 @@ var AIRTIME = (function (AIRTIME) {
                 $.i18n._("Smart Block") +
                 '" src="' +
                 baseUrl +
-                'css/images/icon_smart-block.png">'
+                'css/images/icon_smart-block.png">',
             );
         } else if (aData.ftype === "stream") {
           $(nRow)
@@ -1179,7 +1179,7 @@ var AIRTIME = (function (AIRTIME) {
                 $.i18n._("Webstream preview") +
                 '" src="' +
                 baseUrl +
-                'css/images/icon_webstream.png">'
+                'css/images/icon_webstream.png">',
             );
         }
 
@@ -1283,7 +1283,7 @@ var AIRTIME = (function (AIRTIME) {
                 "' class='controls " +
                 inputClass +
                 "'></div>" +
-                "</div>"
+                "</div>",
             );
           } else {
             advanceSearchDiv.append(
@@ -1300,7 +1300,7 @@ var AIRTIME = (function (AIRTIME) {
                 "' class='controls " +
                 inputClass +
                 "'></div>" +
-                "</div>"
+                "</div>",
             );
           }
 
@@ -1340,7 +1340,7 @@ var AIRTIME = (function (AIRTIME) {
       //Set up the datatables string translation table with different strings depending on
       //whether you're viewing files, playlists, smart blocks, etc.
       var type = parseInt(
-        $(".media_type_selector.selected").data("selection-id")
+        $(".media_type_selector.selected").data("selection-id"),
       );
       type =
         type === undefined
@@ -1446,7 +1446,7 @@ var AIRTIME = (function (AIRTIME) {
           var tr = $(this).parent(),
             data = tr.data("aData");
           AIRTIME.library.dblClickAdd(data, data.ftype);
-        }
+        },
       );
 
     $libTable
@@ -1541,7 +1541,7 @@ var AIRTIME = (function (AIRTIME) {
           } else if (ev.ctrlKey) {
             flagForDeselection = true;
           }
-        }
+        },
       );
 
     $libTable
@@ -1572,7 +1572,7 @@ var AIRTIME = (function (AIRTIME) {
             mod.selectNone();
             mod.selectItem(tr);
           }
-        }
+        },
       );
 
     $libTable
@@ -1688,8 +1688,8 @@ var AIRTIME = (function (AIRTIME) {
                     if (
                       confirm(
                         $.i18n._(
-                          "Are you sure you want to delete the selected item?"
-                        )
+                          "Are you sure you want to delete the selected item?",
+                        ),
                       )
                     ) {
                       AIRTIME.library.fnDeleteItems(aMedia);
@@ -1702,8 +1702,8 @@ var AIRTIME = (function (AIRTIME) {
                     if (
                       confirm(
                         $.i18n._(
-                          "Are you sure you want to delete the selected item?"
-                        )
+                          "Are you sure you want to delete the selected item?",
+                        ),
                       )
                     ) {
                       media.push({ id: data.id, type: data.ftype });
@@ -1719,7 +1719,7 @@ var AIRTIME = (function (AIRTIME) {
 
                           oTable = $("#library_display").dataTable();
                           oTable.fnDeleteRow($tr[0]);
-                        }
+                        },
                       );
                     }
                   };
@@ -1894,7 +1894,7 @@ var AIRTIME = (function (AIRTIME) {
         validateConstraints: function () {
           return true;
         },
-      }
+      },
     );
     $.extend(
       true,
@@ -1908,7 +1908,7 @@ var AIRTIME = (function (AIRTIME) {
         validateConstraints: function () {
           return this.getSelectedRows().length >= 1;
         },
-      }
+      },
     );
     $.extend(
       true,
@@ -1920,7 +1920,7 @@ var AIRTIME = (function (AIRTIME) {
         validateConstraints: function () {
           return this.getSelectedRows().length >= 1;
         },
-      }
+      },
     );
 
     //Set up the div with id "podcast_table" as a datatable.
@@ -1938,7 +1938,7 @@ var AIRTIME = (function (AIRTIME) {
         fnDrawCallback: function () {
           AIRTIME.library.drawEmptyPlaceholder(this);
         },
-      }
+      },
     );
 
     // Edit podcast in right-side pane upon double click
@@ -2146,7 +2146,7 @@ function readArtworkURL(input, id) {
     reader.onload = function (e) {
       $(".artwork-preview-" + id).css(
         "background-image",
-        "url(" + e.target.result + ")"
+        "url(" + e.target.result + ")",
       );
       $(".artwork-preview-" + id).hide();
       $(".artwork-preview-" + id).fadeIn(500);
@@ -2225,7 +2225,7 @@ $(document).ready(function () {
     var id = $(this).attr("data-id");
     $(".artwork-preview-" + id).css(
       "background-image",
-      "url(" + baseUrl + "css/images/no-cover.jpg)"
+      "url(" + baseUrl + "css/images/no-cover.jpg)",
     );
     $(".artwork-preview-" + id).hide();
     $(".artwork-preview-" + id).fadeIn(500);
@@ -2316,7 +2316,7 @@ $(document).ready(function () {
       placeImage: function (data, id) {
         $(".artwork-preview-" + id).css(
           "background-image",
-          "url(" + data + ")"
+          "url(" + data + ")",
         );
         $(".artwork-preview-" + id).hide();
         $(".artwork-preview-" + id).fadeIn(500);

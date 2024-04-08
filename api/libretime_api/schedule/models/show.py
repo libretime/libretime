@@ -69,7 +69,7 @@ class Show(models.Model):
     auto_playlist_enabled = models.BooleanField(db_column="has_autoplaylist")
     auto_playlist_repeat = models.BooleanField(db_column="autoplaylist_repeat")
 
-    hosts = models.ManyToManyField(
+    hosts = models.ManyToManyField(  # type: ignore[var-annotated]
         "core.User",
         through="ShowHost",
     )

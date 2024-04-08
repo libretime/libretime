@@ -35,7 +35,7 @@ class Schema implements ConfigurationInterface
             ->arrayNode('general')->addDefaultsIfNotSet()->children()
             /**/->scalarNode('public_url')->cannotBeEmpty()->end()
             /**/->scalarNode('api_key')->cannotBeEmpty()->end()
-            /**/->scalarNode('secret_key')->end()
+            /**/->scalarNode('secret_key')->cannotBeEmpty()->end()
             /**/->arrayNode('allowed_cors_origins')->scalarPrototype()->defaultValue([])->end()->end()
             /**/->scalarNode('timezone')->cannotBeEmpty()->defaultValue("UTC")
             /*  */->validate()->ifNotInArray(DateTimeZone::listIdentifiers())
@@ -171,6 +171,7 @@ class Schema implements ConfigurationInterface
             /*  */->scalarNode('description')->end()
             /*  */->scalarNode('website')->end()
             /*  */->scalarNode('genre')->end()
+            /*  */->booleanNode('mobile')->defaultFalse()->end()
             /**/->end()->end()->end()
 
             // Shoutcast outputs
@@ -200,15 +201,17 @@ class Schema implements ConfigurationInterface
             /*  */->scalarNode('name')->end()
             /*  */->scalarNode('website')->end()
             /*  */->scalarNode('genre')->end()
+            /*  */->booleanNode('mobile')->defaultFalse()->end()
             /**/->end()->end()->end()
 
             // System outputs
             /**/->arrayNode('system')->arrayPrototype()->children()
             /*  */->booleanNode('enabled')->defaultFalse()->end()
-            /*  */->scalarNode('kind')->defaultValue('alsa')
+            /*  */->scalarNode('kind')->defaultValue('pulseaudio')
             /*    */->validate()->ifNotInArray(["alsa", "ao", "oss", "portaudio", "pulseaudio"])
             /*    */->thenInvalid('invalid stream.outputs.system.kind %s')
             /*  */->end()->end()
+            /*  */->scalarNode('device')->end()
             /**/->end()->end()->end()
 
             ->end()->end()

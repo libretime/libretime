@@ -7,9 +7,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
 
     public static $customizable;
 
-    public function init()
-    {
-    }
+    public function init() {}
 
     public function setPrefix($prefix)
     {

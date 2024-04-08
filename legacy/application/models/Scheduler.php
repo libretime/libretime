@@ -614,10 +614,8 @@ final class Application_Model_Scheduler
     /**
      * Enter description here ...
      *
-     * @param       $scheduleItems
-     *                             cc_schedule items, where the items get inserted after
-     * @param       $filesToInsert
-     *                             array of schedule item info, what gets inserted into cc_schedule
+     * @param       $scheduleItems cc_schedule items, where the items get inserted after
+     * @param       $filesToInsert array of schedule item info, what gets inserted into cc_schedule
      * @param mixed $mediaItems
      * @param mixed $moveAction
      * @param mixed $adjustSched
@@ -1084,9 +1082,7 @@ final class Application_Model_Scheduler
         }
     }
 
-    private function updateMovedItem()
-    {
-    }
+    private function updateMovedItem() {}
 
     private function getInstances($instanceId)
     {
@@ -1410,6 +1406,4 @@ final class Application_Model_Scheduler
     }
 }
 
-class OutDatedScheduleException extends Exception
-{
-}
+class OutDatedScheduleException extends Exception {}

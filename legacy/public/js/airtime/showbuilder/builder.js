@@ -68,7 +68,7 @@ var AIRTIME = (function (AIRTIME) {
             instance_id +
             '" title="' +
             $.i18n._("Show is empty") +
-            '" class="small-icon show-empty"></span>'
+            '" class="small-icon show-empty"></span>',
         );
     } else if (lastElem["fRuntime"][0] == "-") {
       $elem
@@ -78,7 +78,7 @@ var AIRTIME = (function (AIRTIME) {
             instance_id +
             '" title="' +
             $.i18n._("Show is partially filled") +
-            '" class="small-icon show-partial-filled"></span>'
+            '" class="small-icon show-partial-filled"></span>',
         );
     }
   };
@@ -115,7 +115,7 @@ var AIRTIME = (function (AIRTIME) {
               .dataTable()
               .fnStandingRedraw();
           }
-        }
+        },
       );
       oSchedTable.fnDraw();
     }
@@ -327,7 +327,7 @@ var AIRTIME = (function (AIRTIME) {
     $.post(
       baseUrl + "showbuilder/schedule-add",
       { format: "json", mediaIds: aMediaIds, schedIds: aSchedIds },
-      mod.fnItemCallback
+      mod.fnItemCallback,
     );
   };
 
@@ -337,7 +337,7 @@ var AIRTIME = (function (AIRTIME) {
     $.post(
       baseUrl + "showbuilder/schedule-move",
       { format: "json", selectedItem: aSelect, afterItem: aAfter },
-      mod.fnItemCallback
+      mod.fnItemCallback,
     );
   };
 
@@ -348,7 +348,7 @@ var AIRTIME = (function (AIRTIME) {
       $.post(
         baseUrl + "showbuilder/schedule-remove",
         { items: aItems, format: "json" },
-        mod.fnItemCallback
+        mod.fnItemCallback,
       );
     } else {
       mod.enableUI();
@@ -559,7 +559,7 @@ var AIRTIME = (function (AIRTIME) {
         nRow,
         aData,
         iDisplayIndex,
-        iDisplayIndexFull
+        iDisplayIndexFull,
       ) {
         var i,
           length,
@@ -580,7 +580,7 @@ var AIRTIME = (function (AIRTIME) {
         fnPrepareSeparatorRow = function fnPrepareSeparatorRow(
           sRowContent,
           sClass,
-          iNodeIndex
+          iNodeIndex,
         ) {
           //Albert:
           //$(nRow.children[iNodeIndex]).replaceWith(emptyNode);
@@ -725,7 +725,7 @@ var AIRTIME = (function (AIRTIME) {
             $image.find(".ui-icon-alert").qtip({
               content: {
                 text: $.i18n._(
-                  'Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn\'t "watched" anymore.'
+                  'Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn\'t "watched" anymore.',
                 ),
               },
               style: {
@@ -743,7 +743,7 @@ var AIRTIME = (function (AIRTIME) {
             aData.linked_allowed
           ) {
             $node.html(
-              '<input type="checkbox" name="' + aData.id + '"></input>'
+              '<input type="checkbox" name="' + aData.id + '"></input>',
             );
           } else {
             $node.empty();
@@ -769,7 +769,7 @@ var AIRTIME = (function (AIRTIME) {
             .find("td:first")
             .css(
               "background",
-              "rgba(" + r + ", " + g + ", " + b + ", " + a + ")"
+              "rgba(" + r + ", " + g + ", " + b + ", " + a + ")",
             );
         }
 
@@ -880,10 +880,10 @@ var AIRTIME = (function (AIRTIME) {
       sAjaxDataProp: "schedule",
       oLanguage: getDatatablesStrings({
         sZeroRecords: $.i18n._(
-          "There are no shows scheduled during the specified time period."
+          "There are no shows scheduled during the specified time period.",
         ),
         sEmptyTable: $.i18n._(
-          "There are no shows scheduled during the specified time period."
+          "There are no shows scheduled during the specified time period.",
         ),
       }),
       sAjaxSource: baseUrl + "showbuilder/builder-feed",
@@ -931,7 +931,7 @@ var AIRTIME = (function (AIRTIME) {
           selectedRows = $("." + SB_SELECTED_CLASS);
           // Remember this row so we can properly multiselect
           $previouslySelected = $tr;
-        }
+        },
       );
 
     $sbTable
@@ -985,7 +985,7 @@ var AIRTIME = (function (AIRTIME) {
           selectedRows = $("." + SB_SELECTED_CLASS);
           // Remember this row so we can properly multiselect
           $previouslySelected = $tr;
-        }
+        },
       );
 
     $sbTable
@@ -1007,7 +1007,7 @@ var AIRTIME = (function (AIRTIME) {
 
           mod.checkToolBarIcons();
           selectedRows = $("." + SB_SELECTED_CLASS);
-        }
+        },
       );
 
     $sbTable
@@ -1031,7 +1031,7 @@ var AIRTIME = (function (AIRTIME) {
 
           mod.checkToolBarIcons();
           selectedRows = $("." + SB_SELECTED_CLASS);
-        }
+        },
       );
 
     //begin context menu initialization.
@@ -1332,7 +1332,7 @@ var AIRTIME = (function (AIRTIME) {
           $.i18n._("Select none") +
           "</a></li>" +
           "</ul>" +
-          "</div>"
+          "</div>",
       )
       .append(
         "<div class='btn-group'>" +
@@ -1343,7 +1343,7 @@ var AIRTIME = (function (AIRTIME) {
           "<span>" +
           $.i18n._("Trim overbooked shows") +
           "</span>" +
-          "</button></div>"
+          "</button></div>",
       )
       .append(
         "<div class='btn-group'>" +
@@ -1354,7 +1354,7 @@ var AIRTIME = (function (AIRTIME) {
           "<span>" +
           $.i18n._("Remove") +
           "</span>" +
-          "</button></div>"
+          "</button></div>",
       );
 
     //if 'Add/Remove content' was chosen from the context menu
@@ -1370,7 +1370,7 @@ var AIRTIME = (function (AIRTIME) {
             "<span>" +
             $.i18n._("Jump to Current") +
             "</span>" +
-            "</button></div>"
+            "</button></div>",
         )
         .append(
           "<div class='btn-group'>" +
@@ -1381,7 +1381,7 @@ var AIRTIME = (function (AIRTIME) {
             "<span>" +
             $.i18n._("Cancel current show") +
             "</span>" +
-            "</button></div>"
+            "</button></div>",
         );
     }
 

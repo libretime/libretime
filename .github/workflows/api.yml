@@ -3,7 +3,7 @@ name: API
 on:
   workflow_dispatch:
   push:
-    branches: [main, stable]
+    branches: [main, stable-*]
     paths:
       - .github/workflows/_python.yml
       - .github/workflows/api.yml
@@ -12,7 +12,7 @@ on:
       - tools/python*
 
   pull_request:
-    branches: [main, stable]
+    branches: [main, stable-*]
     paths:
       - .github/workflows/_python.yml
       - .github/workflows/api.yml
@@ -62,9 +62,9 @@ jobs:
       LIBRETIME_DATABASE_HOST: postgres
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ matrix.release }}-pip-api-${{ hashFiles('api/**/setup.py') }}
@@ -76,7 +76,7 @@ jobs:
         working-directory: api
 
       - name: Report coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: api/coverage.xml
           flags: api

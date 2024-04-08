@@ -227,6 +227,7 @@ class Application_Model_User
     public function getOwnedFiles()
     {
         $user = $this->_userInstance;
+
         // do we need a find call at the end here?
         return $user->getCcFilessRelatedByDbOwnerId();
     }
@@ -264,7 +265,7 @@ class Application_Model_User
      * uses it to figure out who to reassign the deleted users files to.
      *
      * @param $ignoreUser String optional userid of a user that shall be ignored when
-     *                     when looking for the "first" admin
+     *                    when looking for the "first" admin
      *
      * @return null|CcSubj
      */
@@ -310,7 +311,7 @@ class Application_Model_User
         $sql .= ' AND login ILIKE :search';
         $params[':search'] = "%{$search}%";
 
-        $sql = $sql . ' ORDER BY login';
+        $sql .= ' ORDER BY login';
 
         return Application_Common_Database::prepareAndExecute($sql, $params, 'all');
     }

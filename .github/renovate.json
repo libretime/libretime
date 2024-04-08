@@ -6,9 +6,11 @@
     "commitMessageAction": "lock file maintenance",
     "commitMessageExtra": "({{packageFile}})",
     "branchTopic": "lock-file-maintenance-{{packageFile}}",
-    "schedule": ["after 4am and before 5am on monday"]
+    "schedule": ["after 4am and before 5am on monday"],
+    "automerge": true,
+    "automergeType": "branch"
   },
-  "baseBranches": ["main", "stable"],
+  "baseBranches": ["main"],
   "labels": ["dependencies"],
   "packageRules": [
     {
@@ -25,9 +27,9 @@
       "rangeStrategy": "widen"
     },
     {
-      "matchUpdateTypes": ["patch"],
-      "matchPaths": [".github/workflows/*", ".pre-commit-config.yaml"],
-      "automerge": true
+      "matchManagers": ["github-actions", "pre-commit"],
+      "automerge": true,
+      "automergeType": "branch"
     }
   ]
 }

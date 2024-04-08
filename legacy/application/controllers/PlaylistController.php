@@ -253,7 +253,7 @@ class PlaylistController extends Zend_Controller_Action
             Logging::info("Currently active {$type} {$obj_sess->id}");
             if (in_array($obj_sess->id, $ids)) {
                 Logging::info("Deleting currently active {$type}");
-                // Application_Model_Library::changePlaylist(null, $type);
+            // Application_Model_Library::changePlaylist(null, $type);
             } else {
                 Logging::info("Not deleting currently active {$type}");
                 $obj = new $objInfo['className']($obj_sess->id);
@@ -562,7 +562,7 @@ class PlaylistController extends Zend_Controller_Action
                 $bl->saveSmartBlockCriteria($params['data']);
                 $this->createUpdateResponse($bl, true);
                 $this->view->result = 0;
-                // $result['html'] = $this->createFullResponse($bl, true, true);
+            // $result['html'] = $this->createFullResponse($bl, true, true);
             } else {
                 $this->view->form = $form;
                 $this->view->unsavedName = $params['name'];
@@ -601,7 +601,7 @@ class PlaylistController extends Zend_Controller_Action
                 $result = $bl->generateSmartBlock($params['data']);
                 $this->view->result = $result['result'];
                 $this->createUpdateResponse($bl, true);
-                // $this->_helper->json->sendJson(array("result"=>0, "html"=>$this->createFullResponse($bl, true, true)));
+            // $this->_helper->json->sendJson(array("result"=>0, "html"=>$this->createFullResponse($bl, true, true)));
             } else {
                 $this->view->obj = $bl;
                 $this->view->id = $bl->getId();
@@ -687,12 +687,6 @@ class PlaylistController extends Zend_Controller_Action
         $this->_helper->json->sendJson($out);
     }
 }
-class WrongTypeToBlockException extends Exception
-{
-}
-class WrongTypeToPlaylistException extends Exception
-{
-}
-class BlockDynamicException extends Exception
-{
-}
+class WrongTypeToBlockException extends Exception {}
+class WrongTypeToPlaylistException extends Exception {}
+class BlockDynamicException extends Exception {}

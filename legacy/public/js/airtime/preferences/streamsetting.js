@@ -201,16 +201,16 @@ function setupEventListeners() {
       text:
         sprintf(
           $.i18n._(
-            "If %s is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
+            "If %s is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151.",
           ),
-          PRODUCT_NAME
+          PRODUCT_NAME,
         ) +
         " " +
         sprintf(
           $.i18n._("For more details, please read the %s%s Manual%s"),
           userManualAnchorOpen,
           PRODUCT_NAME,
-          "</a>"
+          "</a>",
         ),
     },
     hide: {
@@ -233,7 +233,7 @@ function setupEventListeners() {
   $(".icecast_metadata_help_icon").qtip({
     content: {
       text: $.i18n._(
-        "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
+        "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option.",
       ),
     },
     hide: {
@@ -256,7 +256,7 @@ function setupEventListeners() {
   $("#auto_transition_help").qtip({
     content: {
       text: $.i18n._(
-        "Check this box to automatically switch off Master/Show source upon source disconnection."
+        "Check this box to automatically switch off Master/Show source upon source disconnection.",
       ),
     },
     hide: {
@@ -279,7 +279,7 @@ function setupEventListeners() {
   $("#auto_switch_help").qtip({
     content: {
       text: $.i18n._(
-        "Check this box to automatically switch on Master/Show source upon source connection."
+        "Check this box to automatically switch on Master/Show source upon source connection.",
       ),
     },
     hide: {
@@ -302,7 +302,7 @@ function setupEventListeners() {
   $(".stream_username_help_icon").qtip({
     content: {
       text: $.i18n._(
-        "If your Icecast server expects a username of 'source', this field can be left blank."
+        "If your Icecast server expects a username of 'source', this field can be left blank.",
       ),
     },
     hide: {
@@ -325,7 +325,7 @@ function setupEventListeners() {
   $(".admin_username_help_icon").qtip({
     content: {
       text: $.i18n._(
-        "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
+        "This is the admin username and password for Icecast/SHOUTcast to get listener statistics.",
       ),
     },
     hide: {
@@ -348,7 +348,7 @@ function setupEventListeners() {
   $(".master_username_help_icon").qtip({
     content: {
       text: $.i18n._(
-        "If your live streaming client does not ask for a username, this field should be 'source'."
+        "If your live streaming client does not ask for a username, this field should be 'source'.",
       ),
     },
     hide: {
@@ -372,12 +372,12 @@ function setupEventListeners() {
     content: {
       text: sprintf(
         $.i18n._(
-          "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+          "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided.",
         ),
         "<a target='_blank' href='https://wiki.sourcefabric.org/x/NgPQ'>",
         "</a>",
         "<a target='_blank' href='https://wiki.sourcefabric.org/x/KgPQ'>",
-        "</a>"
+        "</a>",
       ),
     },
     hide: {
@@ -462,6 +462,6 @@ $(document).ready(function () {
         setSliderForReplayGain();
         getAdminPasswordStatus();
       });
-    }
+    },
   );
 });

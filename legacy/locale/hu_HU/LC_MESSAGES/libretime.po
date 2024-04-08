@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-05-29 02:11+0000\n"
+"POT-Creation-Date: 2024-02-05 01:52+0000\n"
 "PO-Revision-Date: 2021-12-27 20:52+0000\n"
 "Last-Translator: f3rr31 <5920873@disroot.org>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/libretime/legacy/hu/>\n"
@@ -810,21 +810,21 @@ msgstr "Helytelen kérés. nincs 'mód' paraméter lett átadva."
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "Helytelen kérés. 'mód' paraméter érvénytelen."
 
-#: application/controllers/DashboardController.php:34
-#: application/controllers/DashboardController.php:86
+#: application/controllers/DashboardController.php:32
+#: application/controllers/DashboardController.php:84
 msgid "You don't have permission to disconnect source."
 msgstr "Nincs jogosultsága a forrás bontásához."
 
-#: application/controllers/DashboardController.php:36
-#: application/controllers/DashboardController.php:88
+#: application/controllers/DashboardController.php:34
+#: application/controllers/DashboardController.php:86
 msgid "There is no source connected to this input."
 msgstr "Nem csatlakozik forrás az alábbi bemenethez."
 
-#: application/controllers/DashboardController.php:83
+#: application/controllers/DashboardController.php:81
 msgid "You don't have permission to switch source."
 msgstr "Nincs jogosultsága a forrás megváltoztatásához."
 
-#: application/controllers/EmbeddablewidgetsController.php:24
+#: application/controllers/EmbeddablewidgetsController.php:22
 msgid ""
 "To configure and use the embeddable player you must:<br><br>\n"
 "            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
@@ -834,7 +834,7 @@ msgstr ""
 "1. Engedélyezni kell legalább egy MP3, AAC, vagy OGG adásfolyamot a „Beállítások -> Adásfolyamok” alatt<br>\n"
 "2. Engedélyezni kell a Public LibreTime API-t a „Beállítások -> Tulajdonságok” alatt"
 
-#: application/controllers/EmbeddablewidgetsController.php:37
+#: application/controllers/EmbeddablewidgetsController.php:35
 msgid ""
 "To use the embeddable weekly schedule widget you must:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
@@ -842,7 +842,7 @@ msgstr ""
 "A beágyazható heti ütemezés felületi elem használatához a következőt kell tenni:<br><br>\n"
 "Engedélyezni kell a Public LibreTime API-t a Beállítások -> Tulajdonságok alatt"
 
-#: application/controllers/EmbeddablewidgetsController.php:50
+#: application/controllers/EmbeddablewidgetsController.php:48
 msgid ""
 "To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
@@ -866,12 +866,12 @@ msgstr "Nincs jogosultsága ennek a forrásnak az eléréséhez."
 msgid "An internal application error has occurred."
 msgstr "Belső alkalmazáshiba történt."
 
-#: application/controllers/IndexController.php:88
+#: application/controllers/IndexController.php:92
 #, php-format
 msgid "%s Podcast"
 msgstr "%s Podcast"
 
-#: application/controllers/IndexController.php:89
+#: application/controllers/IndexController.php:93
 msgid "No tracks have been published yet."
 msgstr "Még nincsenek közzétett sávok."
 
@@ -889,7 +889,7 @@ msgstr "Valami hiba történt."
 #: application/controllers/LibraryController.php:91
 #: application/controllers/LocaleController.php:171
 #: application/controllers/ShowbuilderController.php:131
-#: application/forms/SmartBlockCriteria.php:573
+#: application/forms/SmartBlockCriteria.php:571
 msgid "Preview"
 msgstr "Előnézet"
 
@@ -1239,7 +1239,7 @@ msgstr "Kódolva"
 
 #: application/controllers/LocaleController.php:97
 #: application/forms/SmartBlockCriteria.php:68
-#: application/forms/StreamSettingSubForm.php:118
+#: application/forms/StreamSettingSubForm.php:116
 #: application/models/Block.php:1440 application/models/Block.php:1538
 #: application/services/HistoryService.php:1055
 msgid "Genre"
@@ -1524,9 +1524,9 @@ msgstr "Feldolgozás..."
 #: application/forms/SmartBlockCriteria.php:117
 #: application/forms/SmartBlockCriteria.php:133
 #: application/forms/SmartBlockCriteria.php:198
-#: application/forms/SmartBlockCriteria.php:377
-#: application/forms/SmartBlockCriteria.php:631
-#: application/forms/SmartBlockCriteria.php:688
+#: application/forms/SmartBlockCriteria.php:375
+#: application/forms/SmartBlockCriteria.php:629
+#: application/forms/SmartBlockCriteria.php:686
 #: application/models/Block.php:1462 application/models/Block.php:1560
 msgid "Select modifier"
 msgstr "Módosító választása"
@@ -1597,7 +1597,7 @@ msgid "is in the range"
 msgstr "tartománya"
 
 #: application/controllers/LocaleController.php:172
-#: application/forms/SmartBlockCriteria.php:575
+#: application/forms/SmartBlockCriteria.php:573
 msgid "Generate"
 msgstr "Létrehozás"
 
@@ -1643,7 +1643,7 @@ msgid "The stream is disabled"
 msgstr "Az adásfolyam ki van kapcsolva"
 
 #: application/controllers/LocaleController.php:184
-#: application/forms/StreamSettingSubForm.php:146
+#: application/forms/StreamSettingSubForm.php:144
 msgid "Getting information from the server..."
 msgstr "Információk lekérdezése a kiszolgálóról..."
 
@@ -1877,37 +1877,37 @@ msgid "Month"
 msgstr "Hónap"
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:230
+#: application/forms/GeneralPreferences.php:255
 msgid "Sunday"
 msgstr "Vasárnap"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:231
+#: application/forms/GeneralPreferences.php:256
 msgid "Monday"
 msgstr "Hétfő"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:232
+#: application/forms/GeneralPreferences.php:257
 msgid "Tuesday"
 msgstr "Kedd"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:233
+#: application/forms/GeneralPreferences.php:258
 msgid "Wednesday"
 msgstr "Szerda"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:234
+#: application/forms/GeneralPreferences.php:259
 msgid "Thursday"
 msgstr "Csütörtök"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:235
+#: application/forms/GeneralPreferences.php:260
 msgid "Friday"
 msgstr "Péntek"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:236
+#: application/forms/GeneralPreferences.php:261
 msgid "Saturday"
 msgstr "Szombat"
 
@@ -2050,14 +2050,14 @@ msgstr "%s elem áthelyezése"
 
 #: application/controllers/LocaleController.php:302
 #: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
+#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "Mentés"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:270 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:268 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -2507,7 +2507,7 @@ msgstr "Szerző"
 
 #: application/controllers/LocaleController.php:438
 #: application/forms/SmartBlockCriteria.php:65
-#: application/forms/StreamSettingSubForm.php:134
+#: application/forms/StreamSettingSubForm.php:132
 #: application/models/Block.php:1437 application/models/Block.php:1535
 msgid "Description"
 msgstr "Leírás"
@@ -2596,8 +2596,8 @@ msgstr ""
 #: application/forms/AddTracktype.php:50
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
-#: application/forms/GeneralPreferences.php:160
-#: application/forms/GeneralPreferences.php:214
+#: application/forms/GeneralPreferences.php:172
+#: application/forms/GeneralPreferences.php:239
 msgid "Enabled"
 msgstr "Engedélyezve"
 
@@ -2605,8 +2605,8 @@ msgstr "Engedélyezve"
 #: application/forms/AddTracktype.php:49
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
-#: application/forms/GeneralPreferences.php:159
-#: application/forms/GeneralPreferences.php:213
+#: application/forms/GeneralPreferences.php:171
+#: application/forms/GeneralPreferences.php:238
 msgid "Disabled"
 msgstr "Letiltva"
 
@@ -2771,23 +2771,23 @@ msgstr "Névtelen okosblokk"
 msgid "Unknown Playlist"
 msgstr "Ismeretlen lejátszási lista"
 
-#: application/controllers/PreferenceController.php:69
+#: application/controllers/PreferenceController.php:71
 msgid "Preferences updated."
 msgstr "Beállítások frissítve."
 
-#: application/controllers/PreferenceController.php:203
+#: application/controllers/PreferenceController.php:208
 msgid "Stream Setting Updated."
 msgstr "Adásfolyam beállítások frissítve."
 
-#: application/controllers/PreferenceController.php:248
+#: application/controllers/PreferenceController.php:253
 msgid "path should be specified"
 msgstr "az útvonalat meg kell határozni"
 
-#: application/controllers/PreferenceController.php:291
+#: application/controllers/PreferenceController.php:296
 msgid "Problem with Liquidsoap..."
 msgstr "Probléma lépett fel a Liquidsoap-al..."
 
-#: application/controllers/PreferenceController.php:334
+#: application/controllers/PreferenceController.php:339
 msgid "Request method not accepted"
 msgstr "A kérés módja nem elfogadott"
 
@@ -2833,11 +2833,11 @@ msgstr "Beállítások sikeresen módosítva!"
 msgid "Untitled Webstream"
 msgstr "Névtelen adásfolyam"
 
-#: application/controllers/WebstreamController.php:156
+#: application/controllers/WebstreamController.php:158
 msgid "Webstream saved."
 msgstr "Web-adásfolyam mentve."
 
-#: application/controllers/WebstreamController.php:164
+#: application/controllers/WebstreamController.php:166
 msgid "Invalid form values."
 msgstr "Érvénytelen űrlap értékek."
 
@@ -3021,12 +3021,12 @@ msgstr "Cím nélküli műsor"
 msgid "URL:"
 msgstr "URL:"
 
-#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:131
 msgid "Genre:"
 msgstr "Műfaj:"
 
 #: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
-#: application/forms/EditAudioMD.php:115
+#: application/forms/EditAudioMD.php:113
 msgid "Description:"
 msgstr "Leírás:"
 
@@ -3177,72 +3177,72 @@ msgstr "Az összes sáv törlése a könyvtárból"
 msgid "Date Start:"
 msgstr "Kezdés Ideje:"
 
-#: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
+#: application/forms/EditAudioMD.php:50 application/forms/Player.php:15
 msgid "Title:"
 msgstr "Cím:"
 
-#: application/forms/EditAudioMD.php:62
+#: application/forms/EditAudioMD.php:60
 msgid "Creator:"
 msgstr "Létrehozó:"
 
-#: application/forms/EditAudioMD.php:72
+#: application/forms/EditAudioMD.php:70
 msgid "Album:"
 msgstr "Album:"
 
-#: application/forms/EditAudioMD.php:89
+#: application/forms/EditAudioMD.php:87
 msgid "Owner:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:101
+#: application/forms/EditAudioMD.php:99
 msgid "Select a Type"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:108
+#: application/forms/EditAudioMD.php:106
 msgid "Track Type:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:143
+#: application/forms/EditAudioMD.php:141
 msgid "Year:"
 msgstr "Év:"
 
-#: application/forms/EditAudioMD.php:156
+#: application/forms/EditAudioMD.php:154
 msgid "Label:"
 msgstr "Címke:"
 
-#: application/forms/EditAudioMD.php:166
+#: application/forms/EditAudioMD.php:164
 msgid "Composer:"
 msgstr "Zeneszerző:"
 
-#: application/forms/EditAudioMD.php:176
+#: application/forms/EditAudioMD.php:174
 msgid "Conductor:"
 msgstr "Karmester:"
 
-#: application/forms/EditAudioMD.php:186
+#: application/forms/EditAudioMD.php:184
 msgid "Mood:"
 msgstr "Hangulat:"
 
-#: application/forms/EditAudioMD.php:196
+#: application/forms/EditAudioMD.php:194
 msgid "BPM:"
 msgstr "BPM:"
 
-#: application/forms/EditAudioMD.php:207
+#: application/forms/EditAudioMD.php:205
 msgid "Copyright:"
 msgstr "Szerzői jog:"
 
-#: application/forms/EditAudioMD.php:217
+#: application/forms/EditAudioMD.php:215
 msgid "ISRC Number:"
 msgstr "ISRC Szám:"
 
-#: application/forms/EditAudioMD.php:227
+#: application/forms/EditAudioMD.php:225
 msgid "Website:"
 msgstr "Honlap:"
 
-#: application/forms/EditAudioMD.php:237 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:235 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "Nyelv:"
 
-#: application/forms/EditAudioMD.php:290
+#: application/forms/EditAudioMD.php:288
 msgid "Publish..."
 msgstr "Közzététel..."
 
@@ -3326,42 +3326,50 @@ msgstr ""
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:156
+#: application/forms/GeneralPreferences.php:161
+msgid "Trim overbooked shows after autoloading?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:168
 msgid "Public LibreTime API"
 msgstr "Public LibreTime API"
 
-#: application/forms/GeneralPreferences.php:157
+#: application/forms/GeneralPreferences.php:169
 msgid "Required for embeddable schedule widget."
 msgstr "Kötelező a beágyazható ütemezés felületi elemhez."
 
-#: application/forms/GeneralPreferences.php:163
+#: application/forms/GeneralPreferences.php:175
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
 msgstr "Bejelölve engedélyezi az AirTime-nak, hogy ütemezési adatokat biztosítson a weboldalakba beágyazható külső felületi elemek számára."
 
-#: application/forms/GeneralPreferences.php:175
+#: application/forms/GeneralPreferences.php:187
 msgid "Default Language"
 msgstr "Alapértelmezett nyelv"
 
-#: application/forms/GeneralPreferences.php:182
+#: application/forms/GeneralPreferences.php:194
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr "Állomás időzóna"
 
-#: application/forms/GeneralPreferences.php:190
+#: application/forms/GeneralPreferences.php:202
 msgid "Week Starts On"
 msgstr "A hét kezdőnapja"
 
-#: application/forms/GeneralPreferences.php:206
+#: application/forms/GeneralPreferences.php:218
 msgid "Display login button on your Radio Page?"
 msgstr "Bejelentkezési gomb megjelenítése a Rádióoldalon?"
 
-#: application/forms/GeneralPreferences.php:211
+#: application/forms/GeneralPreferences.php:231
+msgid "Disable the public radio page and redirect to the login page?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:236
 msgid "Feature Previews"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:217
+#: application/forms/GeneralPreferences.php:242
 msgid "Enable this to opt-in to test new features."
 msgstr ""
 
@@ -3534,8 +3542,8 @@ msgid "between"
 msgstr ""
 
 #: application/forms/SmartBlockCriteria.php:152
-#: application/forms/SmartBlockCriteria.php:471
-#: application/forms/SmartBlockCriteria.php:513
+#: application/forms/SmartBlockCriteria.php:469
+#: application/forms/SmartBlockCriteria.php:511
 msgid "Select unit of time"
 msgstr ""
 
@@ -3604,197 +3612,197 @@ msgstr ""
 msgid "Select Track Type"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:268
+#: application/forms/SmartBlockCriteria.php:266
 msgid "Type:"
 msgstr "Típus:"
 
-#: application/forms/SmartBlockCriteria.php:271
+#: application/forms/SmartBlockCriteria.php:269
 msgid "Dynamic"
 msgstr "Dinamikus"
 
-#: application/forms/SmartBlockCriteria.php:272
+#: application/forms/SmartBlockCriteria.php:270
 msgid "Static"
 msgstr "Statikus"
 
-#: application/forms/SmartBlockCriteria.php:437
+#: application/forms/SmartBlockCriteria.php:435
 msgid "Select track type"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:523
+#: application/forms/SmartBlockCriteria.php:521
 msgid "Allow Repeated Tracks:"
 msgstr "Ismétlődő sávok engedélyezése:"
 
-#: application/forms/SmartBlockCriteria.php:531
+#: application/forms/SmartBlockCriteria.php:529
 msgid "Allow last track to exceed time limit:"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:540
+#: application/forms/SmartBlockCriteria.php:538
 msgid "Sort Tracks:"
 msgstr "Sávok rendezése:"
 
-#: application/forms/SmartBlockCriteria.php:558
+#: application/forms/SmartBlockCriteria.php:556
 msgid "Limit to:"
 msgstr "Korlátozva:"
 
-#: application/forms/SmartBlockCriteria.php:570
+#: application/forms/SmartBlockCriteria.php:568
 msgid "Generate playlist content and save criteria"
 msgstr "Lejátszási lista tartalmának létrehozása és a feltétel mentése"
 
-#: application/forms/SmartBlockCriteria.php:582
+#: application/forms/SmartBlockCriteria.php:580
 msgid "Shuffle playlist content"
 msgstr "Véletlenszerű lejátszási lista tartalom"
 
-#: application/forms/SmartBlockCriteria.php:584
+#: application/forms/SmartBlockCriteria.php:582
 msgid "Shuffle"
 msgstr "Véletlenszerű"
 
-#: application/forms/SmartBlockCriteria.php:813
-#: application/forms/SmartBlockCriteria.php:825
+#: application/forms/SmartBlockCriteria.php:811
+#: application/forms/SmartBlockCriteria.php:823
 msgid "Limit cannot be empty or smaller than 0"
 msgstr "A határérték nem lehet üres vagy kisebb, mint 0"
 
-#: application/forms/SmartBlockCriteria.php:818
+#: application/forms/SmartBlockCriteria.php:816
 msgid "Limit cannot be more than 24 hrs"
 msgstr "A határérték nem lehet hosszabb, mint 24 óra"
 
-#: application/forms/SmartBlockCriteria.php:828
+#: application/forms/SmartBlockCriteria.php:826
 msgid "The value should be an integer"
 msgstr "Az érték csak egész szám lehet"
 
-#: application/forms/SmartBlockCriteria.php:831
+#: application/forms/SmartBlockCriteria.php:829
 msgid "500 is the max item limit value you can set"
 msgstr "Maximum 500 elem állítható be"
 
-#: application/forms/SmartBlockCriteria.php:842
+#: application/forms/SmartBlockCriteria.php:840
 msgid "You must select Criteria and Modifier"
 msgstr "Feltételt és módosítót kell választani"
 
-#: application/forms/SmartBlockCriteria.php:849
+#: application/forms/SmartBlockCriteria.php:847
 msgid "'Length' should be in '00:00:00' format"
 msgstr "A „Hosszúság”-ot „00:00:00” formában kell megadni"
 
-#: application/forms/SmartBlockCriteria.php:858
+#: application/forms/SmartBlockCriteria.php:856
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:863
-#: application/forms/SmartBlockCriteria.php:888
+#: application/forms/SmartBlockCriteria.php:861
+#: application/forms/SmartBlockCriteria.php:886
 msgid "You must select a time unit for a relative datetime."
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:868
-#: application/forms/SmartBlockCriteria.php:893
+#: application/forms/SmartBlockCriteria.php:866
+#: application/forms/SmartBlockCriteria.php:891
 msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
 msgstr "Az értéknek az alábbi időbélyeg formátumban kell lennie (pl. 0000-00-00 vagy 0000-00-00 00:00:00)"
 
-#: application/forms/SmartBlockCriteria.php:883
+#: application/forms/SmartBlockCriteria.php:881
 msgid "Only non-negative integer numbers are allowed for a relative date time"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:910
+#: application/forms/SmartBlockCriteria.php:908
 msgid "The value has to be numeric"
 msgstr "Az értéknek numerikusnak kell lennie"
 
-#: application/forms/SmartBlockCriteria.php:915
+#: application/forms/SmartBlockCriteria.php:913
 msgid "The value should be less then 2147483648"
 msgstr "Az értéknek kevesebbnek kell lennie, mint 2147483648"
 
-#: application/forms/SmartBlockCriteria.php:920
+#: application/forms/SmartBlockCriteria.php:918
 msgid "The value cannot be empty"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:925
+#: application/forms/SmartBlockCriteria.php:923
 #, php-format
 msgid "The value should be less than %s characters"
 msgstr "Az értéknek rövidebb kell lennie, mint %s karakter"
 
-#: application/forms/SmartBlockCriteria.php:932
+#: application/forms/SmartBlockCriteria.php:930
 msgid "Value cannot be empty"
 msgstr "Az érték nem lehet üres"
 
-#: application/forms/StreamSetting.php:26
+#: application/forms/StreamSetting.php:24
 msgid "Stream Label:"
 msgstr "Adásfolyam címke:"
 
-#: application/forms/StreamSetting.php:28
+#: application/forms/StreamSetting.php:26
 msgid "Artist - Title"
 msgstr "Előadó - Cím"
 
-#: application/forms/StreamSetting.php:29
+#: application/forms/StreamSetting.php:27
 msgid "Show - Artist - Title"
 msgstr "Műsor - Előadó - Cím"
 
-#: application/forms/StreamSetting.php:30
+#: application/forms/StreamSetting.php:28
 msgid "Station name - Show name"
 msgstr "Állomásnév - Műsornév"
 
-#: application/forms/StreamSetting.php:38
+#: application/forms/StreamSetting.php:36
 msgid "Off Air Metadata"
 msgstr "Adásszünet - Metaadat"
 
-#: application/forms/StreamSetting.php:45
+#: application/forms/StreamSetting.php:43
 #, fuzzy
 msgid "Enable Replay Gain"
 msgstr "Replay Gain Engedélyezése"
 
-#: application/forms/StreamSetting.php:52
+#: application/forms/StreamSetting.php:50
 #, fuzzy
 msgid "Replay Gain Modifier"
 msgstr "Replay Gain Módosító"
 
-#: application/forms/StreamSetting.php:60
+#: application/forms/StreamSetting.php:58
 msgid "Hardware Audio Output:"
 msgstr "Hardver audio kimenet:"
 
-#: application/forms/StreamSetting.php:69
+#: application/forms/StreamSetting.php:67
 msgid "Output Type"
 msgstr "Kimenet típusa"
 
-#: application/forms/StreamSettingSubForm.php:35
+#: application/forms/StreamSettingSubForm.php:33
 msgid "Enabled:"
 msgstr "Engedélyezett:"
 
-#: application/forms/StreamSettingSubForm.php:43
+#: application/forms/StreamSettingSubForm.php:41
 msgid "Mobile:"
 msgstr "Mobil:"
 
-#: application/forms/StreamSettingSubForm.php:51
+#: application/forms/StreamSettingSubForm.php:49
 msgid "Stream Type:"
 msgstr "Adásfolyam típusa:"
 
-#: application/forms/StreamSettingSubForm.php:59
+#: application/forms/StreamSettingSubForm.php:57
 msgid "Bit Rate:"
 msgstr "Bitráta:"
 
-#: application/forms/StreamSettingSubForm.php:67
+#: application/forms/StreamSettingSubForm.php:65
 msgid "Service Type:"
 msgstr "Szolgáltatás típusa:"
 
-#: application/forms/StreamSettingSubForm.php:75
+#: application/forms/StreamSettingSubForm.php:73
 msgid "Channels:"
 msgstr "Csatornák:"
 
-#: application/forms/StreamSettingSubForm.php:83
+#: application/forms/StreamSettingSubForm.php:81
 msgid "Server"
 msgstr "Kiszolgáló"
 
-#: application/forms/StreamSettingSubForm.php:92
+#: application/forms/StreamSettingSubForm.php:90
 msgid "Port"
 msgstr "Port"
 
-#: application/forms/StreamSettingSubForm.php:100
+#: application/forms/StreamSettingSubForm.php:98
 msgid "Mount Point"
 msgstr "Csatolási pont"
 
-#: application/forms/StreamSettingSubForm.php:109
+#: application/forms/StreamSettingSubForm.php:107
 msgid "Name"
 msgstr "Név"
 
-#: application/forms/StreamSettingSubForm.php:125
+#: application/forms/StreamSettingSubForm.php:123
 msgid "URL"
 msgstr "URL"
 
-#: application/forms/StreamSettingSubForm.php:142
+#: application/forms/StreamSettingSubForm.php:140
 msgid "Stream URL"
 msgstr ""
 
@@ -3930,12 +3938,12 @@ msgstr "Feltöltési idő"
 msgid "None"
 msgstr "Nincs"
 
-#: application/models/Preference.php:536
+#: application/models/Preference.php:538
 #, php-format
 msgid "Powered by %s"
 msgstr "Működteti a %s"
 
-#: application/models/Preference.php:655
+#: application/models/Preference.php:657
 msgid "Select Country"
 msgstr "Ország kiválasztása"
 
@@ -4129,7 +4137,7 @@ msgstr "Sáv"
 msgid "Played"
 msgstr "Lejátszva"
 
-#: application/services/PodcastService.php:163
+#: application/services/PodcastService.php:159
 msgid "Auto-generated smartblock for podcast"
 msgstr ""
 
