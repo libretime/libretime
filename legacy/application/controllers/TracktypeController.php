@@ -44,7 +44,7 @@ class TracktypeController extends Zend_Controller_Action
                 $formData[$v[0]] = urldecode($v[1]);
             }
 
-            if ($form->validateCode($formData)) {
+            if ($form->isValid($formData)) {
                 $tracktype = new Application_Model_Tracktype($formData['tracktype_id']);
                 if (empty($formData['tracktype_id'])) {
                     $tracktype->setCode($formData['code']);
