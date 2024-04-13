@@ -1,7 +1,8 @@
 import logging
+from contextlib import contextmanager
 from typing import Optional
 
-from requests import Response, Session as BaseSession
+from requests import PreparedRequest, Response, Session as BaseSession
 from requests.adapters import HTTPAdapter
 from requests.exceptions import RequestException
 from urllib3.util import Retry
@@ -62,10 +63,35 @@ class Session(BaseSession):
         return f"{self.base_url.rstrip('/')}/{url.lstrip('/')}"
 
 
+class CachedSession(Session):
+    cache: dict[str, Response]
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.cache = {}
+
+    def send(self, request: PreparedRequest, **kwargs) -> Response:  # type: ignore[no-untyped-def]
+        """
+        Send a given PreparedRequest.
+        """
+        if request.method != "GET" or request.url is None:
+            return super().send(request, **kwargs)
+
+        if request.url in self.cache:
+            return self.cache[request.url]
+
+        response = super().send(request, **kwargs)
+        if response.ok:
+            self.cache[request.url] = response
+
+        return response
+
+
 # pylint: disable=too-few-public-methods
 class AbstractApiClient:
     session: Session
     base_url: str
+    retry: Optional[Retry]
 
     def __init__(
         self,
@@ -73,6 +99,7 @@ class AbstractApiClient:
         retry: Optional[Retry] = None,
     ):
         self.base_url = base_url
+        self.retry = retry
         self.session = Session(
             base_url=base_url,
             retry=retry,
@@ -92,3 +119,19 @@ class AbstractApiClient:
         except RequestException as exception:
             logger.error(exception)
             raise exception
+
+    @contextmanager
+    def cached_session(self):
+        """
+        Swap the client session during the scope of the context. The session will cache
+        all GET requests.
+
+        Cached response will not expire, therefore the cached client must not be used
+        for long living scopes.
+        """
+        original_session = self.session
+        self.session = CachedSession(base_url=self.base_url, retry=self.retry)
+        try:
+            yield
+        finally:
+            self.session = original_session

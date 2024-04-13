@@ -54,25 +54,26 @@ def get_schedule(api_client: ApiClient) -> Events:
     ).json()
 
     events: Dict[str, AnyEvent] = {}
-    for item in sorted(schedule, key=itemgetter("starts_at")):
-        item["starts_at"] = event_isoparse(item["starts_at"])
-        item["ends_at"] = event_isoparse(item["ends_at"])
+    with api_client.cached_session():
+        for item in sorted(schedule, key=itemgetter("starts_at")):
+            item["starts_at"] = event_isoparse(item["starts_at"])
+            item["ends_at"] = event_isoparse(item["ends_at"])
 
-        show_instance = api_client.get_show_instance(item["instance"]).json()
-        show = api_client.get_show(show_instance["show"]).json()
+            show_instance = api_client.get_show_instance(item["instance"]).json()
+            show = api_client.get_show(show_instance["show"]).json()
 
-        if show["live_enabled"]:
-            show_instance["starts_at"] = event_isoparse(show_instance["starts_at"])
-            show_instance["ends_at"] = event_isoparse(show_instance["ends_at"])
-            generate_live_events(events, show_instance, stream_preferences)
+            if show["live_enabled"]:
+                show_instance["starts_at"] = event_isoparse(show_instance["starts_at"])
+                show_instance["ends_at"] = event_isoparse(show_instance["ends_at"])
+                generate_live_events(events, show_instance, stream_preferences)
 
-        if item["file"]:
-            file = api_client.get_file(item["file"]).json()
-            generate_file_events(events, item, file, show, stream_preferences)
+            if item["file"]:
+                file = api_client.get_file(item["file"]).json()
+                generate_file_events(events, item, file, show, stream_preferences)
 
-        elif item["stream"]:
-            webstream = api_client.get_webstream(item["stream"]).json()
-            generate_webstream_events(events, item, webstream, show)
+            elif item["stream"]:
+                webstream = api_client.get_webstream(item["stream"]).json()
+                generate_webstream_events(events, item, webstream, show)
 
     return dict(sorted(events.items()))
 
