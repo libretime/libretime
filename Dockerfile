@@ -203,6 +203,7 @@ WORKDIR /app
 CMD ["/usr/local/bin/celery", "worker", \
     "--app=libretime_worker.tasks:worker", \
     "--config=libretime_worker.config", \
+    "--beat", \
     "--time-limit=1800", \
     "--concurrency=1", \
     "--loglevel=info"]
