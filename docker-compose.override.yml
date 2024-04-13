@@ -2,8 +2,6 @@
 # This file is used for development. It it not intended for production!
 # See https://libretime.org/docs/developer-manual/development/environment/#docker-compose
 #
-version: "3.7"
-
 services:
   postgres:
     ports:
