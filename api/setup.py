@@ -29,7 +29,7 @@ setup(
         "django-cors-headers>=3.14.0,<4.4",
         "django-filter>=2.4.0,<24.3",
         "django>=4.2.0,<4.3",
-        "djangorestframework>=3.14.0,<3.15",
+        "djangorestframework>=3.14.0,<3.16",
         "drf-spectacular>=0.22.1,<0.28",
         "requests>=2.31.0,<2.32",
     ],
