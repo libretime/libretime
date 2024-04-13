@@ -25,6 +25,7 @@ WorkingDirectory=@@WORKING_DIR@@/worker
 ExecStart=/usr/bin/sh -c '@@VENV_DIR@@/bin/celery worker \
     --app=libretime_worker.tasks:worker \
     --config=libretime_worker.config \
+    --beat \
     --time-limit=1800 \
     --concurrency=1 \
     --loglevel=INFO \

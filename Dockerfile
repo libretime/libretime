@@ -189,6 +189,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile -r requirements.txt
 
 COPY --from=python-builder /build/shared/*.whl .
+COPY --from=python-builder /build/api-client/*.whl .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile *.whl && rm -Rf *.whl
 
@@ -203,6 +204,7 @@ WORKDIR /app
 CMD ["/usr/local/bin/celery", "worker", \
     "--app=libretime_worker.tasks:worker", \
     "--config=libretime_worker.config", \
+    "--beat", \
     "--time-limit=1800", \
     "--concurrency=1", \
     "--loglevel=info"]
