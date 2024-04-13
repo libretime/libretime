@@ -189,6 +189,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile -r requirements.txt
 
 COPY --from=python-builder /build/shared/*.whl .
+COPY --from=python-builder /build/api-client/*.whl .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile *.whl && rm -Rf *.whl
 

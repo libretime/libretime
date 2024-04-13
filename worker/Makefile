@@ -3,6 +3,7 @@ all: lint test
 include ../tools/python.mk
 
 PIP_INSTALL := \
+	--editable ../api-client \
 	--editable ../shared \
 	--editable .[dev,sentry]
 PYLINT_ARG := libretime_worker
