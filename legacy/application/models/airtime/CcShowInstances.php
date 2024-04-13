@@ -192,7 +192,7 @@ class CcShowInstances extends BaseCcShowInstances
         $this->save($con);
     }
 
-    public function preInsert(PropelPDO $con = null)
+    public function preInsert(?PropelPDO $con = null)
     {
         $now = new DateTime('now', new DateTimeZone('UTC'));
         $this->setDbCreated($now);

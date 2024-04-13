@@ -17,7 +17,7 @@ class Airtime_Zend_Log extends Zend_Log
      */
     protected $_origErrorHandler;
 
-    public function __construct(Zend_Log_Writer_Abstract $writer = null)
+    public function __construct(?Zend_Log_Writer_Abstract $writer = null)
     {
         parent::__construct($writer);
     }
