@@ -12,11 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-02-05 01:52+0000\n"
+"POT-Creation-Date: 2024-04-15 03:48+0000\n"
 "PO-Revision-Date: 2024-03-17 07:32+0000\n"
 "Last-Translator: Mikachu <micah.sh@proton.me>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/libretime/legacy/"
-"nl/>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/libretime/legacy/nl/>\n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2048,7 +2047,7 @@ msgid "Moving %s Items"
 msgstr "%s Items verplaatsen"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
+#: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
 #: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
@@ -2588,7 +2587,7 @@ msgid "No matching track types found"
 msgstr "Geen overeenkomende track types gevonden"
 
 #: application/controllers/LocaleController.php:461
-#: application/forms/AddTracktype.php:50
+#: application/forms/AddTracktype.php:61
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:172
@@ -2597,7 +2596,7 @@ msgid "Enabled"
 msgstr "Ingeschakeld"
 
 #: application/controllers/LocaleController.php:462
-#: application/forms/AddTracktype.php:49
+#: application/forms/AddTracktype.php:60
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:171
@@ -2805,11 +2804,11 @@ msgstr "Cursor verwijderen"
 msgid "show does not exist"
 msgstr "show bestaat niet"
 
-#: application/controllers/TracktypeController.php:62
+#: application/controllers/TracktypeController.php:60
 msgid "Track Type added successfully!"
 msgstr "Track Type succesvol toegevoegd!"
 
-#: application/controllers/TracktypeController.php:64
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type updated successfully!"
 msgstr "Track Type succesvol bijgewerkt!"
 
@@ -3021,7 +3020,7 @@ msgstr "URL:"
 msgid "Genre:"
 msgstr "genre:"
 
-#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:46
 #: application/forms/EditAudioMD.php:113
 msgid "Description:"
 msgstr "Omschrijving:"
@@ -3104,17 +3103,17 @@ msgstr "Type Naam:"
 msgid "Code:"
 msgstr "Code:"
 
-#: application/forms/AddTracktype.php:45
+#: application/forms/AddTracktype.php:39
+msgid "Code is not unique."
+msgstr "Code is niet uniek."
+
+#: application/forms/AddTracktype.php:56
 msgid "Visibility:"
 msgstr "Zichtbaarheid:"
 
-#: application/forms/AddTracktype.php:57
+#: application/forms/AddTracktype.php:68
 msgid "Analyze cue points:"
 msgstr "Analyseer cue points:"
-
-#: application/forms/AddTracktype.php:74
-msgid "Code is not unique."
-msgstr "Code is niet uniek."
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:36
 #: application/forms/LiveStreamingPreferences.php:40
