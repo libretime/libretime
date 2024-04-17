@@ -126,6 +126,8 @@ class BlockCriteria
     private static array $allCriteria;
 
     /**
+     * After adding a new criteria don't forget to also add it into smart_blockbuilder.js
+     *
      * @return BlockCriteria[]
      */
     public static function allCriteria(): array
@@ -161,7 +163,7 @@ class BlockCriteria
                 new BlockCriteria('track_number', ModifierType::NUMBER, 'DbTrackNumber', _('Track Number')),
                 new BlockCriteria('year', ModifierType::NUMBER, 'DbYear', _('Year')),
                 new BlockCriteria('track_type_id', ModifierType::TRACK_TYPE, 'DbTrackTypeId', _('Track Type')),
-//                new BlockCriteria('filepath', ModifierType::STRING, 'DbFilepath', _('File Name')),
+                new BlockCriteria('filepath', ModifierType::STRING, 'DbFilepath', _('File Name')),
             ];
         }
 
