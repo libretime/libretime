@@ -396,6 +396,7 @@ SQL;
 
         // if we get here from the REST API, there's no valid user. APIKEY is validated already.
         if ($userInfo = Zend_Auth::getInstance()->getStorage()->read()) {
+            // This call will throw "Trying to get property 'id' of non-object"
             $user = new Application_Model_User($userInfo->id);
             $isAdminOrPM = $user->isUserType([UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER]);
             if (!$isAdminOrPM && $this->getFileOwnerId() != $user->getId()) {
