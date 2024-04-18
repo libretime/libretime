@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-02-05 01:52+0000\n"
+"POT-Creation-Date: 2024-04-15 03:48+0000\n"
 "PO-Revision-Date: 2015-09-05 08:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Chinese (China)\n"
@@ -2035,7 +2035,7 @@ msgid "Moving %s Items"
 msgstr "移动%s个项目"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
+#: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
 #: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
@@ -2575,7 +2575,7 @@ msgid "No matching track types found"
 msgstr ""
 
 #: application/controllers/LocaleController.php:461
-#: application/forms/AddTracktype.php:50
+#: application/forms/AddTracktype.php:61
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:172
@@ -2584,7 +2584,7 @@ msgid "Enabled"
 msgstr "启用"
 
 #: application/controllers/LocaleController.php:462
-#: application/forms/AddTracktype.php:49
+#: application/forms/AddTracktype.php:60
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:171
@@ -2790,11 +2790,11 @@ msgstr "删除游标"
 msgid "show does not exist"
 msgstr "节目不存在"
 
-#: application/controllers/TracktypeController.php:62
+#: application/controllers/TracktypeController.php:60
 msgid "Track Type added successfully!"
 msgstr ""
 
-#: application/controllers/TracktypeController.php:64
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type updated successfully!"
 msgstr ""
 
@@ -3006,7 +3006,7 @@ msgstr "链接地址："
 msgid "Genre:"
 msgstr "风格："
 
-#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:46
 #: application/forms/EditAudioMD.php:113
 msgid "Description:"
 msgstr "描述："
@@ -3089,16 +3089,16 @@ msgstr ""
 msgid "Code:"
 msgstr ""
 
-#: application/forms/AddTracktype.php:45
+#: application/forms/AddTracktype.php:39
+msgid "Code is not unique."
+msgstr ""
+
+#: application/forms/AddTracktype.php:56
 msgid "Visibility:"
 msgstr ""
 
-#: application/forms/AddTracktype.php:57
+#: application/forms/AddTracktype.php:68
 msgid "Analyze cue points:"
-msgstr ""
-
-#: application/forms/AddTracktype.php:74
-msgid "Code is not unique."
 msgstr ""
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:36

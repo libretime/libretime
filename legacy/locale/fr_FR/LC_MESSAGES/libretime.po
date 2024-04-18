@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-02-05 01:52+0000\n"
+"POT-Creation-Date: 2024-04-15 03:48+0000\n"
 "PO-Revision-Date: 2023-03-06 23:45+0000\n"
 "Last-Translator: \"Jonas L.\" <ljonas@riseup.net>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/fr/>\n"
@@ -2046,7 +2046,7 @@ msgid "Moving %s Items"
 msgstr "Déplacer %s éléments"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
+#: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
 #: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
@@ -2586,7 +2586,7 @@ msgid "No matching track types found"
 msgstr "Aucun type de piste correspondant trouvé"
 
 #: application/controllers/LocaleController.php:461
-#: application/forms/AddTracktype.php:50
+#: application/forms/AddTracktype.php:61
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:172
@@ -2595,7 +2595,7 @@ msgid "Enabled"
 msgstr "Activé"
 
 #: application/controllers/LocaleController.php:462
-#: application/forms/AddTracktype.php:49
+#: application/forms/AddTracktype.php:60
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:171
@@ -2803,11 +2803,11 @@ msgstr "Enlever le Curseur"
 msgid "show does not exist"
 msgstr "l'émission n'existe pas"
 
-#: application/controllers/TracktypeController.php:62
+#: application/controllers/TracktypeController.php:60
 msgid "Track Type added successfully!"
 msgstr "Type de piste ajouté avec succès !"
 
-#: application/controllers/TracktypeController.php:64
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type updated successfully!"
 msgstr "Type de piste mis à jour avec succès !"
 
@@ -3019,7 +3019,7 @@ msgstr "URL :"
 msgid "Genre:"
 msgstr "Genre :"
 
-#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:46
 #: application/forms/EditAudioMD.php:113
 msgid "Description:"
 msgstr "Description :"
@@ -3102,17 +3102,17 @@ msgstr "Nom du type :"
 msgid "Code:"
 msgstr "Code :"
 
-#: application/forms/AddTracktype.php:45
+#: application/forms/AddTracktype.php:39
+msgid "Code is not unique."
+msgstr "Ce code n'est pas unique."
+
+#: application/forms/AddTracktype.php:56
 msgid "Visibility:"
 msgstr "Visibilité :"
 
-#: application/forms/AddTracktype.php:57
+#: application/forms/AddTracktype.php:68
 msgid "Analyze cue points:"
 msgstr "Analyser les points d'entrée et de sortie :"
-
-#: application/forms/AddTracktype.php:74
-msgid "Code is not unique."
-msgstr "Ce code n'est pas unique."
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:36
 #: application/forms/LiveStreamingPreferences.php:40
