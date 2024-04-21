@@ -15,6 +15,11 @@ setup(
     },
     license="MIT",
     packages=find_packages(exclude=["*tests*", "*fixtures*"]),
+    entry_points={
+        "console_scripts": [
+            "libretime-worker=libretime_worker.main:cli",
+        ]
+    },
     python_requires=">=3.8",
     install_requires=[
         "celery==4.4.7",

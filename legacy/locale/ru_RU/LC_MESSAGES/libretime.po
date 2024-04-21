@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-02-05 01:52+0000\n"
+"POT-Creation-Date: 2024-04-15 03:48+0000\n"
 "PO-Revision-Date: 2022-06-05 10:17+0000\n"
 "Last-Translator: МАН69К <weblate@mah69k.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/libretime/legacy/ru/>\n"
@@ -2050,7 +2050,7 @@ msgid "Moving %s Items"
 msgstr "Перемещение %s элементов"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
+#: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
 #: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
@@ -2590,7 +2590,7 @@ msgid "No matching track types found"
 msgstr "Не найдено подходящих типов треков"
 
 #: application/controllers/LocaleController.php:461
-#: application/forms/AddTracktype.php:50
+#: application/forms/AddTracktype.php:61
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:172
@@ -2599,7 +2599,7 @@ msgid "Enabled"
 msgstr "Включено"
 
 #: application/controllers/LocaleController.php:462
-#: application/forms/AddTracktype.php:49
+#: application/forms/AddTracktype.php:60
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:171
@@ -2807,11 +2807,11 @@ msgstr "Удалить курсор"
 msgid "show does not exist"
 msgstr "Программы не существует"
 
-#: application/controllers/TracktypeController.php:62
+#: application/controllers/TracktypeController.php:60
 msgid "Track Type added successfully!"
 msgstr ""
 
-#: application/controllers/TracktypeController.php:64
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type updated successfully!"
 msgstr ""
 
@@ -3023,7 +3023,7 @@ msgstr "URL:"
 msgid "Genre:"
 msgstr "Жанр:"
 
-#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:46
 #: application/forms/EditAudioMD.php:113
 msgid "Description:"
 msgstr "Описание:"
@@ -3106,16 +3106,16 @@ msgstr "Название типа"
 msgid "Code:"
 msgstr "Код:"
 
-#: application/forms/AddTracktype.php:45
+#: application/forms/AddTracktype.php:39
+msgid "Code is not unique."
+msgstr ""
+
+#: application/forms/AddTracktype.php:56
 msgid "Visibility:"
 msgstr "Видимость:"
 
-#: application/forms/AddTracktype.php:57
+#: application/forms/AddTracktype.php:68
 msgid "Analyze cue points:"
-msgstr ""
-
-#: application/forms/AddTracktype.php:74
-msgid "Code is not unique."
 msgstr ""
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:36
