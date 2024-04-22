@@ -21,10 +21,12 @@ class MessageHandler(ConsumerMixin):
         self,
         connection: Connection,
         fetch_queue: "ThreadQueue[Dict[str, Any]]",
+        recorder_queue: "ThreadQueue[Dict[str, Any]]",
     ):
         self.connection = connection
 
         self.fetch_queue = fetch_queue
+        self.recorder_queue = recorder_queue
 
     def get_consumers(self, Consumer, channel):
         exchange = Exchange("airtime-pypo", "direct", durable=True, auto_delete=True)
@@ -57,6 +59,13 @@ class MessageHandler(ConsumerMixin):
                 "disconnect_source",
             ):
                 self.fetch_queue.put(payload)
+
+            elif command in (
+                "update_recorder_schedule",
+                "cancel_recording",
+            ):
+                self.recorder_queue.put(payload)
+
             else:
                 logger.warning("invalid command: %s", command)
 
@@ -72,9 +81,11 @@ class MessageListener:
         self,
         config: Config,
         fetch_queue: "ThreadQueue[Dict[str, Any]]",
+        recorder_queue: "ThreadQueue[Dict[str, Any]]",
     ) -> None:
         self.config = config
         self.fetch_queue = fetch_queue
+        self.recorder_queue = recorder_queue
 
     def run_forever(self) -> None:
         while True:
@@ -86,6 +97,7 @@ class MessageListener:
                 handler = MessageHandler(
                     connection=connection,
                     fetch_queue=self.fetch_queue,
+                    recorder_queue=self.recorder_queue,
                 )
 
                 def shutdown(_signum, _frame):
