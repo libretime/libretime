@@ -405,6 +405,8 @@ SQL;
             $file_id = $this->_file->getDbId();
             Logging::info($file_id);
             Logging::info('User ' . $user->getLogin() . ' is deleting file: ' . $this->_file->getDbTrackTitle() . ' - file id: ' . $file_id);
+        } else {
+            Logging::info('API Auth is deleting file: ' . $this->_file->getDbTrackTitle() . ' - file id: ' . $this->_file->getDbId());
         }
         $filesize = $this->_file->getFileSize();
         if ($filesize < 0) {
