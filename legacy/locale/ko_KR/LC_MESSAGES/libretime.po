@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-04-15 03:48+0000\n"
+"POT-Creation-Date: 2024-04-22 01:54+0000\n"
 "PO-Revision-Date: 2015-09-05 08:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Korean (Korea)\n"
@@ -2034,14 +2034,14 @@ msgstr "아이템 %s개 이동"
 
 #: application/controllers/LocaleController.php:302
 #: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
+#: application/forms/EditAudioMD.php:288 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "저장"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:268 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "취소"
 
@@ -3000,12 +3000,12 @@ msgstr "이름없는 쇼"
 msgid "URL:"
 msgstr ""
 
-#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:131
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
 msgid "Genre:"
 msgstr "장르:"
 
 #: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:46
-#: application/forms/EditAudioMD.php:113
+#: application/forms/EditAudioMD.php:115
 msgid "Description:"
 msgstr "설명:"
 
@@ -3156,72 +3156,76 @@ msgstr ""
 msgid "Date Start:"
 msgstr "시작"
 
-#: application/forms/EditAudioMD.php:50 application/forms/Player.php:15
+#: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
 msgid "Title:"
 msgstr "제목:"
 
-#: application/forms/EditAudioMD.php:60
+#: application/forms/EditAudioMD.php:62
 msgid "Creator:"
 msgstr "제작자:"
 
-#: application/forms/EditAudioMD.php:70
+#: application/forms/EditAudioMD.php:72
 msgid "Album:"
 msgstr "앨범:"
 
-#: application/forms/EditAudioMD.php:87
+#: application/forms/EditAudioMD.php:89
 msgid "Owner:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:99
+#: application/forms/EditAudioMD.php:101
 msgid "Select a Type"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:106
+#: application/forms/EditAudioMD.php:108
 msgid "Track Type:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:141
+#: application/forms/EditAudioMD.php:143
 msgid "Year:"
 msgstr "년도:"
 
-#: application/forms/EditAudioMD.php:154
+#: application/forms/EditAudioMD.php:156
 msgid "Label:"
 msgstr "상표:"
 
-#: application/forms/EditAudioMD.php:164
+#: application/forms/EditAudioMD.php:166
 msgid "Composer:"
 msgstr "작곡가:"
 
-#: application/forms/EditAudioMD.php:174
+#: application/forms/EditAudioMD.php:176
 msgid "Conductor:"
 msgstr "지휘자"
 
-#: application/forms/EditAudioMD.php:184
+#: application/forms/EditAudioMD.php:186
 msgid "Mood:"
 msgstr "무드"
 
-#: application/forms/EditAudioMD.php:194
+#: application/forms/EditAudioMD.php:196
+msgid "Replay Gain:"
+msgstr ""
+
+#: application/forms/EditAudioMD.php:204
 msgid "BPM:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:205
+#: application/forms/EditAudioMD.php:215
 msgid "Copyright:"
 msgstr "저작권:"
 
-#: application/forms/EditAudioMD.php:215
+#: application/forms/EditAudioMD.php:225
 msgid "ISRC Number:"
 msgstr "ISRC 넘버"
 
-#: application/forms/EditAudioMD.php:225
+#: application/forms/EditAudioMD.php:235
 msgid "Website:"
 msgstr "웹사이트"
 
-#: application/forms/EditAudioMD.php:235 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:245 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "언어"
 
-#: application/forms/EditAudioMD.php:288
+#: application/forms/EditAudioMD.php:298
 msgid "Publish..."
 msgstr ""
 
