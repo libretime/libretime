@@ -105,6 +105,8 @@ $baseUrl = Config::getBasePath();
           $(".editor_pane_wrapper").animate({
               scrollTop: $(".collapsible-header").offset().top * 2
           }, 500);
+          wavesurfer["t<?php echo $this->id; ?>"].drawer.containerWidth = wavesurfer["t<?php echo $this->id; ?>"].drawer.container.clientWidth;
+          eTrack.zoom(Number($(".zoom-slider-<?php echo $this->id; ?>").value));
       });
 
       // Counter field edit
