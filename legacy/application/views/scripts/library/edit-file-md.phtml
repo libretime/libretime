@@ -39,8 +39,8 @@ $baseUrl = Config::getBasePath();
   </div>
   <div style="height: 160px;"></div>
   <?php echo $this->form; ?>
-  <div class="collapsible-header closed"><span class="arrow-icon"></span><?php echo _("Cue Point Editor"); ?></div>
-    <div class="visual-waveform-editor" style="clear:both;padding:18px 24px 0 0;">
+  <div class="collapsible-header collapsible-header-<?php echo $this->id;?> closed"><span class="arrow-icon"></span><?php echo _("Cue Point Editor"); ?></div>
+    <div class="visual-waveform-editor visual-waveform-editor-<?php echo $this->id;?>" style="clear:both;padding:18px 24px 0 0;">
       <div class="controls">
         <div class="row">
           <div class="col-sm-7">
@@ -88,42 +88,37 @@ $baseUrl = Config::getBasePath();
 </div>
 <script>
   //waveform
-  var track_id      = <?php echo $this->id; ?>;
-  var selector_id   = "#track-waveform-"+<?php echo $this->id; ?>;
-  var url           = baseUrl + 'api/get-media/file/<?php echo $this->id; ?>';
-  var cuein         = '<?php echo $this->cuein; ?>';
-  var cueout        = '<?php echo $this->cueout; ?>';
-  var eTrack = renderWaveform(track_id, selector_id, url, cuein, cueout);
+  renderWaveform(<?php echo $this->id; ?>, '#track-waveform-<?php echo $this->id; ?>', baseUrl + 'api/get-media/file/<?php echo $this->id; ?>', '<?php echo $this->cuein; ?>', '<?php echo $this->cueout; ?>');
 
   $(document).ready(function() {
 
-    $(".collapsible-header")
+    $(".collapsible-header-<?php echo $this->id;?>")
       .off("click")
       .on("click", function () {
           $(this).toggleClass("visible");
-          $(".visual-waveform-editor").toggle();
+          $(".visual-waveform-editor-<?php echo $this->id;?>").toggle();
           $(".editor_pane_wrapper").animate({
-              scrollTop: $(".collapsible-header").offset().top * 2
+              scrollTop: $(".collapsible-header-<?php echo $this->id;?>").offset().top * 2
           }, 500);
           wavesurfer["t<?php echo $this->id; ?>"].drawer.containerWidth = wavesurfer["t<?php echo $this->id; ?>"].drawer.container.clientWidth;
-          eTrack.zoom(Number($(".zoom-slider-<?php echo $this->id; ?>").value));
+          wavesurfer["t<?php echo $this->id; ?>"].zoom(Number($(".zoom-slider-<?php echo $this->id; ?>").value));
       });
 
-      // Counter field edit
-      $(document).on('change', '#tracktimerinput-<?php echo $this->id; ?>', 'input', function(event) {
+    // Counter field edit
+    $(document).on('change', '#tracktimerinput-<?php echo $this->id; ?>', 'input', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var val = $(this).val();
+        wavesurfer["t<?php echo $this->id; ?>"].setCurrentTime(val);
+    }).on('keypress keydown', '#tracktimerinput-<?php echo $this->id; ?>', 'input', function(event) {
+      if (event.key === 'Enter' || event.keyCode === 13 || event.keyCode === 10) {
+          var val = $(this).val();
+          wavesurfer["t<?php echo $this->id; ?>"].setCurrentTime(val);
           event.preventDefault();
           event.stopPropagation();
-          var val = $(this).val();
-          eTrack.setCurrentTime(val);
-      }).on('keypress keydown', '#tracktimerinput-<?php echo $this->id; ?>', 'input', function(event) {
-        if (event.key === 'Enter' || event.keyCode === 13 || event.keyCode === 10) {
-            var val = $(this).val();
-            eTrack.setCurrentTime(val);
-            event.preventDefault();
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-            return false;
-        }
+          event.stopImmediatePropagation();
+          return false;
+      }
     })
 
     $(document).on('change', '.cuein_<?php echo $this->id; ?>', 'input', function(event) {
@@ -134,9 +129,9 @@ $baseUrl = Config::getBasePath();
         var a = val.split(':');
         var startseconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
         console.log(startseconds);
-        var region = eTrack.regions.list[track_id];
+        var region = wavesurfer["t<?php echo $this->id; ?>"].regions.list[<?php echo $this->id; ?>];
         region.update({start: startseconds});
-        $('#track-playedit-'+track_id).attr('onClick', 'wavesurfer["t'+ track_id +'"].play('+ region.start +', '+ region.end +');');
+        $('#track-playedit-<?php echo $this->id; ?>').attr('onClick', 'wavesurfer["t'+ <?php echo $this->id; ?> +'"].play('+ region.start +', '+ region.end +');');
     });
 
     $(document).on('change', '.cueout_<?php echo $this->id; ?>', 'input', function(event) {
@@ -146,31 +141,31 @@ $baseUrl = Config::getBasePath();
         var val = $(this).val();
         var b = val.split(':');
         var endseconds = (+b[0]) * 60 * 60 + (+b[1]) * 60 + (+b[2]);
-        var region = eTrack.regions.list[track_id];
+        var region = wavesurfer["t<?php echo $this->id; ?>"].regions.list[<?php echo $this->id; ?>];
         region.update({end: endseconds});
-        $('#track-playedit-'+track_id).attr('onClick', 'wavesurfer["t'+ track_id +'"].play('+ region.start +', '+ region.end +');');
+        $('#track-playedit-<?php echo $this->id; ?>').attr('onClick', 'wavesurfer["t'+ <?php echo $this->id; ?> +'"].play('+ region.start +', '+ region.end +');');
     });
 
     $(document).on('click', '#cuein-set-<?php echo $this->id; ?>', 'button', function(event) {
       console.log('cuein button');
         event.preventDefault();
         event.stopPropagation();
-        var val = eTrack.getCurrentTime();
-        var region = eTrack.regions.list[track_id];
+        var val = wavesurfer["t<?php echo $this->id; ?>"].getCurrentTime();
+        var region = wavesurfer["t<?php echo $this->id; ?>"].regions.list[<?php echo $this->id; ?>];
         region.update({start: val});
-        document.getElementsByClassName("cuein_"+track_id)[0].value = toHHMMSS(region.start);
-        $('#track-playedit-'+track_id).attr('onClick', 'wavesurfer["t'+ track_id +'"].play('+ region.start +', '+ region.end +');');
+        document.getElementsByClassName("cuein_<?php echo $this->id; ?>")[0].value = toHHMMSS(region.start);
+        $('#track-playedit-<?php echo $this->id; ?>').attr('onClick', 'wavesurfer["t'+ <?php echo $this->id; ?> +'"].play('+ region.start +', '+ region.end +');');
     });
 
     $(document).on('click', '#cueout-set-<?php echo $this->id; ?>', 'button', function(event) {
       console.log('cueout button')
         event.preventDefault();
         event.stopPropagation();
-        var val = eTrack.getCurrentTime();
-        var region = eTrack.regions.list[track_id];
+        var val = wavesurfer["t<?php echo $this->id; ?>"].getCurrentTime();
+        var region = wavesurfer["t<?php echo $this->id; ?>"].regions.list[<?php echo $this->id; ?>];
         region.update({end: val});
-        document.getElementsByClassName("cueout_"+track_id)[0].value = toHHMMSS(region.end);
-        $('#track-playedit-'+track_id).attr('onClick', 'wavesurfer["t'+ track_id +'"].play('+ region.start +', '+ region.end +');');
+        document.getElementsByClassName("cueout_<?php echo $this->id; ?>")[0].value = toHHMMSS(region.end);
+        $('#track-playedit-<?php echo $this->id; ?>').attr('onClick', 'wavesurfer["t'+ <?php echo $this->id; ?> +'"].play('+ region.start +', '+ region.end +');');
     });
   });
 </script>
