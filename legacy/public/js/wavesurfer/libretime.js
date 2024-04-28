@@ -96,35 +96,6 @@ input[type=checkbox].input-switch:checked,input[type=radio].input-switch:checked
     }
     return r+"</svg>";
   }
-  let initSwitches=(el)=>{
-    let w,h,d,fg,bg;
-    if(el.inputKnobs)
-      return;
-    el.inputKnobs={};
-    el.refresh=()=>{
-      let src=el.getAttribute("data-src");
-      d=+el.getAttribute("data-diameter");
-      let st=document.defaultView.getComputedStyle(el,null);
-      w=parseFloat(el.getAttribute("data-width")||d||st.width);
-      h=parseFloat(el.getAttribute("data-height")||d||st.height);
-      bg=el.getAttribute("data-bgcolor")||op.bgcolor;
-      fg=el.getAttribute("data-fgcolor")||op.fgcolor;
-      el.style.width=w+"px";
-      el.style.height=h+"px";
-      if(src)
-        el.style.backgroundImage="url("+src+")";
-      else {
-        let minwh=Math.min(w,h);
-        let svg=
-`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h*2}" viewBox="0 0 ${w} ${h*2}" preserveAspectRatio="none">
-<g><rect fill="${bg}" x="1" y="1" width="${w-2}" height="${h-2}" rx="${minwh*0.25}" ry="${minwh*0.25}"/>
-<rect fill="${bg}" x="1" y="${h+1}" width="${w-2}" height="${h-2}" rx="${minwh*0.25}" ry="${minwh*0.25}"/>
-<circle fill="${fg}" cx="${w*0.5}" cy="${h*1.5}" r="${minwh*0.25}"/></g></svg>`;
-        el.style.backgroundImage="url(data:image/svg+xml;base64,"+btoa(svg)+")";
-      }
-    };
-    el.refresh();
-  };
   let initKnobs=(el)=>{
     let w,h,d,fg,bg;
     if(el.inputKnobs){
@@ -325,13 +296,9 @@ input[type=checkbox].input-switch:checked,input[type=radio].input-switch:checked
     el.addEventListener("click",function (event){ event.stopPropagation(); });
   }
   let refreshque=()=>{
-    let elem=document.querySelectorAll("input.input-knob,input.input-slider");
+    let elem=document.querySelectorAll("input.input-slider");
     for(let i=0;i<elem.length;++i)
       procque.push([initKnobs,elem[i]]);
-    elem=document.querySelectorAll("input[type=checkbox].input-switch,input[type=radio].input-switch");
-    for(let i=0;i<elem.length;++i){
-      procque.push([initSwitches,elem[i]]);
-    }
   }
   let procque=[];
   refreshque();
@@ -497,7 +464,7 @@ function secondaryLabelInterval(pxPerSec) {
 }
 
 
-function renderWaveform(track_id, selector_id, url, cuein, cueout, gain_level, default_gain) {
+function renderWaveform(track_id, selector_id, url, cuein, cueout) {
 
     var trackid = "t"+track_id;
     var a = cuein.split(':'); // split it at the colons
@@ -612,16 +579,6 @@ function renderWaveform(track_id, selector_id, url, cuein, cueout, gain_level, d
 
     //Volume to Gain deciSteps(gainNum(gain_level))
     eTrack.setVolume(0.6);
-
-    document.querySelector("#volume-"+ track_id).value = eTrack.getVolume();
-
-    var volumeInput = document.querySelector("#volume-"+ track_id);
-
-    var onChangeVolume = function (e) {
-      //eTrack.setVolume(e.target.value);
-    };
-    volumeInput.addEventListener('input', onChangeVolume);
-    volumeInput.addEventListener('change', onChangeVolume);
 
     return eTrack;
 }
