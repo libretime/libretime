@@ -706,6 +706,7 @@ install_service "libretime-analyzer.service" "$SCRIPT_DIR/analyzer/install/syste
 section "Worker"
 
 install_python_app "$SCRIPT_DIR/worker"
+link_python_app libretime-worker
 
 info "creating libretime-worker working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/worker"
