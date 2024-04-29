@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-04-22 01:54+0000\n"
+"POT-Creation-Date: 2024-04-29 01:54+0000\n"
 "PO-Revision-Date: 2023-12-27 23:06+0000\n"
 "Last-Translator: Maurizio Castelvetro <castelvetro@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/libretime/legacy/it/>\n"
@@ -2762,19 +2762,19 @@ msgstr "Playlist sconosciuta"
 msgid "Preferences updated."
 msgstr "Preferenze aggiornate."
 
-#: application/controllers/PreferenceController.php:208
+#: application/controllers/PreferenceController.php:210
 msgid "Stream Setting Updated."
 msgstr "Aggiornamento impostazioni Stream."
 
-#: application/controllers/PreferenceController.php:253
+#: application/controllers/PreferenceController.php:255
 msgid "path should be specified"
 msgstr "il percorso deve essere specificato"
 
-#: application/controllers/PreferenceController.php:296
+#: application/controllers/PreferenceController.php:298
 msgid "Problem with Liquidsoap..."
 msgstr "Problemi con Liquidsoap..."
 
-#: application/controllers/PreferenceController.php:339
+#: application/controllers/PreferenceController.php:341
 msgid "Request method not accepted"
 msgstr ""
 
