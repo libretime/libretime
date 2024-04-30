@@ -190,14 +190,6 @@ class Application_Form_EditAudioMD extends Zend_Form
             ]);
         $this->addElement($mood);
 
-        // Add replay gain field
-        $replay_gain = new Zend_Form_Element_Hidden('replay_gain');
-        $replay_gain->class = 'input_text replay_gain_' . $p_id;
-        $replay_gain->setLabel(_('Replay Gain:'))
-            ->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none'])
-            ->removeDecorator('Label');
-        $this->addElement($replay_gain);
-
         // Add bmp field
         $bpm = new Zend_Form_Element_Text('bpm');
         $bpm->class = 'input_text';
