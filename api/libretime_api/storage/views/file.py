@@ -23,15 +23,12 @@ class FileViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["GET"])
     def download(self, request, pk=None):  # pylint: disable=invalid-name
-        pk = IntegerField().to_internal_value(data=pk)
-
-        file = get_object_or_404(File, pk=pk)
+        instance: File = self.get_object()
 
         response = HttpResponse()
-
         # HTTP headers must be USASCII encoded, or Nginx might not find the file and
         # will return a 404.
-        redirect_uri = filepath_to_uri(os.path.join("/api/_media", file.filepath))
+        redirect_uri = filepath_to_uri(os.path.join("/api/_media", instance.filepath))
         response["X-Accel-Redirect"] = redirect_uri
         return response
 
