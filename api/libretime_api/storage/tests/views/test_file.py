@@ -1,10 +1,12 @@
 import os
+from unittest.mock import patch
 
 from django.conf import settings
 from model_bakery import baker
 from rest_framework.test import APITestCase
 
 from ...._fixtures import AUDIO_FILENAME
+from ...models import File
 
 
 class TestFileViewSet(APITestCase):
@@ -20,7 +22,7 @@ class TestFileViewSet(APITestCase):
 
     def test_download(self):
         self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
-        file = baker.make(
+        file: File = baker.make(
             "storage.File",
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
@@ -29,16 +31,33 @@ class TestFileViewSet(APITestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_destroy(self):
-        path = "/api/v2/files/{id}"
-        file = baker.make(
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
+        file: File = baker.make(
             "storage.File",
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
         )
-        path = path.format(id=str(file.pk))
-        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
-        response = self.client.delete(path)
+
+        with patch("libretime_api.storage.views.file.remove") as remove_mock:
+            response = self.client.delete(f"/api/v2/files/{file.id}")
+
         self.assertEqual(response.status_code, 204)
-        self.assertFalse(
-            os.path.isfile(os.path.join(settings.CONFIG.storage.path, file.filepath))
+        remove_mock.assert_called_with(
+            os.path.join(settings.CONFIG.storage.path, file.filepath)
         )
+
+    def test_destroy_no_file(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
+        file = baker.make(
+            "storage.File",
+            mime="audio/mp3",
+            filepath="invalid.mp3",
+        )
+        response = self.client.delete(f"/api/v2/files/{file.id}")
+        self.assertEqual(response.status_code, 204)
+
+    def test_destroy_invalid(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
+        file_id = "1"
+        response = self.client.delete(f"/api/v2/files/{file_id}")
+        self.assertEqual(response.status_code, 404)
