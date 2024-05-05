@@ -4363,42 +4363,17 @@ body.droppable .artwork-upload .artwork-preview {
     width: 480px;
 }
 
-/* -webkit-appearance: none;
--moz-appearance: none;
--ms-appearance: none;
-appearance: none; */
-textarea,
-input {
+.visual-waveform-editor textarea,
+.visual-waveform-editor input,
+.visual-waveform-editor input:focus,
+.visual-waveform-editor select:focus,
+.visual-waveform-editor textarea:focus,
+.visual-waveform-editor button:focus {
     outline: none;
-}
+} */
 
-input:focus,
-select:focus,
-textarea:focus,
-button:focus {
-    outline: none;
-}
-
-.navtt {
-    margin-bottom: 18px;
-    margin-left: 0;
-    list-style: none;
-}
-
-.navtt > li > a {
-    display: block;
-}
-
-li {
+.visual-waveform-editor li {
     line-height: 18px;
-}
-
-.navtt-content.active {
-    display: block;
-}
-
-.navtt-content.hide {
-    display: none;
 }
 
 .btn-control-player {
