@@ -49,7 +49,9 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetAllow3rdPartyApi($values['thirdPartyApi']);
                 Application_Model_Preference::SetDefaultLocale($values['locale']);
                 Application_Model_Preference::SetWeekStartDay($values['weekStartDay']);
+                Application_Model_Preference::setScheduleTrimOverbooked($values['scheduleTrimOverbooked']);
                 Application_Model_Preference::setRadioPageDisplayLoginButton($values['radioPageLoginButton']);
+                Application_Model_Preference::setRadioPageDisabled($values['radioPageDisabled']);
                 Application_Model_Preference::SetFeaturePreviewMode($values['featurePreviewMode']);
 
                 $logoUploadElement = $form->getSubForm('preferences_general')->getElement('stationLogo');
@@ -195,8 +197,10 @@ class PreferenceController extends Zend_Controller_Action
                 if ($changeRGenabled || $changeRGmodifier) {
                     Application_Model_Preference::SetEnableReplayGain($values['enableReplayGain']);
                     Application_Model_Preference::setReplayGainModifier($values['replayGainModifier']);
-                    $md = ['schedule' => Application_Model_Schedule::getSchedule()];
-                    Application_Model_RabbitMq::SendMessageToPypo('update_schedule', $md);
+                    // The side effects of this function are still required to fill the schedule, we
+                    // don't use the returned schedule.
+                    Application_Model_Schedule::getSchedule();
+                    Application_Model_RabbitMq::SendMessageToPypo('update_schedule', []);
                     // Application_Model_RabbitMq::PushSchedule();
                 }
 

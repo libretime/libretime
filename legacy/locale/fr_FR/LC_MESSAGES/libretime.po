@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-12-25 01:55+0000\n"
+"POT-Creation-Date: 2024-04-29 01:54+0000\n"
 "PO-Revision-Date: 2023-03-06 23:45+0000\n"
 "Last-Translator: \"Jonas L.\" <ljonas@riseup.net>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/fr/>\n"
@@ -865,12 +865,12 @@ msgstr "Vous n'avez pas la permission d'accéder à cette ressource."
 msgid "An internal application error has occurred."
 msgstr "Une erreur interne est survenue."
 
-#: application/controllers/IndexController.php:86
+#: application/controllers/IndexController.php:92
 #, php-format
 msgid "%s Podcast"
 msgstr "%s Podcast"
 
-#: application/controllers/IndexController.php:87
+#: application/controllers/IndexController.php:93
 msgid "No tracks have been published yet."
 msgstr "Aucune piste n'a encore été publiée."
 
@@ -1874,37 +1874,37 @@ msgid "Month"
 msgstr "Mois"
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:230
+#: application/forms/GeneralPreferences.php:255
 msgid "Sunday"
 msgstr "Dimanche"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:231
+#: application/forms/GeneralPreferences.php:256
 msgid "Monday"
 msgstr "Lundi"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:232
+#: application/forms/GeneralPreferences.php:257
 msgid "Tuesday"
 msgstr "Mardi"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:233
+#: application/forms/GeneralPreferences.php:258
 msgid "Wednesday"
 msgstr "Mercredi"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:234
+#: application/forms/GeneralPreferences.php:259
 msgid "Thursday"
 msgstr "Jeudi"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:235
+#: application/forms/GeneralPreferences.php:260
 msgid "Friday"
 msgstr "Vendredi"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:236
+#: application/forms/GeneralPreferences.php:261
 msgid "Saturday"
 msgstr "Samedi"
 
@@ -2046,15 +2046,15 @@ msgid "Moving %s Items"
 msgstr "Déplacer %s éléments"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
+#: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
+#: application/forms/EditAudioMD.php:288 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "Sauvegarder"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:268 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -2586,20 +2586,20 @@ msgid "No matching track types found"
 msgstr "Aucun type de piste correspondant trouvé"
 
 #: application/controllers/LocaleController.php:461
-#: application/forms/AddTracktype.php:50
+#: application/forms/AddTracktype.php:61
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
-#: application/forms/GeneralPreferences.php:160
-#: application/forms/GeneralPreferences.php:214
+#: application/forms/GeneralPreferences.php:172
+#: application/forms/GeneralPreferences.php:239
 msgid "Enabled"
 msgstr "Activé"
 
 #: application/controllers/LocaleController.php:462
-#: application/forms/AddTracktype.php:49
+#: application/forms/AddTracktype.php:60
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
-#: application/forms/GeneralPreferences.php:159
-#: application/forms/GeneralPreferences.php:213
+#: application/forms/GeneralPreferences.php:171
+#: application/forms/GeneralPreferences.php:238
 msgid "Disabled"
 msgstr "Désactivé"
 
@@ -2766,23 +2766,23 @@ msgstr "Bloc intelligent sans titre"
 msgid "Unknown Playlist"
 msgstr "Liste de lecture inconnue"
 
-#: application/controllers/PreferenceController.php:69
+#: application/controllers/PreferenceController.php:71
 msgid "Preferences updated."
 msgstr "Préférences mises à jour."
 
-#: application/controllers/PreferenceController.php:201
+#: application/controllers/PreferenceController.php:210
 msgid "Stream Setting Updated."
 msgstr "Réglages du Flux mis à jour."
 
-#: application/controllers/PreferenceController.php:246
+#: application/controllers/PreferenceController.php:255
 msgid "path should be specified"
 msgstr "le chemin doit être spécifié"
 
-#: application/controllers/PreferenceController.php:289
+#: application/controllers/PreferenceController.php:298
 msgid "Problem with Liquidsoap..."
 msgstr "Problème avec Liquidsoap..."
 
-#: application/controllers/PreferenceController.php:332
+#: application/controllers/PreferenceController.php:341
 msgid "Request method not accepted"
 msgstr "Cette méthode de requête ne peut aboutir"
 
@@ -2803,11 +2803,11 @@ msgstr "Enlever le Curseur"
 msgid "show does not exist"
 msgstr "l'émission n'existe pas"
 
-#: application/controllers/TracktypeController.php:62
+#: application/controllers/TracktypeController.php:60
 msgid "Track Type added successfully!"
 msgstr "Type de piste ajouté avec succès !"
 
-#: application/controllers/TracktypeController.php:64
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type updated successfully!"
 msgstr "Type de piste mis à jour avec succès !"
 
@@ -3015,12 +3015,12 @@ msgstr "Émission sans Titre"
 msgid "URL:"
 msgstr "URL :"
 
-#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:131
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
 msgid "Genre:"
 msgstr "Genre :"
 
-#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
-#: application/forms/EditAudioMD.php:113
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:46
+#: application/forms/EditAudioMD.php:115
 msgid "Description:"
 msgstr "Description :"
 
@@ -3102,17 +3102,17 @@ msgstr "Nom du type :"
 msgid "Code:"
 msgstr "Code :"
 
-#: application/forms/AddTracktype.php:45
+#: application/forms/AddTracktype.php:39
+msgid "Code is not unique."
+msgstr "Ce code n'est pas unique."
+
+#: application/forms/AddTracktype.php:56
 msgid "Visibility:"
 msgstr "Visibilité :"
 
-#: application/forms/AddTracktype.php:57
+#: application/forms/AddTracktype.php:68
 msgid "Analyze cue points:"
 msgstr "Analyser les points d'entrée et de sortie :"
-
-#: application/forms/AddTracktype.php:74
-msgid "Code is not unique."
-msgstr "Ce code n'est pas unique."
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:36
 #: application/forms/LiveStreamingPreferences.php:40
@@ -3171,72 +3171,76 @@ msgstr "Supprimer toutes les pistes de la librairie"
 msgid "Date Start:"
 msgstr "Date de début :"
 
-#: application/forms/EditAudioMD.php:50 application/forms/Player.php:15
+#: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
 msgid "Title:"
 msgstr "Titre :"
 
-#: application/forms/EditAudioMD.php:60
+#: application/forms/EditAudioMD.php:62
 msgid "Creator:"
 msgstr "Créateur·ice :"
 
-#: application/forms/EditAudioMD.php:70
+#: application/forms/EditAudioMD.php:72
 msgid "Album:"
 msgstr "Album :"
 
-#: application/forms/EditAudioMD.php:87
+#: application/forms/EditAudioMD.php:89
 msgid "Owner:"
 msgstr "Propriétaire :"
 
-#: application/forms/EditAudioMD.php:99
+#: application/forms/EditAudioMD.php:101
 msgid "Select a Type"
 msgstr "Sélectionner un type"
 
-#: application/forms/EditAudioMD.php:106
+#: application/forms/EditAudioMD.php:108
 msgid "Track Type:"
 msgstr "Type de piste :"
 
-#: application/forms/EditAudioMD.php:141
+#: application/forms/EditAudioMD.php:143
 msgid "Year:"
 msgstr "Année :"
 
-#: application/forms/EditAudioMD.php:154
+#: application/forms/EditAudioMD.php:156
 msgid "Label:"
 msgstr "Étiquette :"
 
-#: application/forms/EditAudioMD.php:164
+#: application/forms/EditAudioMD.php:166
 msgid "Composer:"
 msgstr "Compositeur·ice :"
 
-#: application/forms/EditAudioMD.php:174
+#: application/forms/EditAudioMD.php:176
 msgid "Conductor:"
 msgstr "Conducteur :"
 
-#: application/forms/EditAudioMD.php:184
+#: application/forms/EditAudioMD.php:186
 msgid "Mood:"
 msgstr "Atmosphère :"
 
-#: application/forms/EditAudioMD.php:194
+#: application/forms/EditAudioMD.php:196
+msgid "Replay Gain:"
+msgstr ""
+
+#: application/forms/EditAudioMD.php:204
 msgid "BPM:"
 msgstr "BPM :"
 
-#: application/forms/EditAudioMD.php:205
+#: application/forms/EditAudioMD.php:215
 msgid "Copyright:"
 msgstr "Copyright :"
 
-#: application/forms/EditAudioMD.php:215
+#: application/forms/EditAudioMD.php:225
 msgid "ISRC Number:"
 msgstr "Numéro ISRC :"
 
-#: application/forms/EditAudioMD.php:225
+#: application/forms/EditAudioMD.php:235
 msgid "Website:"
 msgstr "Site Internet :"
 
-#: application/forms/EditAudioMD.php:235 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:245 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "Langue :"
 
-#: application/forms/EditAudioMD.php:288
+#: application/forms/EditAudioMD.php:298
 msgid "Publish..."
 msgstr "Publier..."
 
@@ -3317,15 +3321,19 @@ msgstr "Générer un bloc intelligent et une playlist à la création d'un nouve
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr "Si cette option est activée, un nouveau bloc intelligent et une playlist correspondant à la dernière piste d'un podcast seront générés immédiatement lors de la création d'un nouveau podcast. Notez que la fonctionnalité \"Remplacer les métatags de l'épisode\" doit aussi être activée pour que les blocs intelligent puissent trouver des épisodes correctement."
 
-#: application/forms/GeneralPreferences.php:156
+#: application/forms/GeneralPreferences.php:161
+msgid "Trim overbooked shows after autoloading?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:168
 msgid "Public LibreTime API"
 msgstr "API publique LibreTime"
 
-#: application/forms/GeneralPreferences.php:157
+#: application/forms/GeneralPreferences.php:169
 msgid "Required for embeddable schedule widget."
 msgstr "Requis pour le widget de programmation."
 
-#: application/forms/GeneralPreferences.php:163
+#: application/forms/GeneralPreferences.php:175
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
@@ -3333,28 +3341,32 @@ msgstr ""
 "L'activation de cette fonctionnalité permettra à LibreTime de fournir des données de planification\n"
 "                                            à des widgets externes pouvant être intégrés à votre site Web."
 
-#: application/forms/GeneralPreferences.php:175
+#: application/forms/GeneralPreferences.php:187
 msgid "Default Language"
 msgstr "Langage par défaut"
 
-#: application/forms/GeneralPreferences.php:182
+#: application/forms/GeneralPreferences.php:194
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr "Fuseau horaire de la Station"
 
-#: application/forms/GeneralPreferences.php:190
+#: application/forms/GeneralPreferences.php:202
 msgid "Week Starts On"
 msgstr "La semaine commence le"
 
-#: application/forms/GeneralPreferences.php:206
+#: application/forms/GeneralPreferences.php:218
 msgid "Display login button on your Radio Page?"
 msgstr "Afficher le bouton de connexion sur votre page radio ?"
 
-#: application/forms/GeneralPreferences.php:211
+#: application/forms/GeneralPreferences.php:231
+msgid "Disable the public radio page and redirect to the login page?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:236
 msgid "Feature Previews"
 msgstr "Aperçus de fonctionnalités"
 
-#: application/forms/GeneralPreferences.php:217
+#: application/forms/GeneralPreferences.php:242
 msgid "Enable this to opt-in to test new features."
 msgstr "Activer ceci pour vous inscrire pour tester les nouvelles fonctionnalités."
 

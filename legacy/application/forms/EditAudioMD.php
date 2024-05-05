@@ -8,9 +8,11 @@ class Application_Form_EditAudioMD extends Zend_Form
     {
         // Set the method for the display form to POST
         $this->setMethod('post');
+        $this->setAttrib('id', 'track_edit_' . $p_id);
 
         $file_id = new Zend_Form_Element_Hidden('file_id');
         $file_id->setValue($p_id);
+        $file_id->setDecorators(['ViewHelper']);
         $file_id->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
         $file_id->removeDecorator('Label');
         $file_id->setAttrib('class', 'obj_id');
@@ -23,25 +25,25 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 2048]),
             ]);
-        $file_id->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
-        $file_id->removeDecorator('Label');
-        $file_id->setAttrib('class', 'artwork');
+        $artwork->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
+        $artwork->removeDecorator('Label');
+        $artwork->setAttrib('class', 'artwork');
         $this->addElement($artwork);
 
         // Set artwork hidden field
         $set_artwork = new Zend_Form_Element_Hidden('set_artwork');
         $set_artwork->class = 'input_text set_artwork_' . $p_id;
-        $file_id->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
-        $file_id->removeDecorator('Label');
-        $file_id->setAttrib('class', 'set_artwork');
+        $set_artwork->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
+        $set_artwork->removeDecorator('Label');
+        $set_artwork->setAttrib('class', 'set_artwork');
         $this->addElement($set_artwork);
 
         // Remove artwork hidden field
         $remove_artwork = new Zend_Form_Element_Hidden('remove_artwork');
         $remove_artwork->class = 'input_text remove_artwork_' . $p_id;
-        $file_id->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
-        $file_id->removeDecorator('Label');
-        $file_id->setAttrib('class', 'remove_artwork');
+        $remove_artwork->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
+        $remove_artwork->removeDecorator('Label');
+        $remove_artwork->setAttrib('class', 'remove_artwork');
         $this->addElement($remove_artwork);
 
         // Add title field
@@ -242,7 +244,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $validCuePattern = '/^(?:[0-9]{1,2}:)?(?:[0-9]{1,2}:)?[0-9]{1,6}(\.\d{1,6})?$/';
 
         $cueIn = new Zend_Form_Element_Text('cuein');
-        $cueIn->class = 'input_text';
+        $cueIn->class = 'input_text cuein_' . $p_id;
         $cueIn->setLabel('Cue In:');
         $cueInValidator = Application_Form_Helper_ValidationTypes::overrideRegexValidator(
             $validCuePattern,
@@ -252,7 +254,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement($cueIn);
 
         $cueOut = new Zend_Form_Element_Text('cueout');
-        $cueOut->class = 'input_text';
+        $cueOut->class = 'input_text cueout_' . $p_id;
         $cueOut->setLabel('Cue Out:');
         $cueOutValidator = Application_Form_Helper_ValidationTypes::overrideRegexValidator(
             $validCuePattern,

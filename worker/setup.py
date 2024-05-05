@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-version = "4.0.0"  # x-release-please-version
+version = "4.1.0"  # x-release-please-version
 
 setup(
     name="libretime-worker",
@@ -15,6 +15,11 @@ setup(
     },
     license="MIT",
     packages=find_packages(exclude=["*tests*", "*fixtures*"]),
+    entry_points={
+        "console_scripts": [
+            "libretime-worker=libretime_worker.main:cli",
+        ]
+    },
     python_requires=">=3.8",
     install_requires=[
         "celery==4.4.7",

@@ -8,6 +8,12 @@ class IndexController extends Zend_Controller_Action
     {
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Config::getBasePath();
+        if (Application_Model_Preference::getRadioPageDisabled()) {
+            $this->_helper->redirector->gotoUrl($baseUrl . 'login');
+
+            return;
+        }
+
         $this->view->headTitle(Application_Model_Preference::GetHeadTitle());
         $this->view->headScript()->appendFile(Assets::url('js/libs/jquery-1.8.3.min.js'), 'text/javascript');
 

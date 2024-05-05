@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-12-25 01:55+0000\n"
+"POT-Creation-Date: 2024-04-29 01:54+0000\n"
 "PO-Revision-Date: 2023-10-29 05:18+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/libretime/legacy/hr/>\n"
@@ -855,12 +855,12 @@ msgstr "Nemaš dozvole za pristupanje ovom resursu."
 msgid "An internal application error has occurred."
 msgstr ""
 
-#: application/controllers/IndexController.php:86
+#: application/controllers/IndexController.php:92
 #, php-format
 msgid "%s Podcast"
 msgstr ""
 
-#: application/controllers/IndexController.php:87
+#: application/controllers/IndexController.php:93
 msgid "No tracks have been published yet."
 msgstr ""
 
@@ -1864,37 +1864,37 @@ msgid "Month"
 msgstr ""
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:230
+#: application/forms/GeneralPreferences.php:255
 msgid "Sunday"
 msgstr "Nedjelja"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:231
+#: application/forms/GeneralPreferences.php:256
 msgid "Monday"
 msgstr "Ponedjeljak"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:232
+#: application/forms/GeneralPreferences.php:257
 msgid "Tuesday"
 msgstr "Utorak"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:233
+#: application/forms/GeneralPreferences.php:258
 msgid "Wednesday"
 msgstr "Srijeda"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:234
+#: application/forms/GeneralPreferences.php:259
 msgid "Thursday"
 msgstr "Četvrtak"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:235
+#: application/forms/GeneralPreferences.php:260
 msgid "Friday"
 msgstr "Petak"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:236
+#: application/forms/GeneralPreferences.php:261
 msgid "Saturday"
 msgstr "Subota"
 
@@ -2037,15 +2037,15 @@ msgid "Moving %s Items"
 msgstr "Premještanje %s stavki"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
+#: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
+#: application/forms/EditAudioMD.php:288 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "Spremi"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:268 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "Odustani"
 
@@ -2577,20 +2577,20 @@ msgid "No matching track types found"
 msgstr ""
 
 #: application/controllers/LocaleController.php:461
-#: application/forms/AddTracktype.php:50
+#: application/forms/AddTracktype.php:61
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
-#: application/forms/GeneralPreferences.php:160
-#: application/forms/GeneralPreferences.php:214
+#: application/forms/GeneralPreferences.php:172
+#: application/forms/GeneralPreferences.php:239
 msgid "Enabled"
 msgstr "Aktivirano"
 
 #: application/controllers/LocaleController.php:462
-#: application/forms/AddTracktype.php:49
+#: application/forms/AddTracktype.php:60
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
-#: application/forms/GeneralPreferences.php:159
-#: application/forms/GeneralPreferences.php:213
+#: application/forms/GeneralPreferences.php:171
+#: application/forms/GeneralPreferences.php:238
 msgid "Disabled"
 msgstr "Deaktivirano"
 
@@ -2757,23 +2757,23 @@ msgstr "Neimenovan pametni blok"
 msgid "Unknown Playlist"
 msgstr "Nepoznata playlista"
 
-#: application/controllers/PreferenceController.php:69
+#: application/controllers/PreferenceController.php:71
 msgid "Preferences updated."
 msgstr "Postavke su ažurirane."
 
-#: application/controllers/PreferenceController.php:201
+#: application/controllers/PreferenceController.php:210
 msgid "Stream Setting Updated."
 msgstr "Postavka prijenosa je ažurirana."
 
-#: application/controllers/PreferenceController.php:246
+#: application/controllers/PreferenceController.php:255
 msgid "path should be specified"
 msgstr "put bi trebao biti specificiran"
 
-#: application/controllers/PreferenceController.php:289
+#: application/controllers/PreferenceController.php:298
 msgid "Problem with Liquidsoap..."
 msgstr "Problem s Liquidsoap..."
 
-#: application/controllers/PreferenceController.php:332
+#: application/controllers/PreferenceController.php:341
 msgid "Request method not accepted"
 msgstr ""
 
@@ -2794,11 +2794,11 @@ msgstr "Ukloni pokazivač"
 msgid "show does not exist"
 msgstr "emisija ne postoji"
 
-#: application/controllers/TracktypeController.php:62
+#: application/controllers/TracktypeController.php:60
 msgid "Track Type added successfully!"
 msgstr "Vrsta snimke uspješno dodana!"
 
-#: application/controllers/TracktypeController.php:64
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type updated successfully!"
 msgstr "Vrsta snimke uspješno ažurirana!"
 
@@ -3007,12 +3007,12 @@ msgstr "Neimenovana emisija"
 msgid "URL:"
 msgstr "URL:"
 
-#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:131
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
 msgid "Genre:"
 msgstr "Žanr:"
 
-#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
-#: application/forms/EditAudioMD.php:113
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:46
+#: application/forms/EditAudioMD.php:115
 msgid "Description:"
 msgstr "Opis:"
 
@@ -3094,17 +3094,17 @@ msgstr "Ime vrste:"
 msgid "Code:"
 msgstr "Kod:"
 
-#: application/forms/AddTracktype.php:45
+#: application/forms/AddTracktype.php:39
+msgid "Code is not unique."
+msgstr "Kod nije jedinstven."
+
+#: application/forms/AddTracktype.php:56
 msgid "Visibility:"
 msgstr "Vidljivost:"
 
-#: application/forms/AddTracktype.php:57
+#: application/forms/AddTracktype.php:68
 msgid "Analyze cue points:"
 msgstr ""
-
-#: application/forms/AddTracktype.php:74
-msgid "Code is not unique."
-msgstr "Kod nije jedinstven."
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:36
 #: application/forms/LiveStreamingPreferences.php:40
@@ -3163,72 +3163,76 @@ msgstr "Izbriši sve snimke u medijateci"
 msgid "Date Start:"
 msgstr "Datum početka:"
 
-#: application/forms/EditAudioMD.php:50 application/forms/Player.php:15
+#: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
 msgid "Title:"
 msgstr "Naslov:"
 
-#: application/forms/EditAudioMD.php:60
+#: application/forms/EditAudioMD.php:62
 msgid "Creator:"
 msgstr "Tvorac:"
 
-#: application/forms/EditAudioMD.php:70
+#: application/forms/EditAudioMD.php:72
 msgid "Album:"
 msgstr "Album:"
 
-#: application/forms/EditAudioMD.php:87
+#: application/forms/EditAudioMD.php:89
 msgid "Owner:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:99
+#: application/forms/EditAudioMD.php:101
 msgid "Select a Type"
 msgstr "Odaberi jednu vrstu"
 
-#: application/forms/EditAudioMD.php:106
+#: application/forms/EditAudioMD.php:108
 msgid "Track Type:"
 msgstr "Vrsta snimke:"
 
-#: application/forms/EditAudioMD.php:141
+#: application/forms/EditAudioMD.php:143
 msgid "Year:"
 msgstr "Godina:"
 
-#: application/forms/EditAudioMD.php:154
+#: application/forms/EditAudioMD.php:156
 msgid "Label:"
 msgstr "Naljepnica:"
 
-#: application/forms/EditAudioMD.php:164
+#: application/forms/EditAudioMD.php:166
 msgid "Composer:"
 msgstr "Kompozitor:"
 
-#: application/forms/EditAudioMD.php:174
+#: application/forms/EditAudioMD.php:176
 msgid "Conductor:"
 msgstr "Dirigent:"
 
-#: application/forms/EditAudioMD.php:184
+#: application/forms/EditAudioMD.php:186
 msgid "Mood:"
 msgstr "Raspoloženje:"
 
-#: application/forms/EditAudioMD.php:194
+#: application/forms/EditAudioMD.php:196
+msgid "Replay Gain:"
+msgstr ""
+
+#: application/forms/EditAudioMD.php:204
 msgid "BPM:"
 msgstr "BPM:"
 
-#: application/forms/EditAudioMD.php:205
+#: application/forms/EditAudioMD.php:215
 msgid "Copyright:"
 msgstr "Autorsko pravo:"
 
-#: application/forms/EditAudioMD.php:215
+#: application/forms/EditAudioMD.php:225
 msgid "ISRC Number:"
 msgstr "ISRC Broj:"
 
-#: application/forms/EditAudioMD.php:225
+#: application/forms/EditAudioMD.php:235
 msgid "Website:"
 msgstr "Web stranica:"
 
-#: application/forms/EditAudioMD.php:235 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:245 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "Jezik:"
 
-#: application/forms/EditAudioMD.php:288
+#: application/forms/EditAudioMD.php:298
 msgid "Publish..."
 msgstr "Objavi …"
 
@@ -3309,42 +3313,50 @@ msgstr ""
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:156
+#: application/forms/GeneralPreferences.php:161
+msgid "Trim overbooked shows after autoloading?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:168
 msgid "Public LibreTime API"
 msgstr "Javni LibreTime API"
 
-#: application/forms/GeneralPreferences.php:157
+#: application/forms/GeneralPreferences.php:169
 msgid "Required for embeddable schedule widget."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:163
+#: application/forms/GeneralPreferences.php:175
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:175
+#: application/forms/GeneralPreferences.php:187
 msgid "Default Language"
 msgstr "Standardni jezik"
 
-#: application/forms/GeneralPreferences.php:182
+#: application/forms/GeneralPreferences.php:194
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr "Vremenska zona stanice"
 
-#: application/forms/GeneralPreferences.php:190
+#: application/forms/GeneralPreferences.php:202
 msgid "Week Starts On"
 msgstr "Prvi dan tjedna"
 
-#: application/forms/GeneralPreferences.php:206
+#: application/forms/GeneralPreferences.php:218
 msgid "Display login button on your Radio Page?"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:211
+#: application/forms/GeneralPreferences.php:231
+msgid "Disable the public radio page and redirect to the login page?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:236
 msgid "Feature Previews"
 msgstr "Pregledi funkcija"
 
-#: application/forms/GeneralPreferences.php:217
+#: application/forms/GeneralPreferences.php:242
 msgid "Enable this to opt-in to test new features."
 msgstr "Aktiviraj ovo za testiranje novih funkcija."
 

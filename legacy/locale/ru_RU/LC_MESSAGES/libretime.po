@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-12-25 01:55+0000\n"
+"POT-Creation-Date: 2024-04-29 01:54+0000\n"
 "PO-Revision-Date: 2022-06-05 10:17+0000\n"
 "Last-Translator: МАН69К <weblate@mah69k.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/libretime/legacy/ru/>\n"
@@ -869,12 +869,12 @@ msgstr "У вас нет доступа к данному ресурсу."
 msgid "An internal application error has occurred."
 msgstr "Произошла внутренняя ошибка."
 
-#: application/controllers/IndexController.php:86
+#: application/controllers/IndexController.php:92
 #, php-format
 msgid "%s Podcast"
 msgstr "%s Подкаст"
 
-#: application/controllers/IndexController.php:87
+#: application/controllers/IndexController.php:93
 msgid "No tracks have been published yet."
 msgstr "Ни одного трека пока не опубликовано."
 
@@ -1878,37 +1878,37 @@ msgid "Month"
 msgstr "Месяц"
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:230
+#: application/forms/GeneralPreferences.php:255
 msgid "Sunday"
 msgstr "Воскресенье"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:231
+#: application/forms/GeneralPreferences.php:256
 msgid "Monday"
 msgstr "Понедельник"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:232
+#: application/forms/GeneralPreferences.php:257
 msgid "Tuesday"
 msgstr "Вторник"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:233
+#: application/forms/GeneralPreferences.php:258
 msgid "Wednesday"
 msgstr "Среда"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:234
+#: application/forms/GeneralPreferences.php:259
 msgid "Thursday"
 msgstr "Четверг"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:235
+#: application/forms/GeneralPreferences.php:260
 msgid "Friday"
 msgstr "Пятница"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:236
+#: application/forms/GeneralPreferences.php:261
 msgid "Saturday"
 msgstr "Суббота"
 
@@ -2050,15 +2050,15 @@ msgid "Moving %s Items"
 msgstr "Перемещение %s элементов"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
+#: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
+#: application/forms/EditAudioMD.php:288 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "Сохранить"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:268 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -2590,20 +2590,20 @@ msgid "No matching track types found"
 msgstr "Не найдено подходящих типов треков"
 
 #: application/controllers/LocaleController.php:461
-#: application/forms/AddTracktype.php:50
+#: application/forms/AddTracktype.php:61
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
-#: application/forms/GeneralPreferences.php:160
-#: application/forms/GeneralPreferences.php:214
+#: application/forms/GeneralPreferences.php:172
+#: application/forms/GeneralPreferences.php:239
 msgid "Enabled"
 msgstr "Включено"
 
 #: application/controllers/LocaleController.php:462
-#: application/forms/AddTracktype.php:49
+#: application/forms/AddTracktype.php:60
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
-#: application/forms/GeneralPreferences.php:159
-#: application/forms/GeneralPreferences.php:213
+#: application/forms/GeneralPreferences.php:171
+#: application/forms/GeneralPreferences.php:238
 msgid "Disabled"
 msgstr "Отключено"
 
@@ -2770,23 +2770,23 @@ msgstr "Смарт-блок без названия"
 msgid "Unknown Playlist"
 msgstr "Неизвестный Плейлист"
 
-#: application/controllers/PreferenceController.php:69
+#: application/controllers/PreferenceController.php:71
 msgid "Preferences updated."
 msgstr "Настройки сохранены."
 
-#: application/controllers/PreferenceController.php:201
+#: application/controllers/PreferenceController.php:210
 msgid "Stream Setting Updated."
 msgstr "Настройки потока обновлены."
 
-#: application/controllers/PreferenceController.php:246
+#: application/controllers/PreferenceController.php:255
 msgid "path should be specified"
 msgstr "необходимо указать путь"
 
-#: application/controllers/PreferenceController.php:289
+#: application/controllers/PreferenceController.php:298
 msgid "Problem with Liquidsoap..."
 msgstr "Проблема с Liquidsoap ..."
 
-#: application/controllers/PreferenceController.php:332
+#: application/controllers/PreferenceController.php:341
 msgid "Request method not accepted"
 msgstr "Метод запроса не принят"
 
@@ -2807,11 +2807,11 @@ msgstr "Удалить курсор"
 msgid "show does not exist"
 msgstr "Программы не существует"
 
-#: application/controllers/TracktypeController.php:62
+#: application/controllers/TracktypeController.php:60
 msgid "Track Type added successfully!"
 msgstr ""
 
-#: application/controllers/TracktypeController.php:64
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type updated successfully!"
 msgstr ""
 
@@ -3019,12 +3019,12 @@ msgstr "Программа без названия"
 msgid "URL:"
 msgstr "URL:"
 
-#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:131
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
 msgid "Genre:"
 msgstr "Жанр:"
 
-#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
-#: application/forms/EditAudioMD.php:113
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:46
+#: application/forms/EditAudioMD.php:115
 msgid "Description:"
 msgstr "Описание:"
 
@@ -3106,16 +3106,16 @@ msgstr "Название типа"
 msgid "Code:"
 msgstr "Код:"
 
-#: application/forms/AddTracktype.php:45
+#: application/forms/AddTracktype.php:39
+msgid "Code is not unique."
+msgstr ""
+
+#: application/forms/AddTracktype.php:56
 msgid "Visibility:"
 msgstr "Видимость:"
 
-#: application/forms/AddTracktype.php:57
+#: application/forms/AddTracktype.php:68
 msgid "Analyze cue points:"
-msgstr ""
-
-#: application/forms/AddTracktype.php:74
-msgid "Code is not unique."
 msgstr ""
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:36
@@ -3175,72 +3175,76 @@ msgstr "Удалить все треки в Библиотеке"
 msgid "Date Start:"
 msgstr "Дата начала:"
 
-#: application/forms/EditAudioMD.php:50 application/forms/Player.php:15
+#: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
 msgid "Title:"
 msgstr "Название:"
 
-#: application/forms/EditAudioMD.php:60
+#: application/forms/EditAudioMD.php:62
 msgid "Creator:"
 msgstr "Автор:"
 
-#: application/forms/EditAudioMD.php:70
+#: application/forms/EditAudioMD.php:72
 msgid "Album:"
 msgstr "Альбом:"
 
-#: application/forms/EditAudioMD.php:87
+#: application/forms/EditAudioMD.php:89
 msgid "Owner:"
 msgstr "Владелец:"
 
-#: application/forms/EditAudioMD.php:99
+#: application/forms/EditAudioMD.php:101
 msgid "Select a Type"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:106
+#: application/forms/EditAudioMD.php:108
 msgid "Track Type:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:141
+#: application/forms/EditAudioMD.php:143
 msgid "Year:"
 msgstr "Год:"
 
-#: application/forms/EditAudioMD.php:154
+#: application/forms/EditAudioMD.php:156
 msgid "Label:"
 msgstr "Метка:"
 
-#: application/forms/EditAudioMD.php:164
+#: application/forms/EditAudioMD.php:166
 msgid "Composer:"
 msgstr "Композитор:"
 
-#: application/forms/EditAudioMD.php:174
+#: application/forms/EditAudioMD.php:176
 msgid "Conductor:"
 msgstr "Исполнитель:"
 
-#: application/forms/EditAudioMD.php:184
+#: application/forms/EditAudioMD.php:186
 msgid "Mood:"
 msgstr "Настроение:"
 
-#: application/forms/EditAudioMD.php:194
+#: application/forms/EditAudioMD.php:196
+msgid "Replay Gain:"
+msgstr ""
+
+#: application/forms/EditAudioMD.php:204
 msgid "BPM:"
 msgstr "BPM:"
 
-#: application/forms/EditAudioMD.php:205
+#: application/forms/EditAudioMD.php:215
 msgid "Copyright:"
 msgstr "Авторское право:"
 
-#: application/forms/EditAudioMD.php:215
+#: application/forms/EditAudioMD.php:225
 msgid "ISRC Number:"
 msgstr "ISRC номер:"
 
-#: application/forms/EditAudioMD.php:225
+#: application/forms/EditAudioMD.php:235
 msgid "Website:"
 msgstr "Сайт:"
 
-#: application/forms/EditAudioMD.php:235 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:245 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "Язык:"
 
-#: application/forms/EditAudioMD.php:288
+#: application/forms/EditAudioMD.php:298
 msgid "Publish..."
 msgstr "Опубликовать..."
 
@@ -3321,42 +3325,50 @@ msgstr "Генерация Смарт-блока и Плейлиста посл�
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr "Если эта опция включена, новый Смарт-блок и Плейлист, соответствующие новой дорожке Подкаста, будут созданы сразу же после создания нового Подкаста. Обратите внимание, что функция «Перезапись мета-тегов эпизодов Подкастов» также должна быть включена, чтобы Смарт-блоки могли гарантированно находить эпизоды."
 
-#: application/forms/GeneralPreferences.php:156
+#: application/forms/GeneralPreferences.php:161
+msgid "Trim overbooked shows after autoloading?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:168
 msgid "Public LibreTime API"
 msgstr "Разрешить публичный API для LibreTime?"
 
-#: application/forms/GeneralPreferences.php:157
+#: application/forms/GeneralPreferences.php:169
 msgid "Required for embeddable schedule widget."
 msgstr "Требуется для встраиваемого виджета-расписания."
 
-#: application/forms/GeneralPreferences.php:163
+#: application/forms/GeneralPreferences.php:175
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
 msgstr "Активация данной функции позволит LibreTime предоставлять данные на внешние виджеты, которые могут быть встроены на сайт."
 
-#: application/forms/GeneralPreferences.php:175
+#: application/forms/GeneralPreferences.php:187
 msgid "Default Language"
 msgstr "Язык по умолчанию:"
 
-#: application/forms/GeneralPreferences.php:182
+#: application/forms/GeneralPreferences.php:194
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr "Часовой пояс станции:"
 
-#: application/forms/GeneralPreferences.php:190
+#: application/forms/GeneralPreferences.php:202
 msgid "Week Starts On"
 msgstr "Неделя начинается с:"
 
-#: application/forms/GeneralPreferences.php:206
+#: application/forms/GeneralPreferences.php:218
 msgid "Display login button on your Radio Page?"
 msgstr "Отображать кнопку «Вход» на Странице Радио?"
 
-#: application/forms/GeneralPreferences.php:211
+#: application/forms/GeneralPreferences.php:231
+msgid "Disable the public radio page and redirect to the login page?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:236
 msgid "Feature Previews"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:217
+#: application/forms/GeneralPreferences.php:242
 msgid "Enable this to opt-in to test new features."
 msgstr ""
 

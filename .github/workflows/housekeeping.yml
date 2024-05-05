@@ -40,7 +40,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: .lycheecache
           key: housekeeping-find-broken-links-${{ github.sha }}
@@ -48,7 +48,7 @@ jobs:
 
       - name: Check Links
         id: lychee
-        uses: lycheeverse/lychee-action@v1.9.1
+        uses: lycheeverse/lychee-action@v1.10.0
         with:
           args: >-
             '**/*.md'
