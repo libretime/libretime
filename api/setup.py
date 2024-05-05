@@ -41,7 +41,7 @@ setup(
         ],
         "dev": [
             "django-coverage-plugin>=3.0.0,<4",
-            "django-stubs>=1.14.0,<5",
+            "django-stubs>=1.14.0,<6",
             "djangorestframework-stubs>=1.8.0,<4",
             "model_bakery>=1.10.1,<2",
             "psycopg[binary]>=3.1.8,<4",
