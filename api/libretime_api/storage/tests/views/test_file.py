@@ -1,35 +1,63 @@
+import os
+from unittest.mock import patch
+
 from django.conf import settings
 from model_bakery import baker
 from rest_framework.test import APITestCase
 
 from ...._fixtures import AUDIO_FILENAME
+from ...models import File
 
 
 class TestFileViewSet(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.path = "/api/v2/files/{id}/download"
         cls.token = settings.CONFIG.general.api_key
 
-    def test_invalid(self):
-        path = self.path.format(id="a")
+    def test_download_invalid(self):
         self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
-        response = self.client.get(path)
-        self.assertEqual(response.status_code, 400)
-
-    def test_does_not_exist(self):
-        path = self.path.format(id="1")
-        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
-        response = self.client.get(path)
+        file_id = "1"
+        response = self.client.get(f"/api/v2/files/{file_id}/download")
         self.assertEqual(response.status_code, 404)
 
-    def test_exists(self):
-        file = baker.make(
+    def test_download(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
+        file: File = baker.make(
             "storage.File",
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
         )
-        path = self.path.format(id=str(file.pk))
-        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
-        response = self.client.get(path)
+        response = self.client.get(f"/api/v2/files/{file.id}/download")
         self.assertEqual(response.status_code, 200)
+
+    def test_destroy(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
+        file: File = baker.make(
+            "storage.File",
+            mime="audio/mp3",
+            filepath=AUDIO_FILENAME,
+        )
+
+        with patch("libretime_api.storage.views.file.remove") as remove_mock:
+            response = self.client.delete(f"/api/v2/files/{file.id}")
+
+        self.assertEqual(response.status_code, 204)
+        remove_mock.assert_called_with(
+            os.path.join(settings.CONFIG.storage.path, file.filepath)
+        )
+
+    def test_destroy_no_file(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
+        file = baker.make(
+            "storage.File",
+            mime="audio/mp3",
+            filepath="invalid.mp3",
+        )
+        response = self.client.delete(f"/api/v2/files/{file.id}")
+        self.assertEqual(response.status_code, 204)
+
+    def test_destroy_invalid(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
+        file_id = "1"
+        response = self.client.delete(f"/api/v2/files/{file_id}")
+        self.assertEqual(response.status_code, 404)
