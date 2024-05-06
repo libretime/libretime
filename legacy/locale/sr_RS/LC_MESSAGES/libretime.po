@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-04-29 01:54+0000\n"
+"POT-Creation-Date: 2024-05-06 01:56+0000\n"
 "PO-Revision-Date: 2015-09-05 08:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Serbian (Serbia)\n"
@@ -2036,14 +2036,14 @@ msgstr "Премештање %s Ставке"
 
 #: application/controllers/LocaleController.php:302
 #: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:288 application/forms/EditHistory.php:131
+#: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "Сачувај"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:270 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "Одустани"
 
@@ -3203,31 +3203,27 @@ msgid "Mood:"
 msgstr "Расположење:"
 
 #: application/forms/EditAudioMD.php:196
-msgid "Replay Gain:"
-msgstr ""
-
-#: application/forms/EditAudioMD.php:204
 msgid "BPM:"
 msgstr "BPM:"
 
-#: application/forms/EditAudioMD.php:215
+#: application/forms/EditAudioMD.php:207
 msgid "Copyright:"
 msgstr "Ауторско право:"
 
-#: application/forms/EditAudioMD.php:225
+#: application/forms/EditAudioMD.php:217
 msgid "ISRC Number:"
 msgstr "ISRC Број:"
 
-#: application/forms/EditAudioMD.php:235
+#: application/forms/EditAudioMD.php:227
 msgid "Website:"
 msgstr "Веб страница:"
 
-#: application/forms/EditAudioMD.php:245 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:237 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "Језик:"
 
-#: application/forms/EditAudioMD.php:298
+#: application/forms/EditAudioMD.php:290
 msgid "Publish..."
 msgstr ""
 
