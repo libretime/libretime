@@ -94,6 +94,8 @@ services:
     volumes:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
       - libretime_storage:/srv/libretime
+    healthcheck:
+      test: python3 -c "import requests; requests.get('http://localhost:9001/api/v2/version').raise_for_status()"
 
   legacy:
     image: ghcr.io/libretime/libretime-legacy:${LIBRETIME_VERSION:-latest}
