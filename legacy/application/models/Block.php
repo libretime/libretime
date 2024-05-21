@@ -1368,7 +1368,7 @@ SQL;
         $insertList = [];
         $totalTime = 0;
         if ($isRandomSort && !$overflow && $blockItems === null) {
-            $minTrackLength = min(array_map(fn(Track $item) => $item->length, $tracks));
+            $minTrackLength = min(array_map(fn (Track $item) => $item->length, $tracks));
             do {
                 $solution = SSPSolution::solve($tracks, 0.2, $blockTime);
                 $insertList = array_merge($insertList, $solution->tracks);
@@ -1376,7 +1376,7 @@ SQL;
             } while ($repeat && ($blockTime - $totalTime) > $minTrackLength);
             shuffle($insertList);
         } else {
-            $isFull = fn() => $blockItems !== null && count($insertList) >= $blockItems || $totalTime > $blockTime;
+            $isFull = fn () => $blockItems !== null && count($insertList) >= $blockItems || $totalTime > $blockTime;
             $addTrack = function (Track $track) use ($overflow, $blockTime, &$insertList, &$totalTime) {
                 if ($overflow) {
                     $insertList[] = $track;
@@ -1394,7 +1394,9 @@ SQL;
             foreach ($tracks as $track) {
                 $addTrack($track);
 
-                if ($isFull()) break;
+                if ($isFull()) {
+                    break;
+                }
             }
 
             $sizeOfInsert = count($insertList);
@@ -1408,7 +1410,7 @@ SQL;
             }
         }
 
-        return array_map(fn(Track $track) => ['id' => $track->id, 'length' => $track->length], $insertList);
+        return array_map(fn (Track $track) => ['id' => $track->id, 'length' => $track->length], $insertList);
     }
 
     /**
@@ -1851,14 +1853,10 @@ SQL;
     // smart block functions end
 }
 
-class Track {
+class Track
+{
     public int $id;
 
-    /**
-     * Length in seconds
-     *
-     * @var float
-     */
     public float $length;
 
     public function __construct($id, $length)
@@ -1869,19 +1867,17 @@ class Track {
 }
 
 /**
- * https://en.wikipedia.org/wiki/Subset_sum_problem
- *
  * Using Fully-polynomial time approximation scheme solution for the Subset Sum Problem
+ *
+ * https://en.wikipedia.org/wiki/Subset_sum_problem#Fully-polynomial_time_approximation_scheme.
  */
-class SSPSolution {
+class SSPSolution
+{
     /**
      * @var Track[]
      */
     public array $tracks;
 
-    /**
-     * @var float
-     */
     public float $sum = 0.0;
 
     public function __construct($tracks = [], $sum = null)
@@ -1900,23 +1896,20 @@ class SSPSolution {
     {
         $new = $this->tracks;
         $new[] = $track;
+
         return new SSPSolution($new, $this->sum + $track->length);
     }
 
     /**
      * @param SSPSolution[] $solutions
-     * @return void
      */
-    public static function sort(array $solutions)
+    public static function sort(array &$solutions)
     {
-        usort($solutions, fn(SSPSolution $a, SSPSolution $b) => $a->sum <=> $b->sum);
+        usort($solutions, fn (SSPSolution $a, SSPSolution $b) => $a->sum <=> $b->sum);
     }
 
     /**
      * @param Track[] $tracks
-     * @param float   $epsilon
-     * @param float   $maxLength
-     * @return SSPSolution
      */
     public static function solve(array $tracks, float $epsilon, float $maxLength): SSPSolution
     {
@@ -1925,7 +1918,7 @@ class SSPSolution {
         $L = [new SSPSolution()];
 
         foreach ($tracks as $xi) {
-            $U = array_merge($L, array_map(fn(SSPSolution $s) => $s->add($xi), $L));
+            $U = array_merge($L, array_map(fn (SSPSolution $s) => $s->add($xi), $L));
 
             SSPSolution::sort($U);
 
@@ -1943,6 +1936,7 @@ class SSPSolution {
         }
 
         SSPSolution::sort($L);
+
         return end($L);
     }
 }
