@@ -1367,7 +1367,6 @@ SQL;
          */
         $insertList = [];
         $totalTime = 0;
-
         if ($isRandomSort && !$overflow && $blockItems === null) {
             $minTrackLength = min(array_map(fn(Track $item) => $item->length, $tracks));
             do {
