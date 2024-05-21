@@ -1620,9 +1620,7 @@ SQL;
 
         return preg_replace_callback(
             '/date{(.*?)}/',
-            function ($matches) {
-                return date($matches[1]);
-            },
+            fn ($matches) => date($matches[1]);,
             $value
         );
     }
