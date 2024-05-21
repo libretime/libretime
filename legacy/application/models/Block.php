@@ -1867,7 +1867,7 @@ class Track
 }
 
 /**
- * Using Fully-polynomial time approximation scheme solution for the Subset Sum Problem
+ * Using Fully-polynomial time approximation scheme solution for the Subset Sum Problem.
  *
  * https://en.wikipedia.org/wiki/Subset_sum_problem#Fully-polynomial_time_approximation_scheme.
  */
