@@ -1932,15 +1932,15 @@ class SSPSolution
     public static function solve(array $tracks, float $target, int $trials = 50): SSPSolution
     {
         $best = new SSPSolution();
-        for ($trial = 0; $trial < $trials; $trial++) {
+        for ($trial = 0; $trial < $trials; ++$trial) {
             shuffle($tracks);
             $initial = array_reduce($tracks, function (SSPSolution $solution, Track $track) use ($target) {
                 $new = $solution->add($track);
                 if ($new->sum <= $target) {
                     return $new;
-                } else {
-                    return $solution;
                 }
+
+                return $solution;
             }, new SSPSolution());
 
             if (count($initial->tracks) == count($tracks)) {
@@ -1954,7 +1954,6 @@ class SSPSolution
                 if (self::isCloseEnough($delta)) {
                     return $solution;
                 }
-
 
                 $replacement = self::maxByOrNull(
                     array_filter(
