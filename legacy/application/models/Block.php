@@ -1370,7 +1370,7 @@ SQL;
         if ($isRandomSort && !$overflow && $blockItems === null) {
             $minTrackLength = min(array_map(fn (Track $item) => $item->length, $tracks));
             do {
-                $solution = SSPSolution::solve($tracks, 0.2, $blockTime);
+                $solution = SSPSolution::solve($tracks, $blockTime - $totalTime);
                 $insertList = array_merge($insertList, $solution->tracks);
                 $totalTime += $solution->sum;
             } while ($repeat && ($blockTime - $totalTime) > $minTrackLength);
@@ -1867,9 +1867,9 @@ class Track
 }
 
 /**
- * Using Fully-polynomial time approximation scheme solution for the Subset Sum Problem.
+ * Using a randomized greedy with local improvement approximation solution for the Subset Sum Problem.
  *
- * https://en.wikipedia.org/wiki/Subset_sum_problem#Fully-polynomial_time_approximation_scheme.
+ * https://web.stevens.edu/algebraic/Files/SubsetSum/przydatek99fast.pdf
  */
 class SSPSolution
 {
@@ -1900,44 +1900,86 @@ class SSPSolution
         return new SSPSolution($new, $this->sum + $track->length);
     }
 
-    /**
-     * @param SSPSolution[] $solutions
-     */
-    public static function sort(array &$solutions)
+    public function replace(Track $old, Track $new): SSPSolution
     {
-        usort($solutions, fn (SSPSolution $a, SSPSolution $b) => $a->sum <=> $b->sum);
+        return new SSPSolution(array_map(fn (Track $it) => $it === $old ? $new : $it, $this->tracks));
+    }
+
+    public static function isCloseEnough(float $delta): bool
+    {
+        return $delta < 0.25;
+    }
+
+    public static function maxByOrNull(array $array, callable $callback)
+    {
+        $max = null;
+        $v = null;
+        foreach ($array as $item) {
+            $value = $callback($item);
+
+            if ($max === null || $v < $value) {
+                $max = $item;
+                $v = $value;
+            }
+        }
+
+        return $max;
     }
 
     /**
      * @param Track[] $tracks
      */
-    public static function solve(array $tracks, float $epsilon, float $maxLength): SSPSolution
+    public static function solve(array $tracks, float $target, int $trials = 50): SSPSolution
     {
-        $T = $maxLength;
-        $fudgeFactor = $epsilon * $T / count($tracks);
-        $L = [new SSPSolution()];
-
-        foreach ($tracks as $xi) {
-            $U = array_merge($L, array_map(fn (SSPSolution $s) => $s->add($xi), $L));
-
-            SSPSolution::sort($U);
-
-            $L = [];
-
-            $y = $U[0];
-            $L[] = $y;
-
-            foreach ($U as $z) {
-                if (($y->sum + $fudgeFactor) < $z->sum && $z->sum <= $T) {
-                    $y = $z;
-                    $L[] = $z;
+        $best = new SSPSolution();
+        for ($trial = 0; $trial < $trials; $trial++) {
+            shuffle($tracks);
+            $initial = array_reduce($tracks, function (SSPSolution $solution, Track $track) use ($target) {
+                $new = $solution->add($track);
+                if ($new->sum <= $target) {
+                    return $new;
+                } else {
+                    return $solution;
                 }
+            }, new SSPSolution());
+
+            if (count($initial->tracks) == count($tracks)) {
+                return $initial;
+            }
+
+            $acceptedItems = $initial->tracks;
+            shuffle($acceptedItems);
+            $localImprovement = array_reduce($acceptedItems, function (SSPSolution $solution, Track $track) use ($target, $tracks) {
+                $delta = $target - $solution->sum;
+                if (self::isCloseEnough($delta)) {
+                    return $solution;
+                }
+
+
+                $replacement = self::maxByOrNull(
+                    array_filter(
+                        array_diff($tracks, $solution->tracks),
+                        fn (Track $it) => $it->length > $track->length && $it->length - $track->length <= $delta,
+                    ),
+                    fn (Track $it) => $it->length,
+                );
+
+                if ($replacement === null) {
+                    return $solution;
+                }
+
+                return $solution->replace($track, $replacement);
+            }, $initial);
+
+            if ($localImprovement->sum > $best->sum) {
+                $best = $localImprovement;
+            }
+            if ($best->sum === 0.0) {
+                return $best;
             }
         }
 
-        SSPSolution::sort($L);
-
-        return end($L);
+        return $best;
     }
 }
 
