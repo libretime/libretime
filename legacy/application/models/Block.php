@@ -1864,6 +1864,11 @@ class Track
         $this->id = $id;
         $this->length = $length;
     }
+
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
 }
 
 /**
