@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-05-06 01:56+0000\n"
+"POT-Creation-Date: 2024-06-10 02:02+0000\n"
 "PO-Revision-Date: 2022-06-05 10:17+0000\n"
 "Last-Translator: МАН69К <weblate@mah69k.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/libretime/legacy/ru/>\n"
@@ -3952,8 +3952,8 @@ msgstr "Расписание, которое вы просматриваете -
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "Расписание, которое вы просматриваете - устарело! (Несоответствие экземпляров)"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:491
-#: application/models/Scheduler.php:529 application/models/Scheduler.php:568
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
+#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
 msgid "The schedule you're viewing is out of date!"
 msgstr "Расписание, которое вы просматриваете - устарело!"
 
@@ -3984,7 +3984,7 @@ msgstr "Контент в связанных Программах не може�
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr "Нельзя запланировать Плейлист, которой содержит отсутствующие файлы."
 
-#: application/models/Scheduler.php:228 application/models/Scheduler.php:320
+#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
 msgid "A selected File does not exist!"
 msgstr "Выбранный файл не существует!"
 

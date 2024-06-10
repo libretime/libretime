@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-05-06 01:56+0000\n"
+"POT-Creation-Date: 2024-06-10 02:02+0000\n"
 "PO-Revision-Date: 2023-03-06 23:45+0000\n"
 "Last-Translator: \"Jonas L.\" <ljonas@riseup.net>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/fr/>\n"
@@ -3950,8 +3950,8 @@ msgstr "Le calendrier que vous consultez n'est pas à jour ! (décalage calend
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "La programmation que vous consultez n'est pas à jour ! (décalage d'instance)"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:491
-#: application/models/Scheduler.php:529 application/models/Scheduler.php:568
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
+#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
 msgid "The schedule you're viewing is out of date!"
 msgstr "Le calendrier que vous consultez n'est pas à jour !"
 
@@ -3982,7 +3982,7 @@ msgstr "Le contenu des émissions liées ne peut pas être changé en cours de d
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr "Vous ne pouvez pas programmer une liste de lecture qui contient des fichiers manquants."
 
-#: application/models/Scheduler.php:228 application/models/Scheduler.php:320
+#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
 msgid "A selected File does not exist!"
 msgstr "Un fichier sélectionne n'existe pas !"
 

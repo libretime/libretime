@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-05-06 01:56+0000\n"
+"POT-Creation-Date: 2024-06-10 02:02+0000\n"
 "PO-Revision-Date: 2024-03-17 07:32+0000\n"
 "Last-Translator: Mikachu <micah.sh@proton.me>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/libretime/legacy/nl/>\n"
@@ -3951,8 +3951,8 @@ msgstr "Het schema dat u aan het bekijken bent is verouderd! (geplande wanverhou
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "Het schema dat u aan het bekijken bent is verouderd! (exemplaar wanverhouding)"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:491
-#: application/models/Scheduler.php:529 application/models/Scheduler.php:568
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
+#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
 msgid "The schedule you're viewing is out of date!"
 msgstr "Het schema dat u aan het bekijken bent is verouderd!"
 
@@ -3983,7 +3983,7 @@ msgstr "De inhoud van gelinkte shows kan niet worden gewijzigd tijdens de uitzen
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr "Niet gepland een afspeellijst die ontbrekende bestanden bevat."
 
-#: application/models/Scheduler.php:228 application/models/Scheduler.php:320
+#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
 msgid "A selected File does not exist!"
 msgstr "Een geselecteerd bestand bestaat niet!"
 

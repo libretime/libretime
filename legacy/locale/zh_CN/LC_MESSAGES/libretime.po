@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-05-06 01:56+0000\n"
+"POT-Creation-Date: 2024-06-10 02:02+0000\n"
 "PO-Revision-Date: 2015-09-05 08:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Chinese (China)\n"
@@ -3925,8 +3925,8 @@ msgstr "当前节目内容表（内容部分）需要刷新"
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "当前节目内容表（节目已更改）需要刷新"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:491
-#: application/models/Scheduler.php:529 application/models/Scheduler.php:568
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
+#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
 msgid "The schedule you're viewing is out of date!"
 msgstr "当前节目内容需要刷新！"
 
@@ -3957,7 +3957,7 @@ msgstr ""
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr ""
 
-#: application/models/Scheduler.php:228 application/models/Scheduler.php:320
+#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
 msgid "A selected File does not exist!"
 msgstr "某个选中的文件不存在。"
 

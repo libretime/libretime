@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-05-06 01:56+0000\n"
+"POT-Creation-Date: 2024-06-10 02:02+0000\n"
 "PO-Revision-Date: 2021-12-27 20:52+0000\n"
 "Last-Translator: f3rr31 <5920873@disroot.org>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/libretime/legacy/hu/>\n"
@@ -3963,8 +3963,8 @@ msgstr "A megtekintett ütemterv elavult! (ütem eltérés)"
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "A megtekintett ütemterv elavult! (példány eltérés)"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:491
-#: application/models/Scheduler.php:529 application/models/Scheduler.php:568
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
+#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
 msgid "The schedule you're viewing is out of date!"
 msgstr "A megtekintett ütemterv időpontja elavult!"
 
@@ -3995,7 +3995,7 @@ msgstr "A hivatkozott műsorok tartalma nem módosítható adás közben!"
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr "Nem lehet ütemezni olyan lejátszási listát amely hiányzó fájlokat tartalmaz."
 
-#: application/models/Scheduler.php:228 application/models/Scheduler.php:320
+#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
 msgid "A selected File does not exist!"
 msgstr "Egy kiválasztott fájl nem létezik!"
 
