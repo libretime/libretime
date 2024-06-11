@@ -1,30 +1,30 @@
 <?php
 
-
 class ModifierType
 {
-    const STRING = 's';
-    const NUMBER = 'n';
-    const DATE = 'd';
-    const TRACK_TYPE = 'tt';
+    public const STRING = 's';
+    public const NUMBER = 'n';
+    public const DATE = 'd';
+    public const TRACK_TYPE = 'tt';
 }
 
 class CriteriaModifier
 {
-    const CONTAINS = 'contains';
-    const DOES_NOT_CONTAIN = 'does not contain';
-    const IS = 'is';
-    const IS_NOT = 'is not';
-    const STARTS_WITH = 'starts with';
-    const ENDS_WITH = 'ends with';
-    const BEFORE = 'before';
-    const AFTER = 'after';
-    const BETWEEN = 'between';
-    const IS_GREATER_THAN = 'is greater than';
-    const IS_LESS_THAN = 'is less than';
-    const IS_IN_THE_RANGE = 'is in the range';
+    public const CONTAINS = 'contains';
+    public const DOES_NOT_CONTAIN = 'does not contain';
+    public const IS = 'is';
+    public const IS_NOT = 'is not';
+    public const STARTS_WITH = 'starts with';
+    public const ENDS_WITH = 'ends with';
+    public const BEFORE = 'before';
+    public const AFTER = 'after';
+    public const BETWEEN = 'between';
+    public const IS_GREATER_THAN = 'is greater than';
+    public const IS_LESS_THAN = 'is less than';
+    public const IS_IN_THE_RANGE = 'is in the range';
 
-    public static function mapToDisplay(array $modifiers = self::ALL): array {
+    public static function mapToDisplay(array $modifiers = self::ALL): array
+    {
         $arr = ['0' => _('Select modifier')];
 
         foreach ($modifiers as $m) {
@@ -34,7 +34,7 @@ class CriteriaModifier
         return $arr;
     }
 
-    const ALL = [
+    public const ALL = [
         CriteriaModifier::CONTAINS,
         CriteriaModifier::DOES_NOT_CONTAIN,
         CriteriaModifier::IS,
@@ -49,7 +49,7 @@ class CriteriaModifier
         CriteriaModifier::IS_IN_THE_RANGE,
     ];
 
-    const FOR_STRING = [
+    public const FOR_STRING = [
         CriteriaModifier::CONTAINS,
         CriteriaModifier::DOES_NOT_CONTAIN,
         CriteriaModifier::IS,
@@ -58,7 +58,7 @@ class CriteriaModifier
         CriteriaModifier::ENDS_WITH,
     ];
 
-    const FOR_NUMBER = [
+    public const FOR_NUMBER = [
         CriteriaModifier::IS,
         CriteriaModifier::IS_NOT,
         CriteriaModifier::IS_GREATER_THAN,
@@ -66,7 +66,7 @@ class CriteriaModifier
         CriteriaModifier::IS_IN_THE_RANGE,
     ];
 
-    const FOR_DATE = [
+    public const FOR_DATE = [
         CriteriaModifier::BEFORE,
         CriteriaModifier::AFTER,
         CriteriaModifier::BETWEEN,
@@ -77,7 +77,7 @@ class CriteriaModifier
         CriteriaModifier::IS_IN_THE_RANGE,
     ];
 
-    const FOR_TRACK_TYPE = [
+    public const FOR_TRACK_TYPE = [
         CriteriaModifier::IS,
         CriteriaModifier::IS_NOT,
     ];
@@ -90,7 +90,7 @@ class BlockCriteria
     public string $peer;
     public string $display;
 
-    function __construct(string $key, string $type, string $peer, string $display)
+    public function __construct(string $key, string $type, string $peer, string $display)
     {
         $this->key = $key;
         $this->type = $type;
@@ -101,32 +101,41 @@ class BlockCriteria
     public function getModifiers(): array
     {
         $modifiers = [];
+
         switch ($this->type) {
             case ModifierType::STRING:
                 $modifiers = CriteriaModifier::FOR_STRING;
+
                 break;
+
             case ModifierType::DATE:
                 $modifiers = CriteriaModifier::FOR_DATE;
+
                 break;
+
             case ModifierType::NUMBER:
                 $modifiers = CriteriaModifier::FOR_NUMBER;
+
                 break;
+
             case ModifierType::TRACK_TYPE:
                 $modifiers = CriteriaModifier::FOR_TRACK_TYPE;
+
                 break;
         }
 
         return $modifiers;
     }
 
-    public function displayModifiers(): array {
+    public function displayModifiers(): array
+    {
         return CriteriaModifier::mapToDisplay(self::getModifiers());
     }
 
     private static array $allCriteria;
 
     /**
-     * After adding a new criteria don't forget to also add it into smart_blockbuilder.js
+     * After adding a new criteria don't forget to also add it into smart_blockbuilder.js.
      *
      * @return BlockCriteria[]
      */
@@ -170,7 +179,8 @@ class BlockCriteria
         return BlockCriteria::$allCriteria;
     }
 
-    public static function displayCriteria(): array {
+    public static function displayCriteria(): array
+    {
         $arr = [0 => _('Select criteria')];
 
         foreach (self::allCriteria() as $c) {
@@ -183,15 +193,18 @@ class BlockCriteria
     /**
      * @return BlockCriteria[]
      */
-    public static function criteriaMap(): array {
+    public static function criteriaMap(): array
+    {
         $arr = [];
         foreach (self::allCriteria() as $i) {
             $arr[$i->key] = $i;
         }
+
         return $arr;
     }
 
-    public static function get(string $key): BlockCriteria {
+    public static function get(string $key): BlockCriteria
+    {
         return self::criteriaMap()[$key];
     }
 }
