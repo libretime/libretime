@@ -15,7 +15,6 @@ from .events import (
     WebStreamEvent,
     datetime_to_event_key,
     event_isoparse,
-    parse_any_event,
 )
 
 
@@ -213,12 +212,3 @@ def generate_webstream_events(
         show_name=show["name"],
     )
     insert_event(events, schedule_end_event_key, stream_output_end_event)
-
-
-def receive_schedule(schedule: Dict[str, dict]) -> Events:
-    events: Dict[str, AnyEvent] = {}
-
-    for event_key, event in schedule.items():
-        events[event_key] = parse_any_event(event)
-
-    return events

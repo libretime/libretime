@@ -63,7 +63,7 @@ class ZendActionHttpException extends Exception
         $statusCode,
         $message,
         $code = 0,
-        Exception $previous = null
+        ?Exception $previous = null
     ) {
         Logging::error('Error in action ' . $action->getRequest()->getActionName()
             . " with status code {$statusCode}: {$message}");
