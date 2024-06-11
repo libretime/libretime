@@ -394,16 +394,20 @@ SQL;
             throw new DeleteScheduledFileException();
         }
 
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        $isAdminOrPM = $user->isUserType([UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER]);
-        if (!$isAdminOrPM && $this->getFileOwnerId() != $user->getId()) {
-            throw new FileNoPermissionException();
+        // if we get here from the REST API, there's no valid user. APIKEY is validated already.
+        if ($userInfo = Zend_Auth::getInstance()->getStorage()->read()) {
+            // This call will throw "Trying to get property 'id' of non-object"
+            $user = new Application_Model_User($userInfo->id);
+            $isAdminOrPM = $user->isUserType([UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER]);
+            if (!$isAdminOrPM && $this->getFileOwnerId() != $user->getId()) {
+                throw new FileNoPermissionException();
+            }
+            $file_id = $this->_file->getDbId();
+            Logging::info($file_id);
+            Logging::info('User ' . $user->getLogin() . ' is deleting file: ' . $this->_file->getDbTrackTitle() . ' - file id: ' . $file_id);
+        } else {
+            Logging::info('API Auth is deleting file: ' . $this->_file->getDbTrackTitle() . ' - file id: ' . $this->_file->getDbId());
         }
-        $file_id = $this->_file->getDbId();
-        Logging::info($file_id);
-        Logging::info('User ' . $user->getLogin() . ' is deleting file: ' . $this->_file->getDbTrackTitle() . ' - file id: ' . $file_id);
-
         $filesize = $this->_file->getFileSize();
         if ($filesize < 0) {
             throw new Exception('Cannot delete file with filesize ' . $filesize);

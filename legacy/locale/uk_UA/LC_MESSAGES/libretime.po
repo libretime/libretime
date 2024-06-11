@@ -7,17 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-02-05 01:52+0000\n"
+"POT-Creation-Date: 2024-06-10 02:02+0000\n"
 "PO-Revision-Date: 2024-02-11 23:11+0000\n"
 "Last-Translator: Ihor Hordiichuk <igor_ck@outlook.com>\n"
-"Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/"
-"legacy/uk/>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/legacy/uk/>\n"
 "Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Weblate 5.4-dev\n"
 
 #: application/common/DateHelper.php:216
@@ -2044,15 +2042,15 @@ msgid "Moving %s Items"
 msgstr "Переміщення %s елементів"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
+#: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
+#: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "Зберегти"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:268 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:270 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "Відміна"
 
@@ -2584,7 +2582,7 @@ msgid "No matching track types found"
 msgstr "Відповідних типів треків не знайдено"
 
 #: application/controllers/LocaleController.php:461
-#: application/forms/AddTracktype.php:50
+#: application/forms/AddTracktype.php:61
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:172
@@ -2593,7 +2591,7 @@ msgid "Enabled"
 msgstr "Увімкнено"
 
 #: application/controllers/LocaleController.php:462
-#: application/forms/AddTracktype.php:49
+#: application/forms/AddTracktype.php:60
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:171
@@ -2768,19 +2766,19 @@ msgstr "Невідомий плейлист"
 msgid "Preferences updated."
 msgstr "Налаштування оновлено."
 
-#: application/controllers/PreferenceController.php:208
+#: application/controllers/PreferenceController.php:210
 msgid "Stream Setting Updated."
 msgstr "Налаштування потоку оновлено."
 
-#: application/controllers/PreferenceController.php:253
+#: application/controllers/PreferenceController.php:255
 msgid "path should be specified"
 msgstr "слід вказати шлях"
 
-#: application/controllers/PreferenceController.php:296
+#: application/controllers/PreferenceController.php:298
 msgid "Problem with Liquidsoap..."
 msgstr "Проблема з Liquidsoap..."
 
-#: application/controllers/PreferenceController.php:339
+#: application/controllers/PreferenceController.php:341
 msgid "Request method not accepted"
 msgstr "Метод запиту не прийнято"
 
@@ -2801,11 +2799,11 @@ msgstr "Видалити курсор"
 msgid "show does not exist"
 msgstr "програми не існує"
 
-#: application/controllers/TracktypeController.php:62
+#: application/controllers/TracktypeController.php:60
 msgid "Track Type added successfully!"
 msgstr "Тип треку успішно додано!"
 
-#: application/controllers/TracktypeController.php:64
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type updated successfully!"
 msgstr "Тип треку успішно оновлено!"
 
@@ -3013,12 +3011,12 @@ msgstr "Програма без назви"
 msgid "URL:"
 msgstr "URL:"
 
-#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:131
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
 msgid "Genre:"
 msgstr "Жанр:"
 
-#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
-#: application/forms/EditAudioMD.php:113
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:46
+#: application/forms/EditAudioMD.php:115
 msgid "Description:"
 msgstr "Опис:"
 
@@ -3100,17 +3098,17 @@ msgstr "Назва типу:"
 msgid "Code:"
 msgstr "Код:"
 
-#: application/forms/AddTracktype.php:45
+#: application/forms/AddTracktype.php:39
+msgid "Code is not unique."
+msgstr "Код не унікальний."
+
+#: application/forms/AddTracktype.php:56
 msgid "Visibility:"
 msgstr "Видимість:"
 
-#: application/forms/AddTracktype.php:57
+#: application/forms/AddTracktype.php:68
 msgid "Analyze cue points:"
 msgstr "Проаналізуйте контрольні точки:"
-
-#: application/forms/AddTracktype.php:74
-msgid "Code is not unique."
-msgstr "Код не унікальний."
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:36
 #: application/forms/LiveStreamingPreferences.php:40
@@ -3169,72 +3167,72 @@ msgstr "Видалити всі треки з бібліотеки"
 msgid "Date Start:"
 msgstr "Дата початку:"
 
-#: application/forms/EditAudioMD.php:50 application/forms/Player.php:15
+#: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
 msgid "Title:"
 msgstr "Назва:"
 
-#: application/forms/EditAudioMD.php:60
+#: application/forms/EditAudioMD.php:62
 msgid "Creator:"
 msgstr "Автор:"
 
-#: application/forms/EditAudioMD.php:70
+#: application/forms/EditAudioMD.php:72
 msgid "Album:"
 msgstr "Альбом:"
 
-#: application/forms/EditAudioMD.php:87
+#: application/forms/EditAudioMD.php:89
 msgid "Owner:"
 msgstr "Власник:"
 
-#: application/forms/EditAudioMD.php:99
+#: application/forms/EditAudioMD.php:101
 msgid "Select a Type"
 msgstr "Виберіть тип"
 
-#: application/forms/EditAudioMD.php:106
+#: application/forms/EditAudioMD.php:108
 msgid "Track Type:"
 msgstr "Тип треку:"
 
-#: application/forms/EditAudioMD.php:141
+#: application/forms/EditAudioMD.php:143
 msgid "Year:"
 msgstr "Рік:"
 
-#: application/forms/EditAudioMD.php:154
+#: application/forms/EditAudioMD.php:156
 msgid "Label:"
 msgstr "Label:"
 
-#: application/forms/EditAudioMD.php:164
+#: application/forms/EditAudioMD.php:166
 msgid "Composer:"
 msgstr "Композитор:"
 
-#: application/forms/EditAudioMD.php:174
+#: application/forms/EditAudioMD.php:176
 msgid "Conductor:"
 msgstr "Виконавець:"
 
-#: application/forms/EditAudioMD.php:184
+#: application/forms/EditAudioMD.php:186
 msgid "Mood:"
 msgstr "Настрій:"
 
-#: application/forms/EditAudioMD.php:194
+#: application/forms/EditAudioMD.php:196
 msgid "BPM:"
 msgstr "BPM:"
 
-#: application/forms/EditAudioMD.php:205
+#: application/forms/EditAudioMD.php:207
 msgid "Copyright:"
 msgstr "Авторське право:"
 
-#: application/forms/EditAudioMD.php:215
+#: application/forms/EditAudioMD.php:217
 msgid "ISRC Number:"
 msgstr "Номер ISRC:"
 
-#: application/forms/EditAudioMD.php:225
+#: application/forms/EditAudioMD.php:227
 msgid "Website:"
 msgstr "Веб-сайт:"
 
-#: application/forms/EditAudioMD.php:235 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:237 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "Мова:"
 
-#: application/forms/EditAudioMD.php:288
+#: application/forms/EditAudioMD.php:290
 msgid "Publish..."
 msgstr "Опублікувати..."
 
@@ -3948,8 +3946,8 @@ msgstr "Розклад, який ви переглядаєте, застарів
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "Розклад, який ви переглядаєте, застарів! (невідповідність екземплярів)"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:491
-#: application/models/Scheduler.php:529 application/models/Scheduler.php:568
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
+#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
 msgid "The schedule you're viewing is out of date!"
 msgstr "Розклад, який ви переглядаєте, застарів!"
 
@@ -3980,7 +3978,7 @@ msgstr "Вміст пов’язаних програм не можна змін
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr "Неможливо запланувати плейлист, який містить відсутні файли."
 
-#: application/models/Scheduler.php:228 application/models/Scheduler.php:320
+#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
 msgid "A selected File does not exist!"
 msgstr "Вибраний файл не існує!"
 
