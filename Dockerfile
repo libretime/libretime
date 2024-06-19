@@ -141,6 +141,7 @@ FROM python-base as libretime-api
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    curl \
     gcc \
     libc6-dev \
     libpq-dev \
@@ -174,8 +175,7 @@ CMD ["/usr/local/bin/gunicorn", \
 ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 
-HEALTHCHECK CMD ["python3", "-c", \
-    "import requests; requests.get('http://localhost:9001/api/v2/version').raise_for_status()"]
+HEALTHCHECK CMD ["curl", "-f", "http://localhost:9001/api/v2/version"]
 
 #======================================================================================#
 # Worker                                                                               #
