@@ -16,7 +16,7 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-libretime}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-libretime} # Change me !
     healthcheck:
-      test: rabbitmq-diagnostics -q ping
+      test: nc -z 127.0.0.1 5672
 
   playout:
     image: ghcr.io/libretime/libretime-playout:${LIBRETIME_VERSION:-latest}
