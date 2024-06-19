@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 
 
 class Schedule(models.Model):
@@ -114,6 +115,14 @@ class Schedule(models.Model):
         if self.instance.ends_at < self.ends_at:
             return self.instance.ends_at
         return self.ends_at
+
+    @staticmethod
+    def is_file_scheduled_in_the_future(file_id):
+        count = Schedule.objects.filter(
+            file_id=file_id,
+            ends_at__gt=now(),
+        ).count()
+        return count > 0
 
     class Meta:
         managed = False

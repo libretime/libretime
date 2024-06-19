@@ -24,7 +24,7 @@ class Rest_RouteController extends Zend_Controller_Router_Route
      * @param Zend_Translate        $translator Translator to use for this instance
      * @param null|mixed            $locale
      */
-    public function __construct(Zend_Controller_Front $front, $route, $defaults = [], $reqs = [], Zend_Translate $translator = null, $locale = null)
+    public function __construct(Zend_Controller_Front $front, $route, $defaults = [], $reqs = [], ?Zend_Translate $translator = null, $locale = null)
     {
         $this->_front = $front;
         $this->_dispatcher = $front->getDispatcher();

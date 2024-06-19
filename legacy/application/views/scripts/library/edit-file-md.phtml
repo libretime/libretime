@@ -1,39 +1,171 @@
-<?php $get_artwork = FileDataHelper::getArtworkData($this->artwork, 256); ?>
+<?php $get_artwork = FileDataHelper::getArtworkData($this->artwork, 256);
+
+$baseUrl = Config::getBasePath();
+?>
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong edit-md-dialog">
-    <div class="track-edit-header" style="top:15px">
-        <?php if ($this->permissionDenied) { ?> <h3><?php echo _("You do not have permission to edit this track.") ?></h3> <?php } ?>
-        <?php
-        /*
-        if ($this->permissionDenied) {
-          echo(_("Viewing "));
-        } else {
-          echo(_("Editing "));
-        } */
-        ?>
-        <div class="track-edit-right-wrapper">
-            <div class="track-edit-right">
-                <div class="inner_track_editor_title" style="width: 100%;">
-                    <h2 style="line-height: 26px !important;"><span class="title_obj_name"><?php echo ($this->title); ?></span></h2>
-                    <h3 style="line-height: 2px !important;"><span class=""><?php echo ($this->artist_name); ?></span></h3>
-                </div>
-            </div>
-        </div>
-        <div class="track-edit-left">
-            <div class="artwork-upload" data-id="<?php echo ($this->id); ?>">
-                <div class="artwork-edit">
-                    <input type='file' class="artworkUpload artwork-uploaded-<?php echo ($this->id); ?>" id="artworkUpload-<?php echo ($this->id); ?>" data-id="<?php echo ($this->id); ?>" accept=".png, .jpg, .jpeg" />
-                    <label for="artworkUpload-<?php echo ($this->id); ?>"></label>
-                </div>
-                <div id="artwork-preview" class="artwork-preview">
-                    <div class="artwork-preview-<?php echo ($this->id); ?>" id="artworkPreview" style="background-image: url(<?php echo $get_artwork; ?>);">
-                    </div>
-                </div>
-            </div>
-            <div>
-                <a href="#" class="delete-artwork" data-id="<?php echo ($this->id); ?>" style="font-size: 11px;">Remove</a>
+  <div class="track-edit-header" style="top:15px">
+    <?php if ($this->permissionDenied) { ?> <h3><?php echo _("You do not have permission to edit this track.") ?></h3> <?php } ?>
+    <?php
+    /*
+    if ($this->permissionDenied) {
+      echo(_("Viewing "));
+    } else {
+      echo(_("Editing "));
+    } */
+    ?>
+    <div class="track-edit-right-wrapper">
+        <div class="track-edit-right">
+            <div class="inner_track_editor_title" style="width: 100%;">
+                <h2 style="line-height: 26px !important;"><span class="title_obj_name"><?php echo ($this->title); ?></span></h2>
+                <h3 style="line-height: 2px !important;"><span class=""><?php echo ($this->artist_name); ?></span></h3>
             </div>
         </div>
     </div>
-    <div style="height: 160px;"></div>
-    <?php echo $this->form; ?>
+    <div class="track-edit-left">
+        <div class="artwork-upload" data-id="<?php echo ($this->id); ?>">
+            <div class="artwork-edit">
+                <input type='file' class="artworkUpload artwork-uploaded-<?php echo ($this->id); ?>" id="artworkUpload-<?php echo ($this->id); ?>" data-id="<?php echo ($this->id); ?>" accept=".png, .jpg, .jpeg" />
+                <label for="artworkUpload-<?php echo ($this->id); ?>"></label>
+            </div>
+            <div id="artwork-preview" class="artwork-preview">
+                <div class="artwork-preview-<?php echo ($this->id); ?>" id="artworkPreview" style="background-image: url(<?php echo $get_artwork; ?>);">
+                </div>
+            </div>
+        </div>
+        <div>
+            <a href="#" class="delete-artwork" data-id="<?php echo ($this->id); ?>" style="font-size: 11px;">Remove</a>
+        </div>
+    </div>
+  </div>
+  <div style="height: 160px;"></div>
+  <?php echo $this->form; ?>
+  <div class="collapsible-header collapsible-header-<?php echo $this->id;?> closed"><span class="arrow-icon"></span><?php echo _("Cue Point Editor"); ?></div>
+    <div class="visual-waveform-editor visual-waveform-editor-<?php echo $this->id;?>" style="clear:both;padding:18px 24px 0 0;">
+      <div class="controls">
+        <div class="row">
+          <div class="col-sm-7">
+            <div class="btn-toolbar track-toolbar">
+              <div class="btn-group" title="Play Controls">
+                <button class="btn btn-control-player btn-new control-play-btn" id="track-play-<?php echo $this->id; ?>" onClick="wavesurfer['t<?php echo $this->id; ?>'].playPause();" style="background-color:#555555; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                  <i class="icon-white icon-play"></i>
+                </button>
+                <button class="btn btn-control-player btn-new control-playedit-btn" id="track-playedit-<?php echo $this->id; ?>" onClick="" style="background-color:#555555; border-top-right-radius: 5px; border-bottom-right-radius: 5px">
+                  <i class="icon-white icon-step-backward"></i>
+                </button>
+              </div>
+              <div class="btn-group" title="Playhead">
+                <div class="btn track-timer" style="border-radius: 5px">
+                  <input class="track-timer-input" id="tracktimerinput-<?php echo $this->id; ?>" val="0.000" style="font-size:15px; font-weight:500;"/>
+                </div>
+              </div>
+
+              <div class="btn-group" title="Cue Controls">
+                <img src="<?php echo $baseUrl.'css/img/icon_cut_white.png';?>" style="top:6px;margin-right:5px;">
+                <button class="btn btn-control-player btn-new" id="cuein-set-<?php echo $this->id; ?>" style="background-color:#00e640; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                  <i class="icon-white icon-chevron-right"></i>
+                </button>
+                <button class="btn btn-control-player btn-new" id="cueout-set-<?php echo $this->id; ?>" style="background-color:#f22613; border-top-right-radius: 5px; border-bottom-right-radius: 5px">
+                  <i class="icon-white icon-chevron-left"></i>
+                </button>
+              </div>
+
+              <div class="btn-group pull-right zoom-container" title="Zoom">
+                <i class="icon-white icon-zoom-out" style="margin-top: -24px;"></i>
+                <input id="zoom-slider-<?php echo $this->id; ?>" class="input-slider" data-height="26" data-width="120" data-action="zoom-<?php echo $this->id; ?>" type="range"  min="20" max="290" data-sprites="50" data-src="<?php echo $baseUrl.'css/images/slider.png'; ?>" value="0" />
+                <i class="icon-white icon-zoom-in" style="margin-top: -24px;"></i>
+              </div>
+              <br><br>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div id="track-waveform-<?php echo $this->id; ?>"></div>
+          <div id="timeline-<?php echo $this->id; ?>"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+<script>
+  //waveform
+  renderWaveform(<?php echo $this->id; ?>, '#track-waveform-<?php echo $this->id; ?>', baseUrl + 'api/get-media/file/<?php echo $this->id; ?>', '<?php echo $this->cuein; ?>', '<?php echo $this->cueout; ?>');
+
+  $(document).ready(function() {
+
+    $(".collapsible-header-<?php echo $this->id;?>")
+      .off("click")
+      .on("click", function () {
+          $(this).toggleClass("visible");
+          $(".visual-waveform-editor-<?php echo $this->id;?>").toggle();
+          $(".editor_pane_wrapper").animate({
+              scrollTop: $(".collapsible-header-<?php echo $this->id;?>").offset().top * 2
+          }, 500);
+          wavesurfer["t<?php echo $this->id; ?>"].drawer.containerWidth = wavesurfer["t<?php echo $this->id; ?>"].drawer.container.clientWidth;
+          wavesurfer["t<?php echo $this->id; ?>"].zoom(Number($(".zoom-slider-<?php echo $this->id; ?>").value));
+      });
+
+    // Counter field edit
+    $(document).on('change', '#tracktimerinput-<?php echo $this->id; ?>', 'input', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var val = $(this).val();
+        wavesurfer["t<?php echo $this->id; ?>"].setCurrentTime(val);
+    }).on('keypress keydown', '#tracktimerinput-<?php echo $this->id; ?>', 'input', function(event) {
+      if (event.key === 'Enter' || event.keyCode === 13 || event.keyCode === 10) {
+          var val = $(this).val();
+          wavesurfer["t<?php echo $this->id; ?>"].setCurrentTime(val);
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          return false;
+      }
+    })
+
+    $(document).on('change', '.cuein_<?php echo $this->id; ?>', 'input', function(event) {
+        console.log('cuein input');
+        event.preventDefault();
+        event.stopPropagation();
+        var val = $(this).val();
+        var a = val.split(':');
+        var startseconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+        console.log(startseconds);
+        var region = wavesurfer["t<?php echo $this->id; ?>"].regions.list[<?php echo $this->id; ?>];
+        region.update({start: startseconds});
+        $('#track-playedit-<?php echo $this->id; ?>').attr('onClick', 'wavesurfer["t'+ <?php echo $this->id; ?> +'"].play('+ region.start +', '+ region.end +');');
+    });
+
+    $(document).on('change', '.cueout_<?php echo $this->id; ?>', 'input', function(event) {
+      console.log('cueout input');
+        event.preventDefault();
+        event.stopPropagation();
+        var val = $(this).val();
+        var b = val.split(':');
+        var endseconds = (+b[0]) * 60 * 60 + (+b[1]) * 60 + (+b[2]);
+        var region = wavesurfer["t<?php echo $this->id; ?>"].regions.list[<?php echo $this->id; ?>];
+        region.update({end: endseconds});
+        $('#track-playedit-<?php echo $this->id; ?>').attr('onClick', 'wavesurfer["t'+ <?php echo $this->id; ?> +'"].play('+ region.start +', '+ region.end +');');
+    });
+
+    $(document).on('click', '#cuein-set-<?php echo $this->id; ?>', 'button', function(event) {
+      console.log('cuein button');
+        event.preventDefault();
+        event.stopPropagation();
+        var val = wavesurfer["t<?php echo $this->id; ?>"].getCurrentTime();
+        var region = wavesurfer["t<?php echo $this->id; ?>"].regions.list[<?php echo $this->id; ?>];
+        region.update({start: val});
+        document.getElementsByClassName("cuein_<?php echo $this->id; ?>")[0].value = toHHMMSS(region.start);
+        $('#track-playedit-<?php echo $this->id; ?>').attr('onClick', 'wavesurfer["t'+ <?php echo $this->id; ?> +'"].play('+ region.start +', '+ region.end +');');
+    });
+
+    $(document).on('click', '#cueout-set-<?php echo $this->id; ?>', 'button', function(event) {
+      console.log('cueout button')
+        event.preventDefault();
+        event.stopPropagation();
+        var val = wavesurfer["t<?php echo $this->id; ?>"].getCurrentTime();
+        var region = wavesurfer["t<?php echo $this->id; ?>"].regions.list[<?php echo $this->id; ?>];
+        region.update({end: val});
+        document.getElementsByClassName("cueout_<?php echo $this->id; ?>")[0].value = toHHMMSS(region.end);
+        $('#track-playedit-<?php echo $this->id; ?>').attr('onClick', 'wavesurfer["t'+ <?php echo $this->id; ?> +'"].play('+ region.start +', '+ region.end +');');
+    });
+  });
+</script>

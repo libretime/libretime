@@ -13,17 +13,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-02-05 01:52+0000\n"
-"PO-Revision-Date: 2024-02-07 22:01+0000\n"
+"POT-Creation-Date: 2024-06-10 02:02+0000\n"
+"PO-Revision-Date: 2024-04-23 09:07+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
-"Language-Team: Spanish <https://hosted.weblate.org/projects/libretime/legacy/"
-"es/>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/libretime/legacy/es/>\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -2049,15 +2048,15 @@ msgid "Moving %s Items"
 msgstr "Moviendo %s elementos"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
+#: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
+#: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "Guardar"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:268 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:270 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -2589,7 +2588,7 @@ msgid "No matching track types found"
 msgstr "No se ha encontrado ningún tipo de pista"
 
 #: application/controllers/LocaleController.php:461
-#: application/forms/AddTracktype.php:50
+#: application/forms/AddTracktype.php:61
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:172
@@ -2598,7 +2597,7 @@ msgid "Enabled"
 msgstr "Activado"
 
 #: application/controllers/LocaleController.php:462
-#: application/forms/AddTracktype.php:49
+#: application/forms/AddTracktype.php:60
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:171
@@ -2773,19 +2772,19 @@ msgstr "Lista de reproducción desconocida"
 msgid "Preferences updated."
 msgstr "Se actualizaron las preferencias."
 
-#: application/controllers/PreferenceController.php:208
+#: application/controllers/PreferenceController.php:210
 msgid "Stream Setting Updated."
 msgstr "Se actualizaron las configuraciones del stream."
 
-#: application/controllers/PreferenceController.php:253
+#: application/controllers/PreferenceController.php:255
 msgid "path should be specified"
 msgstr "se debe especificar la ruta"
 
-#: application/controllers/PreferenceController.php:296
+#: application/controllers/PreferenceController.php:298
 msgid "Problem with Liquidsoap..."
 msgstr "Hay un problema con Liquidsoap..."
 
-#: application/controllers/PreferenceController.php:339
+#: application/controllers/PreferenceController.php:341
 msgid "Request method not accepted"
 msgstr "Método de solicitud no aceptado"
 
@@ -2806,11 +2805,11 @@ msgstr "Eliminar cursor"
 msgid "show does not exist"
 msgstr "El show no existe"
 
-#: application/controllers/TracktypeController.php:62
+#: application/controllers/TracktypeController.php:60
 msgid "Track Type added successfully!"
 msgstr "¡Tipo de pista añadido con éxito!"
 
-#: application/controllers/TracktypeController.php:64
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type updated successfully!"
 msgstr "¡Tipo de pista actualizado con éxito!"
 
@@ -3018,12 +3017,12 @@ msgstr "Show sin nombre"
 msgid "URL:"
 msgstr "URL:"
 
-#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:131
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
 msgid "Genre:"
 msgstr "Género:"
 
-#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
-#: application/forms/EditAudioMD.php:113
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:46
+#: application/forms/EditAudioMD.php:115
 msgid "Description:"
 msgstr "Descripción:"
 
@@ -3105,17 +3104,17 @@ msgstr "Escribe un nombre:"
 msgid "Code:"
 msgstr "Código:"
 
-#: application/forms/AddTracktype.php:45
+#: application/forms/AddTracktype.php:39
+msgid "Code is not unique."
+msgstr "El código no es único."
+
+#: application/forms/AddTracktype.php:56
 msgid "Visibility:"
 msgstr "Visibilidad:"
 
-#: application/forms/AddTracktype.php:57
+#: application/forms/AddTracktype.php:68
 msgid "Analyze cue points:"
 msgstr "Analizar los puntos de referencia:"
-
-#: application/forms/AddTracktype.php:74
-msgid "Code is not unique."
-msgstr "El código no es único."
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:36
 #: application/forms/LiveStreamingPreferences.php:40
@@ -3174,72 +3173,72 @@ msgstr "Eliminar todas las pistas de la biblioteca"
 msgid "Date Start:"
 msgstr "Fecha de Inicio:"
 
-#: application/forms/EditAudioMD.php:50 application/forms/Player.php:15
+#: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
 msgid "Title:"
 msgstr "Título:"
 
-#: application/forms/EditAudioMD.php:60
+#: application/forms/EditAudioMD.php:62
 msgid "Creator:"
 msgstr "Creador:"
 
-#: application/forms/EditAudioMD.php:70
+#: application/forms/EditAudioMD.php:72
 msgid "Album:"
 msgstr "Álbum:"
 
-#: application/forms/EditAudioMD.php:87
+#: application/forms/EditAudioMD.php:89
 msgid "Owner:"
 msgstr "Propietario:"
 
-#: application/forms/EditAudioMD.php:99
+#: application/forms/EditAudioMD.php:101
 msgid "Select a Type"
 msgstr "Seleccionar un tipo"
 
-#: application/forms/EditAudioMD.php:106
+#: application/forms/EditAudioMD.php:108
 msgid "Track Type:"
 msgstr "Tipo de pista:"
 
-#: application/forms/EditAudioMD.php:141
+#: application/forms/EditAudioMD.php:143
 msgid "Year:"
 msgstr "Año:"
 
-#: application/forms/EditAudioMD.php:154
+#: application/forms/EditAudioMD.php:156
 msgid "Label:"
 msgstr "Sello:"
 
-#: application/forms/EditAudioMD.php:164
+#: application/forms/EditAudioMD.php:166
 msgid "Composer:"
 msgstr "Compositor:"
 
-#: application/forms/EditAudioMD.php:174
+#: application/forms/EditAudioMD.php:176
 msgid "Conductor:"
 msgstr "Conductor:"
 
-#: application/forms/EditAudioMD.php:184
+#: application/forms/EditAudioMD.php:186
 msgid "Mood:"
 msgstr "Ánimo (mood):"
 
-#: application/forms/EditAudioMD.php:194
+#: application/forms/EditAudioMD.php:196
 msgid "BPM:"
 msgstr "BPM:"
 
-#: application/forms/EditAudioMD.php:205
+#: application/forms/EditAudioMD.php:207
 msgid "Copyright:"
 msgstr "Derechos de autor:"
 
-#: application/forms/EditAudioMD.php:215
+#: application/forms/EditAudioMD.php:217
 msgid "ISRC Number:"
 msgstr "Número ISRC:"
 
-#: application/forms/EditAudioMD.php:225
+#: application/forms/EditAudioMD.php:227
 msgid "Website:"
 msgstr "Sitio web:"
 
-#: application/forms/EditAudioMD.php:235 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:237 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "Idioma:"
 
-#: application/forms/EditAudioMD.php:288
+#: application/forms/EditAudioMD.php:290
 msgid "Publish..."
 msgstr "Publicar..."
 
@@ -3359,9 +3358,7 @@ msgstr "¿Mostrar el botón de inicio de sesión en su página de radio?"
 
 #: application/forms/GeneralPreferences.php:231
 msgid "Disable the public radio page and redirect to the login page?"
-msgstr ""
-"¿Desactivar la página de la radio pública y redirigir a la página de inicio "
-"de sesión?"
+msgstr "¿Desactivar la página de la radio pública y redirigir a la página de inicio de sesión?"
 
 #: application/forms/GeneralPreferences.php:236
 msgid "Feature Previews"
@@ -3955,8 +3952,8 @@ msgstr "¡El calendario que tienes a la vista no está actualizado! (sched misma
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "¡La programación que estás viendo está desactualizada! (desfase de instancia)"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:491
-#: application/models/Scheduler.php:529 application/models/Scheduler.php:568
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
+#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
 msgid "The schedule you're viewing is out of date!"
 msgstr "¡La programación que estás viendo está desactualizada!"
 
@@ -3987,7 +3984,7 @@ msgstr "¡El contenido de los programas enlazados no se puede cambiar mientras s
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr "No se puede programar una lista de reproducción que contenga archivos perdidos."
 
-#: application/models/Scheduler.php:228 application/models/Scheduler.php:320
+#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
 msgid "A selected File does not exist!"
 msgstr "¡Un Archivo seleccionado no existe!"
 
@@ -4685,6 +4682,9 @@ msgstr "Retransmisiones por Internet"
 
 #~ msgid "Repeat Days:"
 #~ msgstr "Días de repetición:"
+
+#~ msgid "Replay Gain:"
+#~ msgstr "Ganancia de repetición:"
 
 #, php-format
 #~ msgid "Rescan watched directory (This is useful if it is network mount and may be out of sync with %s)"
