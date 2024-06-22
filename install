@@ -605,7 +605,7 @@ info "creating python3 venv"
 python3 -m venv "$VENV_DIR"
 
 info "upgrading python3 tools"
-$VENV_DIR/bin/pip install --upgrade "pip<21.4" setuptools wheel
+$VENV_DIR/bin/pip install --upgrade "pip<24.1" setuptools wheel
 
 # Install Shared and API client
 ########################################################################################
