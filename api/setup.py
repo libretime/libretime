@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-version = "4.1.0"  # x-release-please-version
+version = "4.2.0"  # x-release-please-version
 
 setup(
     name="libretime-api",
@@ -26,18 +26,18 @@ setup(
         ]
     },
     install_requires=[
-        "django-cors-headers>=3.14.0,<4.4",
+        "django-cors-headers>=3.14.0,<4.5",
         "django-filter>=2.4.0,<24.3",
         "django>=4.2.0,<4.3",
         "djangorestframework>=3.14.0,<3.16",
         "drf-spectacular>=0.22.1,<0.28",
-        "requests>=2.31.0,<2.32",
+        "requests>=2.32.2,<2.33",
     ],
     extras_require={
         "prod": [
             "gunicorn>=22.0.0,<22.1",
             "psycopg[c]>=3.1.8,<3.2",
-            "uvicorn[standard]>=0.17.6,<0.30.0",
+            "uvicorn[standard]>=0.17.6,<0.31.0",
         ],
         "dev": [
             "django-coverage-plugin>=3.0.0,<4",

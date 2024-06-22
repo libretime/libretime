@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-04-29 01:54+0000\n"
+"POT-Creation-Date: 2024-06-10 02:02+0000\n"
 "PO-Revision-Date: 2022-06-05 10:17+0000\n"
 "Last-Translator: МАН69К <weblate@mah69k.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/libretime/legacy/ru/>\n"
@@ -2051,14 +2051,14 @@ msgstr "Перемещение %s элементов"
 
 #: application/controllers/LocaleController.php:302
 #: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:288 application/forms/EditHistory.php:131
+#: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "Сохранить"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:270 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -3220,31 +3220,27 @@ msgid "Mood:"
 msgstr "Настроение:"
 
 #: application/forms/EditAudioMD.php:196
-msgid "Replay Gain:"
-msgstr ""
-
-#: application/forms/EditAudioMD.php:204
 msgid "BPM:"
 msgstr "BPM:"
 
-#: application/forms/EditAudioMD.php:215
+#: application/forms/EditAudioMD.php:207
 msgid "Copyright:"
 msgstr "Авторское право:"
 
-#: application/forms/EditAudioMD.php:225
+#: application/forms/EditAudioMD.php:217
 msgid "ISRC Number:"
 msgstr "ISRC номер:"
 
-#: application/forms/EditAudioMD.php:235
+#: application/forms/EditAudioMD.php:227
 msgid "Website:"
 msgstr "Сайт:"
 
-#: application/forms/EditAudioMD.php:245 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:237 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "Язык:"
 
-#: application/forms/EditAudioMD.php:298
+#: application/forms/EditAudioMD.php:290
 msgid "Publish..."
 msgstr "Опубликовать..."
 
@@ -3956,8 +3952,8 @@ msgstr "Расписание, которое вы просматриваете -
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "Расписание, которое вы просматриваете - устарело! (Несоответствие экземпляров)"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:491
-#: application/models/Scheduler.php:529 application/models/Scheduler.php:568
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
+#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
 msgid "The schedule you're viewing is out of date!"
 msgstr "Расписание, которое вы просматриваете - устарело!"
 
@@ -3988,7 +3984,7 @@ msgstr "Контент в связанных Программах не може�
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr "Нельзя запланировать Плейлист, которой содержит отсутствующие файлы."
 
-#: application/models/Scheduler.php:228 application/models/Scheduler.php:320
+#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
 msgid "A selected File does not exist!"
 msgstr "Выбранный файл не существует!"
 

@@ -41,51 +41,18 @@ class Application_Model_Block implements Application_Model_LibraryEditable
     ];
 
     private static $modifier2CriteriaMap = [
-        'contains' => Criteria::ILIKE,
-        'does not contain' => Criteria::NOT_ILIKE,
-        'is' => Criteria::EQUAL,
-        'is not' => Criteria::NOT_EQUAL,
-        'starts with' => Criteria::ILIKE,
-        'ends with' => Criteria::ILIKE,
-        'is greater than' => Criteria::GREATER_THAN,
-        'is less than' => Criteria::LESS_THAN,
-        'is in the range' => Criteria::CUSTOM,
-        'before' => Criteria::CUSTOM,
-        'after' => Criteria::CUSTOM,
-        'between' => Criteria::CUSTOM,
-    ];
-
-    private static $criteria2PeerMap = [
-        0 => 'Select criteria',
-        'album_title' => 'DbAlbumTitle',
-        'artist_name' => 'DbArtistName',
-        'bit_rate' => 'DbBitRate',
-        'bpm' => 'DbBpm',
-        'composer' => 'DbComposer',
-        'conductor' => 'DbConductor',
-        'copyright' => 'DbCopyright',
-        'cuein' => 'DbCuein',
-        'cueout' => 'DbCueout',
-        'description' => 'DbDescription',
-        'encoded_by' => 'DbEncodedBy',
-        'utime' => 'DbUtime',
-        'mtime' => 'DbMtime',
-        'lptime' => 'DbLPtime',
-        'genre' => 'DbGenre',
-        'info_url' => 'DbInfoUrl',
-        'isrc_number' => 'DbIsrcNumber',
-        'label' => 'DbLabel',
-        'language' => 'DbLanguage',
-        'length' => 'DbLength',
-        'mime' => 'DbMime',
-        'mood' => 'DbMood',
-        'owner_id' => 'DbOwnerId',
-        'replay_gain' => 'DbReplayGain',
-        'sample_rate' => 'DbSampleRate',
-        'track_title' => 'DbTrackTitle',
-        'track_number' => 'DbTrackNumber',
-        'year' => 'DbYear',
-        'track_type_id' => 'DbTrackTypeId',
+        CriteriaModifier::CONTAINS => Criteria::ILIKE,
+        CriteriaModifier::DOES_NOT_CONTAIN => Criteria::NOT_ILIKE,
+        CriteriaModifier::IS => Criteria::EQUAL,
+        CriteriaModifier::IS_NOT => Criteria::NOT_EQUAL,
+        CriteriaModifier::STARTS_WITH => Criteria::ILIKE,
+        CriteriaModifier::ENDS_WITH => Criteria::ILIKE,
+        CriteriaModifier::IS_GREATER_THAN => Criteria::GREATER_THAN,
+        CriteriaModifier::IS_LESS_THAN => Criteria::LESS_THAN,
+        CriteriaModifier::IS_IN_THE_RANGE => Criteria::CUSTOM,
+        CriteriaModifier::BEFORE => Criteria::CUSTOM,
+        CriteriaModifier::AFTER => Criteria::CUSTOM,
+        CriteriaModifier::BETWEEN => Criteria::CUSTOM,
     ];
 
     public function __construct($id = null, $con = null)
@@ -1424,57 +1391,8 @@ SQL;
      */
     public function getCriteria()
     {
-        $criteriaOptions = [
-            0 => _('Select criteria'),
-            'album_title' => _('Album'),
-            'bit_rate' => _('Bit Rate (Kbps)'),
-            'bpm' => _('BPM'),
-            'composer' => _('Composer'),
-            'conductor' => _('Conductor'),
-            'copyright' => _('Copyright'),
-            'cuein' => _('Cue In'),
-            'cueout' => _('Cue Out'),
-            'description' => _('Description'),
-            'artist_name' => _('Creator'),
-            'encoded_by' => _('Encoded By'),
-            'genre' => _('Genre'),
-            'isrc_number' => _('ISRC'),
-            'label' => _('Label'),
-            'language' => _('Language'),
-            'utime' => _('Upload Time'),
-            'mtime' => _('Last Modified'),
-            'lptime' => _('Last Played'),
-            'length' => _('Length'),
-            'track_type_id' => _('Track Type'),
-            'mime' => _('Mime'),
-            'mood' => _('Mood'),
-            'owner_id' => _('Owner'),
-            'replay_gain' => _('Replay Gain'),
-            'sample_rate' => _('Sample Rate (kHz)'),
-            'track_title' => _('Title'),
-            'track_number' => _('Track Number'),
-            'utime' => _('Uploaded'),
-            'info_url' => _('Website'),
-            'year' => _('Year'),
-        ];
-
-        $modifierOptions = [
-            '0' => _('Select modifier'),
-            'contains' => _('contains'),
-            'does not contain' => _('does not contain'),
-            'is' => _('is'),
-            'is not' => _('is not'),
-            'starts with' => _('starts with'),
-            'ends with' => _('ends with'),
-            'before' => _('before'),
-            'after' => _('after'),
-            'between' => _('between'),
-            'is' => _('is'),
-            'is not' => _('is not'),
-            'is greater than' => _('is greater than'),
-            'is less than' => _('is less than'),
-            'is in the range' => _('is in the range'),
-        ];
+        $allCriteria = BlockCriteria::criteriaMap();
+        $allOptions = CriteriaModifier::mapToDisplay();
 
         // Load criteria from db
         $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($this->id);
@@ -1500,14 +1418,15 @@ SQL;
             } elseif ($criteria == 'sort') {
                 $storedCrit['sort'] = ['value' => $value];
             } else {
+                $c = $allCriteria[$criteria];
                 $storedCrit['crit'][$criteria][] = [
                     'criteria' => $criteria,
                     'value' => $value,
                     'modifier' => $modifier,
                     'extra' => $extra,
                     'criteria_group' => $criteriagroup,
-                    'display_name' => $criteriaOptions[$criteria],
-                    'display_modifier' => $modifierOptions[$modifier],
+                    'display_name' => $c->display,
+                    'display_modifier' => $allOptions[$modifier],
                 ];
             }
         }
@@ -1522,57 +1441,8 @@ SQL;
      */
     public function getCriteriaGrouped()
     {
-        $criteriaOptions = [
-            0 => _('Select criteria'),
-            'album_title' => _('Album'),
-            'bit_rate' => _('Bit Rate (Kbps)'),
-            'bpm' => _('BPM'),
-            'composer' => _('Composer'),
-            'conductor' => _('Conductor'),
-            'copyright' => _('Copyright'),
-            'cuein' => _('Cue In'),
-            'cueout' => _('Cue Out'),
-            'description' => _('Description'),
-            'artist_name' => _('Creator'),
-            'encoded_by' => _('Encoded By'),
-            'genre' => _('Genre'),
-            'isrc_number' => _('ISRC'),
-            'label' => _('Label'),
-            'language' => _('Language'),
-            'utime' => _('Upload Time'),
-            'mtime' => _('Last Modified'),
-            'lptime' => _('Last Played'),
-            'length' => _('Length'),
-            'track_type_id' => _('Track Type'),
-            'mime' => _('Mime'),
-            'mood' => _('Mood'),
-            'owner_id' => _('Owner'),
-            'replay_gain' => _('Replay Gain'),
-            'sample_rate' => _('Sample Rate (kHz)'),
-            'track_title' => _('Title'),
-            'track_number' => _('Track Number'),
-            'utime' => _('Uploaded'),
-            'info_url' => _('Website'),
-            'year' => _('Year'),
-        ];
-
-        $modifierOptions = [
-            '0' => _('Select modifier'),
-            'contains' => _('contains'),
-            'does not contain' => _('does not contain'),
-            'is' => _('is'),
-            'is not' => _('is not'),
-            'starts with' => _('starts with'),
-            'ends with' => _('ends with'),
-            'before' => _('before'),
-            'after' => _('after'),
-            'between' => _('between'),
-            'is' => _('is'),
-            'is not' => _('is not'),
-            'is greater than' => _('is greater than'),
-            'is less than' => _('is less than'),
-            'is in the range' => _('is in the range'),
-        ];
+        $criteriaOptions = BlockCriteria::displayCriteria();
+        $modifierOptions = CriteriaModifier::mapToDisplay();
 
         // Load criteria from db
         $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($this->id);
@@ -1612,6 +1482,19 @@ SQL;
         return $storedCrit;
     }
 
+    private function resolveDate($value)
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        return preg_replace_callback(
+            '/now{(.*?)}/',
+            fn ($matches) => date($matches[1]),
+            $value
+        );
+    }
+
     // this function return list of propel object
     public function getListofFilesMeetCriteria($showLimit = null)
     {
@@ -1619,6 +1502,8 @@ SQL;
 
         $qry = CcFilesQuery::create();
         $qry->useFkOwnerQuery('subj', 'left join');
+
+        $allCriteria = BlockCriteria::criteriaMap();
 
         // Logging::info($storedCrit);
         if (isset($storedCrit['crit'])) {
@@ -1636,7 +1521,7 @@ SQL;
                     $spCriteria = $criteria['criteria'];
                     $spCriteriaModifier = $criteria['modifier'];
 
-                    $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$spCriteria]);
+                    $column = CcFilesPeer::getTableMap()->getColumnByPhpName($allCriteria[$spCriteria]->peer);
 
                     // data should already be in UTC, do we have to do anything special here anymore?
                     if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
@@ -1676,6 +1561,8 @@ SQL;
                         }
                         $spCriteriaExtra = $criteria['extra'];
                     }
+
+                    $spCriteriaValue = $this->resolveDate($spCriteriaValue);
 
                     if ($spCriteriaModifier == 'starts with') {
                         $spCriteriaValue = "{$spCriteriaValue}%";
