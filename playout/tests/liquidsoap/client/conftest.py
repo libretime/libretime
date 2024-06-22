@@ -119,9 +119,10 @@ def run_liq_server(
         if process.poll() is not None:
             pytest.fail(process.stdout.read())
 
-        yield manager
-
-        process.terminate()
+        try:
+            yield manager
+        finally:
+            process.terminate()
 
 
 @pytest.fixture(
