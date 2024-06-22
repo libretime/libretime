@@ -1,5 +1,25 @@
 # Changelog
 
+## [4.2.0](https://github.com/libretime/libretime/compare/4.1.0...4.2.0) (2024-06-22)
+
+
+### Features
+
+* **legacy:** add current date macro to string block criteria ([#3013](https://github.com/libretime/libretime/issues/3013)) ([451652b](https://github.com/libretime/libretime/commit/451652bc4002b142ab9cf33ae517451c4966134f))
+* **legacy:** add filename block criteria ([#3015](https://github.com/libretime/libretime/issues/3015)) ([4642b6c](https://github.com/libretime/libretime/commit/4642b6c08ef813ab5dc7354f73141239f5c145e0))
+
+
+### Bug Fixes
+
+* pin pip version to &lt;24.1 to allow installing pytz (celery) ([#3043](https://github.com/libretime/libretime/issues/3043)) ([646bc81](https://github.com/libretime/libretime/commit/646bc817246a1e3e0d8107c2b69d726681c643b6))
+* playlist allocates inaccurate time to smartblocks ([#3026](https://github.com/libretime/libretime/issues/3026)) ([2b43e51](https://github.com/libretime/libretime/commit/2b43e51ed140bf307e491f0fcb7b84f95709d604))
+
+
+### Performance Improvements
+
+* optimize the api image health check ([#3038](https://github.com/libretime/libretime/issues/3038)) ([d99d6e1](https://github.com/libretime/libretime/commit/d99d6e1a68f20b3f4255296cd22ac80a90adc020))
+* optimize the rabbitmq health check ([#3037](https://github.com/libretime/libretime/issues/3037)) ([9684214](https://github.com/libretime/libretime/commit/96842144257855df86085b052ed8ff87562bc049))
+
 ## [4.1.0](https://github.com/libretime/libretime/compare/4.0.0...4.1.0) (2024-05-05)
 
 
