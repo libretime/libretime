@@ -175,7 +175,7 @@ CMD ["/usr/local/bin/gunicorn", \
 ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 
-HEALTHCHECK CMD ["curl", "-f", "http://localhost:9001/api/v2/version"]
+HEALTHCHECK CMD ["curl", "--fail", "http://localhost:9001/api/v2/version"]
 
 #======================================================================================#
 # Worker                                                                               #
