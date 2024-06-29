@@ -16,6 +16,7 @@ def cli(log_level: str, log_filepath: Optional[Path]):
     Run celery.
     """
     args = [
+        "worker",
         f"--config={config_module}",
         "--beat",
         "--time-limit=1800",
