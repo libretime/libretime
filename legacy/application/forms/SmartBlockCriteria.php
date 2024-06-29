@@ -2,148 +2,10 @@
 
 class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 {
-    private $criteriaOptions;
-    private $stringCriteriaOptions;
-    private $numericCriteriaOptions;
-    private $dateTimeCriteriaOptions;
     private $timePeriodCriteriaOptions;
     private $sortOptions;
     private $limitOptions;
-    private $isOrNotCriteriaOptions;
     private $trackTypeOptions;
-
-    /* We need to know if the criteria value will be a string
-     * or numeric value in order to populate the modifier
-     * select list
-     */
-    private $criteriaTypes = [
-        0 => '',
-        'album_title' => 's',
-        'bit_rate' => 'n',
-        'bpm' => 'n',
-        'composer' => 's',
-        'conductor' => 's',
-        'copyright' => 's',
-        'cuein' => 'n',
-        'cueout' => 'n',
-        'description' => 's',
-        'artist_name' => 's',
-        'encoded_by' => 's',
-        'utime' => 'd',
-        'mtime' => 'd',
-        'lptime' => 'd',
-        'genre' => 's',
-        'isrc_number' => 's',
-        'label' => 's',
-        'language' => 's',
-        'length' => 'n',
-        'mime' => 's',
-        'mood' => 's',
-        'owner_id' => 's',
-        'replay_gain' => 'n',
-        'sample_rate' => 'n',
-        'track_title' => 's',
-        'track_number' => 'n',
-        'info_url' => 's',
-        'year' => 'n',
-        'track_type_id' => 'tt',
-    ];
-
-    private function getCriteriaOptions($option = null)
-    {
-        if (!isset($this->criteriaOptions)) {
-            $this->criteriaOptions = [
-                0 => _('Select criteria'),
-                'album_title' => _('Album'),
-                'bit_rate' => _('Bit Rate (Kbps)'),
-                'bpm' => _('BPM'),
-                'composer' => _('Composer'),
-                'conductor' => _('Conductor'),
-                'copyright' => _('Copyright'),
-                'cuein' => _('Cue In'),
-                'cueout' => _('Cue Out'),
-                'description' => _('Description'),
-                'artist_name' => _('Creator'),
-                'encoded_by' => _('Encoded By'),
-                'genre' => _('Genre'),
-                'isrc_number' => _('ISRC'),
-                'label' => _('Label'),
-                'language' => _('Language'),
-                'mtime' => _('Last Modified'),
-                'lptime' => _('Last Played'),
-                'length' => _('Length'),
-                'track_type_id' => _('Track Type'),
-                'mime' => _('Mime'),
-                'mood' => _('Mood'),
-                'owner_id' => _('Owner'),
-                'replay_gain' => _('Replay Gain'),
-                'sample_rate' => _('Sample Rate (kHz)'),
-                'track_title' => _('Title'),
-                'track_number' => _('Track Number'),
-                'utime' => _('Uploaded'),
-                'info_url' => _('Website'),
-                'year' => _('Year'),
-            ];
-        }
-
-        if (is_null($option)) {
-            return $this->criteriaOptions;
-        }
-
-        return $this->criteriaOptions[$option];
-    }
-
-    private function getStringCriteriaOptions()
-    {
-        if (!isset($this->stringCriteriaOptions)) {
-            $this->stringCriteriaOptions = [
-                '0' => _('Select modifier'),
-                'contains' => _('contains'),
-                'does not contain' => _('does not contain'),
-                'is' => _('is'),
-                'is not' => _('is not'),
-                'starts with' => _('starts with'),
-                'ends with' => _('ends with'),
-            ];
-        }
-
-        return $this->stringCriteriaOptions;
-    }
-
-    private function getNumericCriteriaOptions()
-    {
-        if (!isset($this->numericCriteriaOptions)) {
-            $this->numericCriteriaOptions = [
-                '0' => _('Select modifier'),
-                'is' => _('is'),
-                'is not' => _('is not'),
-                'is greater than' => _('is greater than'),
-                'is less than' => _('is less than'),
-                'is in the range' => _('is in the range'),
-            ];
-        }
-
-        return $this->numericCriteriaOptions;
-    }
-
-    private function getDateTimeCriteriaOptions()
-    {
-        if (!isset($this->dateTimeCriteriaOptions)) {
-            $this->dateTimeCriteriaOptions = [
-                '0' => _('Select modifier'),
-                'before' => _('before'),
-                'after' => _('after'),
-                'between' => _('between'),
-                'is' => _('is'),
-                'is not' => _('is not'),
-                'is greater than' => _('is greater than'),
-                'is less than' => _('is less than'),
-                'is in the range' => _('is in the range'),
-            ];
-        }
-
-        return $this->dateTimeCriteriaOptions;
-    }
 
     private function getTimePeriodCriteriaOptions()
     {
@@ -189,19 +51,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         }
 
         return $this->sortOptions;
-    }
-
-    private function getIsNotOptions()
-    {
-        if (!isset($this->isOrNotCriteriaOptions)) {
-            $this->isOrNotCriteriaOptions = [
-                '0' => _('Select modifier'),
-                'is' => _('is'),
-                'is not' => _('is not'),
-            ];
-        }
-
-        return $this->isOrNotCriteriaOptions;
     }
 
     private function getTracktypeOptions()
@@ -297,7 +146,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         }
         // the way the everything is currently built it setups 25 smartblock criteria forms and then disables them
         // but this creates 29 elements
-        $numElements = count($this->getCriteriaOptions());
+        $numElements = count(BlockCriteria::displayCriteria());
         // loop through once for each potential criteria option ie album, composer, track
         // criteria from different groups are separated already by the getCriteriaGrouped call
 
@@ -335,7 +184,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 $criteria->setAttrib('class', 'input_select sp_input_select' . $invisible)
                     ->setValue('Select criteria')
                     ->setDecorators(['viewHelper'])
-                    ->setMultiOptions($this->getCriteriaOptions());
+                    ->setMultiOptions(BlockCriteria::displayCriteria());
                 // if this isn't the first criteria and there isn't an entry for it already disable it
                 if ($i != 0 && !isset($criteriaKeys[$i])) {
                     $criteria->setAttrib('disabled', 'disabled');
@@ -344,8 +193,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 // the j loop starts at 0 and grows for each item matching the same criteria
                 // look up the criteria type using the criteriaTypes function from above based upon the criteria value
                 if (isset($criteriaKeys[$i])) {
-                    $criteriaType = $this->criteriaTypes[$storedCrit['crit'][$criteriaKeys[$i]][$j]['criteria']];
-                    $criteria->setValue($storedCrit['crit'][$criteriaKeys[$i]][$j]['criteria']);
+                    $bCriteria = BlockCriteria::get($storedCrit['crit'][$criteriaKeys[$i]][$j]['criteria']);
+                    $criteriaType = $bCriteria->type;
+                    $criteria->setValue($bCriteria->key);
                 }
                 $this->addElement($criteria);
 
@@ -361,18 +211,10 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 }
                 // determine the modifier based upon criteria type which is looked up based upon an array
                 if (isset($criteriaKeys[$i])) {
-                    if ($criteriaType == 's') {
-                        $criteriaModifers->setMultiOptions($this->getStringCriteriaOptions());
-                    } elseif ($criteriaType == 'd') {
-                        $criteriaModifers->setMultiOptions($this->getDateTimeCriteriaOptions());
-                    } elseif ($criteriaType == 'tt') {
-                        $criteriaModifers->setMultiOptions($this->getIsNotOptions());
-                    } else {
-                        $criteriaModifers->setMultiOptions($this->getNumericCriteriaOptions());
-                    }
+                    $criteriaModifers->setMultiOptions($bCriteria->displayModifiers());
                     $criteriaModifers->setValue($storedCrit['crit'][$criteriaKeys[$i]][$j]['modifier']);
                 } else {
-                    $criteriaModifers->setMultiOptions(['0' => _('Select modifier')]);
+                    $criteriaModifers->setMultiOptions(CriteriaModifier::mapToDisplay([]));
                 }
                 $this->addElement($criteriaModifers);
 
@@ -381,7 +223,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 if (isset($criteriaKeys[$i])) {
                     $modifierTest = (string) $storedCrit['crit'][$criteriaKeys[$i]][$j]['modifier'];
                     if (
-                        isset($criteriaType) && $criteriaType == 'tt'
+                        isset($criteriaType) && $criteriaType == ModifierType::TRACK_TYPE
                         && preg_match('/is|is not/', $modifierTest) == 1
                     ) {
                         $criteriaValue = new Zend_Form_Element_Select('sp_criteria_value_' . $i . '_' . $j);
@@ -412,14 +254,14 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     $relativeDateTime = false;
                     $modifierTest = (string) $storedCrit['crit'][$criteriaKeys[$i]][$j]['modifier'];
                     if (
-                        isset($criteriaType) && $criteriaType == 'd'
+                        isset($criteriaType) && $criteriaType == ModifierType::DATE
                         && preg_match('/before|after|between/', $modifierTest) == 1
                     ) {
                         // set relativeDatetime boolean to true so that the datetime select is displayed below
                         $relativeDateTime = true;
                         $criteriaValue->setValue(filter_var($storedCrit['crit'][$criteriaKeys[$i]][$j]['value'], FILTER_SANITIZE_NUMBER_INT));
                     } elseif (
-                        isset($criteriaType) && $criteriaType == 'tt'
+                        isset($criteriaType) && $criteriaType == ModifierType::TRACK_TYPE
                         && preg_match('/is|is not/', $modifierTest) == 1
                     ) {
                         // set relativeDatetime boolean to true so that the datetime select is displayed below
@@ -455,7 +297,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 // check if the value is stored and it is a relative datetime field
                 if (
                     isset($criteriaKeys[$i], $storedCrit['crit'][$criteriaKeys[$i]][$j]['value'], $criteriaType)
-                    && $criteriaType == 'd'
+                    && $criteriaType == ModifierType::DATE
                     && preg_match('/before|after|between/', $modifierTest) == 1
                 ) {
                     // need to remove any leading numbers stored in the database
@@ -478,7 +320,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     ->setDecorators(['viewHelper']);
                 if (isset($criteriaKeys[$i], $storedCrit['crit'][$criteriaKeys[$i]][$j]['extra'])) {
                     // need to check if this is a relative date time value
-                    if (isset($criteriaType) && $criteriaType == 'd' && $modifierTest == 'between') {
+                    if (isset($criteriaType) && $criteriaType == ModifierType::DATE && $modifierTest == 'between') {
                         // the criteria value will be a number followed by time unit and ago so set input to number part
                         $criteriaExtra->setValue(filter_var($storedCrit['crit'][$criteriaKeys[$i]][$j]['extra'], FILTER_SANITIZE_NUMBER_INT));
                     } else {
@@ -610,28 +452,21 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         foreach ($data['criteria'] as $critKey => $d) {
             $count = 1;
             foreach ($d as $modKey => $modInfo) {
+                $critMod = $critKey . '_' . $modKey;
+                $blockCriteria = BlockCriteria::get($modInfo['sp_criteria_field']);
                 if ($modKey == 0) {
-                    $eleCrit = $this->getElement('sp_criteria_field_' . $critKey . '_' . $modKey);
-                    $eleCrit->setValue($this->getCriteriaOptions($modInfo['sp_criteria_field']));
+                    $eleCrit = $this->getElement('sp_criteria_field_' . $critMod);
+                    $eleCrit->setValue($blockCriteria->display);
                     $eleCrit->setAttrib('disabled', null);
 
-                    $eleMod = $this->getElement('sp_criteria_modifier_' . $critKey . '_' . $modKey);
-                    $criteriaType = $this->criteriaTypes[$modInfo['sp_criteria_field']];
-                    if ($criteriaType == 's') {
-                        $eleMod->setMultiOptions($this->getStringCriteriaOptions());
-                    } elseif ($criteriaType == 'n') {
-                        $eleMod->setMultiOptions($this->getNumericCriteriaOptions());
-                    } elseif ($criteriaType == 'd') {
-                        $eleMod->setMultiOptions($this->getDateTimeCriteriaOptions());
-                    } elseif ($criteriaType == 'tt') {
-                        $eleMod->setMultiOptions($this->getIsNotOptions());
-                    } else {
-                        $eleMod->setMultiOptions(['0' => _('Select modifier')]);
-                    }
+                    $eleMod = $this->getElement('sp_criteria_modifier_' . $critMod);
+
+                    $eleMod->setMultiOptions($blockCriteria->displayModifiers());
+
                     $eleMod->setValue($modInfo['sp_criteria_modifier']);
                     $eleMod->setAttrib('disabled', null);
 
-                    $eleDatetime = $this->getElement('sp_criteria_datetime_select_' . $critKey . '_' . $modKey);
+                    $eleDatetime = $this->getElement('sp_criteria_datetime_select_' . $critMod);
                     if ($this->enableDateTimeUnit($eleMod->getValue())) {
                         $eleDatetime->setAttrib('enabled', 'enabled');
                         $eleDatetime->setValue($modInfo['sp_criteria_datetime_select']);
@@ -639,17 +474,17 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     } else {
                         $eleDatetime->setAttrib('disabled', 'disabled');
                     }
-                    $eleValue = $this->getElement('sp_criteria_value_' . $critKey . '_' . $modKey);
+                    $eleValue = $this->getElement('sp_criteria_value_' . $critMod);
                     $eleValue->setValue($modInfo['sp_criteria_value']);
                     $eleValue->setAttrib('disabled', null);
 
                     if (isset($modInfo['sp_criteria_extra'])) {
-                        $eleExtra = $this->getElement('sp_criteria_extra_' . $critKey . '_' . $modKey);
+                        $eleExtra = $this->getElement('sp_criteria_extra_' . $critMod);
                         $eleExtra->setValue($modInfo['sp_criteria_extra']);
                         $eleValue->setAttrib('class', 'input_text sp_extra_input_text');
                         $eleExtra->setAttrib('disabled', null);
                     }
-                    $eleExtraDatetime = $this->getElement('sp_criteria_extra_datetime_select_' . $critKey . '_' . $modKey);
+                    $eleExtraDatetime = $this->getElement('sp_criteria_extra_datetime_select_' . $critMod);
                     if ($eleMod->getValue() == 'between') {
                         $eleExtraDatetime->setAttrib('enabled', 'enabled');
                         $eleExtraDatetime->setValue($modInfo['sp_criteria_extra_datetime_select']);
@@ -658,45 +493,34 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         $eleExtraDatetime->setAttrib('disabled', 'disabled');
                     }
                 } else {
-                    $criteria = new Zend_Form_Element_Select('sp_criteria_field_' . $critKey . '_' . $modKey);
+                    $criteria = new Zend_Form_Element_Select('sp_criteria_field_' . $critMod);
                     $criteria->setAttrib('class', 'input_select sp_input_select sp-invisible')
                         ->setValue('Select criteria')
                         ->setDecorators(['viewHelper'])
-                        ->setMultiOptions($this->getCriteriaOptions());
+                        ->setMultiOptions(BlockCriteria::displayCriteria());
 
-                    $criteriaType = $this->criteriaTypes[$modInfo['sp_criteria_field']];
-                    $criteria->setValue($this->getCriteriaOptions($modInfo['sp_criteria_field']));
+                    $criteria->setValue($blockCriteria->display);
                     $this->addElement($criteria);
 
                     // MODIFIER
-                    $criteriaModifers = new Zend_Form_Element_Select('sp_criteria_modifier_' . $critKey . '_' . $modKey);
+                    $criteriaModifers = new Zend_Form_Element_Select('sp_criteria_modifier_' . $critMod);
                     $criteriaModifers->setValue('Select modifier')
                         ->setAttrib('class', 'input_select sp_input_select')
                         ->setDecorators(['viewHelper']);
 
-                    if ($criteriaType == 's') {
-                        $criteriaModifers->setMultiOptions($this->getStringCriteriaOptions());
-                    } elseif ($criteriaType == 'n') {
-                        $criteriaModifers->setMultiOptions($this->getNumericCriteriaOptions());
-                    } elseif ($criteriaType == 'd') {
-                        $criteriaModifers->setMultiOptions($this->getDateTimeCriteriaOptions());
-                    } elseif ($criteriaType == 'tt') {
-                        $criteriaModifers->setMultiOptions($this->getIsNotOptions());
-                    } else {
-                        $criteriaModifers->setMultiOptions(['0' => _('Select modifier')]);
-                    }
+                    $criteriaModifers->setMultiOptions($blockCriteria->displayModifiers());
                     $criteriaModifers->setValue($modInfo['sp_criteria_modifier']);
                     $this->addElement($criteriaModifers);
 
                     // VALUE
-                    $criteriaValue = new Zend_Form_Element_Text('sp_criteria_value_' . $critKey . '_' . $modKey);
+                    $criteriaValue = new Zend_Form_Element_Text('sp_criteria_value_' . $critMod);
                     $criteriaValue->setAttrib('class', 'input_text sp_input_text')
                         ->setDecorators(['viewHelper']);
                     $criteriaValue->setValue($modInfo['sp_criteria_value']);
                     $this->addElement($criteriaValue);
                     // DATETIME UNIT SELECT
 
-                    $criteriaDatetimeSelect = new Zend_Form_Element_Select('sp_criteria_datetime_select_' . $critKey . '_' . $modKey);
+                    $criteriaDatetimeSelect = new Zend_Form_Element_Select('sp_criteria_datetime_select_' . $critMod);
                     $criteriaDatetimeSelect->setAttrib('class', 'input_select sp_input_select')
                         ->setDecorators(['viewHelper']);
                     if ($this->enableDateTimeUnit($criteriaValue->getValue())) {
@@ -708,7 +532,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         $criteriaDatetimeSelect->setAttrib('disabled', 'disabled');
                     }
                     // EXTRA
-                    $criteriaExtra = new Zend_Form_Element_Text('sp_criteria_extra_' . $critKey . '_' . $modKey);
+                    $criteriaExtra = new Zend_Form_Element_Text('sp_criteria_extra_' . $critMod);
                     $criteriaExtra->setAttrib('class', 'input_text sp_extra_input_text')
                         ->setDecorators(['viewHelper']);
                     if (isset($modInfo['sp_criteria_extra'])) {
@@ -721,7 +545,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
                     // EXTRA DATETIME UNIT SELECT
 
-                    $criteriaExtraDatetimeSelect = new Zend_Form_Element_Select('sp_criteria_extra_datetime_select_' . $critKey . '_' . $modKey);
+                    $criteriaExtraDatetimeSelect = new Zend_Form_Element_Select('sp_criteria_extra_datetime_select_' . $critMod);
                     $criteriaExtraDatetimeSelect->setAttrib('class', 'input_select sp_input_select')
                         ->setDecorators(['viewHelper']);
                     if ($criteriaValue->getValue() == 'between') {
@@ -761,45 +585,13 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     {
         $isValid = true;
         $data = $this->preValidation($params);
-        $criteria2PeerMap = [
-            0 => 'Select criteria',
-            'album_title' => 'DbAlbumTitle',
-            'artist_name' => 'DbArtistName',
-            'bit_rate' => 'DbBitRate',
-            'bpm' => 'DbBpm',
-            'composer' => 'DbComposer',
-            'conductor' => 'DbConductor',
-            'copyright' => 'DbCopyright',
-            'cuein' => 'DbCuein',
-            'cueout' => 'DbCueout',
-            'description' => 'DbDescription',
-            'encoded_by' => 'DbEncodedBy',
-            'utime' => 'DbUtime',
-            'mtime' => 'DbMtime',
-            'lptime' => 'DbLPtime',
-            'genre' => 'DbGenre',
-            'info_url' => 'DbInfoUrl',
-            'isrc_number' => 'DbIsrcNumber',
-            'label' => 'DbLabel',
-            'language' => 'DbLanguage',
-            'length' => 'DbLength',
-            'mime' => 'DbMime',
-            'mood' => 'DbMood',
-            'owner_id' => 'DbOwnerId',
-            'replay_gain' => 'DbReplayGain',
-            'sample_rate' => 'DbSampleRate',
-            'track_title' => 'DbTrackTitle',
-            'track_number' => 'DbTrackNumber',
-            'year' => 'DbYear',
-            'track_type_id' => 'DbTrackTypeId',
-        ];
+        $allCriteria = BlockCriteria::criteriaMap();
 
         // things we need to check
         // 1. limit value shouldn't be empty and has upperbound of 24 hrs
         // 2. sp_criteria or sp_criteria_modifier shouldn't be 0
         // 3. validate formate according to DB column type
         $multiplier = 1;
-        $result = 0;
 
         // validation start
         if ($data['etc']['sp_limit_options'] == 'hours') {
@@ -840,7 +632,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         $element->addError(_('You must select Criteria and Modifier'));
                         $isValid = false;
                     } else {
-                        $column = CcFilesPeer::getTableMap()->getColumnByPhpName($criteria2PeerMap[$d['sp_criteria_field']]);
+                        $column = CcFilesPeer::getTableMap()->getColumnByPhpName($allCriteria[$d['sp_criteria_field']]->peer);
                         // validation on type of column
                         if (in_array($d['sp_criteria_field'], ['length', 'cuein', 'cueout'])) {
                             if (!preg_match('/^(\d{2}):(\d{2}):(\d{2})/', $d['sp_criteria_value'])) {

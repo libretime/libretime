@@ -54,7 +54,6 @@ jobs:
             '**/*.md'
             --require-https
             --exclude-all-private
-            --exclude-mail
             --exclude 'example\.(com|org)'
             --exclude '\$server_name\$request_uri'
             --exclude '%7Bvars.version%7D'
