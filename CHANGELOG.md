@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.1](https://github.com/libretime/libretime/compare/4.2.0...4.2.1) (2024-06-30)
+
+
+### Bug Fixes
+
+* docker warnings "keywords casing do not match" ([#3048](https://github.com/libretime/libretime/issues/3048)) ([e095cb2](https://github.com/libretime/libretime/commit/e095cb2a5f6b0b62613b7a6bab9a820d5a4a85f3))
+
 ## [4.2.0](https://github.com/libretime/libretime/compare/4.1.0...4.2.0) (2024-06-22)
 
 
