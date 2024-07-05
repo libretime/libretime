@@ -14,6 +14,12 @@ This guide walk you though the steps required to install LibreTime on your syste
 
 Before installing LibreTime, you need to make sure that [Docker](https://docs.docker.com/engine/) is installed on your operating system and **up-to-date**.
 
+For a quick install of Docker, you can execute the command below:
+
+```bash
+curl -sSL https://get.docker.com/ | CHANNEL=stable bash
+```
+
 ## Download
 
 First, set the version you want to install:
@@ -22,7 +28,7 @@ First, set the version you want to install:
 echo LIBRETIME_VERSION="{vars.version}" > .env
 </CodeBlock>
 
-Download the docker-compose files from the repository:
+Download the docker compose files from the repository:
 
 ```bash
 # Load LIBRETIME_VERSION variable
@@ -106,16 +112,16 @@ You can find more details in the `docker-compose.yml` file or on the external se
 Next, run the following commands to setup the database:
 
 ```bash
-docker-compose run --rm api libretime-api migrate
+docker compose run --rm api libretime-api migrate
 ```
 
 Finally, start the services, and check that they're running using the following commands:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 
-docker-compose ps
-docker-compose logs -f
+docker compose ps
+docker compose logs -f
 ```
 
 ## Securing LibreTime
