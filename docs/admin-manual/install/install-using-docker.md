@@ -14,12 +14,6 @@ This guide walk you though the steps required to install LibreTime on your syste
 
 Before installing LibreTime, you need to make sure that [Docker](https://docs.docker.com/engine/) is installed on your operating system and **up-to-date**.
 
-For a quick install of Docker, you can execute the command below:
-
-```bash
-curl -sSL https://get.docker.com/ | CHANNEL=stable bash
-```
-
 ## Download
 
 First, set the version you want to install:
