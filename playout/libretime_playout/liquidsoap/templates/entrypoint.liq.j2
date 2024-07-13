@@ -39,6 +39,8 @@ input_fade_transition = interactive.float("input_fade_transition", {{ preference
 
 %include "{{ paths.lib_filepath }}"
 
+{% include "master_me.liq.j2" %}
+
 {% include "outputs.liq.j2" %}
 
 gateway("started")

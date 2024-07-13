@@ -19,6 +19,8 @@ class StreamPreferences(BaseModel):
     message_offline: str
     replay_gain_enabled: bool
     replay_gain_offset: float
+    master_me_preset: int
+    master_me_lufs: int
 
 
 class StreamState(BaseModel):
