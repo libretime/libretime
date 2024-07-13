@@ -21,6 +21,10 @@ class ShowSerializer(serializers.ModelSerializer):
             "auto_playlist",
             "auto_playlist_enabled",
             "auto_playlist_repeat",
+            "intro_playlist",
+            "override_intro_playlist",
+            "outro_playlist",
+            "override_outro_playlist",
         ]
 
 
