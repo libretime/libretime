@@ -69,6 +69,28 @@ class Show(models.Model):
     auto_playlist_enabled = models.BooleanField(db_column="has_autoplaylist")
     auto_playlist_repeat = models.BooleanField(db_column="autoplaylist_repeat")
 
+    intro_playlist = models.ForeignKey(
+        "schedule.Playlist",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+        db_column="intro_playlist_id",
+        related_name="intro_playlist",
+    )
+
+    override_intro_playlist = models.BooleanField(db_column="override_intro_playlist")
+
+    outro_playlist = models.ForeignKey(
+        "schedule.Playlist",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+        db_column="outro_playlist_id",
+        related_name="outro_playlist",
+    )
+
+    override_outro_playlist = models.BooleanField(db_column="override_outro_playlist")
+
     hosts = models.ManyToManyField(  # type: ignore[var-annotated]
         "core.User",
         through="ShowHost",

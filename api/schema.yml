@@ -6409,6 +6409,16 @@ components:
           type: boolean
         auto_playlist_repeat:
           type: boolean
+        intro_playlist:
+          type: integer
+          nullable: true
+        override_intro_playlist:
+          type: boolean
+        outro_playlist:
+          type: integer
+          nullable: true
+        override_outro_playlist:
+          type: boolean
     PatchedShowDays:
       type: object
       properties:
@@ -7241,6 +7251,16 @@ components:
           type: boolean
         auto_playlist_repeat:
           type: boolean
+        intro_playlist:
+          type: integer
+          nullable: true
+        override_intro_playlist:
+          type: boolean
+        outro_playlist:
+          type: integer
+          nullable: true
+        override_outro_playlist:
+          type: boolean
       required:
         - auto_playlist_enabled
         - auto_playlist_repeat
@@ -7249,6 +7269,8 @@ components:
         - linked
         - live_enabled
         - name
+        - override_intro_playlist
+        - override_outro_playlist
     ShowDays:
       type: object
       properties:

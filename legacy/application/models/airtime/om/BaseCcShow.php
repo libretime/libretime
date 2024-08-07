@@ -142,6 +142,32 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     protected $autoplaylist_repeat;
 
     /**
+     * The value for the override_intro_playlist field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $override_intro_playlist;
+
+    /**
+     * The value for the intro_playlist_id field.
+     * @var        int
+     */
+    protected $intro_playlist_id;
+
+    /**
+     * The value for the override_outro_playlist field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $override_outro_playlist;
+
+    /**
+     * The value for the outro_playlist_id field.
+     * @var        int
+     */
+    protected $outro_playlist_id;
+
+    /**
      * @var        CcPlaylist
      */
     protected $aCcPlaylist;
@@ -232,6 +258,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $this->image_path = '';
         $this->has_autoplaylist = false;
         $this->autoplaylist_repeat = false;
+        $this->override_intro_playlist = false;
+        $this->override_outro_playlist = false;
     }
 
     /**
@@ -429,6 +457,51 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     {
 
         return $this->autoplaylist_repeat;
+    }
+
+    /**
+     * Get the [override_intro_playlist] column value.
+     *
+     * @return boolean
+     */
+    public function getDbOverrideIntroPlaylist()
+    {
+
+        return $this->override_intro_playlist;
+    }
+
+    /**
+     * Get the [intro_playlist_id] column value.
+     *
+     * @return int
+     */
+    public function getDbIntroPlaylistId()
+    {
+
+        return $this->intro_playlist_id;
+    }
+
+    /**
+     * Get the [override_outro_playlist] column value.
+     *
+     * @return boolean
+     */
+    public function getDbOverrideOutroPlaylist()
+    {
+
+        return $this->override_outro_playlist;
+    }
+
+    /**
+     * Get the [outro_playlist_id] column value.
+     *
+     * @return int
+     */
+
+    public function getDbOutroPlaylistId()
+    {
+
+        return $this->outro_playlist_id;
     }
 
     /**
@@ -841,6 +914,101 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     } // setDbAutoPlaylistRepeat()
 
     /**
+     * Sets the value of the [override_intro_playlist] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return CcShow The current object (for fluent API support)
+     */
+    public function setDbOverrideIntroPlaylist($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->override_intro_playlist !== $v) {
+            $this->override_intro_playlist = $v;
+            $this->modifiedColumns[] = CcShowPeer::OVERRIDE_INTRO_PLAYLIST;
+        }
+    }
+
+    /**
+     * Set the value of [intro_playlist_id] column.
+     *
+     * @param  int $v new value
+     * @return CcShow The current object (for fluent API support)
+     */
+
+    public function setDbIntroPlaylistId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->intro_playlist_id !== $v) {
+            $this->intro_playlist_id = $v;
+            $this->modifiedColumns[] = CcShowPeer::INTRO_PLAYLIST_ID;
+        }
+
+        return $this;
+    } // setDbIntroPlaylistId()
+
+    /**
+     * Sets the value of the [override_outro_playlist] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return CcShow The current object (for fluent API support)
+     */
+
+    public function setDbOverrideOutroPlaylist($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->override_outro_playlist !== $v) {
+            $this->override_outro_playlist = $v;
+            $this->modifiedColumns[] = CcShowPeer::OVERRIDE_OUTRO_PLAYLIST;
+        }
+    }
+
+    /**
+     * Set the value of [outro_playlist_id] column.
+     *
+     * @param  int $v new value
+     * @return CcShow The current object (for fluent API support)
+     */
+
+    public function setDbOutroPlaylistId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->outro_playlist_id !== $v) {
+            $this->outro_playlist_id = $v;
+            $this->modifiedColumns[] = CcShowPeer::OUTRO_PLAYLIST_ID;
+        }
+
+        return $this;
+    } // setDbOutroPlaylistId()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -890,6 +1058,14 @@ abstract class BaseCcShow extends BaseObject implements Persistent
                 return false;
             }
 
+            if ($this->override_intro_playlist !== false) {
+                return false;
+            }
+
+            if ($this->override_outro_playlist !== false) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return true
         return true;
     } // hasOnlyDefaultValues()
@@ -929,6 +1105,10 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $this->has_autoplaylist = ($row[$startcol + 14] !== null) ? (boolean) $row[$startcol + 14] : null;
             $this->autoplaylist_id = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
             $this->autoplaylist_repeat = ($row[$startcol + 16] !== null) ? (boolean) $row[$startcol + 16] : null;
+            $this->override_intro_playlist = ($row[$startcol + 17] !== null) ? (boolean) $row[$startcol + 17] : null;
+            $this->intro_playlist_id = ($row[$startcol + 18] !== null) ? (int) $row[$startcol + 18] : null;
+            $this->override_outro_playlist = ($row[$startcol + 19] !== null) ? (boolean) $row[$startcol + 19] : null;
+            $this->outro_playlist_id = ($row[$startcol + 20] !== null) ? (int) $row[$startcol + 20] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -938,7 +1118,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 17; // 17 = CcShowPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 21; // 21 = CcShowPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcShow object", $e);
@@ -1303,6 +1483,18 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowPeer::AUTOPLAYLIST_REPEAT)) {
             $modifiedColumns[':p' . $index++]  = '"autoplaylist_repeat"';
         }
+        if ($this->isColumnModified(CcShowPeer::OVERRIDE_INTRO_PLAYLIST)) {
+            $modifiedColumns[':p' . $index++]  = '"override_intro_playlist"';
+        }
+        if ($this->isColumnModified(CcShowPeer::INTRO_PLAYLIST_ID)) {
+            $modifiedColumns[':p' . $index++]  = '"intro_playlist_id"';
+        }
+        if ($this->isColumnModified(CcShowPeer::OVERRIDE_OUTRO_PLAYLIST)) {
+            $modifiedColumns[':p' . $index++]  = '"override_outro_playlist"';
+        }
+        if ($this->isColumnModified(CcShowPeer::OUTRO_PLAYLIST_ID)) {
+            $modifiedColumns[':p' . $index++]  = '"outro_playlist_id"';
+        }
 
         $sql = sprintf(
             'INSERT INTO "cc_show" (%s) VALUES (%s)',
@@ -1364,6 +1556,18 @@ abstract class BaseCcShow extends BaseObject implements Persistent
                         break;
                     case '"autoplaylist_repeat"':
                         $stmt->bindValue($identifier, $this->autoplaylist_repeat, PDO::PARAM_BOOL);
+                        break;
+                    case '"override_intro_playlist"':
+                        $stmt->bindValue($identifier, $this->override_intro_playlist, PDO::PARAM_BOOL);
+                        break;
+                    case '"intro_playlist_id"':
+                        $stmt->bindValue($identifier, $this->intro_playlist_id, PDO::PARAM_INT);
+                        break;
+                    case '"override_outro_playlist"':
+                        $stmt->bindValue($identifier, $this->override_outro_playlist, PDO::PARAM_BOOL);
+                        break;
+                    case '"outro_playlist_id"':
+                        $stmt->bindValue($identifier, $this->outro_playlist_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1587,6 +1791,18 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             case 16:
                 return $this->getDbAutoPlaylistRepeat();
                 break;
+            case 17:
+                return $this->getDbOverrideIntroPlaylist();
+                break;
+            case 18:
+                return $this->getDbIntroPlaylistId();
+                break;
+            case 19:
+                return $this->getDbOverrideOutroPlaylist();
+                break;
+            case 20:
+                return $this->getDbOutroPlaylistId();
+                break;
             default:
                 return null;
                 break;
@@ -1633,6 +1849,10 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $keys[14] => $this->getDbHasAutoPlaylist(),
             $keys[15] => $this->getDbAutoPlaylistId(),
             $keys[16] => $this->getDbAutoPlaylistRepeat(),
+            $keys[17] => $this->getDbOverrideIntroPlaylist(),
+            $keys[18] => $this->getDbIntroPlaylistId(),
+            $keys[19] => $this->getDbOverrideOutroPlaylist(),
+            $keys[20] => $this->getDbOutroPlaylistId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1740,6 +1960,18 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             case 16:
                 $this->setDbAutoPlaylistRepeat($value);
                 break;
+            case 17:
+                $this->setDbOverrideIntroPlaylist($value);
+                break;
+            case 18:
+                $this->setDbIntroPlaylistId($value);
+                break;
+            case 19:
+                $this->setDbOverrideOutroPlaylist($value);
+                break;
+            case 20:
+                $this->setDbOutroPlaylistId($value);
+                break;
         } // switch()
     }
 
@@ -1781,6 +2013,10 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if (array_key_exists($keys[14], $arr)) $this->setDbHasAutoPlaylist($arr[$keys[14]]);
         if (array_key_exists($keys[15], $arr)) $this->setDbAutoPlaylistId($arr[$keys[15]]);
         if (array_key_exists($keys[16], $arr)) $this->setDbAutoPlaylistRepeat($arr[$keys[16]]);
+        if (array_key_exists($keys[17], $arr)) $this->setDbOverrideIntroPlaylist($arr[$keys[17]]);
+        if (array_key_exists($keys[18], $arr)) $this->setDbIntroPlaylistId($arr[$keys[18]]);
+        if (array_key_exists($keys[19], $arr)) $this->setDbOverrideOutroPlaylist($arr[$keys[19]]);
+        if (array_key_exists($keys[20], $arr)) $this->setDbOutroPlaylistId($arr[$keys[20]]);
     }
 
     /**
@@ -1809,6 +2045,10 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowPeer::HAS_AUTOPLAYLIST)) $criteria->add(CcShowPeer::HAS_AUTOPLAYLIST, $this->has_autoplaylist);
         if ($this->isColumnModified(CcShowPeer::AUTOPLAYLIST_ID)) $criteria->add(CcShowPeer::AUTOPLAYLIST_ID, $this->autoplaylist_id);
         if ($this->isColumnModified(CcShowPeer::AUTOPLAYLIST_REPEAT)) $criteria->add(CcShowPeer::AUTOPLAYLIST_REPEAT, $this->autoplaylist_repeat);
+        if ($this->isColumnModified(CcShowPeer::OVERRIDE_INTRO_PLAYLIST)) $criteria->add(CcShowPeer::OVERRIDE_INTRO_PLAYLIST, $this->override_intro_playlist);
+        if ($this->isColumnModified(CcShowPeer::INTRO_PLAYLIST_ID)) $criteria->add(CcShowPeer::INTRO_PLAYLIST_ID, $this->intro_playlist_id);
+        if ($this->isColumnModified(CcShowPeer::OVERRIDE_OUTRO_PLAYLIST)) $criteria->add(CcShowPeer::OVERRIDE_OUTRO_PLAYLIST, $this->override_outro_playlist);
+        if ($this->isColumnModified(CcShowPeer::OUTRO_PLAYLIST_ID)) $criteria->add(CcShowPeer::OUTRO_PLAYLIST_ID, $this->outro_playlist_id);
 
         return $criteria;
     }
@@ -1888,6 +2128,10 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $copyObj->setDbHasAutoPlaylist($this->getDbHasAutoPlaylist());
         $copyObj->setDbAutoPlaylistId($this->getDbAutoPlaylistId());
         $copyObj->setDbAutoPlaylistRepeat($this->getDbAutoPlaylistRepeat());
+        $copyObj->setDbOverrideIntroPlaylist($this->getDbOverrideIntroPlaylist());
+        $copyObj->setDbIntroPlaylistId($this->getDbIntroPlaylistId());
+        $copyObj->setDbOverrideOutroPlaylist($this->getDbOverrideOutroPlaylist());
+        $copyObj->setDbOutroPlaylistId($this->getDbOutroPlaylistId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -3044,6 +3288,10 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $this->has_autoplaylist = null;
         $this->autoplaylist_id = null;
         $this->autoplaylist_repeat = null;
+        $this->override_intro_playlist = null;
+        $this->intro_playlist_id = null;
+        $this->override_outro_playlist = null;
+        $this->outro_playlist_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
