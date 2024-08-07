@@ -27,7 +27,7 @@ setup(
     },
     install_requires=[
         "django-cors-headers>=3.14.0,<4.5",
-        "django-filter>=2.4.0,<24.3",
+        "django-filter>=2.4.0,<24.4",
         "django>=4.2.0,<4.3",
         "djangorestframework>=3.14.0,<3.16",
         "drf-spectacular>=0.22.1,<0.28",
@@ -41,7 +41,8 @@ setup(
         ],
         "dev": [
             "django-coverage-plugin>=3.0.0,<4",
-            "django-stubs>=1.14.0,<6",
+            # Cannot upgrade to 5.x until https://github.com/typeddjango/django-stubs/issues/2304 is fixed
+            "django-stubs>=1.14.0,<5",
             "djangorestframework-stubs>=1.8.0,<4",
             "model_bakery>=1.10.1,<2",
             "psycopg[binary]>=3.1.8,<4",
