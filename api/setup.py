@@ -35,7 +35,7 @@ setup(
     ],
     extras_require={
         "prod": [
-            "gunicorn>=22.0.0,<22.1",
+            "gunicorn>=22.0.0,<23.1",
             "psycopg[c]>=3.1.8,<3.2",
             "uvicorn[standard]>=0.17.6,<0.31.0",
         ],
