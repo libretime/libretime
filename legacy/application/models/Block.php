@@ -1376,7 +1376,10 @@ SQL;
             } while ($repeat && ($blockTime - $totalTime) > $minTrackLength);
             shuffle($insertList);
         } else {
-            $isFull = fn () => $blockItems !== null && count($insertList) >= $blockItems || $totalTime > $blockTime;
+            $isFull = function () use (&$blockItems, &$insertList, &$totalTime, &$blockTime) {
+                return $blockItems !== null && count($insertList) >= $blockItems || $totalTime > $blockTime;
+            };
+
             $addTrack = function (Track $track) use ($overflow, $blockTime, &$insertList, &$totalTime) {
                 if ($overflow) {
                     $insertList[] = $track;
