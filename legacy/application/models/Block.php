@@ -1564,9 +1564,9 @@ SQL;
 
                     $spCriteriaValue = $this->resolveDate($spCriteriaValue);
 
-                    if ($spCriteriaModifier == 'starts with') {
+                    if ($spCriteriaModifier == CriteriaModifier::STARTS_WITH) {
                         $spCriteriaValue = "{$spCriteriaValue}%";
-                    } elseif ($spCriteriaModifier == 'ends with') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::ENDS_WITH) {
                         $spCriteriaValue = "%{$spCriteriaValue}";
                     } elseif ($spCriteriaModifier == 'contains' || $spCriteriaModifier == 'does not contain') {
                         $spCriteriaValue = "%{$spCriteriaValue}%";
@@ -1596,6 +1596,11 @@ SQL;
                         if ($spCriteria == 'owner_id') {
                             $spCriteria = 'subj.login';
                         }
+
+                        if ($spCriteria == 'filepath') {
+                            $spCriteria = "split_part(filepath, '/', -1)";
+                        }
+
                         if ($i > 0 && $prevgroup == $group) {
                             $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         } else {
