@@ -54,7 +54,7 @@ liable to legal action.
 If you want to go down the commercial music route, check out the
 https://www.prsformusic.com and https://www.ppluk.com websites for UK licence
 details. In the USA, the https://www.soundexchange.com website currently quotes
-a 500 dollar minimum annual fee for non-commercial webcasters, plus a usage fee
+a 1000 (per Jan. 2024) dollar minimum annual fee for non-commercial webcasters, plus a usage fee
 above a certain number of listener hours, for the right to stream music
 recordings to listeners. See the websites of [ASCAP](https://www.ascap.com),
 [BMI](https://www.bmi.com) and [SESAC](https://www.sesac.com) for details of music
