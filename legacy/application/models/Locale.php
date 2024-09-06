@@ -19,6 +19,7 @@ final class Application_Model_Locale
         'it_IT' => 'Italiano',
         'ja_JP' => '日本語',
         'ko_KR' => '한국어',
+        'nb_NO' => 'Norwegian Bokmål (Norway)',
         // 'nl_NL' => '',
         'pl_PL' => 'Polski',
         'pt_BR' => 'Português (Brasil)',
