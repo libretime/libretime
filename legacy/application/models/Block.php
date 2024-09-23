@@ -1633,12 +1633,10 @@ SQL;
             $qry->addDescendingOrderByColumn('utime');
         } elseif ($sortTracks == 'oldest') {
             $qry->addAscendingOrderByColumn('utime');
-        }
-        // these sort additions are needed to override the default postgres NULL sort behavior
-        elseif ($sortTracks == 'mostrecentplay') {
-            $qry->addDescendingOrderByColumn('(lptime IS NULL), lptime');
+        } elseif ($sortTracks == 'mostrecentplay') {
+            $qry->addAscendingOrderByColumn('lptime DESC NULLS LAST, filepath');
         } elseif ($sortTracks == 'leastrecentplay') {
-            $qry->addAscendingOrderByColumn('(lptime IS NOT NULL), lptime');
+            $qry->addAscendingOrderByColumn('lptime ASC NULLS FIRST, filepath');
         } elseif ($sortTracks == 'random') {
             $qry->addAscendingOrderByColumn('random()');
         } else {

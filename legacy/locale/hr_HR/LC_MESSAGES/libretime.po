@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-06-24 02:01+0000\n"
+"POT-Creation-Date: 2024-09-09 02:14+0000\n"
 "PO-Revision-Date: 2023-10-29 05:18+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/libretime/legacy/hr/>\n"
@@ -357,222 +357,226 @@ msgid "Nauru"
 msgstr ""
 
 #: application/common/LocaleHelper.php:101
-msgid "Nepali"
+msgid "Norwegian Bokmål"
 msgstr ""
 
 #: application/common/LocaleHelper.php:102
-msgid "Dutch"
+msgid "Nepali"
 msgstr ""
 
 #: application/common/LocaleHelper.php:103
-msgid "Norwegian"
+msgid "Dutch"
 msgstr ""
 
 #: application/common/LocaleHelper.php:104
-msgid "Occitan"
+msgid "Norwegian"
 msgstr ""
 
 #: application/common/LocaleHelper.php:105
-msgid "(Afan)/Oromoor/Oriya"
+msgid "Occitan"
 msgstr ""
 
 #: application/common/LocaleHelper.php:106
-msgid "Punjabi"
+msgid "(Afan)/Oromoor/Oriya"
 msgstr ""
 
 #: application/common/LocaleHelper.php:107
-msgid "Polish"
+msgid "Punjabi"
 msgstr ""
 
 #: application/common/LocaleHelper.php:108
-msgid "Pashto/Pushto"
+msgid "Polish"
 msgstr ""
 
 #: application/common/LocaleHelper.php:109
-msgid "Portuguese"
+msgid "Pashto/Pushto"
 msgstr ""
 
 #: application/common/LocaleHelper.php:110
-msgid "Quechua"
+msgid "Portuguese"
 msgstr ""
 
 #: application/common/LocaleHelper.php:111
-msgid "Rhaeto-Romance"
+msgid "Quechua"
 msgstr ""
 
 #: application/common/LocaleHelper.php:112
-msgid "Kirundi"
+msgid "Rhaeto-Romance"
 msgstr ""
 
 #: application/common/LocaleHelper.php:113
-msgid "Romanian"
+msgid "Kirundi"
 msgstr ""
 
 #: application/common/LocaleHelper.php:114
-msgid "Russian"
+msgid "Romanian"
 msgstr ""
 
 #: application/common/LocaleHelper.php:115
-msgid "Kinyarwanda"
+msgid "Russian"
 msgstr ""
 
 #: application/common/LocaleHelper.php:116
-msgid "Sanskrit"
+msgid "Kinyarwanda"
 msgstr ""
 
 #: application/common/LocaleHelper.php:117
-msgid "Sindhi"
+msgid "Sanskrit"
 msgstr ""
 
 #: application/common/LocaleHelper.php:118
-msgid "Sangro"
+msgid "Sindhi"
 msgstr ""
 
 #: application/common/LocaleHelper.php:119
-msgid "Serbo-Croatian"
+msgid "Sangro"
 msgstr ""
 
 #: application/common/LocaleHelper.php:120
-msgid "Singhalese"
+msgid "Serbo-Croatian"
 msgstr ""
 
 #: application/common/LocaleHelper.php:121
-msgid "Slovak"
+msgid "Singhalese"
 msgstr ""
 
 #: application/common/LocaleHelper.php:122
-msgid "Slovenian"
+msgid "Slovak"
 msgstr ""
 
 #: application/common/LocaleHelper.php:123
-msgid "Samoan"
+msgid "Slovenian"
 msgstr ""
 
 #: application/common/LocaleHelper.php:124
-msgid "Shona"
+msgid "Samoan"
 msgstr ""
 
 #: application/common/LocaleHelper.php:125
-msgid "Somali"
+msgid "Shona"
 msgstr ""
 
 #: application/common/LocaleHelper.php:126
-msgid "Albanian"
+msgid "Somali"
 msgstr ""
 
 #: application/common/LocaleHelper.php:127
-msgid "Serbian"
+msgid "Albanian"
 msgstr ""
 
 #: application/common/LocaleHelper.php:128
-msgid "Siswati"
+msgid "Serbian"
 msgstr ""
 
 #: application/common/LocaleHelper.php:129
-msgid "Sesotho"
+msgid "Siswati"
 msgstr ""
 
 #: application/common/LocaleHelper.php:130
-msgid "Sundanese"
+msgid "Sesotho"
 msgstr ""
 
 #: application/common/LocaleHelper.php:131
-msgid "Swedish"
+msgid "Sundanese"
 msgstr ""
 
 #: application/common/LocaleHelper.php:132
-msgid "Swahili"
+msgid "Swedish"
 msgstr ""
 
 #: application/common/LocaleHelper.php:133
-msgid "Tamil"
+msgid "Swahili"
 msgstr ""
 
 #: application/common/LocaleHelper.php:134
-msgid "Tegulu"
+msgid "Tamil"
 msgstr ""
 
 #: application/common/LocaleHelper.php:135
-msgid "Tajik"
+msgid "Tegulu"
 msgstr ""
 
 #: application/common/LocaleHelper.php:136
-msgid "Thai"
+msgid "Tajik"
 msgstr ""
 
 #: application/common/LocaleHelper.php:137
-msgid "Tigrinya"
+msgid "Thai"
 msgstr ""
 
 #: application/common/LocaleHelper.php:138
-msgid "Turkmen"
+msgid "Tigrinya"
 msgstr ""
 
 #: application/common/LocaleHelper.php:139
-msgid "Tagalog"
+msgid "Turkmen"
 msgstr ""
 
 #: application/common/LocaleHelper.php:140
-msgid "Setswana"
+msgid "Tagalog"
 msgstr ""
 
 #: application/common/LocaleHelper.php:141
-msgid "Tonga"
+msgid "Setswana"
 msgstr ""
 
 #: application/common/LocaleHelper.php:142
-msgid "Turkish"
+msgid "Tonga"
 msgstr ""
 
 #: application/common/LocaleHelper.php:143
-msgid "Tsonga"
+msgid "Turkish"
 msgstr ""
 
 #: application/common/LocaleHelper.php:144
-msgid "Tatar"
+msgid "Tsonga"
 msgstr ""
 
 #: application/common/LocaleHelper.php:145
-msgid "Twi"
+msgid "Tatar"
 msgstr ""
 
 #: application/common/LocaleHelper.php:146
-msgid "Ukrainian"
+msgid "Twi"
 msgstr ""
 
 #: application/common/LocaleHelper.php:147
-msgid "Urdu"
+msgid "Ukrainian"
 msgstr ""
 
 #: application/common/LocaleHelper.php:148
-msgid "Uzbek"
+msgid "Urdu"
 msgstr ""
 
 #: application/common/LocaleHelper.php:149
-msgid "Vietnamese"
+msgid "Uzbek"
 msgstr ""
 
 #: application/common/LocaleHelper.php:150
-msgid "Volapuk"
+msgid "Vietnamese"
 msgstr ""
 
 #: application/common/LocaleHelper.php:151
-msgid "Wolof"
+msgid "Volapuk"
 msgstr ""
 
 #: application/common/LocaleHelper.php:152
-msgid "Xhosa"
+msgid "Wolof"
 msgstr ""
 
 #: application/common/LocaleHelper.php:153
-msgid "Yoruba"
+msgid "Xhosa"
 msgstr ""
 
 #: application/common/LocaleHelper.php:154
-msgid "Chinese"
+msgid "Yoruba"
 msgstr ""
 
 #: application/common/LocaleHelper.php:155
+msgid "Chinese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:156
 msgid "Zulu"
 msgstr ""
 
