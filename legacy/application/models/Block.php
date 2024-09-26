@@ -1564,24 +1564,24 @@ SQL;
 
                     $spCriteriaValue = $this->resolveDate($spCriteriaValue);
 
-                    if ($spCriteriaModifier == 'starts with') {
+                    if ($spCriteriaModifier == CriteriaModifier::STARTS_WITH) {
                         $spCriteriaValue = "{$spCriteriaValue}%";
-                    } elseif ($spCriteriaModifier == 'ends with') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::ENDS_WITH) {
                         $spCriteriaValue = "%{$spCriteriaValue}";
-                    } elseif ($spCriteriaModifier == 'contains' || $spCriteriaModifier == 'does not contain') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::CONTAINS || $spCriteriaModifier == CriteriaModifier::DOES_NOT_CONTAIN) {
                         $spCriteriaValue = "%{$spCriteriaValue}%";
-                    } elseif ($spCriteriaModifier == 'is in the range') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::IS_IN_THE_RANGE) {
                         $spCriteriaValue = "{$spCriteria} >= '{$spCriteriaValue}' AND {$spCriteria} <= '{$spCriteriaExtra}'";
-                    } elseif ($spCriteriaModifier == 'before') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::BEFORE) {
                         // need to pull in the current time and subtract the value or figure out how to make it relative
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
                         $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') <= '{$dt}'";
-                    } elseif ($spCriteriaModifier == 'after') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::AFTER) {
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
                         $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') >= '{$dt}'";
-                    } elseif ($spCriteriaModifier == 'between') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::BETWEEN) {
                         $fromrelativedate = new DateTime($spCriteriaValue);
                         $fdt = $fromrelativedate->format(DateTime::ISO8601);
 
@@ -1596,6 +1596,11 @@ SQL;
                         if ($spCriteria == 'owner_id') {
                             $spCriteria = 'subj.login';
                         }
+
+                        if ($spCriteria == 'filepath') {
+                            $spCriteria = "split_part(filepath, '/', -1)";
+                        }
+
                         if ($i > 0 && $prevgroup == $group) {
                             $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         } else {
@@ -1628,12 +1633,10 @@ SQL;
             $qry->addDescendingOrderByColumn('utime');
         } elseif ($sortTracks == 'oldest') {
             $qry->addAscendingOrderByColumn('utime');
-        }
-        // these sort additions are needed to override the default postgres NULL sort behavior
-        elseif ($sortTracks == 'mostrecentplay') {
-            $qry->addDescendingOrderByColumn('(lptime IS NULL), lptime');
+        } elseif ($sortTracks == 'mostrecentplay') {
+            $qry->addAscendingOrderByColumn('lptime DESC NULLS LAST, filepath');
         } elseif ($sortTracks == 'leastrecentplay') {
-            $qry->addAscendingOrderByColumn('(lptime IS NOT NULL), lptime');
+            $qry->addAscendingOrderByColumn('lptime ASC NULLS FIRST, filepath');
         } elseif ($sortTracks == 'random') {
             $qry->addAscendingOrderByColumn('random()');
         } else {
