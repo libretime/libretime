@@ -15,7 +15,7 @@ def flatten(xss):
 
 
 def comment_get(id3, _):
-    comments = [v.text for k, v in id3.items() if 'COMM' in k]
+    comments = [v.text for k, v in id3.items() if "COMM" in k]
 
     return flatten(comments)
 
@@ -38,7 +38,7 @@ def analyze_metadata(filepath_: str, metadata: Dict[str, Any]):
     metadata["md5"] = compute_md5(filepath)
 
     # Get audio file metadata
-    extracted = mutagen.File(filepath, easy = True)
+    extracted = mutagen.File(filepath, easy=True)
     if extracted is None:
         logger.warning("no metadata were extracted for %s", filepath)
         return metadata
@@ -54,7 +54,7 @@ def analyze_metadata(filepath_: str, metadata: Dict[str, Any]):
 
     if hasattr(info, "length"):
         metadata["length_seconds"] = info.length
-        metadata["length"] = str(timedelta(seconds = info.length))
+        metadata["length"] = str(timedelta(seconds=info.length))
 
     try:
         # Special handling for the number of channels in mp3 files.
