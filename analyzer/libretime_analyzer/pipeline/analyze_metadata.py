@@ -15,7 +15,7 @@ def flatten(xss):
 
 
 def comment_get(id3, _):
-    comments = [v.text for k, v in id3.items() if "COMM" in k]
+    comments = [v.text for k, v in id3.items() if "COMM" in k or "comment" in k]
 
     return flatten(comments)
 
@@ -93,6 +93,7 @@ def analyze_metadata(filepath_: str, metadata: Dict[str, Any]):
         ("composer", "composer"),
         ("conductor", "conductor"),
         ("copyright", "copyright"),
+        ("comment", "comment"),
         ("comment", "comments"),
         ("comment", "description"),
         ("encoded_by", "encoder"),

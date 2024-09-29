@@ -27,8 +27,8 @@ def test_analyze_metadata(filepath: Path, metadata: dict):
     del metadata["length"]
     del found["length"]
 
-    # mp3,ogg,flac files does not support comments yet
-    if not filepath.suffix == ".m4a":
+    # ogg,flac files does not support comments yet
+    if not filepath.suffix == ".m4a" and not filepath.suffix == ".mp3":
         if "comment" in metadata:
             del metadata["comment"]
 
