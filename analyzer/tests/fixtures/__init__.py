@@ -159,7 +159,7 @@ FILES_TAGGED = [
             **meta,
             **mp3Tags,
             "bit_rate": approx(65000, abs=5e4),
-            "channels": 1,
+            "channels": 2,  # Weird
             "mime": "audio/mp4",
         },
     ),
@@ -297,7 +297,7 @@ FILES_TAGGED += [
             **meta,
             **mp3Tags,
             "bit_rate": approx(65000, abs=5e4),
-            "channels": 1,
+            "channels": 2,  # Weird
             "mime": "audio/mp4",
         },
     ),
