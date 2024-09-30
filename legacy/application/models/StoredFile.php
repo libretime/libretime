@@ -750,7 +750,7 @@ SQL;
             } elseif ($key === 'filepath') {
                 $plSelect[] = 'NULL::VARCHAR AS ' . $key;
                 $blSelect[] = 'NULL::VARCHAR AS ' . $key;
-                $fileSelect[] = $key;
+                $fileSelect[] = "split_part($key, '/', -1) as $key";
                 $streamSelect[] = 'url AS ' . $key;
             } elseif ($key == 'mime') {
                 $plSelect[] = 'NULL::VARCHAR AS ' . $key;
