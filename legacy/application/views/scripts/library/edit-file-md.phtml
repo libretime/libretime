@@ -18,7 +18,7 @@ $baseUrl = Config::getBasePath();
             <div class="inner_track_editor_title" style="width: 100%;">
                 <h2 style="line-height: 26px !important;"><span class="title_obj_name"><?php echo ($this->title); ?></span></h2>
                 <h3 style="line-height: 2px !important;"><span class=""><?php echo ($this->artist_name); ?></span></h3>
-                <h5 style="line-height: 26px !important;"><span class=""><?php $array = explode(DIRECTORY_SEPARATOR, $this->file_path); echo (end($array) . " (" . $this->file_size . ")"); ?></span></h5>
+                <h5 style="line-height: 26px !important;"><span class=""><?php echo ($this->file_name) . " (" . $this->file_size . ")"; ?></span></h5>
             </div>
         </div>
     </div>
