@@ -30,6 +30,7 @@ class PypoFetch(Thread):
     daemon = True
 
     # pylint: disable=too-many-positional-arguments
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         fetch_queue: "Queue[Dict[str, Any]]",
