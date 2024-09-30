@@ -410,15 +410,15 @@ class LibraryController extends Zend_Controller_Action
         $size = $file->getPropelOrm()->getFileSize();
         if ($size < 1000) {
             // Use B up to 1 KB
-            $this->view->file_size = $size . " B";
+            $this->view->file_size = $size . ' B';
         } elseif ($size < (500 * 1000)) {
             // Use KB up to 500 KB
-            $this->view->file_size = round($size / 1000, 1) . " KB";
+            $this->view->file_size = round($size / 1000, 1) . ' KB';
         } elseif ($size < (1 * 1000 * 1000 * 1000)) {
             // Use MB up to 1 GB
-            $this->view->file_size = round($size / 1000 / 1000, 1) . " MB";
+            $this->view->file_size = round($size / 1000 / 1000, 1) . ' MB';
         } else {
-            $this->view->file_size = round($size / 1000 / 1000 / 1000, 1) . " GB";
+            $this->view->file_size = round($size / 1000 / 1000 / 1000, 1) . ' GB';
         }
         $this->view->html = $this->view->render('library/edit-file-md.phtml');
     }
