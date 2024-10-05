@@ -75,7 +75,7 @@ def compute_silences(filepath: Path) -> List[Tuple[float, float]]:
     cmd = _ffmpeg(
         *("-i", filepath),
         "-vn",
-        *("-filter", "highpass=frequency=80,silencedetect=noise=0.001:duration=1"),
+        *("-filter", "highpass=frequency=80,silencedetect=noise=-60dB:duration=0.9"),
     )
 
     starts, ends = [], []
