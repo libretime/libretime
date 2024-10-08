@@ -37,12 +37,11 @@ setup(
         "prod": [
             "gunicorn>=22.0.0,<23.1",
             "psycopg[c]>=3.1.8,<3.2",
-            "uvicorn[standard]>=0.17.6,<0.31.0",
+            "uvicorn[standard]>=0.17.6,<0.32.0",
         ],
         "dev": [
             "django-coverage-plugin>=3.0.0,<4",
-            # Cannot upgrade to 5.x until https://github.com/typeddjango/django-stubs/issues/2304 is fixed
-            "django-stubs>=1.14.0,<5",
+            "django-stubs>=5.1.0,<6",
             "djangorestframework-stubs>=1.8.0,<4",
             "model_bakery>=1.10.1,<2",
             "psycopg[binary]>=3.1.8,<4",
