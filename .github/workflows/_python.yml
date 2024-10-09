@@ -54,6 +54,7 @@ jobs:
           - focal
           - bullseye
           - jammy
+          - bookworm
 
     container:
       image: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
