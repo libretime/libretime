@@ -77,6 +77,10 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
             'add_show_has_autoplaylist' => 0,
             'add_show_autoplaylist_id' => null,
             'add_show_autoplaylist_repeat' => 0,
+            'add_show_override_intro_playlist' => 0,
+            'add_show_intro_playlist_id' => null,
+            'add_show_override_outro_playlist' => 0,
+            'add_show_outro_playlist_id' => null,
         ];
 
         $showService->setCcShow($data);
