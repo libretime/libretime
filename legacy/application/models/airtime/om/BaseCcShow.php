@@ -142,9 +142,31 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     protected $autoplaylist_repeat;
 
     /**
+     * The value for the intro_playlist_id field.
+     * @var        int
+     */
+    protected $intro_playlist_id;
+
+    /**
+     * The value for the outro_playlist_id field.
+     * @var        int
+     */
+    protected $outro_playlist_id;
+
+    /**
      * @var        CcPlaylist
      */
-    protected $aCcPlaylist;
+    protected $aCcPlaylistRelatedByDbAutoPlaylistId;
+
+    /**
+     * @var        CcPlaylist
+     */
+    protected $aCcPlaylistRelatedByDbIntroPlaylistId;
+
+    /**
+     * @var        CcPlaylist
+     */
+    protected $aCcPlaylistRelatedByDbOutroPlaylistId;
 
     /**
      * @var        PropelObjectCollection|CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
@@ -429,6 +451,28 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     {
 
         return $this->autoplaylist_repeat;
+    }
+
+    /**
+     * Get the [intro_playlist_id] column value.
+     *
+     * @return int
+     */
+    public function getDbIntroPlaylistId()
+    {
+
+        return $this->intro_playlist_id;
+    }
+
+    /**
+     * Get the [outro_playlist_id] column value.
+     *
+     * @return int
+     */
+    public function getDbOutroPlaylistId()
+    {
+
+        return $this->outro_playlist_id;
     }
 
     /**
@@ -803,8 +847,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $this->modifiedColumns[] = CcShowPeer::AUTOPLAYLIST_ID;
         }
 
-        if ($this->aCcPlaylist !== null && $this->aCcPlaylist->getDbId() !== $v) {
-            $this->aCcPlaylist = null;
+        if ($this->aCcPlaylistRelatedByDbAutoPlaylistId !== null && $this->aCcPlaylistRelatedByDbAutoPlaylistId->getDbId() !== $v) {
+            $this->aCcPlaylistRelatedByDbAutoPlaylistId = null;
         }
 
 
@@ -839,6 +883,56 @@ abstract class BaseCcShow extends BaseObject implements Persistent
 
         return $this;
     } // setDbAutoPlaylistRepeat()
+
+    /**
+     * Set the value of [intro_playlist_id] column.
+     *
+     * @param  int $v new value
+     * @return CcShow The current object (for fluent API support)
+     */
+    public function setDbIntroPlaylistId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->intro_playlist_id !== $v) {
+            $this->intro_playlist_id = $v;
+            $this->modifiedColumns[] = CcShowPeer::INTRO_PLAYLIST_ID;
+        }
+
+        if ($this->aCcPlaylistRelatedByDbIntroPlaylistId !== null && $this->aCcPlaylistRelatedByDbIntroPlaylistId->getDbId() !== $v) {
+            $this->aCcPlaylistRelatedByDbIntroPlaylistId = null;
+        }
+
+
+        return $this;
+    } // setDbIntroPlaylistId()
+
+    /**
+     * Set the value of [outro_playlist_id] column.
+     *
+     * @param  int $v new value
+     * @return CcShow The current object (for fluent API support)
+     */
+    public function setDbOutroPlaylistId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->outro_playlist_id !== $v) {
+            $this->outro_playlist_id = $v;
+            $this->modifiedColumns[] = CcShowPeer::OUTRO_PLAYLIST_ID;
+        }
+
+        if ($this->aCcPlaylistRelatedByDbOutroPlaylistId !== null && $this->aCcPlaylistRelatedByDbOutroPlaylistId->getDbId() !== $v) {
+            $this->aCcPlaylistRelatedByDbOutroPlaylistId = null;
+        }
+
+
+        return $this;
+    } // setDbOutroPlaylistId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -929,6 +1023,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $this->has_autoplaylist = ($row[$startcol + 14] !== null) ? (boolean) $row[$startcol + 14] : null;
             $this->autoplaylist_id = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
             $this->autoplaylist_repeat = ($row[$startcol + 16] !== null) ? (boolean) $row[$startcol + 16] : null;
+            $this->intro_playlist_id = ($row[$startcol + 17] !== null) ? (int) $row[$startcol + 17] : null;
+            $this->outro_playlist_id = ($row[$startcol + 18] !== null) ? (int) $row[$startcol + 18] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -938,7 +1034,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 17; // 17 = CcShowPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 19; // 19 = CcShowPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcShow object", $e);
@@ -961,8 +1057,14 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
-        if ($this->aCcPlaylist !== null && $this->autoplaylist_id !== $this->aCcPlaylist->getDbId()) {
-            $this->aCcPlaylist = null;
+        if ($this->aCcPlaylistRelatedByDbAutoPlaylistId !== null && $this->autoplaylist_id !== $this->aCcPlaylistRelatedByDbAutoPlaylistId->getDbId()) {
+            $this->aCcPlaylistRelatedByDbAutoPlaylistId = null;
+        }
+        if ($this->aCcPlaylistRelatedByDbIntroPlaylistId !== null && $this->intro_playlist_id !== $this->aCcPlaylistRelatedByDbIntroPlaylistId->getDbId()) {
+            $this->aCcPlaylistRelatedByDbIntroPlaylistId = null;
+        }
+        if ($this->aCcPlaylistRelatedByDbOutroPlaylistId !== null && $this->outro_playlist_id !== $this->aCcPlaylistRelatedByDbOutroPlaylistId->getDbId()) {
+            $this->aCcPlaylistRelatedByDbOutroPlaylistId = null;
         }
     } // ensureConsistency
 
@@ -1003,7 +1105,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aCcPlaylist = null;
+            $this->aCcPlaylistRelatedByDbAutoPlaylistId = null;
+            $this->aCcPlaylistRelatedByDbIntroPlaylistId = null;
+            $this->aCcPlaylistRelatedByDbOutroPlaylistId = null;
             $this->collCcShowInstancess = null;
 
             $this->collCcShowDayss = null;
@@ -1130,11 +1234,25 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aCcPlaylist !== null) {
-                if ($this->aCcPlaylist->isModified() || $this->aCcPlaylist->isNew()) {
-                    $affectedRows += $this->aCcPlaylist->save($con);
+            if ($this->aCcPlaylistRelatedByDbAutoPlaylistId !== null) {
+                if ($this->aCcPlaylistRelatedByDbAutoPlaylistId->isModified() || $this->aCcPlaylistRelatedByDbAutoPlaylistId->isNew()) {
+                    $affectedRows += $this->aCcPlaylistRelatedByDbAutoPlaylistId->save($con);
                 }
-                $this->setCcPlaylist($this->aCcPlaylist);
+                $this->setCcPlaylistRelatedByDbAutoPlaylistId($this->aCcPlaylistRelatedByDbAutoPlaylistId);
+            }
+
+            if ($this->aCcPlaylistRelatedByDbIntroPlaylistId !== null) {
+                if ($this->aCcPlaylistRelatedByDbIntroPlaylistId->isModified() || $this->aCcPlaylistRelatedByDbIntroPlaylistId->isNew()) {
+                    $affectedRows += $this->aCcPlaylistRelatedByDbIntroPlaylistId->save($con);
+                }
+                $this->setCcPlaylistRelatedByDbIntroPlaylistId($this->aCcPlaylistRelatedByDbIntroPlaylistId);
+            }
+
+            if ($this->aCcPlaylistRelatedByDbOutroPlaylistId !== null) {
+                if ($this->aCcPlaylistRelatedByDbOutroPlaylistId->isModified() || $this->aCcPlaylistRelatedByDbOutroPlaylistId->isNew()) {
+                    $affectedRows += $this->aCcPlaylistRelatedByDbOutroPlaylistId->save($con);
+                }
+                $this->setCcPlaylistRelatedByDbOutroPlaylistId($this->aCcPlaylistRelatedByDbOutroPlaylistId);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -1303,6 +1421,12 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowPeer::AUTOPLAYLIST_REPEAT)) {
             $modifiedColumns[':p' . $index++]  = '"autoplaylist_repeat"';
         }
+        if ($this->isColumnModified(CcShowPeer::INTRO_PLAYLIST_ID)) {
+            $modifiedColumns[':p' . $index++]  = '"intro_playlist_id"';
+        }
+        if ($this->isColumnModified(CcShowPeer::OUTRO_PLAYLIST_ID)) {
+            $modifiedColumns[':p' . $index++]  = '"outro_playlist_id"';
+        }
 
         $sql = sprintf(
             'INSERT INTO "cc_show" (%s) VALUES (%s)',
@@ -1364,6 +1488,12 @@ abstract class BaseCcShow extends BaseObject implements Persistent
                         break;
                     case '"autoplaylist_repeat"':
                         $stmt->bindValue($identifier, $this->autoplaylist_repeat, PDO::PARAM_BOOL);
+                        break;
+                    case '"intro_playlist_id"':
+                        $stmt->bindValue($identifier, $this->intro_playlist_id, PDO::PARAM_INT);
+                        break;
+                    case '"outro_playlist_id"':
+                        $stmt->bindValue($identifier, $this->outro_playlist_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1457,9 +1587,21 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aCcPlaylist !== null) {
-                if (!$this->aCcPlaylist->validate($columns)) {
-                    $failureMap = array_merge($failureMap, $this->aCcPlaylist->getValidationFailures());
+            if ($this->aCcPlaylistRelatedByDbAutoPlaylistId !== null) {
+                if (!$this->aCcPlaylistRelatedByDbAutoPlaylistId->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aCcPlaylistRelatedByDbAutoPlaylistId->getValidationFailures());
+                }
+            }
+
+            if ($this->aCcPlaylistRelatedByDbIntroPlaylistId !== null) {
+                if (!$this->aCcPlaylistRelatedByDbIntroPlaylistId->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aCcPlaylistRelatedByDbIntroPlaylistId->getValidationFailures());
+                }
+            }
+
+            if ($this->aCcPlaylistRelatedByDbOutroPlaylistId !== null) {
+                if (!$this->aCcPlaylistRelatedByDbOutroPlaylistId->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aCcPlaylistRelatedByDbOutroPlaylistId->getValidationFailures());
                 }
             }
 
@@ -1587,6 +1729,12 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             case 16:
                 return $this->getDbAutoPlaylistRepeat();
                 break;
+            case 17:
+                return $this->getDbIntroPlaylistId();
+                break;
+            case 18:
+                return $this->getDbOutroPlaylistId();
+                break;
             default:
                 return null;
                 break;
@@ -1633,6 +1781,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $keys[14] => $this->getDbHasAutoPlaylist(),
             $keys[15] => $this->getDbAutoPlaylistId(),
             $keys[16] => $this->getDbAutoPlaylistRepeat(),
+            $keys[17] => $this->getDbIntroPlaylistId(),
+            $keys[18] => $this->getDbOutroPlaylistId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1640,8 +1790,14 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aCcPlaylist) {
-                $result['CcPlaylist'] = $this->aCcPlaylist->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            if (null !== $this->aCcPlaylistRelatedByDbAutoPlaylistId) {
+                $result['CcPlaylistRelatedByDbAutoPlaylistId'] = $this->aCcPlaylistRelatedByDbAutoPlaylistId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aCcPlaylistRelatedByDbIntroPlaylistId) {
+                $result['CcPlaylistRelatedByDbIntroPlaylistId'] = $this->aCcPlaylistRelatedByDbIntroPlaylistId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aCcPlaylistRelatedByDbOutroPlaylistId) {
+                $result['CcPlaylistRelatedByDbOutroPlaylistId'] = $this->aCcPlaylistRelatedByDbOutroPlaylistId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collCcShowInstancess) {
                 $result['CcShowInstancess'] = $this->collCcShowInstancess->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1740,6 +1896,12 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             case 16:
                 $this->setDbAutoPlaylistRepeat($value);
                 break;
+            case 17:
+                $this->setDbIntroPlaylistId($value);
+                break;
+            case 18:
+                $this->setDbOutroPlaylistId($value);
+                break;
         } // switch()
     }
 
@@ -1781,6 +1943,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if (array_key_exists($keys[14], $arr)) $this->setDbHasAutoPlaylist($arr[$keys[14]]);
         if (array_key_exists($keys[15], $arr)) $this->setDbAutoPlaylistId($arr[$keys[15]]);
         if (array_key_exists($keys[16], $arr)) $this->setDbAutoPlaylistRepeat($arr[$keys[16]]);
+        if (array_key_exists($keys[17], $arr)) $this->setDbIntroPlaylistId($arr[$keys[17]]);
+        if (array_key_exists($keys[18], $arr)) $this->setDbOutroPlaylistId($arr[$keys[18]]);
     }
 
     /**
@@ -1809,6 +1973,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowPeer::HAS_AUTOPLAYLIST)) $criteria->add(CcShowPeer::HAS_AUTOPLAYLIST, $this->has_autoplaylist);
         if ($this->isColumnModified(CcShowPeer::AUTOPLAYLIST_ID)) $criteria->add(CcShowPeer::AUTOPLAYLIST_ID, $this->autoplaylist_id);
         if ($this->isColumnModified(CcShowPeer::AUTOPLAYLIST_REPEAT)) $criteria->add(CcShowPeer::AUTOPLAYLIST_REPEAT, $this->autoplaylist_repeat);
+        if ($this->isColumnModified(CcShowPeer::INTRO_PLAYLIST_ID)) $criteria->add(CcShowPeer::INTRO_PLAYLIST_ID, $this->intro_playlist_id);
+        if ($this->isColumnModified(CcShowPeer::OUTRO_PLAYLIST_ID)) $criteria->add(CcShowPeer::OUTRO_PLAYLIST_ID, $this->outro_playlist_id);
 
         return $criteria;
     }
@@ -1888,6 +2054,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $copyObj->setDbHasAutoPlaylist($this->getDbHasAutoPlaylist());
         $copyObj->setDbAutoPlaylistId($this->getDbAutoPlaylistId());
         $copyObj->setDbAutoPlaylistRepeat($this->getDbAutoPlaylistRepeat());
+        $copyObj->setDbIntroPlaylistId($this->getDbIntroPlaylistId());
+        $copyObj->setDbOutroPlaylistId($this->getDbOutroPlaylistId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1977,7 +2145,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return CcShow The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcPlaylist(CcPlaylist $v = null)
+    public function setCcPlaylistRelatedByDbAutoPlaylistId(CcPlaylist $v = null)
     {
         if ($v === null) {
             $this->setDbAutoPlaylistId(NULL);
@@ -1985,12 +2153,12 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $this->setDbAutoPlaylistId($v->getDbId());
         }
 
-        $this->aCcPlaylist = $v;
+        $this->aCcPlaylistRelatedByDbAutoPlaylistId = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the CcPlaylist object, it will not be re-added.
         if ($v !== null) {
-            $v->addCcShow($this);
+            $v->addCcShowRelatedByDbAutoPlaylistId($this);
         }
 
 
@@ -2006,20 +2174,124 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return CcPlaylist The associated CcPlaylist object.
      * @throws PropelException
      */
-    public function getCcPlaylist(PropelPDO $con = null, $doQuery = true)
+    public function getCcPlaylistRelatedByDbAutoPlaylistId(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aCcPlaylist === null && ($this->autoplaylist_id !== null) && $doQuery) {
-            $this->aCcPlaylist = CcPlaylistQuery::create()->findPk($this->autoplaylist_id, $con);
+        if ($this->aCcPlaylistRelatedByDbAutoPlaylistId === null && ($this->autoplaylist_id !== null) && $doQuery) {
+            $this->aCcPlaylistRelatedByDbAutoPlaylistId = CcPlaylistQuery::create()->findPk($this->autoplaylist_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aCcPlaylist->addCcShows($this);
+                $this->aCcPlaylistRelatedByDbAutoPlaylistId->addCcShowsRelatedByDbAutoPlaylistId($this);
              */
         }
 
-        return $this->aCcPlaylist;
+        return $this->aCcPlaylistRelatedByDbAutoPlaylistId;
+    }
+
+    /**
+     * Declares an association between this object and a CcPlaylist object.
+     *
+     * @param                  CcPlaylist $v
+     * @return CcShow The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setCcPlaylistRelatedByDbIntroPlaylistId(CcPlaylist $v = null)
+    {
+        if ($v === null) {
+            $this->setDbIntroPlaylistId(NULL);
+        } else {
+            $this->setDbIntroPlaylistId($v->getDbId());
+        }
+
+        $this->aCcPlaylistRelatedByDbIntroPlaylistId = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the CcPlaylist object, it will not be re-added.
+        if ($v !== null) {
+            $v->addCcShowRelatedByDbIntroPlaylistId($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated CcPlaylist object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return CcPlaylist The associated CcPlaylist object.
+     * @throws PropelException
+     */
+    public function getCcPlaylistRelatedByDbIntroPlaylistId(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aCcPlaylistRelatedByDbIntroPlaylistId === null && ($this->intro_playlist_id !== null) && $doQuery) {
+            $this->aCcPlaylistRelatedByDbIntroPlaylistId = CcPlaylistQuery::create()->findPk($this->intro_playlist_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aCcPlaylistRelatedByDbIntroPlaylistId->addCcShowsRelatedByDbIntroPlaylistId($this);
+             */
+        }
+
+        return $this->aCcPlaylistRelatedByDbIntroPlaylistId;
+    }
+
+    /**
+     * Declares an association between this object and a CcPlaylist object.
+     *
+     * @param                  CcPlaylist $v
+     * @return CcShow The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setCcPlaylistRelatedByDbOutroPlaylistId(CcPlaylist $v = null)
+    {
+        if ($v === null) {
+            $this->setDbOutroPlaylistId(NULL);
+        } else {
+            $this->setDbOutroPlaylistId($v->getDbId());
+        }
+
+        $this->aCcPlaylistRelatedByDbOutroPlaylistId = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the CcPlaylist object, it will not be re-added.
+        if ($v !== null) {
+            $v->addCcShowRelatedByDbOutroPlaylistId($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated CcPlaylist object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return CcPlaylist The associated CcPlaylist object.
+     * @throws PropelException
+     */
+    public function getCcPlaylistRelatedByDbOutroPlaylistId(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aCcPlaylistRelatedByDbOutroPlaylistId === null && ($this->outro_playlist_id !== null) && $doQuery) {
+            $this->aCcPlaylistRelatedByDbOutroPlaylistId = CcPlaylistQuery::create()->findPk($this->outro_playlist_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aCcPlaylistRelatedByDbOutroPlaylistId->addCcShowsRelatedByDbOutroPlaylistId($this);
+             */
+        }
+
+        return $this->aCcPlaylistRelatedByDbOutroPlaylistId;
     }
 
 
@@ -3044,6 +3316,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $this->has_autoplaylist = null;
         $this->autoplaylist_id = null;
         $this->autoplaylist_repeat = null;
+        $this->intro_playlist_id = null;
+        $this->outro_playlist_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -3087,8 +3361,14 @@ abstract class BaseCcShow extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->aCcPlaylist instanceof Persistent) {
-              $this->aCcPlaylist->clearAllReferences($deep);
+            if ($this->aCcPlaylistRelatedByDbAutoPlaylistId instanceof Persistent) {
+              $this->aCcPlaylistRelatedByDbAutoPlaylistId->clearAllReferences($deep);
+            }
+            if ($this->aCcPlaylistRelatedByDbIntroPlaylistId instanceof Persistent) {
+              $this->aCcPlaylistRelatedByDbIntroPlaylistId->clearAllReferences($deep);
+            }
+            if ($this->aCcPlaylistRelatedByDbOutroPlaylistId instanceof Persistent) {
+              $this->aCcPlaylistRelatedByDbOutroPlaylistId->clearAllReferences($deep);
             }
 
             $this->alreadyInClearAllReferencesDeep = false;
@@ -3110,7 +3390,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $this->collCcShowHostss->clearIterator();
         }
         $this->collCcShowHostss = null;
-        $this->aCcPlaylist = null;
+        $this->aCcPlaylistRelatedByDbAutoPlaylistId = null;
+        $this->aCcPlaylistRelatedByDbIntroPlaylistId = null;
+        $this->aCcPlaylistRelatedByDbOutroPlaylistId = null;
     }
 
     /**
