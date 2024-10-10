@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.3.0](https://github.com/libretime/libretime/compare/4.2.0...4.3.0) (2024-10-10)
+
+
+### Features
+
+* add Norwegian Bokmål locale ([#3073](https://github.com/libretime/libretime/issues/3073)) ([e614fbc](https://github.com/libretime/libretime/commit/e614fbcf6cfc52e236135a5529bf4d05bdd5fa43))
+* **legacy:** order by filename when lptime is null ([#3069](https://github.com/libretime/libretime/issues/3069)) ([8c26505](https://github.com/libretime/libretime/commit/8c2650562289bc790f994b2a2bd2d0d9e97957cb))
+
+
+### Bug Fixes
+
+* add missing file for nb_NO locale ([#3075](https://github.com/libretime/libretime/issues/3075)) ([a3865aa](https://github.com/libretime/libretime/commit/a3865aa6eed914b1604fe4a933a9be7b4d2cbb40))
+* **analyzer:** make ffmpeg filters less aggressive ([#3086](https://github.com/libretime/libretime/issues/3086)) ([32cad0f](https://github.com/libretime/libretime/commit/32cad0faa495d4c6058ca75c4aee74b95b73b08e)), closes [#2629](https://github.com/libretime/libretime/issues/2629)
+* docker warnings "keywords casing do not match" ([#3048](https://github.com/libretime/libretime/issues/3048)) ([e095cb2](https://github.com/libretime/libretime/commit/e095cb2a5f6b0b62613b7a6bab9a820d5a4a85f3))
+* **legacy:** fix filename criteria searching ([#3068](https://github.com/libretime/libretime/issues/3068)) ([c883d0f](https://github.com/libretime/libretime/commit/c883d0f2d570dc502dbec99c0f1d2e53fd2e3419))
+
 ## [4.2.0](https://github.com/libretime/libretime/compare/4.1.0...4.2.0) (2024-06-22)
 
 
