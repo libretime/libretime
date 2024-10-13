@@ -38,6 +38,9 @@ class Application_Form_AddShowAutoPlaylist extends Zend_Form_SubForm
             'decorators' => ['ViewHelper'],
         ]);
 
+        // Append 'Default' to 'None' option
+        $playlistNames[null] = _('None') . '/' . _('Default');
+
         $introPlaylistSelect = new Zend_Form_Element_Select('add_show_intro_playlist_id');
         $introPlaylistSelect->setLabel(_('Select Intro Playlist'));
         $introPlaylistSelect->setMultiOptions($playlistNames);
