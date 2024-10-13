@@ -1300,89 +1300,87 @@ SQL;
         $info = $this->getListofFilesMeetCriteria($show);
         $files = $info['files'];
         $limit = $info['limit'];
-        $repeat = $info['repeat_tracks'];
-        $overflow = $info['overflow_tracks'];
-
-        $insertList = [];
-        $totalTime = 0;
-        $totalItems = 0;
+        $repeat = $info['repeat_tracks'] == 1;
+        $overflow = $info['overflow_tracks'] == 1;
+        $isRandomSort = $info['sort_type'] == 'random';
+        $blockTime = $limit['time'];
+        $blockItems = $limit['items'];
 
         if ($files->isEmpty()) {
-            return $insertList;
+            return [];
         }
 
         // this moves the pointer to the first element in the collection
         $files->getFirst();
         $iterator = $files->getIterator();
 
-        $isBlockFull = false;
-
-        while ($iterator->valid()) {
+        /**
+         * @var Track[] $tracks
+         */
+        $tracks = [];
+        $maxItems = 500;
+        while ($iterator->valid() && count($tracks) < $maxItems) {
             $id = $iterator->current()->getDbId();
             $fileLength = $iterator->current()->getCueLength();
             $length = Application_Common_DateHelper::calculateLengthInSeconds($fileLength);
-            // if the block is setup to allow the overflow of tracks this will add the next track even if it becomes
-            // longer than the time limit
-            if ($overflow == 1) {
-                $insertList[] = ['id' => $id, 'length' => $length];
-                $totalTime += $length;
-                ++$totalItems;
-            }
-            // otherwise we need to check to determine if the track will make the playlist exceed the totalTime before
-            // adding it this could loop through a lot of tracks so I used the totalItems limit to prevent
-            // the algorithm from parsing too many items.
 
-            else {
-                $projectedTime = $totalTime + $length;
-                if ($projectedTime > $limit['time']) {
-                    ++$totalItems;
-                } else {
-                    $insertList[] = ['id' => $id, 'length' => $length];
-                    $totalTime += $length;
-                    ++$totalItems;
-                }
-            }
-            if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
-                $isBlockFull = true;
-
-                break;
-            }
+            $tracks[] = new Track($id, $length);
 
             $iterator->next();
         }
 
-        $sizeOfInsert = count($insertList);
+        /**
+         * @var Track[] $insertList
+         */
+        $insertList = [];
+        $totalTime = 0;
+        if ($isRandomSort && !$overflow && $blockItems === null) {
+            $minTrackLength = min(array_map(fn (Track $item) => $item->length, $tracks));
+            do {
+                $solution = SSPSolution::solve($tracks, $blockTime - $totalTime);
+                $insertList = array_merge($insertList, $solution->tracks);
+                $totalTime += $solution->sum;
+            } while ($repeat && ($blockTime - $totalTime) > $minTrackLength);
+            shuffle($insertList);
+        } else {
+            $isFull = function () use (&$blockItems, &$insertList, &$totalTime, &$blockTime) {
+                return $blockItems !== null && count($insertList) >= $blockItems || $totalTime > $blockTime;
+            };
 
-        // if block is not full and repeat_track is check, fill up more
-        // additionally still don't overflow the limit
-        while (!$isBlockFull && $repeat == 1 && $sizeOfInsert > 0) {
-            Logging::debug('adding repeated tracks.');
-            Logging::debug('total time = ' . $totalTime);
-
-            $randomEleKey = array_rand(array_slice($insertList, 0, $sizeOfInsert));
-            // this will also allow the overflow of tracks so that time limited smart blocks will schedule until they
-            // are longer than the time limit rather than never scheduling past the time limit
-            if ($overflow == 1) {
-                $insertList[] = $insertList[$randomEleKey];
-                $totalTime += $insertList[$randomEleKey]['length'];
-                ++$totalItems;
-            } else {
-                $projectedTime = $totalTime + $insertList[$randomEleKey]['length'];
-                if ($projectedTime > $limit['time']) {
-                    ++$totalItems;
+            $addTrack = function (Track $track) use ($overflow, $blockTime, &$insertList, &$totalTime) {
+                if ($overflow) {
+                    $insertList[] = $track;
+                    $totalTime += $track->length;
                 } else {
-                    $insertList[] = $insertList[$randomEleKey];
-                    $totalTime += $insertList[$randomEleKey]['length'];
-                    ++$totalItems;
+                    $projectedTime = $totalTime + $track->length;
+
+                    if ($projectedTime <= $blockTime) {
+                        $insertList[] = $track;
+                        $totalTime += $track->length;
+                    }
+                }
+            };
+
+            foreach ($tracks as $track) {
+                $addTrack($track);
+
+                if ($isFull()) {
+                    break;
                 }
             }
 
-            if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
-                break;
+            $sizeOfInsert = count($insertList);
+
+            while (!$isFull() && $repeat && $sizeOfInsert > 0) {
+                Logging::debug('adding repeated tracks.');
+                Logging::debug('total time = ' . $totalTime);
+                $track = $insertList[array_rand(array_slice($insertList, 0, $sizeOfInsert))];
+
+                $addTrack($track);
             }
         }
 
-        return $insertList;
+        return array_map(fn (Track $track) => ['id' => $track->id, 'length' => $track->length], $insertList);
     }
 
     /**
@@ -1680,7 +1678,7 @@ SQL;
         try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
 
-            return ['files' => $out, 'limit' => $limits, 'repeat_tracks' => $repeatTracks, 'overflow_tracks' => $overflowTracks, 'count' => $out->count()];
+            return ['files' => $out, 'limit' => $limits, 'repeat_tracks' => $repeatTracks, 'overflow_tracks' => $overflowTracks, 'count' => $out->count(), 'sort_type' => $sortTracks];
         } catch (Exception $e) {
             Logging::info($e);
         }
@@ -1746,6 +1744,140 @@ SQL;
         return $real_files;
     }
     // smart block functions end
+}
+
+class Track
+{
+    public int $id;
+
+    public float $length;
+
+    public function __construct($id, $length)
+    {
+        $this->id = $id;
+        $this->length = $length;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
+}
+
+/**
+ * Using a randomized greedy with local improvement approximation solution for the Subset Sum Problem.
+ *
+ * https://web.stevens.edu/algebraic/Files/SubsetSum/przydatek99fast.pdf
+ */
+class SSPSolution
+{
+    /**
+     * @var Track[]
+     */
+    public array $tracks;
+
+    public float $sum = 0.0;
+
+    public function __construct($tracks = [], $sum = null)
+    {
+        $this->tracks = $tracks;
+        if ($sum !== null) {
+            $this->sum = $sum;
+        } else {
+            foreach ($this->tracks as $track) {
+                $this->sum += $track->length;
+            }
+        }
+    }
+
+    public function add(Track $track): SSPSolution
+    {
+        $new = $this->tracks;
+        $new[] = $track;
+
+        return new SSPSolution($new, $this->sum + $track->length);
+    }
+
+    public function replace(Track $old, Track $new): SSPSolution
+    {
+        return new SSPSolution(array_map(fn (Track $it) => $it === $old ? $new : $it, $this->tracks));
+    }
+
+    public static function isCloseEnough(float $delta): bool
+    {
+        return $delta < 0.25;
+    }
+
+    public static function maxByOrNull(array $array, callable $callback)
+    {
+        $max = null;
+        $v = null;
+        foreach ($array as $item) {
+            $value = $callback($item);
+
+            if ($max === null || $v < $value) {
+                $max = $item;
+                $v = $value;
+            }
+        }
+
+        return $max;
+    }
+
+    /**
+     * @param Track[] $tracks
+     */
+    public static function solve(array $tracks, float $target, int $trials = 50): SSPSolution
+    {
+        $best = new SSPSolution();
+        for ($trial = 0; $trial < $trials; ++$trial) {
+            shuffle($tracks);
+            $initial = array_reduce($tracks, function (SSPSolution $solution, Track $track) use ($target) {
+                $new = $solution->add($track);
+                if ($new->sum <= $target) {
+                    return $new;
+                }
+
+                return $solution;
+            }, new SSPSolution());
+
+            if (count($initial->tracks) == count($tracks)) {
+                return $initial;
+            }
+
+            $acceptedItems = $initial->tracks;
+            shuffle($acceptedItems);
+            $localImprovement = array_reduce($acceptedItems, function (SSPSolution $solution, Track $track) use ($target, $tracks) {
+                $delta = $target - $solution->sum;
+                if (self::isCloseEnough($delta)) {
+                    return $solution;
+                }
+
+                $replacement = self::maxByOrNull(
+                    array_filter(
+                        array_diff($tracks, $solution->tracks),
+                        fn (Track $it) => $it->length > $track->length && $it->length - $track->length <= $delta,
+                    ),
+                    fn (Track $it) => $it->length,
+                );
+
+                if ($replacement === null) {
+                    return $solution;
+                }
+
+                return $solution->replace($track, $replacement);
+            }, $initial);
+
+            if ($localImprovement->sum > $best->sum) {
+                $best = $localImprovement;
+            }
+            if ($best->sum === 0.0) {
+                return $best;
+            }
+        }
+
+        return $best;
+    }
 }
 
 class BlockNotFoundException extends Exception {}
