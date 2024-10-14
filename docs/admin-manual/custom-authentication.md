@@ -113,3 +113,57 @@ general:
 ```
 
 You should now be able to use your FreeIPA credentials to log in to LibreTime.
+
+## Setup Header Authentication
+
+If you have an SSO system that supports trusted SSO header authentication such as [Authelia](https://www.authelia.com/),
+you can configure LibreTime to login users based on those trusted headers.
+
+This allows users to only need to log in once on the SSO system and not need to log in again. It also allows LibreTime
+to indirectly support other authentication mechanisms such as OAuth2.
+
+### Configure Headers
+
+LibreTime needs to know what headers are sent, and what information is available to it. You can also
+setup a predefined group mapping so users are automatically granted the desired permissions.
+
+This configuration is in `/etc/libretime/config.yml`. The following is an example configuration for an SSO service
+that does the following:
+
+- Sends the username in the `Remote-User` HTTP header (required).
+- Sends the email in the `Remote-Email` HTTP header (not required).
+- Sends the name in the `Remote-Name` HTTP header (not required). Example `John Doe`
+- Sends the comma delimited groups in the `Remote-Groups` HTTP header (not required). Example `group 1,lt-admin,group2`
+- Users with the `lt-host` group should get host privileges.
+- Users with the `lt-admin` group should get admin privileges.
+- Users with the `lt-pm` group should get program manager privileges.
+- Users with the `lt-superadmin` group should get super admin privileges.
+- All other users should get guest privileges.
+
+```yml
+header_auth:
+  user_header: Remote-User
+  groups_header: Remote-Groups
+  email_header: Remote-Email
+  name_header: Remote-Name
+  group_map:
+    host: lt-host
+    program_manager: lt-pm
+    admin: lt-admin
+    superadmin: lt-superadmin
+```
+
+Since the `user_header` is required, if it is not found in the request, users will be kicked to the login page
+with a message that their username/password is invalid and will not be able to log in.
+
+
+### Enable Header authentication
+
+After everything is set up properly you can enable header auth in `config.yml`:
+
+```yml
+general:
+  auth: LibreTime_Auth_Adaptor_Header
+```
+
+You should now be automatically logged into LibreTime when you click the `Login` button.
