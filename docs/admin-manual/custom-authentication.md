@@ -158,7 +158,7 @@ header_auth:
 If the `user_header` is not found in the request, users will be kicked to the login page
 with a message that their username/password is invalid and will not be able to log in. When `proxy_ip` is provided
 it will check that the request is coming from the correct proxy before doing the login. This prevents users who have
-internal network access from being able to login as whoever they want in LibreTime. 
+internal network access from being able to login as whoever they want in LibreTime.
 
 ::: warning
 
