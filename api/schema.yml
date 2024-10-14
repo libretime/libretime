@@ -6409,6 +6409,12 @@ components:
           type: boolean
         auto_playlist_repeat:
           type: boolean
+        intro_playlist:
+          type: integer
+          nullable: true
+        outro_playlist:
+          type: integer
+          nullable: true
     PatchedShowDays:
       type: object
       properties:
@@ -7241,6 +7247,12 @@ components:
           type: boolean
         auto_playlist_repeat:
           type: boolean
+        intro_playlist:
+          type: integer
+          nullable: true
+        outro_playlist:
+          type: integer
+          nullable: true
       required:
         - auto_playlist_enabled
         - auto_playlist_repeat

@@ -56,6 +56,8 @@ class CcShowTableMap extends TableMap
         $this->addColumn('has_autoplaylist', 'DbHasAutoPlaylist', 'BOOLEAN', true, null, false);
         $this->addForeignKey('autoplaylist_id', 'DbAutoPlaylistId', 'INTEGER', 'cc_playlist', 'id', false, null, null);
         $this->addColumn('autoplaylist_repeat', 'DbAutoPlaylistRepeat', 'BOOLEAN', true, null, false);
+        $this->addForeignKey('intro_playlist_id', 'DbIntroPlaylistId', 'INTEGER', 'cc_playlist', 'id', false, null, null);
+        $this->addForeignKey('outro_playlist_id', 'DbOutroPlaylistId', 'INTEGER', 'cc_playlist', 'id', false, null, null);
         // validators
     } // initialize()
 
@@ -64,7 +66,9 @@ class CcShowTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('autoplaylist_id' => 'id', ), 'SET NULL', null);
+        $this->addRelation('CcPlaylistRelatedByDbAutoPlaylistId', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('autoplaylist_id' => 'id', ), 'SET NULL', null);
+        $this->addRelation('CcPlaylistRelatedByDbIntroPlaylistId', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('intro_playlist_id' => 'id', ), 'SET NULL', null);
+        $this->addRelation('CcPlaylistRelatedByDbOutroPlaylistId', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('outro_playlist_id' => 'id', ), 'SET NULL', null);
         $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null, 'CcShowInstancess');
         $this->addRelation('CcShowDays', 'CcShowDays', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null, 'CcShowDayss');
         $this->addRelation('CcShowRebroadcast', 'CcShowRebroadcast', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null, 'CcShowRebroadcasts');

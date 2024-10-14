@@ -16,6 +16,8 @@ cc_show:
     has_autoplaylist: false
     autoplaylist_id: null
     autoplaylist_repeat: false
+    intro_playlist_id: null
+    outro_playlist_id: null
 cc_show_days:
   - id: "1"
     first_show: "2014-01-05"

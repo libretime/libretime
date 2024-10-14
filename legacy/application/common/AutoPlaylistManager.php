@@ -33,8 +33,13 @@ class AutoPlaylistManager
             // call the addPlaylist to show function and don't check for user permission to avoid call to non-existant user object
             $sid = $si->getShowId();
             $playlistrepeat = new Application_Model_Show($sid);
-            $introplaylistid = Application_Model_Preference::GetIntroPlaylist();
-            $outroplaylistid = Application_Model_Preference::GetOutroPlaylist();
+            if (!$introplaylistid = $playlistrepeat->getIntroPlaylistId()) {
+                $introplaylistid = Application_Model_Preference::GetIntroPlaylist();
+            }
+
+            if (!$outroplaylistid = $playlistrepeat->getOutroPlaylistId()) {
+                $outroplaylistid = Application_Model_Preference::GetOutroPlaylist();
+            }
 
             // we want to check and see if we need to repeat this process until the show is 100% scheduled
             // so we create a while loop and break it immediately if repeat until full isn't enabled
