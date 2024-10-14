@@ -130,10 +130,11 @@ setup a predefined group mapping so users are automatically granted the desired 
 This configuration is in `/etc/libretime/config.yml`. The following is an example configuration for an SSO service
 that does the following:
 
-- Sends the username in the `Remote-User` HTTP header (required).
-- Sends the email in the `Remote-Email` HTTP header (not required).
-- Sends the name in the `Remote-Name` HTTP header (not required). Example `John Doe`
-- Sends the comma delimited groups in the `Remote-Groups` HTTP header (not required). Example `group 1,lt-admin,group2`
+- Sends the username in the `Remote-User` HTTP header.
+- Sends the email in the `Remote-Email` HTTP header.
+- Sends the name in the `Remote-Name` HTTP header. Example `John Doe`
+- Sends the comma delimited groups in the `Remote-Groups` HTTP header. Example `group 1,lt-admin,group2`
+- Has an IP of `10.0.0.34` (not required). When not provided it is not checked.
 - Users with the `lt-host` group should get host privileges.
 - Users with the `lt-admin` group should get admin privileges.
 - Users with the `lt-pm` group should get program manager privileges.
@@ -142,10 +143,11 @@ that does the following:
 
 ```yml
 header_auth:
-  user_header: Remote-User
-  groups_header: Remote-Groups
-  email_header: Remote-Email
-  name_header: Remote-Name
+  user_header: Remote-User # This is the default and could be omitted
+  groups_header: Remote-Groups # This is the default and could be omitted
+  email_header: Remote-Email # This is the default and could be omitted
+  name_header: Remote-Name # This is the default and could be omitted
+  proxy_ip: 10.0.0.34
   group_map:
     host: lt-host
     program_manager: lt-pm
@@ -153,9 +155,16 @@ header_auth:
     superadmin: lt-superadmin
 ```
 
-Since the `user_header` is required, if it is not found in the request, users will be kicked to the login page
-with a message that their username/password is invalid and will not be able to log in.
+If the `user_header` is not found in the request, users will be kicked to the login page
+with a message that their username/password is invalid and will not be able to log in. When `proxy_ip` is provided
+it will check that the request is coming from the correct proxy before doing the login. This prevents users who have
+internal network access from being able to login as whoever they want in LibreTime. 
 
+::: warning
+
+If `proxy_ip` is not provided any user on the internal network can log in as any user in LibreTime.
+
+:::
 
 ### Enable Header authentication
 

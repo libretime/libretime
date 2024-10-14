@@ -5,16 +5,16 @@
  */
 class LibreTime_Auth_Adaptor_Header implements Zend_Auth_Adapter_Interface
 {
-    public function locale(): string
-    {
-        return Config::get('header_auth.locale');
-    }
-
     /**
      * @throws Exception
      */
     public function authenticate(): Zend_Auth_Result
     {
+        $trustedIp = Config::get('header_auth.proxy_ip');
+        if ($trustedIp != null && $_SERVER['REMOTE_ADDR'] != trim($trustedIp)) {
+            return new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null);
+        }
+
         $userHeader = Config::get('header_auth.user_header');
         $groupsHeader = Config::get('header_auth.groups_header');
         $emailHeader = Config::get('header_auth.email_header');
