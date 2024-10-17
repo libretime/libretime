@@ -55,9 +55,9 @@ class CcPlaylistTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('creator_id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('CcShow', 'CcShow', RelationMap::ONE_TO_MANY, array('id' => 'autoplaylist_id', ), 'SET NULL', null, 'CcShows');
-        $this->addRelation('CcShow', 'CcShow', RelationMap::ONE_TO_MANY, array('id' => 'intro_playlist_id', ), 'SET NULL', null, 'CcShows');
-        $this->addRelation('CcShow', 'CcShow', RelationMap::ONE_TO_MANY, array('id' => 'outro_playlist_id', ), 'SET NULL', null, 'CcShows');
+        $this->addRelation('CcShowRelatedByDbAutoPlaylistId', 'CcShow', RelationMap::ONE_TO_MANY, array('id' => 'autoplaylist_id', ), 'SET NULL', null, 'CcShowsRelatedByDbAutoPlaylistId');
+        $this->addRelation('CcShowRelatedByDbIntroPlaylistId', 'CcShow', RelationMap::ONE_TO_MANY, array('id' => 'intro_playlist_id', ), 'SET NULL', null, 'CcShowsRelatedByDbIntroPlaylistId');
+        $this->addRelation('CcShowRelatedByDbOutroPlaylistId', 'CcShow', RelationMap::ONE_TO_MANY, array('id' => 'outro_playlist_id', ), 'SET NULL', null, 'CcShowsRelatedByDbOutroPlaylistId');
         $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'playlist_id', ), 'CASCADE', null, 'CcPlaylistcontentss');
     } // buildRelations()
 

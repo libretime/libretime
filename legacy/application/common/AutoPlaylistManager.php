@@ -33,15 +33,11 @@ class AutoPlaylistManager
             // call the addPlaylist to show function and don't check for user permission to avoid call to non-existant user object
             $sid = $si->getShowId();
             $playlistrepeat = new Application_Model_Show($sid);
-            if ($playlistrepeat->getHasOverrideIntroPlaylist()) {
-                $introplaylistid = $playlistrepeat->getIntroPlaylistId();
-            } else {
+            if (!$introplaylistid = $playlistrepeat->getIntroPlaylistId()) {
                 $introplaylistid = Application_Model_Preference::GetIntroPlaylist();
             }
 
-            if ($playlistrepeat->getHasOverrideOutroPlaylist()) {
-                $outroplaylistid = $playlistrepeat->getOutroPlaylistId();
-            } else {
+            if (!$outroplaylistid = $playlistrepeat->getOutroPlaylistId()) {
                 $outroplaylistid = Application_Model_Preference::GetOutroPlaylist();
             }
 
