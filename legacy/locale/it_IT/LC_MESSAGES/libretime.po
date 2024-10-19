@@ -13,15 +13,16 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2024-09-09 02:14+0000\n"
-"PO-Revision-Date: 2023-12-27 23:06+0000\n"
+"PO-Revision-Date: 2024-10-16 22:15+0000\n"
 "Last-Translator: Maurizio Castelvetro <castelvetro@gmail.com>\n"
-"Language-Team: Italian <https://hosted.weblate.org/projects/libretime/legacy/it/>\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/libretime/legacy/"
+"it/>\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.8-rc\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -3878,11 +3879,11 @@ msgstr "Il programma %s è già stato aggiornato!"
 
 #: application/models/Scheduler.php:187
 msgid "Content in linked shows cannot be changed while on air!"
-msgstr ""
+msgstr "Il contenuto non può essere modificato durante la trasmissione!"
 
 #: application/models/Scheduler.php:202
 msgid "Cannot schedule a playlist that contains missing files."
-msgstr ""
+msgstr "Impossibile programmare una playlist contenente file assenti."
 
 #: application/models/Scheduler.php:229 application/models/Scheduler.php:321
 msgid "A selected File does not exist!"
@@ -3952,7 +3953,7 @@ msgstr "Tipo di stream sconosciuto: %s"
 
 #: application/services/CalendarService.php:48
 msgid "Record file doesn't exist"
-msgstr ""
+msgstr "File non esistente"
 
 #: application/services/CalendarService.php:53
 msgid "View Recorded File Metadata"
@@ -3974,7 +3975,7 @@ msgstr ""
 #: application/services/CalendarService.php:149
 #: application/services/CalendarService.php:168
 msgid "Edit Instance"
-msgstr ""
+msgstr "Modifica istanza"
 
 #: application/services/CalendarService.php:161
 #: application/services/CalendarService.php:175
@@ -3983,7 +3984,7 @@ msgstr "Modifica il programma"
 
 #: application/services/CalendarService.php:199
 msgid "Delete Instance"
-msgstr ""
+msgstr "Cancella istanza"
 
 #: application/services/CalendarService.php:206
 msgid "Delete Instance and All Following"
@@ -3991,7 +3992,7 @@ msgstr ""
 
 #: application/services/CalendarService.php:264
 msgid "Permission denied"
-msgstr ""
+msgstr "Autorizzazione negata"
 
 #: application/services/CalendarService.php:268
 msgid "Can't drag and drop repeating shows"
@@ -4019,7 +4020,7 @@ msgstr "Devi aspettare un'ora prima di ritrasmettere."
 
 #: application/services/HistoryService.php:1062
 msgid "Track"
-msgstr ""
+msgstr "Traccia"
 
 #: application/services/HistoryService.php:1103
 msgid "Played"
