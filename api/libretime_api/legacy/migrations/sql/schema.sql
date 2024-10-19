@@ -126,7 +126,9 @@ CREATE TABLE "cc_show"
     "has_autoplaylist" BOOLEAN DEFAULT 'f' NOT NULL,
     "autoplaylist_id" INTEGER,
     "autoplaylist_repeat" BOOLEAN DEFAULT 'f' NOT NULL,
+    "override_intro_playlist" BOOLEAN DEFAULT 'f' NOT NULL,
     "intro_playlist_id" INTEGER,
+    "override_outro_playlist" BOOLEAN DEFAULT 'f' NOT NULL,
     "outro_playlist_id" INTEGER,
     PRIMARY KEY ("id")
 );
