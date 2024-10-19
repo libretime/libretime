@@ -99,6 +99,22 @@ class Schema implements ConfigurationInterface
             /**/->scalarNode('filter_field')->end()
             ->end()->end()
 
+            // Header Auth Schema
+            ->arrayNode('header_auth')->children()
+            /**/->scalarNode('user_header')->defaultValue('Remote-User')->end()
+            /**/->scalarNode('groups_header')->defaultValue('Remote-Groups')->end()
+            /**/->scalarNode('email_header')->defaultValue('Remote-Email')->end()
+            /**/->scalarNode('name_header')->defaultValue('Remote-Name')->end()
+            /**/->scalarNode('proxy_ip')->end()
+            /**/->scalarNode('locale')->defaultValue('en-US')->end()
+            /**/->arrayNode('group_map')->children()
+            /*  */->scalarNode('host')->end()
+            /*  */->scalarNode('program_manager')->end()
+            /*  */->scalarNode('admin')->end()
+            /*  */->scalarNode('superadmin')->end()
+            /**/->end()->end()
+            ->end()->end()
+
             // Playout schema
             ->arrayNode('playout')
             /**/->ignoreExtraKeys()
