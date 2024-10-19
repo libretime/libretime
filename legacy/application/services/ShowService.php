@@ -1668,12 +1668,12 @@ SQL;
             $ccShow->setDbAutoPlaylistId($showData['add_show_autoplaylist_id']);
         }
 
-        $ccShow->setDbOverrideIntroPlaylist($showData['add_show_override_intro_playlist'] == 1);
-        if ($showData['add_show_intro_playlist_id'] != '') {
+        $ccShow->setDbOverrideIntroPlaylist($showData['add_show_intro_playlist_id'] != 0);
+        if ($showData['add_show_outro_playlist_id'] != '') {
             $ccShow->setDbIntroPlaylistId($showData['add_show_intro_playlist_id']);
         }
 
-        $ccShow->setDbOverrideOutroPlaylist($showData['add_show_override_outro_playlist'] == 1);
+        $ccShow->setDbOverrideOutroPlaylist($showData['add_show_outro_playlist_id'] != 0);
         if ($showData['add_show_outro_playlist_id'] != '') {
             $ccShow->setDbOutroPlaylistId($showData['add_show_outro_playlist_id']);
         }
