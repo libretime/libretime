@@ -6411,9 +6411,9 @@ components:
           type: boolean
         intro_playlist:
           type: integer
+          nullable: true
         override_intro_playlist:
           type: boolean
-          nullable: true
         outro_playlist:
           type: integer
           nullable: true
