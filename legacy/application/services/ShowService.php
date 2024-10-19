@@ -1669,7 +1669,7 @@ SQL;
         }
 
         $ccShow->setDbOverrideIntroPlaylist($showData['add_show_intro_playlist_id'] != 0);
-        if ($showData['add_show_outro_playlist_id'] != '') {
+        if ($showData['add_show_intro_playlist_id'] != '') {
             $ccShow->setDbIntroPlaylistId($showData['add_show_intro_playlist_id']);
         }
 
