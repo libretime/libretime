@@ -182,9 +182,9 @@ class Application_Model_Show
 
         if ($show->getDbOverrideIntroPlaylist()) {
             return $show->getDbIntroPlaylistId();
-        } else {
-            return 0;
         }
+
+        return 0;
     }
 
     public function setIntroPlaylistId($playlistid)
@@ -208,9 +208,9 @@ class Application_Model_Show
 
         if ($show->getDbOverrideOutroPlaylist()) {
             return $show->getDbOutroPlaylistId();
-        } else {
-            return 0;
         }
+
+        return 0;
     }
 
     public function setOutroPlaylistId($playlistid)
