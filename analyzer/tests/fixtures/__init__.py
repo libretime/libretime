@@ -96,12 +96,18 @@ tags = {
     "comment": "Test Comment",
 }
 
+mp3Tags = {
+    **tags,
+    "comments": tags["comment"],
+    "description": tags["comment"],
+}
+
 FILES_TAGGED = [
     FixtureMeta(
         here / "s1-jointstereo-tagged.mp3",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(128000, abs=1e2),
             "channels": 2,
             "mime": "audio/mp3",
@@ -111,7 +117,7 @@ FILES_TAGGED = [
         here / "s1-mono-tagged.mp3",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(64000, abs=1e2),
             "channels": 1,
             "mime": "audio/mp3",
@@ -121,7 +127,7 @@ FILES_TAGGED = [
         here / "s1-stereo-tagged.mp3",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(128000, abs=1e2),
             "channels": 2,
             "mime": "audio/mp3",
@@ -151,7 +157,7 @@ FILES_TAGGED = [
         here / "s1-mono-tagged.m4a",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(65000, abs=5e4),
             "channels": 2,  # Weird
             "mime": "audio/mp4",
@@ -161,7 +167,7 @@ FILES_TAGGED = [
         here / "s1-stereo-tagged.m4a",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(128000, abs=1e5),
             "channels": 2,
             "mime": "audio/mp4",
@@ -228,12 +234,18 @@ tags = {
     "comment": "Ł Ą Ż Ę Ć Ń Ś Ź",
 }
 
+mp3Tags = {
+    **tags,
+    "comments": tags["comment"],
+    "description": tags["comment"],
+}
+
 FILES_TAGGED += [
     FixtureMeta(
         here / "s1-jointstereo-tagged-utf8.mp3",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(128000, abs=1e2),
             "channels": 2,
             "mime": "audio/mp3",
@@ -243,7 +255,7 @@ FILES_TAGGED += [
         here / "s1-mono-tagged-utf8.mp3",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(64000, abs=1e2),
             "channels": 1,
             "mime": "audio/mp3",
@@ -253,7 +265,7 @@ FILES_TAGGED += [
         here / "s1-stereo-tagged-utf8.mp3",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(128000, abs=1e2),
             "channels": 2,
             "mime": "audio/mp3",
@@ -283,7 +295,7 @@ FILES_TAGGED += [
         here / "s1-mono-tagged-utf8.m4a",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(65000, abs=5e4),
             "channels": 2,  # Weird
             "mime": "audio/mp4",
@@ -293,7 +305,7 @@ FILES_TAGGED += [
         here / "s1-stereo-tagged-utf8.m4a",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(128000, abs=1e5),
             "channels": 2,
             "mime": "audio/mp4",
