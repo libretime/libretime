@@ -1596,7 +1596,7 @@ SQL;
                         }
 
                         if ($spCriteria == 'filepath') {
-                            $spCriteria = "split_part(filepath, '/', -1)";
+                            $spCriteria = "reverse(split_part(reverse(filepath), '/', 1))";
                         }
 
                         if ($i > 0 && $prevgroup == $group) {
