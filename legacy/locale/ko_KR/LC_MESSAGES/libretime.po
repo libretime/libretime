@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-09-09 02:14+0000\n"
+"POT-Creation-Date: 2024-10-21 02:20+0000\n"
 "PO-Revision-Date: 2015-09-05 08:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Korean (Korea)\n"
@@ -2787,16 +2787,33 @@ msgstr "시간을 설정하세요"
 msgid "Must wait at least 1 hour to rebroadcast"
 msgstr "재방송 설정까지 1시간 기간이 필요합니다"
 
-#: application/forms/AddShowAutoPlaylist.php:18
+#: application/forms/AddShowAutoPlaylist.php:20
 msgid "Add Autoloading Playlist ?"
 msgstr ""
 
-#: application/forms/AddShowAutoPlaylist.php:25
+#: application/forms/AddShowAutoPlaylist.php:27
 msgid "Select Playlist"
 msgstr ""
 
-#: application/forms/AddShowAutoPlaylist.php:32
+#: application/forms/AddShowAutoPlaylist.php:35
 msgid "Repeat Playlist Until Show is Full ?"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:42
+msgid "Default"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:42
+#: application/models/Library.php:36 application/models/Library.php:57
+msgid "None"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:45
+msgid "Select Intro Playlist"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:52
+msgid "Select Outro Playlist"
 msgstr ""
 
 #: application/forms/AddShowLiveStream.php:10
@@ -2991,7 +3008,7 @@ msgstr "쇼를 과거에 생성 할수 없습니다"
 msgid "Cannot modify start date/time of the show that is already started"
 msgstr "이미 시작한 쇼의 시작 날짜/시간을 바꿀수 없습니다"
 
-#: application/forms/AddShowWhen.php:166 application/models/Show.php:326
+#: application/forms/AddShowWhen.php:166 application/models/Show.php:352
 msgid "End date/time cannot be in the past"
 msgstr "종료 날짜/시간을 과거로 설정할수 없습니다"
 
@@ -3816,10 +3833,6 @@ msgstr ""
 msgid "Select criteria"
 msgstr "기준 선택"
 
-#: application/models/Library.php:36 application/models/Library.php:57
-msgid "None"
-msgstr ""
-
 #: application/models/Preference.php:538
 #, php-format
 msgid "Powered by %s"
@@ -3881,11 +3894,11 @@ msgstr ""
 msgid "A selected File does not exist!"
 msgstr "선택하신 파일이 존재 하지 않습니다"
 
-#: application/models/Show.php:229
+#: application/models/Show.php:255
 msgid "Shows can have a max length of 24 hours."
 msgstr "쇼 길이는 24시간을 넘을수 없습니다."
 
-#: application/models/Show.php:341
+#: application/models/Show.php:367
 msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."

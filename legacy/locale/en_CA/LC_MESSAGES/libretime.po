@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-09-09 02:14+0000\n"
+"POT-Creation-Date: 2024-10-21 02:20+0000\n"
 "PO-Revision-Date: 2015-09-05 08:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: English (Canada)\n"
@@ -2790,16 +2790,33 @@ msgstr "Time must be specified"
 msgid "Must wait at least 1 hour to rebroadcast"
 msgstr "Must wait at least 1 hour to rebroadcast"
 
-#: application/forms/AddShowAutoPlaylist.php:18
+#: application/forms/AddShowAutoPlaylist.php:20
 msgid "Add Autoloading Playlist ?"
 msgstr ""
 
-#: application/forms/AddShowAutoPlaylist.php:25
+#: application/forms/AddShowAutoPlaylist.php:27
 msgid "Select Playlist"
 msgstr ""
 
-#: application/forms/AddShowAutoPlaylist.php:32
+#: application/forms/AddShowAutoPlaylist.php:35
 msgid "Repeat Playlist Until Show is Full ?"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:42
+msgid "Default"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:42
+#: application/models/Library.php:36 application/models/Library.php:57
+msgid "None"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:45
+msgid "Select Intro Playlist"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:52
+msgid "Select Outro Playlist"
 msgstr ""
 
 #: application/forms/AddShowLiveStream.php:10
@@ -2994,7 +3011,7 @@ msgstr "Cannot create show in the past"
 msgid "Cannot modify start date/time of the show that is already started"
 msgstr "Cannot modify start date/time of the show that is already started"
 
-#: application/forms/AddShowWhen.php:166 application/models/Show.php:326
+#: application/forms/AddShowWhen.php:166 application/models/Show.php:352
 msgid "End date/time cannot be in the past"
 msgstr "End date/time cannot be in the past"
 
@@ -3819,10 +3836,6 @@ msgstr ""
 msgid "Select criteria"
 msgstr "Select criteria"
 
-#: application/models/Library.php:36 application/models/Library.php:57
-msgid "None"
-msgstr ""
-
 #: application/models/Preference.php:538
 #, php-format
 msgid "Powered by %s"
@@ -3884,11 +3897,11 @@ msgstr ""
 msgid "A selected File does not exist!"
 msgstr "A selected File does not exist!"
 
-#: application/models/Show.php:229
+#: application/models/Show.php:255
 msgid "Shows can have a max length of 24 hours."
 msgstr "Shows can have a max length of 24 hours."
 
-#: application/models/Show.php:341
+#: application/models/Show.php:367
 msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."
