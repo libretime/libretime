@@ -78,6 +78,8 @@ class Show(models.Model):
         related_name="intro_playlist",
     )
 
+    override_intro_playlist = models.BooleanField(db_column="override_intro_playlist")
+
     outro_playlist = models.ForeignKey(
         "schedule.Playlist",
         on_delete=models.DO_NOTHING,
@@ -86,6 +88,8 @@ class Show(models.Model):
         db_column="outro_playlist_id",
         related_name="outro_playlist",
     )
+
+    override_outro_playlist = models.BooleanField(db_column="override_outro_playlist")
 
     hosts = models.ManyToManyField(  # type: ignore[var-annotated]
         "core.User",
