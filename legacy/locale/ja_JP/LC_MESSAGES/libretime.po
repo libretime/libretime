@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-10-21 02:20+0000\n"
+"POT-Creation-Date: 2024-10-28 02:21+0000\n"
 "PO-Revision-Date: 2021-10-17 08:09+0000\n"
 "Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/libretime/legacy/ja/>\n"
@@ -1809,37 +1809,37 @@ msgid "Month"
 msgstr ""
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:255
+#: application/forms/GeneralPreferences.php:257
 msgid "Sunday"
 msgstr "日曜日"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:256
+#: application/forms/GeneralPreferences.php:258
 msgid "Monday"
 msgstr "月曜日"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:257
+#: application/forms/GeneralPreferences.php:259
 msgid "Tuesday"
 msgstr "火曜日"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:258
+#: application/forms/GeneralPreferences.php:260
 msgid "Wednesday"
 msgstr "水曜日"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:259
+#: application/forms/GeneralPreferences.php:261
 msgid "Thursday"
 msgstr "木曜日"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:260
+#: application/forms/GeneralPreferences.php:262
 msgid "Friday"
 msgstr "金曜日"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:261
+#: application/forms/GeneralPreferences.php:263
 msgid "Saturday"
 msgstr "土曜日"
 
@@ -2519,19 +2519,19 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:461
 #: application/forms/AddTracktype.php:61
-#: application/forms/GeneralPreferences.php:125
-#: application/forms/GeneralPreferences.php:141
-#: application/forms/GeneralPreferences.php:172
-#: application/forms/GeneralPreferences.php:239
+#: application/forms/GeneralPreferences.php:127
+#: application/forms/GeneralPreferences.php:143
+#: application/forms/GeneralPreferences.php:174
+#: application/forms/GeneralPreferences.php:241
 msgid "Enabled"
 msgstr "有効"
 
 #: application/controllers/LocaleController.php:462
 #: application/forms/AddTracktype.php:60
-#: application/forms/GeneralPreferences.php:124
-#: application/forms/GeneralPreferences.php:140
-#: application/forms/GeneralPreferences.php:171
-#: application/forms/GeneralPreferences.php:238
+#: application/forms/GeneralPreferences.php:126
+#: application/forms/GeneralPreferences.php:142
+#: application/forms/GeneralPreferences.php:173
+#: application/forms/GeneralPreferences.php:240
 msgid "Disabled"
 msgstr "無効"
 
@@ -3011,7 +3011,7 @@ msgstr "過去の日付に番組は作成できません。"
 msgid "Cannot modify start date/time of the show that is already started"
 msgstr "すでに開始されている番組の開始日、開始時間を変更することはできません。"
 
-#: application/forms/AddShowWhen.php:166 application/models/Show.php:352
+#: application/forms/AddShowWhen.php:166 application/models/Show.php:378
 msgid "End date/time cannot be in the past"
 msgstr "終了日時は過去に設定できません。"
 
@@ -3240,74 +3240,74 @@ msgstr "デフォルトフェードアウト（初期値）："
 msgid "Track Type Upload Default"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:110
+#: application/forms/GeneralPreferences.php:112
 msgid "Intro Autoloading Playlist"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:116
+#: application/forms/GeneralPreferences.php:118
 msgid "Outro Autoloading Playlist"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:122
+#: application/forms/GeneralPreferences.php:124
 msgid "Overwrite Podcast Episode Metatags"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:128
+#: application/forms/GeneralPreferences.php:130
 msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:138
+#: application/forms/GeneralPreferences.php:140
 msgid "Generate a smartblock and a playlist upon creation of a new podcast"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:144
+#: application/forms/GeneralPreferences.php:146
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:161
+#: application/forms/GeneralPreferences.php:163
 msgid "Trim overbooked shows after autoloading?"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:168
+#: application/forms/GeneralPreferences.php:170
 msgid "Public LibreTime API"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:169
+#: application/forms/GeneralPreferences.php:171
 msgid "Required for embeddable schedule widget."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:175
+#: application/forms/GeneralPreferences.php:177
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:187
+#: application/forms/GeneralPreferences.php:189
 msgid "Default Language"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:194
+#: application/forms/GeneralPreferences.php:196
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr "ステーションのタイムゾーン"
 
-#: application/forms/GeneralPreferences.php:202
+#: application/forms/GeneralPreferences.php:204
 msgid "Week Starts On"
 msgstr "週の開始曜日"
 
-#: application/forms/GeneralPreferences.php:218
+#: application/forms/GeneralPreferences.php:220
 msgid "Display login button on your Radio Page?"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:231
+#: application/forms/GeneralPreferences.php:233
 msgid "Disable the public radio page and redirect to the login page?"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:236
+#: application/forms/GeneralPreferences.php:238
 msgid "Feature Previews"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:242
+#: application/forms/GeneralPreferences.php:244
 msgid "Enable this to opt-in to test new features."
 msgstr ""
 
@@ -3897,11 +3897,11 @@ msgstr ""
 msgid "A selected File does not exist!"
 msgstr "選択したファイルは存在しません。"
 
-#: application/models/Show.php:255
+#: application/models/Show.php:281
 msgid "Shows can have a max length of 24 hours."
 msgstr "番組は最大24時間まで設定可能です。"
 
-#: application/models/Show.php:367
+#: application/models/Show.php:393
 msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."
