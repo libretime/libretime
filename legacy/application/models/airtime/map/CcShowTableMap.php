@@ -56,7 +56,9 @@ class CcShowTableMap extends TableMap
         $this->addColumn('has_autoplaylist', 'DbHasAutoPlaylist', 'BOOLEAN', true, null, false);
         $this->addForeignKey('autoplaylist_id', 'DbAutoPlaylistId', 'INTEGER', 'cc_playlist', 'id', false, null, null);
         $this->addColumn('autoplaylist_repeat', 'DbAutoPlaylistRepeat', 'BOOLEAN', true, null, false);
+        $this->addColumn('override_intro_playlist', 'DbOverrideIntroPlaylist', 'BOOLEAN', true, null, false);
         $this->addForeignKey('intro_playlist_id', 'DbIntroPlaylistId', 'INTEGER', 'cc_playlist', 'id', false, null, null);
+        $this->addColumn('override_outro_playlist', 'DbOverrideOutroPlaylist', 'BOOLEAN', true, null, false);
         $this->addForeignKey('outro_playlist_id', 'DbOutroPlaylistId', 'INTEGER', 'cc_playlist', 'id', false, null, null);
         // validators
     } // initialize()

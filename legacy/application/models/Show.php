@@ -169,29 +169,55 @@ class Application_Model_Show
         $show->setDbAutoPlaylistId($playlistid);
     }
 
+    public function getHasOverrideIntroPlaylist()
+    {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+
+        return $show->getDbOverrideIntroPlaylist();
+    }
+
     public function getIntroPlaylistId()
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
 
-        return $show->getDbIntroPlaylistId();
+        if ($show->getDbOverrideIntroPlaylist()) {
+            return $show->getDbIntroPlaylistId();
+        }
+
+        return 0;
     }
 
     public function setIntroPlaylistId($playlistid)
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
+
+        $show->setDbOverrideIntroPlaylist($playlistid != 0);
         $show->setDbIntroPlaylistId($playlistid);
+    }
+
+    public function getHasOverrideOutroPlaylist()
+    {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+
+        return $show->getDbOverrideOutroPlaylist();
     }
 
     public function getOutroPlaylistId()
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
 
-        return $show->getDbOutroPlaylistId();
+        if ($show->getDbOverrideOutroPlaylist()) {
+            return $show->getDbOutroPlaylistId();
+        }
+
+        return 0;
     }
 
     public function setOutroPlaylistId($playlistid)
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
+
+        $show->setDbOverrideOutroPlaylist($playlistid != 0);
         $show->setDbOutroPlaylistId($playlistid);
     }
 
