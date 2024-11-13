@@ -1,3 +1,6 @@
+from rest_framework.serializers import Serializer
+
+
 class ReadWriteSerializerMixin:
     """
     Overrides get_serializer_class to choose the read serializer
@@ -7,8 +10,8 @@ class ReadWriteSerializerMixin:
     viewset.
     """
 
-    read_serializer_class = None
-    write_serializer_class = None
+    read_serializer_class = Serializer
+    write_serializer_class = Serializer
 
     def get_serializer_class(self):
         if self.action in ["create"]:
