@@ -122,6 +122,8 @@ you can configure LibreTime to login users based on those trusted headers.
 This allows users to only need to log in once on the SSO system and not need to log in again. It also allows LibreTime
 to indirectly support other authentication mechanisms such as OAuth2.
 
+This ONLY affects Legacy/Legacy API auth and does NOT affect API V2 auth.
+
 ### Configure Headers
 
 LibreTime needs to know what headers are sent, and what information is available to it. You can also
