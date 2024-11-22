@@ -5,8 +5,22 @@ from typing import Any, Dict
 
 import mutagen
 from libretime_shared.files import compute_md5
+from mutagen.easyid3 import EasyID3
 
 logger = logging.getLogger(__name__)
+
+
+def flatten(xss):
+    return [x for xs in xss for x in xs]
+
+
+def comment_get(id3, _):
+    comments = [v.text for k, v in id3.items() if "COMM" in k or "comment" in k]
+
+    return flatten(comments)
+
+
+EasyID3.RegisterKey("comment", comment_get)
 
 
 def analyze_metadata(filepath_: str, metadata: Dict[str, Any]):
@@ -71,34 +85,36 @@ def analyze_metadata(filepath_: str, metadata: Dict[str, Any]):
     except (AttributeError, KeyError, IndexError):
         pass
 
-    extracted_tags_mapping = {
-        "title": "track_title",
-        "artist": "artist_name",
-        "album": "album_title",
-        "bpm": "bpm",
-        "composer": "composer",
-        "conductor": "conductor",
-        "copyright": "copyright",
-        "comment": "comment",
-        "encoded_by": "encoder",
-        "genre": "genre",
-        "isrc": "isrc",
-        "label": "label",
-        "organization": "label",
-        # "length": "length",
-        "language": "language",
-        "last_modified": "last_modified",
-        "mood": "mood",
-        "bit_rate": "bit_rate",
-        "replay_gain": "replaygain",
-        # "tracknumber": "track_number",
-        # "track_total": "track_total",
-        "website": "website",
-        "date": "year",
-        # "mime_type": "mime",
-    }
+    extracted_tags_mapping = [
+        ("title", "track_title"),
+        ("artist", "artist_name"),
+        ("album", "album_title"),
+        ("bpm", "bpm"),
+        ("composer", "composer"),
+        ("conductor", "conductor"),
+        ("copyright", "copyright"),
+        ("comment", "comment"),
+        ("comment", "comments"),
+        ("comment", "description"),
+        ("encoded_by", "encoder"),
+        ("genre", "genre"),
+        ("isrc", "isrc"),
+        ("label", "label"),
+        ("organization", "label"),
+        # ("length", "length"),
+        ("language", "language"),
+        ("last_modified", "last_modified"),
+        ("mood", "mood"),
+        ("bit_rate", "bit_rate"),
+        ("replay_gain", "replaygain"),
+        # ("tracknumber", "track_number"),
+        # ("track_total", "track_total"),
+        ("website", "website"),
+        ("date", "year"),
+        # ("mime_type", "mime"),
+    ]
 
-    for extracted_key, metadata_key in extracted_tags_mapping.items():
+    for extracted_key, metadata_key in extracted_tags_mapping:
         try:
             metadata[metadata_key] = extracted[extracted_key]
             if isinstance(metadata[metadata_key], list):
