@@ -48,7 +48,7 @@ jobs:
 
       - name: Check Links
         id: lychee
-        uses: lycheeverse/lychee-action@v1.10.0
+        uses: lycheeverse/lychee-action@v2.1.0
         with:
           args: >-
             '**/*.md'
@@ -62,6 +62,8 @@ jobs:
             --exclude 'https://www.ascap.com'
             --exclude 'https://www.youtube-nocookie.com'
             --exclude 'github\.com/libretime/libretime/(issues|pulls)'
+            --exclude 'https://packages.ubuntu.com/bionic/php7.2'
+            --exclude 'https://packages.ubuntu.com/bionic/python3'
             --cache
             --max-cache-age 2d
           fail: true

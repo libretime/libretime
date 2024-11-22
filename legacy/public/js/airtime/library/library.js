@@ -55,6 +55,7 @@ var AIRTIME = (function (AIRTIME) {
     replay_gain: "n",
     artwork: "s",
     track_type_id: "tt",
+    filepath: "s",
   };
 
   if (AIRTIME.library === undefined) {
@@ -843,6 +844,13 @@ var AIRTIME = (function (AIRTIME) {
         sClass: "library_year",
         sWidth: "60px",
       },
+      /* File Name */ {
+        sTitle: $.i18n._("File Name"),
+        mDataProp: "filepath",
+        bVisible: false,
+        sClass: "library_file",
+        sWidth: "170px",
+      },
     ];
 
     if (onDashboard) {
@@ -858,7 +866,7 @@ var AIRTIME = (function (AIRTIME) {
       );
     }
 
-    var colExclude = onDashboard ? [0, 1, 2, 3, 34] : [0, 1, 2];
+    var colExclude = onDashboard ? [0, 1, 2, 3, 35] : [0, 1, 2];
 
     /*  ############################################
                             DATATABLES

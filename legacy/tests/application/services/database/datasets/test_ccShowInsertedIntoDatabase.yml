@@ -16,3 +16,7 @@ cc_show:
     has_autoplaylist: false
     autoplaylist_id: null
     autoplaylist_repeat: false
+    override_intro_playlist: false
+    intro_playlist_id: null
+    override_outro_playlist: false
+    outro_playlist_id: null

@@ -2,8 +2,9 @@ from django.db import models
 from django_filters import rest_framework as filters
 from rest_framework import viewsets
 
+from ...mixins import ReadWriteSerializerMixin
 from ..models import Schedule
-from ..serializers import ScheduleSerializer
+from ..serializers import ReadScheduleSerializer, WriteScheduleSerializer
 
 
 class ScheduleFilter(filters.FilterSet):
@@ -26,8 +27,9 @@ class ScheduleFilter(filters.FilterSet):
         fields = []  # type: ignore
 
 
-class ScheduleViewSet(viewsets.ModelViewSet):
+class ScheduleViewSet(ReadWriteSerializerMixin, viewsets.ModelViewSet):
     queryset = Schedule.objects.all()
-    serializer_class = ScheduleSerializer
+    read_serializer_class = ReadScheduleSerializer
+    write_serializer_class = WriteScheduleSerializer
     filterset_class = ScheduleFilter
     model_permission_name = "schedule"
