@@ -13,6 +13,8 @@ class Application_Form_AddShowAutoPlaylist extends Zend_Form_SubForm
         // and store to assoc array
         $maxLens = Application_Model_Show::getMaxLengths();
 
+        $playlistNames = Application_Model_Library::getPlaylistNames(true);
+
         // Add autoplaylist checkbox element
         $this->addElement('checkbox', 'add_show_has_autoplaylist', [
             'label' => _('Add Autoloading Playlist ?'),
@@ -23,10 +25,11 @@ class Application_Form_AddShowAutoPlaylist extends Zend_Form_SubForm
 
         $autoPlaylistSelect = new Zend_Form_Element_Select('add_show_autoplaylist_id');
         $autoPlaylistSelect->setLabel(_('Select Playlist'));
-        $autoPlaylistSelect->setMultiOptions(Application_Model_Library::getPlaylistNames(true));
+        $autoPlaylistSelect->setMultiOptions($playlistNames);
         $autoPlaylistSelect->setValue(null);
         $autoPlaylistSelect->setDecorators(['ViewHelper']);
         $this->addElement($autoPlaylistSelect);
+
         // Add autoplaylist checkbox element
         $this->addElement('checkbox', 'add_show_autoplaylist_repeat', [
             'label' => _('Repeat Playlist Until Show is Full ?'),
@@ -34,6 +37,23 @@ class Application_Form_AddShowAutoPlaylist extends Zend_Form_SubForm
             'class' => 'input_text',
             'decorators' => ['ViewHelper'],
         ]);
+
+        // Append 'Default' to 'None' option
+        $playlistNames[null] = _('None') . '/' . _('Default');
+
+        $introPlaylistSelect = new Zend_Form_Element_Select('add_show_intro_playlist_id');
+        $introPlaylistSelect->setLabel(_('Select Intro Playlist'));
+        $introPlaylistSelect->setMultiOptions($playlistNames);
+        $introPlaylistSelect->setValue(null);
+        $introPlaylistSelect->setDecorators(['ViewHelper']);
+        $this->addElement($introPlaylistSelect);
+
+        $outroPlaylistSelect = new Zend_Form_Element_Select('add_show_outro_playlist_id');
+        $outroPlaylistSelect->setLabel(_('Select Outro Playlist'));
+        $outroPlaylistSelect->setMultiOptions($playlistNames);
+        $outroPlaylistSelect->setValue(null);
+        $outroPlaylistSelect->setDecorators(['ViewHelper']);
+        $this->addElement($outroPlaylistSelect);
     }
 
     public function disable()

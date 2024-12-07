@@ -164,6 +164,8 @@ class Application_Service_ShowFormService
                 'add_show_has_autoplaylist' => $this->ccShow->getDbHasAutoPlaylist() ? 1 : 0,
                 'add_show_autoplaylist_id' => $this->ccShow->getDbAutoPlaylistId(),
                 'add_show_autoplaylist_repeat' => $this->ccShow->getDbAutoPlaylistRepeat(),
+                'add_show_intro_playlist_id' => $this->ccShow->getDbOverrideIntroPlaylist() ? $this->ccShow->getDbIntroPlaylistId() : 0,
+                'add_show_outro_playlist_id' => $this->ccShow->getDbOverrideOutroPlaylist() ? $this->ccShow->getDbOutroPlaylistId() : 0,
             ]
         );
     }
