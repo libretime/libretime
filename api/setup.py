@@ -30,7 +30,7 @@ setup(
         "django-filter>=2.4.0,<24.4",
         "django>=4.2.0,<4.3",
         "djangorestframework>=3.14.0,<3.16",
-        "drf-spectacular>=0.22.1,<0.28",
+        "drf-spectacular>=0.22.1,<0.29",
         "requests>=2.32.2,<2.33",
     ],
     extras_require={
