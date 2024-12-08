@@ -2552,6 +2552,12 @@ paths:
   /api/v2/schedule:
     get:
       operationId: schedule_list
+      description: |-
+        Overrides get_serializer_class to choose the read serializer
+        for GET requests and the write serializer for POST requests.
+
+        Set read_serializer_class and write_serializer_class attributes on a
+        viewset.
       parameters:
         - in: query
           name: broadcasted
@@ -2597,23 +2603,29 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Schedule"
+                  $ref: "#/components/schemas/ReadSchedule"
           description: ""
     post:
       operationId: schedule_create
+      description: |-
+        Overrides get_serializer_class to choose the read serializer
+        for GET requests and the write serializer for POST requests.
+
+        Set read_serializer_class and write_serializer_class attributes on a
+        viewset.
       tags:
         - schedule
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Schedule"
+              $ref: "#/components/schemas/WriteSchedule"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/Schedule"
+              $ref: "#/components/schemas/WriteSchedule"
           multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Schedule"
+              $ref: "#/components/schemas/WriteSchedule"
         required: true
       security:
         - cookieAuth: []
@@ -2623,11 +2635,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Schedule"
+                $ref: "#/components/schemas/WriteSchedule"
           description: ""
   /api/v2/schedule/{id}:
     get:
       operationId: schedule_retrieve
+      description: |-
+        Overrides get_serializer_class to choose the read serializer
+        for GET requests and the write serializer for POST requests.
+
+        Set read_serializer_class and write_serializer_class attributes on a
+        viewset.
       parameters:
         - in: path
           name: id
@@ -2645,10 +2663,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Schedule"
+                $ref: "#/components/schemas/ReadSchedule"
           description: ""
     put:
       operationId: schedule_update
+      description: |-
+        Overrides get_serializer_class to choose the read serializer
+        for GET requests and the write serializer for POST requests.
+
+        Set read_serializer_class and write_serializer_class attributes on a
+        viewset.
       parameters:
         - in: path
           name: id
@@ -2662,13 +2686,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Schedule"
+              $ref: "#/components/schemas/ReadSchedule"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/Schedule"
+              $ref: "#/components/schemas/ReadSchedule"
           multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Schedule"
+              $ref: "#/components/schemas/ReadSchedule"
         required: true
       security:
         - cookieAuth: []
@@ -2678,10 +2702,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Schedule"
+                $ref: "#/components/schemas/ReadSchedule"
           description: ""
     patch:
       operationId: schedule_partial_update
+      description: |-
+        Overrides get_serializer_class to choose the read serializer
+        for GET requests and the write serializer for POST requests.
+
+        Set read_serializer_class and write_serializer_class attributes on a
+        viewset.
       parameters:
         - in: path
           name: id
@@ -2695,13 +2725,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PatchedSchedule"
+              $ref: "#/components/schemas/PatchedReadSchedule"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/PatchedSchedule"
+              $ref: "#/components/schemas/PatchedReadSchedule"
           multipart/form-data:
             schema:
-              $ref: "#/components/schemas/PatchedSchedule"
+              $ref: "#/components/schemas/PatchedReadSchedule"
       security:
         - cookieAuth: []
         - basicAuth: []
@@ -2710,10 +2740,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Schedule"
+                $ref: "#/components/schemas/ReadSchedule"
           description: ""
     delete:
       operationId: schedule_destroy
+      description: |-
+        Overrides get_serializer_class to choose the read serializer
+        for GET requests and the write serializer for POST requests.
+
+        Set read_serializer_class and write_serializer_class attributes on a
+        viewset.
       parameters:
         - in: path
           name: id
@@ -6300,7 +6336,7 @@ components:
         user:
           type: integer
           nullable: true
-    PatchedSchedule:
+    PatchedReadSchedule:
       type: object
       properties:
         id:
@@ -7096,41 +7132,7 @@ components:
         - id
         - key
         - user
-    RecordEnabledEnum:
-      enum:
-        - 0
-        - 1
-      type: integer
-      description: |-
-        * `0` - No
-        * `1` - Yes
-    RepeatKindEnum:
-      enum:
-        - 0
-        - 1
-        - 4
-        - 5
-        - 2
-      type: integer
-      description: |-
-        * `0` - Every week
-        * `1` - Every 2 weeks
-        * `4` - Every 3 weeks
-        * `5` - Every 4 weeks
-        * `2` - Every month
-    RoleEnum:
-      enum:
-        - G
-        - H
-        - P
-        - A
-      type: string
-      description: |-
-        * `G` - Guest
-        * `H` - Host
-        * `P` - Manager
-        * `A` - Admin
-    Schedule:
+    ReadSchedule:
       type: object
       properties:
         id:
@@ -7192,6 +7194,40 @@ components:
         - instance
         - position
         - starts_at
+    RecordEnabledEnum:
+      enum:
+        - 0
+        - 1
+      type: integer
+      description: |-
+        * `0` - No
+        * `1` - Yes
+    RepeatKindEnum:
+      enum:
+        - 0
+        - 1
+        - 4
+        - 5
+        - 2
+      type: integer
+      description: |-
+        * `0` - Every week
+        * `1` - Every 2 weeks
+        * `4` - Every 3 weeks
+        * `5` - Every 4 weeks
+        * `2` - Every month
+    RoleEnum:
+      enum:
+        - G
+        - H
+        - P
+        - A
+      type: string
+      description: |-
+        * `G` - Guest
+        * `H` - Host
+        * `P` - Manager
+        * `A` - Admin
     ServiceRegister:
       type: object
       properties:
@@ -7795,6 +7831,66 @@ components:
         * `4` - Friday
         * `5` - Saturday
         * `6` - Sunday
+    WriteSchedule:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        length:
+          type: string
+          nullable: true
+        fade_in:
+          type: string
+          format: time
+          nullable: true
+        fade_out:
+          type: string
+          format: time
+          nullable: true
+        cue_in:
+          type: string
+        cue_out:
+          type: string
+        position:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        position_status:
+          allOf:
+            - $ref: "#/components/schemas/PositionStatusEnum"
+          minimum: -32768
+          maximum: 32767
+        broadcasted:
+          type: integer
+          maximum: 32767
+          minimum: -32768
+        played:
+          type: boolean
+          nullable: true
+        instance:
+          type: integer
+        file:
+          type: integer
+          nullable: true
+        stream:
+          type: integer
+          nullable: true
+      required:
+        - broadcasted
+        - cue_in
+        - cue_out
+        - ends_at
+        - id
+        - instance
+        - position
+        - starts_at
   securitySchemes:
     basicAuth:
       type: http
