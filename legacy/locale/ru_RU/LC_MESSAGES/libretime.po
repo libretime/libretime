@@ -17,17 +17,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-10-28 02:21+0000\n"
+"POT-Creation-Date: 2024-12-09 02:37+0000\n"
 "PO-Revision-Date: 2024-11-27 10:57+0000\n"
 "Last-Translator: gfbdrgng <hnaofegnp@hldrive.com>\n"
-"Language-Team: Russian <https://hosted.weblate.org/projects/libretime/legacy/"
-"ru/>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/libretime/legacy/ru/>\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Weblate 5.9-dev\n"
 
 #: application/common/DateHelper.php:216
@@ -2561,10 +2559,7 @@ msgstr "Тип"
 
 #: application/controllers/LocaleController.php:465
 msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>More information</a>"
-msgstr ""
-"Содержимое плейлистов автозагрузки добавляется в шоу за час до его выхода в "
-"эфир. <a target='_blank' href='https://libretime.org/docs/user-manual/"
-"playlists/'>More information</a>"
+msgstr "Содержимое плейлистов автозагрузки добавляется в шоу за час до его выхода в эфир. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>More information</a>"
 
 #: application/controllers/LocaleController.php:466
 msgid "Podcast settings saved"
@@ -2667,23 +2662,19 @@ msgstr "Ничего не запланировано"
 msgid "Click 'Add' to create one now."
 msgstr "Нажмите «Добавить» чтобы создать новый"
 
-#: application/controllers/LoginController.php:47
-msgid "Please enter your username and password."
-msgstr "Пожалуйста введите ваш логин и пароль."
-
-#: application/controllers/LoginController.php:145
+#: application/controllers/LoginController.php:138
 msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
 msgstr "E-mail не может быть отправлен. Проверьте настройки почтового сервера и убедитесь, что он был настроен должным образом."
 
-#: application/controllers/LoginController.php:148
+#: application/controllers/LoginController.php:141
 msgid "That username or email address could not be found."
 msgstr "Такой пользователь или e-mail не найдены."
 
-#: application/controllers/LoginController.php:151
+#: application/controllers/LoginController.php:144
 msgid "There was a problem with the username or email address you entered."
 msgstr "Неправильно ввели логин или e-mail."
 
-#: application/controllers/LoginController.php:229
+#: application/controllers/LoginController.php:222
 msgid "Wrong username or password provided. Please try again."
 msgstr "Неверный логин или пароль. Пожалуйста, попробуйте еще раз."
 
@@ -3322,9 +3313,7 @@ msgstr "Отображать кнопку «Вход» на Странице Р�
 
 #: application/forms/GeneralPreferences.php:233
 msgid "Disable the public radio page and redirect to the login page?"
-msgstr ""
-"Отключить страницу общественного радио и перенаправить на страницу входа в "
-"систему?"
+msgstr "Отключить страницу общественного радио и перенаправить на страницу входа в систему?"
 
 #: application/forms/GeneralPreferences.php:238
 msgid "Feature Previews"
@@ -3607,9 +3596,7 @@ msgstr "«Длительность» должна быть в формате '00
 
 #: application/forms/SmartBlockCriteria.php:648
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
-msgstr ""
-"Для текстового значения допускаются только неотрицательные целые числа ("
-"например, 1 или 5)"
+msgstr "Для текстового значения допускаются только неотрицательные целые числа (например, 1 или 5)"
 
 #: application/forms/SmartBlockCriteria.php:653
 #: application/forms/SmartBlockCriteria.php:678
@@ -3623,9 +3610,7 @@ msgstr "Значение должно быть в формате временн�
 
 #: application/forms/SmartBlockCriteria.php:673
 msgid "Only non-negative integer numbers are allowed for a relative date time"
-msgstr ""
-"Для относительного времени даты допускаются только неотрицательные целые "
-"числа"
+msgstr "Для относительного времени даты допускаются только неотрицательные целые числа"
 
 #: application/forms/SmartBlockCriteria.php:700
 msgid "The value has to be numeric"
@@ -4687,6 +4672,9 @@ msgstr "Веб-потоки"
 
 #~ msgid "Please enter both your username and email address."
 #~ msgstr "Пожалуйста, введите ваши логин и e-mail."
+
+#~ msgid "Please enter your username and password."
+#~ msgstr "Пожалуйста введите ваш логин и пароль."
 
 #~ msgid "Podcast Name: "
 #~ msgstr "Название Подкаста: "

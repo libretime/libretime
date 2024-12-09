@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-10-28 02:21+0000\n"
+"POT-Creation-Date: 2024-12-09 02:37+0000\n"
 "PO-Revision-Date: 2024-10-25 19:16+0000\n"
 "Last-Translator: Ihor Hordiichuk <igor_ck@outlook.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/legacy/uk/>\n"
@@ -2654,23 +2654,19 @@ msgstr "Нічого не заплановано"
 msgid "Click 'Add' to create one now."
 msgstr "Натисніть «Додати», щоб створити зараз."
 
-#: application/controllers/LoginController.php:47
-msgid "Please enter your username and password."
-msgstr "Будь ласка, введіть своє ім'я користувача та пароль."
-
-#: application/controllers/LoginController.php:145
+#: application/controllers/LoginController.php:138
 msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
 msgstr "Не вдалося надіслати електронний лист. Перевірте налаштування свого поштового сервера та переконайтеся, що його налаштовано належним чином."
 
-#: application/controllers/LoginController.php:148
+#: application/controllers/LoginController.php:141
 msgid "That username or email address could not be found."
 msgstr "Не вдалося знайти це ім’я користувача чи електронну адресу."
 
-#: application/controllers/LoginController.php:151
+#: application/controllers/LoginController.php:144
 msgid "There was a problem with the username or email address you entered."
 msgstr "Виникла проблема з іменем користувача або електронною адресою, яку ви ввели."
 
-#: application/controllers/LoginController.php:229
+#: application/controllers/LoginController.php:222
 msgid "Wrong username or password provided. Please try again."
 msgstr "Вказано неправильне ім'я користувача або пароль. Будь ласка спробуйте ще раз."
 
@@ -4396,6 +4392,9 @@ msgstr "Веб-потоки"
 
 #~ msgid "Please enter and confirm your new password in the fields below."
 #~ msgstr "Please enter and confirm your new password in the fields below."
+
+#~ msgid "Please enter your username and password."
+#~ msgstr "Будь ласка, введіть своє ім'я користувача та пароль."
 
 #~ msgid "Please upgrade to "
 #~ msgstr "Please upgrade to "
