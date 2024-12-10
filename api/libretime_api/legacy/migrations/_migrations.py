@@ -19,8 +19,17 @@ def get_schema_version():
     with connection.cursor() as cursor:
         cursor.execute("SELECT valstr FROM cc_pref WHERE keystr = 'schema_version'")
         row = cursor.fetchone()
-        return row[0] if row else None
+        if row: return row[0]
 
+        # Check to see if this is an airtime 2.5.1 migration which will not return a schema_version
+        # We look for system_version to have a value of 2.5.1
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT valstr FROM cc_pref WHERE keystr = 'system_version'")
+            row = cursor.fetchone()
+            if row and row[0] == '2.5.1':
+                return '0'  # A low schema version that is not None
+
+        return None
 
 def set_schema_version(cursor, version: str):
     cursor.execute(

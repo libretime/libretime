@@ -5,11 +5,11 @@ from django.db import migrations
 from ._migrations import legacy_migration_factory
 
 UP = """
-ALTER TABLE cc_files ADD COLUMN artwork VARCHAR(4096);
+
 """
 
 DOWN = """
-ALTER TABLE cc_files DROP COLUMN IF EXISTS artwork;
+
 """
 
 
