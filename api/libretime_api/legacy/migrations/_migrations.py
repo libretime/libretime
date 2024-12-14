@@ -11,25 +11,28 @@ def get_schema_version():
 
     Don't use django models as they might break in the future. Our concern is to upgrade
     the legacy database schema to the point where django is in charge of the migrations.
+
+    An airtime 2.5.1 migration will not have schema_version, in that case, we look for
+    system_version to have a value of 2.5.1 and return that as the schema version value
+    (really just needs to be anything besides None, so that the next migration doesn't overwrite the database)
     """
 
     if "cc_pref" not in connection.introspection.table_names():
         return None
 
     with connection.cursor() as cursor:
-        cursor.execute("SELECT valstr FROM cc_pref WHERE keystr = 'schema_version'")
+        cursor.execute(
+            """
+            SELECT valstr AS version
+            FROM cc_pref
+            WHERE (keystr = 'schema_version') OR (keystr = 'system_version' AND valstr = '2.5.1')
+            """
+        )
         row = cursor.fetchone()
-        if row: return row[0]
-
-        # Check to see if this is an airtime 2.5.1 migration which will not return a schema_version
-        # We look for system_version to have a value of 2.5.1
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT valstr FROM cc_pref WHERE keystr = 'system_version'")
-            row = cursor.fetchone()
-            if row and row[0] == '2.5.1':
-                return '0'  # A low schema version that is not None
-
+        if row and row[0]:
+            return row[0]
         return None
+
 
 def set_schema_version(cursor, version: str):
     cursor.execute(
