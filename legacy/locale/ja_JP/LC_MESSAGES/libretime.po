@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-10-28 02:21+0000\n"
+"POT-Creation-Date: 2024-12-09 02:37+0000\n"
 "PO-Revision-Date: 2021-10-17 08:09+0000\n"
 "Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/libretime/legacy/ja/>\n"
@@ -2646,23 +2646,19 @@ msgstr ""
 msgid "Click 'Add' to create one now."
 msgstr ""
 
-#: application/controllers/LoginController.php:47
-msgid "Please enter your username and password."
-msgstr ""
-
-#: application/controllers/LoginController.php:145
+#: application/controllers/LoginController.php:138
 msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
 msgstr "メールが送信できませんでした。メールサーバーの設定を確認してください。"
 
-#: application/controllers/LoginController.php:148
+#: application/controllers/LoginController.php:141
 msgid "That username or email address could not be found."
 msgstr ""
 
-#: application/controllers/LoginController.php:151
+#: application/controllers/LoginController.php:144
 msgid "There was a problem with the username or email address you entered."
 msgstr ""
 
-#: application/controllers/LoginController.php:229
+#: application/controllers/LoginController.php:222
 msgid "Wrong username or password provided. Please try again."
 msgstr "入力されたユーザー名またはパスワードが誤っています。"
 
