@@ -119,7 +119,7 @@ git checkout {vars.version}
 
 By default the installer will configure LibreTime to listen at the port `8080`. We recommend that you configure a [reverse proxy in front of LibreTime](./reverse-proxy.md) to secure the connection using HTTPS, and route the traffic from the ports `80`/`443` to the LibreTime server.
 
-Install LibreTime with the following command, be sure to replace `https://libretime.example.org` with the public url of your installation:
+Install LibreTime with the following command, be sure to replace `https://libretime.example.org` with the public url of your installation (including port, such as when you use `--listen-port` to specify something other than the default):
 
 ```bash
 sudo ./install https://libretime.example.org
@@ -143,7 +143,7 @@ LIBRETIME_PACKAGES_EXCLUDES='liquidsoap' \
 ./install \
   --listen-port 8081 \
   --no-setup-postgresql \
-  https://libretime.example.org
+  https://libretime.example.org:8081
 ```
 
 You can persist the install configuration in a `.env` file next to the install script. For example, the above command could be persisted using the `.env` file below, and you should be able to run the install script without arguments:
