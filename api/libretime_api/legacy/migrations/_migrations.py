@@ -14,7 +14,8 @@ def get_schema_version():
 
     An airtime 2.5.1 migration will not have schema_version, in that case, we look for
     system_version to have a value of 2.5.1 and return that as the schema version value
-    (really just needs to be anything besides None, so that the next migration doesn't overwrite the database)
+    (really just needs to be anything besides None, so that the next migration doesn't overwrite
+    the database)
     """
 
     if "cc_pref" not in connection.introspection.table_names():
