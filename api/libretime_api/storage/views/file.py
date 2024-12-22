@@ -5,6 +5,7 @@ from os import remove
 from django.conf import settings
 from django.http import HttpResponse
 from django.utils.encoding import filepath_to_uri
+from django_filters import rest_framework as filters
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
@@ -26,6 +27,8 @@ class FileViewSet(viewsets.ModelViewSet):
     queryset = File.objects.all()
     serializer_class = FileSerializer
     model_permission_name = "file"
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ("md5", "genre")
 
     # pylint: disable=invalid-name,unused-argument
     @action(detail=True, methods=["GET"])
