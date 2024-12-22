@@ -154,6 +154,15 @@ paths:
   /api/v2/files:
     get:
       operationId: files_list
+      parameters:
+        - in: query
+          name: genre
+          schema:
+            type: string
+        - in: query
+          name: md5
+          schema:
+            type: string
       tags:
         - files
       security:

@@ -9,7 +9,6 @@ from django_filters import rest_framework as filters
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
-from rest_framework.pagination import LimitOffsetPagination
 
 from ...schedule.models import Schedule
 from ..models import File
@@ -28,7 +27,6 @@ class FileViewSet(viewsets.ModelViewSet):
     queryset = File.objects.all()
     serializer_class = FileSerializer
     model_permission_name = "file"
-    pagination_class = LimitOffsetPagination
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ("md5", "genre")
 

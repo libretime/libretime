@@ -83,10 +83,6 @@ class TestFileViewSet(APITestCase):
         results = self.client.get(path).json()
         self.assertEqual(len(results), 2)
 
-        path = "/api/v2/files?limit=1"
-        results = self.client.get(path).json()
-        self.assertEqual(len(results["results"]), 1)
-
         path = f"/api/v2/files?md5={file.md5}"
         results = self.client.get(path).json()
         self.assertEqual(len(results), 1)
