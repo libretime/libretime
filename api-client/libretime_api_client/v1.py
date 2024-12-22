@@ -214,3 +214,6 @@ class ApiClient:
 
     def update_metadata_on_tunein(self):
         self._base_client.update_metadata_on_tunein()
+
+    def trigger_task_manager(self):
+        self._base_client.version()

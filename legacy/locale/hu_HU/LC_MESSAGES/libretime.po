@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-02-05 01:52+0000\n"
+"POT-Creation-Date: 2024-06-10 02:02+0000\n"
 "PO-Revision-Date: 2021-12-27 20:52+0000\n"
 "Last-Translator: f3rr31 <5920873@disroot.org>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/libretime/legacy/hu/>\n"
@@ -2049,15 +2049,15 @@ msgid "Moving %s Items"
 msgstr "%s elem áthelyezése"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
+#: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
+#: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "Mentés"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:268 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:270 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -2593,7 +2593,7 @@ msgid "No matching track types found"
 msgstr ""
 
 #: application/controllers/LocaleController.php:461
-#: application/forms/AddTracktype.php:50
+#: application/forms/AddTracktype.php:61
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:172
@@ -2602,7 +2602,7 @@ msgid "Enabled"
 msgstr "Engedélyezve"
 
 #: application/controllers/LocaleController.php:462
-#: application/forms/AddTracktype.php:49
+#: application/forms/AddTracktype.php:60
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:171
@@ -2775,19 +2775,19 @@ msgstr "Ismeretlen lejátszási lista"
 msgid "Preferences updated."
 msgstr "Beállítások frissítve."
 
-#: application/controllers/PreferenceController.php:208
+#: application/controllers/PreferenceController.php:210
 msgid "Stream Setting Updated."
 msgstr "Adásfolyam beállítások frissítve."
 
-#: application/controllers/PreferenceController.php:253
+#: application/controllers/PreferenceController.php:255
 msgid "path should be specified"
 msgstr "az útvonalat meg kell határozni"
 
-#: application/controllers/PreferenceController.php:296
+#: application/controllers/PreferenceController.php:298
 msgid "Problem with Liquidsoap..."
 msgstr "Probléma lépett fel a Liquidsoap-al..."
 
-#: application/controllers/PreferenceController.php:339
+#: application/controllers/PreferenceController.php:341
 msgid "Request method not accepted"
 msgstr "A kérés módja nem elfogadott"
 
@@ -2808,11 +2808,11 @@ msgstr "Kurzor eltávolítása"
 msgid "show does not exist"
 msgstr "a műsor nem található"
 
-#: application/controllers/TracktypeController.php:62
+#: application/controllers/TracktypeController.php:60
 msgid "Track Type added successfully!"
 msgstr ""
 
-#: application/controllers/TracktypeController.php:64
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type updated successfully!"
 msgstr ""
 
@@ -3021,12 +3021,12 @@ msgstr "Cím nélküli műsor"
 msgid "URL:"
 msgstr "URL:"
 
-#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:131
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
 msgid "Genre:"
 msgstr "Műfaj:"
 
-#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
-#: application/forms/EditAudioMD.php:113
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:46
+#: application/forms/EditAudioMD.php:115
 msgid "Description:"
 msgstr "Leírás:"
 
@@ -3108,16 +3108,16 @@ msgstr ""
 msgid "Code:"
 msgstr ""
 
-#: application/forms/AddTracktype.php:45
+#: application/forms/AddTracktype.php:39
+msgid "Code is not unique."
+msgstr ""
+
+#: application/forms/AddTracktype.php:56
 msgid "Visibility:"
 msgstr ""
 
-#: application/forms/AddTracktype.php:57
+#: application/forms/AddTracktype.php:68
 msgid "Analyze cue points:"
-msgstr ""
-
-#: application/forms/AddTracktype.php:74
-msgid "Code is not unique."
 msgstr ""
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:36
@@ -3177,72 +3177,72 @@ msgstr "Az összes sáv törlése a könyvtárból"
 msgid "Date Start:"
 msgstr "Kezdés Ideje:"
 
-#: application/forms/EditAudioMD.php:50 application/forms/Player.php:15
+#: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
 msgid "Title:"
 msgstr "Cím:"
 
-#: application/forms/EditAudioMD.php:60
+#: application/forms/EditAudioMD.php:62
 msgid "Creator:"
 msgstr "Létrehozó:"
 
-#: application/forms/EditAudioMD.php:70
+#: application/forms/EditAudioMD.php:72
 msgid "Album:"
 msgstr "Album:"
 
-#: application/forms/EditAudioMD.php:87
+#: application/forms/EditAudioMD.php:89
 msgid "Owner:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:99
+#: application/forms/EditAudioMD.php:101
 msgid "Select a Type"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:106
+#: application/forms/EditAudioMD.php:108
 msgid "Track Type:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:141
+#: application/forms/EditAudioMD.php:143
 msgid "Year:"
 msgstr "Év:"
 
-#: application/forms/EditAudioMD.php:154
+#: application/forms/EditAudioMD.php:156
 msgid "Label:"
 msgstr "Címke:"
 
-#: application/forms/EditAudioMD.php:164
+#: application/forms/EditAudioMD.php:166
 msgid "Composer:"
 msgstr "Zeneszerző:"
 
-#: application/forms/EditAudioMD.php:174
+#: application/forms/EditAudioMD.php:176
 msgid "Conductor:"
 msgstr "Karmester:"
 
-#: application/forms/EditAudioMD.php:184
+#: application/forms/EditAudioMD.php:186
 msgid "Mood:"
 msgstr "Hangulat:"
 
-#: application/forms/EditAudioMD.php:194
+#: application/forms/EditAudioMD.php:196
 msgid "BPM:"
 msgstr "BPM:"
 
-#: application/forms/EditAudioMD.php:205
+#: application/forms/EditAudioMD.php:207
 msgid "Copyright:"
 msgstr "Szerzői jog:"
 
-#: application/forms/EditAudioMD.php:215
+#: application/forms/EditAudioMD.php:217
 msgid "ISRC Number:"
 msgstr "ISRC Szám:"
 
-#: application/forms/EditAudioMD.php:225
+#: application/forms/EditAudioMD.php:227
 msgid "Website:"
 msgstr "Honlap:"
 
-#: application/forms/EditAudioMD.php:235 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:237 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "Nyelv:"
 
-#: application/forms/EditAudioMD.php:288
+#: application/forms/EditAudioMD.php:290
 msgid "Publish..."
 msgstr "Közzététel..."
 
@@ -3963,8 +3963,8 @@ msgstr "A megtekintett ütemterv elavult! (ütem eltérés)"
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "A megtekintett ütemterv elavult! (példány eltérés)"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:491
-#: application/models/Scheduler.php:529 application/models/Scheduler.php:568
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
+#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
 msgid "The schedule you're viewing is out of date!"
 msgstr "A megtekintett ütemterv időpontja elavult!"
 
@@ -3995,7 +3995,7 @@ msgstr "A hivatkozott műsorok tartalma nem módosítható adás közben!"
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr "Nem lehet ütemezni olyan lejátszási listát amely hiányzó fájlokat tartalmaz."
 
-#: application/models/Scheduler.php:228 application/models/Scheduler.php:320
+#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
 msgid "A selected File does not exist!"
 msgstr "Egy kiválasztott fájl nem létezik!"
 

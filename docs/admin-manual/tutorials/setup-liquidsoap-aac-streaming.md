@@ -26,10 +26,17 @@ For Ubuntu 20.04 LTS ('focal'), use the following file:
 wget https://github.com/savonet/liquidsoap/releases/download/v1.4.4/liquidsoap-v1.4.4_1.4.4-ubuntu-focal-amd64-1_amd64.deb
 ```
 
-For Debian 11 ('Bullseye'), use the following file:
+For Debian 11 ('Bullseye'), first enable non-free package source for libfdk-aac support:
 
 ```bash
-wget https://github.com/savonet/liquidsoap/releases/download/v1.4.4/liquidsoap-v1.4.4_1.4.4-debian-stable-amd64-1_amd64.deb
+sudo apt install software-properties-common
+sudo apt-add-repository -c non-free
+```
+
+Then use the following file:
+
+```bash
+wget https://github.com/savonet/liquidsoap/releases/download/v1.4.4/liquidsoap-v1.4.4_1.4.4-debian-testing-amd64-1_amd64.deb
 ```
 
 ## 2. Install and replace the liquidsoap package

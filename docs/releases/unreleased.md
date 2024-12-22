@@ -12,7 +12,11 @@ The LibreTime project wants to thank the following contributors for authoring PR
 
 ## :rocket: Features
 
+Please see the [changelog](https://github.com/libretime/libretime/blob/main/CHANGELOG.md).
+
 ## :bug: Bug fixes
+
+Please see the [changelog](https://github.com/libretime/libretime/blob/main/CHANGELOG.md).
 
 ## :fire: Deprecation and removal
 

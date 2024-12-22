@@ -9,7 +9,9 @@ from urllib.parse import urlsplit
 import mutagen
 import requests
 from celery import Celery, signals
+from celery.schedules import crontab
 from celery.utils.log import get_task_logger
+from libretime_api_client.v1 import ApiClient as LegacyClient
 from mutagen import MutagenError
 from requests import RequestException, Response
 
@@ -18,6 +20,11 @@ from .config import config
 
 worker = Celery()
 logger = get_task_logger(__name__)
+
+legacy_client = LegacyClient(
+    base_url=config.general.public_url,
+    api_key=config.general.api_key,
+)
 
 
 @signals.worker_init.connect
@@ -35,6 +42,22 @@ def init_sentry(**_kwargs):
                 CeleryIntegration(),
             ],
         )
+
+
+worker.conf.beat_schedule = {
+    "legacy-trigger-task-manager": {
+        "task": "libretime_worker.tasks.legacy_trigger_task_manager",
+        "schedule": crontab(minute="*/5"),
+    },
+}
+
+
+@worker.task()
+def legacy_trigger_task_manager():
+    """
+    Trigger the legacy task manager to perform background tasks.
+    """
+    legacy_client.trigger_task_manager()
 
 
 @worker.task(name="podcast-download", acks_late=True)

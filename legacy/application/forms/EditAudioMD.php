@@ -8,9 +8,11 @@ class Application_Form_EditAudioMD extends Zend_Form
     {
         // Set the method for the display form to POST
         $this->setMethod('post');
+        $this->setAttrib('id', 'track_edit_' . $p_id);
 
         $file_id = new Zend_Form_Element_Hidden('file_id');
         $file_id->setValue($p_id);
+        $file_id->setDecorators(['ViewHelper']);
         $file_id->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
         $file_id->removeDecorator('Label');
         $file_id->setAttrib('class', 'obj_id');
@@ -242,7 +244,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $validCuePattern = '/^(?:[0-9]{1,2}:)?(?:[0-9]{1,2}:)?[0-9]{1,6}(\.\d{1,6})?$/';
 
         $cueIn = new Zend_Form_Element_Text('cuein');
-        $cueIn->class = 'input_text';
+        $cueIn->class = 'input_text cuein_' . $p_id;
         $cueIn->setLabel('Cue In:');
         $cueInValidator = Application_Form_Helper_ValidationTypes::overrideRegexValidator(
             $validCuePattern,
@@ -252,7 +254,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement($cueIn);
 
         $cueOut = new Zend_Form_Element_Text('cueout');
-        $cueOut->class = 'input_text';
+        $cueOut->class = 'input_text cueout_' . $p_id;
         $cueOut->setLabel('Cue Out:');
         $cueOutValidator = Application_Form_Helper_ValidationTypes::overrideRegexValidator(
             $validCuePattern,

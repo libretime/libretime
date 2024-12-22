@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-02-05 01:52+0000\n"
+"POT-Creation-Date: 2024-06-10 02:02+0000\n"
 "PO-Revision-Date: 2015-09-05 08:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Korean (Korea)\n"
@@ -2033,15 +2033,15 @@ msgid "Moving %s Items"
 msgstr "아이템 %s개 이동"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
+#: application/forms/AddTracktype.php:75 application/forms/AddUser.php:108
+#: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "저장"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:268 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:270 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "취소"
 
@@ -2573,7 +2573,7 @@ msgid "No matching track types found"
 msgstr ""
 
 #: application/controllers/LocaleController.php:461
-#: application/forms/AddTracktype.php:50
+#: application/forms/AddTracktype.php:61
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:172
@@ -2582,7 +2582,7 @@ msgid "Enabled"
 msgstr "사용"
 
 #: application/controllers/LocaleController.php:462
-#: application/forms/AddTracktype.php:49
+#: application/forms/AddTracktype.php:60
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:171
@@ -2755,19 +2755,19 @@ msgstr "모르는 재생목록"
 msgid "Preferences updated."
 msgstr "설정이 업데이트 되었습니다"
 
-#: application/controllers/PreferenceController.php:208
+#: application/controllers/PreferenceController.php:210
 msgid "Stream Setting Updated."
 msgstr "스트림 설정이 업데이트 되었습니다"
 
-#: application/controllers/PreferenceController.php:253
+#: application/controllers/PreferenceController.php:255
 msgid "path should be specified"
 msgstr "경로를 입력해주세요"
 
-#: application/controllers/PreferenceController.php:296
+#: application/controllers/PreferenceController.php:298
 msgid "Problem with Liquidsoap..."
 msgstr "Liquidsoap 문제..."
 
-#: application/controllers/PreferenceController.php:339
+#: application/controllers/PreferenceController.php:341
 msgid "Request method not accepted"
 msgstr ""
 
@@ -2788,11 +2788,11 @@ msgstr "커서 제거"
 msgid "show does not exist"
 msgstr "쇼가 존재 하지 않음"
 
-#: application/controllers/TracktypeController.php:62
+#: application/controllers/TracktypeController.php:60
 msgid "Track Type added successfully!"
 msgstr ""
 
-#: application/controllers/TracktypeController.php:64
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type updated successfully!"
 msgstr ""
 
@@ -3000,12 +3000,12 @@ msgstr "이름없는 쇼"
 msgid "URL:"
 msgstr ""
 
-#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:131
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
 msgid "Genre:"
 msgstr "장르:"
 
-#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
-#: application/forms/EditAudioMD.php:113
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:46
+#: application/forms/EditAudioMD.php:115
 msgid "Description:"
 msgstr "설명:"
 
@@ -3087,16 +3087,16 @@ msgstr ""
 msgid "Code:"
 msgstr ""
 
-#: application/forms/AddTracktype.php:45
+#: application/forms/AddTracktype.php:39
+msgid "Code is not unique."
+msgstr ""
+
+#: application/forms/AddTracktype.php:56
 msgid "Visibility:"
 msgstr ""
 
-#: application/forms/AddTracktype.php:57
+#: application/forms/AddTracktype.php:68
 msgid "Analyze cue points:"
-msgstr ""
-
-#: application/forms/AddTracktype.php:74
-msgid "Code is not unique."
 msgstr ""
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:36
@@ -3156,72 +3156,72 @@ msgstr ""
 msgid "Date Start:"
 msgstr "시작"
 
-#: application/forms/EditAudioMD.php:50 application/forms/Player.php:15
+#: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
 msgid "Title:"
 msgstr "제목:"
 
-#: application/forms/EditAudioMD.php:60
+#: application/forms/EditAudioMD.php:62
 msgid "Creator:"
 msgstr "제작자:"
 
-#: application/forms/EditAudioMD.php:70
+#: application/forms/EditAudioMD.php:72
 msgid "Album:"
 msgstr "앨범:"
 
-#: application/forms/EditAudioMD.php:87
+#: application/forms/EditAudioMD.php:89
 msgid "Owner:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:99
+#: application/forms/EditAudioMD.php:101
 msgid "Select a Type"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:106
+#: application/forms/EditAudioMD.php:108
 msgid "Track Type:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:141
+#: application/forms/EditAudioMD.php:143
 msgid "Year:"
 msgstr "년도:"
 
-#: application/forms/EditAudioMD.php:154
+#: application/forms/EditAudioMD.php:156
 msgid "Label:"
 msgstr "상표:"
 
-#: application/forms/EditAudioMD.php:164
+#: application/forms/EditAudioMD.php:166
 msgid "Composer:"
 msgstr "작곡가:"
 
-#: application/forms/EditAudioMD.php:174
+#: application/forms/EditAudioMD.php:176
 msgid "Conductor:"
 msgstr "지휘자"
 
-#: application/forms/EditAudioMD.php:184
+#: application/forms/EditAudioMD.php:186
 msgid "Mood:"
 msgstr "무드"
 
-#: application/forms/EditAudioMD.php:194
+#: application/forms/EditAudioMD.php:196
 msgid "BPM:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:205
+#: application/forms/EditAudioMD.php:207
 msgid "Copyright:"
 msgstr "저작권:"
 
-#: application/forms/EditAudioMD.php:215
+#: application/forms/EditAudioMD.php:217
 msgid "ISRC Number:"
 msgstr "ISRC 넘버"
 
-#: application/forms/EditAudioMD.php:225
+#: application/forms/EditAudioMD.php:227
 msgid "Website:"
 msgstr "웹사이트"
 
-#: application/forms/EditAudioMD.php:235 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:237 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "언어"
 
-#: application/forms/EditAudioMD.php:288
+#: application/forms/EditAudioMD.php:290
 msgid "Publish..."
 msgstr ""
 
@@ -3923,8 +3923,8 @@ msgstr "현재 보고 계신 스케쥴이 맞지 않습니다(sched mismatch)"
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "현재 보고 계신 스케쥴이 맞지 않습니다(instance mismatch)"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:491
-#: application/models/Scheduler.php:529 application/models/Scheduler.php:568
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
+#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
 msgid "The schedule you're viewing is out of date!"
 msgstr "현재 보고 계신 스케쥴이 맞지 않습니다"
 
@@ -3955,7 +3955,7 @@ msgstr ""
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr ""
 
-#: application/models/Scheduler.php:228 application/models/Scheduler.php:320
+#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
 msgid "A selected File does not exist!"
 msgstr "선택하신 파일이 존재 하지 않습니다"
 

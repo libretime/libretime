@@ -50,7 +50,7 @@ check them against pam.
 
 The above configuration expects a PAM configuration for the `http-libretime` service.
 
-To confiure this you need to create the file `/etc/pam.d/http-libretime` with the following contents.
+To configure this you need to create the file `/etc/pam.d/http-libretime` with the following contents.
 
 ```
 auth    required   pam_sss.so

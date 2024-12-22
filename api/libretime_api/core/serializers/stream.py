@@ -6,6 +6,8 @@ class StreamPreferencesSerializer(serializers.Serializer):
     input_fade_transition = serializers.FloatField(read_only=True)
     message_format = serializers.IntegerField(read_only=True)
     message_offline = serializers.CharField(read_only=True)
+    replay_gain_enabled = serializers.BooleanField(read_only=True)
+    replay_gain_offset = serializers.FloatField(read_only=True)
 
 
 # pylint: disable=abstract-method

@@ -22,13 +22,7 @@ Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
 Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/worker.log
 WorkingDirectory=@@WORKING_DIR@@/worker
 
-ExecStart=/usr/bin/sh -c '@@VENV_DIR@@/bin/celery worker \
-    --app=libretime_worker.tasks:worker \
-    --config=libretime_worker.config \
-    --time-limit=1800 \
-    --concurrency=1 \
-    --loglevel=INFO \
-    --logfile=$LIBRETIME_LOG_FILEPATH'
+ExecStart=/usr/local/bin/libretime-worker
 Restart=always
 
 User=libretime

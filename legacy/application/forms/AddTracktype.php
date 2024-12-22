@@ -28,6 +28,17 @@ class Application_Form_AddTracktype extends Zend_Form
         $code->setAttrib('style', 'width: 40%');
         $code->setRequired(true);
         $code->addValidator($notEmptyValidator);
+
+        $uniqueTrackTypeCodeValidator = new Zend_Validate_Callback(function ($value, $context) {
+            if (strlen($context['tracktype_id']) === 0) { // Only check uniqueness on create
+                return CcTracktypesQuery::create()->filterByDbCode($value)->count() === 0;
+            }
+
+            return true;
+        });
+        $uniqueTrackTypeCodeValidator->setMessage(_('Code is not unique.'));
+        $code->addValidator($uniqueTrackTypeCodeValidator);
+
         $code->addFilter('StringTrim');
         $this->addElement($code);
 
@@ -63,20 +74,5 @@ class Application_Form_AddTracktype extends Zend_Form
         $saveBtn->setIgnore(true);
         $saveBtn->setLabel(_('Save'));
         $this->addElement($saveBtn);
-    }
-
-    public function validateCode($data)
-    {
-        if (strlen($data['tracktype_id']) == 0) {
-            $count = CcTracktypesQuery::create()->filterByDbCode($data['code'])->count();
-
-            if ($count != 0) {
-                $this->getElement('code')->setErrors([_('Code is not unique.')]);
-
-                return false;
-            }
-        }
-
-        return true;
     }
 }

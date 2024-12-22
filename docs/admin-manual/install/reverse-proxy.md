@@ -76,6 +76,9 @@ server {
     listen 80;
     server_name libretime.example.org;
 
+    client_max_body_size 512M;
+    client_body_timeout 300s;
+
     location / {
         proxy_set_header Host              $host;
         proxy_set_header X-Real-IP         $remote_addr;
@@ -124,6 +127,9 @@ server {
     listen 80;
     server_name libretime.example.org;
 
+    client_max_body_size 512M;
+    client_body_timeout 300s;
+
     if ($host = libretime.example.org) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
@@ -134,6 +140,9 @@ server {
 server {
     listen 443 ssl; # managed by Certbot
     server_name libretime.example.org;
+
+    client_max_body_size 512M;
+    client_body_timeout 300s;
 
     ssl_certificate /etc/letsencrypt/live/libretime.example.org/fullchain.pem; # managed by Certbot
     ssl_certificate_key /etc/letsencrypt/live/libretime.example.org/privkey.pem; # managed by Certbot

@@ -19,6 +19,8 @@ class StreamPreferencesView(views.APIView):
                     "input_fade_transition",
                     "message_format",
                     "message_offline",
+                    "replay_gain_enabled",
+                    "replay_gain_offset",
                 }
             )
         )

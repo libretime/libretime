@@ -18,12 +18,13 @@ class StreamPreferences(BaseModel):
     input_fade_transition: float
     message_format: MessageFormatKind
     message_offline: str
+    replay_gain_enabled: bool
+    replay_gain_offset: float
+
     # input_auto_switch_off: bool
     # input_auto_switch_on: bool
     # input_main_user: str
     # input_main_password: str
-    # replay_gain_enabled: bool
-    # replay_gain_offset: float
     # track_fade_in: float
     # track_fade_out: float
     # track_fade_transition: float
@@ -82,6 +83,8 @@ class Preference(models.Model):
                 int(entries.get("stream_label_format") or 0)
             ),
             message_offline=entries.get("off_air_meta") or "Offline",
+            replay_gain_enabled=entries.get("enable_replay_gain") == "1",
+            replay_gain_offset=float(entries.get("replay_gain_modifier") or 0.0),
         )
 
     @classmethod

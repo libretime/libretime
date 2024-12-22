@@ -108,8 +108,6 @@ class LoginController extends Zend_Controller_Action
 
     public function passwordRestoreAction()
     {
-        $this->view->headScript()->appendFile(Assets::url('js/airtime/login/password-restore.js'), 'text/javascript');
-
         $request = $this->getRequest();
         $stationLocale = Application_Model_Preference::GetDefaultLocale();
 

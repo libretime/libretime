@@ -141,6 +141,7 @@ FROM python-base as libretime-api
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    curl \
     gcc \
     libc6-dev \
     libpq-dev \
@@ -174,8 +175,7 @@ CMD ["/usr/local/bin/gunicorn", \
 ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 
-HEALTHCHECK CMD ["python3", "-c", \
-    "import requests; requests.get('http://localhost:9001/api/v2/version').raise_for_status()"]
+HEALTHCHECK CMD ["curl", "--fail", "http://localhost:9001/api/v2/version"]
 
 #======================================================================================#
 # Worker                                                                               #
@@ -189,6 +189,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile -r requirements.txt
 
 COPY --from=python-builder /build/shared/*.whl .
+COPY --from=python-builder /build/api-client/*.whl .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile *.whl && rm -Rf *.whl
 
@@ -200,13 +201,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 USER ${UID}:${GID}
 WORKDIR /app
 
-CMD ["/usr/local/bin/celery", "worker", \
-    "--app=libretime_worker.tasks:worker", \
-    "--config=libretime_worker.config", \
-    "--time-limit=1800", \
-    "--concurrency=1", \
-    "--loglevel=info"]
-
+CMD ["/usr/local/bin/libretime-worker"]
 ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 

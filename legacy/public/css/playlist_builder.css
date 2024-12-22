@@ -658,7 +658,7 @@ li.spl_empty {
 .collapsible-header.visible .arrow-icon {
     transform: rotate(90deg);
 }
-.smart-block-advanced {
+.smart-block-advanced, .visual-waveform-editor {
     display: none;
 }
 .smart-block-form .smart-block-advanced dt {

@@ -605,7 +605,7 @@ info "creating python3 venv"
 python3 -m venv "$VENV_DIR"
 
 info "upgrading python3 tools"
-$VENV_DIR/bin/pip install --upgrade pip setuptools wheel
+$VENV_DIR/bin/pip install --upgrade "pip<24.1" setuptools wheel
 
 # Install Shared and API client
 ########################################################################################
@@ -683,6 +683,7 @@ install_service "libretime-analyzer.service" "$SCRIPT_DIR/analyzer/install/syste
 section "Worker"
 
 install_python_app "$SCRIPT_DIR/worker"
+link_python_app libretime-worker
 
 info "creating libretime-worker working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/worker"

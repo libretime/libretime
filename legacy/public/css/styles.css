@@ -4350,3 +4350,70 @@ body.droppable .artwork-upload .artwork-preview {
   border: 2px dashed lightblue;
   z-index: 9999;
 }
+
+/* Cue editor GUI starts here */
+
+.track-file-details {
+    font-size: 14px;
+    line-height: 2;
+}
+
+.track-window {
+    top: 285px;
+    width: 480px;
+}
+
+.visual-waveform-editor textarea,
+.visual-waveform-editor input,
+.visual-waveform-editor input:focus,
+.visual-waveform-editor select:focus,
+.visual-waveform-editor textarea:focus,
+.visual-waveform-editor button:focus {
+    outline: none;
+} */
+
+.visual-waveform-editor li {
+    line-height: 18px;
+}
+
+.btn-control-player {
+    padding: 5px 7px 5px 10px;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.zoom-container {
+    margin-top: 15px;
+}
+
+.track-toolbar {
+    padding: 0 !important;
+}
+
+.track-timer {
+    border-radius: 5px;
+    background-image: none;
+    -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.2);
+    -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.2);
+    /*background-color: #727272;*/
+    outline: 0;
+    border-top-color: #333333;
+    /*background: #246B86;*/
+
+    width: 65px;
+    /*padding: 5px 7px 5px 10px;*/
+    font-size: 14px;
+    line-height: 18px;
+    background-color: #666666;
+}
+
+.track-timer-input {
+    background-color: transparent;
+    border: none;
+    width: 75px;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+/* Track Edit - Cue and Gain editor GUI ends here */

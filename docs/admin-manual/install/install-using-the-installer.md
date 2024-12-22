@@ -230,6 +230,9 @@ server {
 
   server_name libretime.example.org;
 
+  client_max_body_size 512M;
+  client_body_timeout 300s;
+
   location / {
     proxy_set_header Host              $host;
     proxy_set_header X-Real-IP         $remote_addr;

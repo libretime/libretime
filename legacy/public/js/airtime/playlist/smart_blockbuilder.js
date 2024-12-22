@@ -1102,6 +1102,7 @@ var criteriaTypes = {
   info_url: "s",
   year: "n",
   track_type_id: "tt",
+  filepath: "s",
 };
 
 var stringCriteriaOptions = {

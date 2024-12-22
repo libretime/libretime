@@ -41,7 +41,13 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
                     "default": "stereo",
                 },
                 "bitrate": {"title": "Bitrate", "type": "integer"},
-                "format": {"const": "aac", "default": "aac", "title": "Format"},
+                "format": {
+                    "const": "aac",
+                    "default": "aac",
+                    "enum": ["aac"],
+                    "title": "Format",
+                    "type": "string",
+                },
             },
             "required": ["bitrate"],
             "title": "AudioAAC",
@@ -59,7 +65,13 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
                     "default": "stereo",
                 },
                 "bitrate": {"title": "Bitrate", "type": "integer"},
-                "format": {"const": "mp3", "default": "mp3", "title": "Format"},
+                "format": {
+                    "const": "mp3",
+                    "default": "mp3",
+                    "enum": ["mp3"],
+                    "title": "Format",
+                    "type": "string",
+                },
             },
             "required": ["bitrate"],
             "title": "AudioMP3",
@@ -72,7 +84,13 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
                     "default": "stereo",
                 },
                 "bitrate": {"title": "Bitrate", "type": "integer"},
-                "format": {"const": "ogg", "default": "ogg", "title": "Format"},
+                "format": {
+                    "const": "ogg",
+                    "default": "ogg",
+                    "enum": ["ogg"],
+                    "title": "Format",
+                    "type": "string",
+                },
                 "enable_metadata": {
                     "anyOf": [{"type": "boolean"}, {"type": "null"}],
                     "default": False,
@@ -93,7 +111,9 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
                 "format": {
                     "const": "opus",
                     "default": "opus",
+                    "enum": ["opus"],
                     "title": "Format",
+                    "type": "string",
                 },
             },
             "required": ["bitrate"],
@@ -132,7 +152,9 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
                 "kind": {
                     "const": "icecast",
                     "default": "icecast",
+                    "enum": ["icecast"],
                     "title": "Kind",
+                    "type": "string",
                 },
                 "enabled": {
                     "default": False,
@@ -141,7 +163,7 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
                 },
                 "public_url": {
                     "anyOf": [
-                        {"type": "string", "format": "uri"},
+                        {"format": "uri", "type": "string"},
                         {"type": "null"},
                     ],
                     "default": None,
@@ -253,7 +275,9 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
                 "kind": {
                     "const": "shoutcast",
                     "default": "shoutcast",
+                    "enum": ["shoutcast"],
                     "title": "Kind",
+                    "type": "string",
                 },
                 "enabled": {
                     "default": False,
@@ -262,7 +286,7 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
                 },
                 "public_url": {
                     "anyOf": [
-                        {"type": "string", "format": "uri"},
+                        {"format": "uri", "type": "string"},
                         {"type": "null"},
                     ],
                     "default": None,
@@ -334,7 +358,7 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
         },
     },
     "properties": {
-        "public_url": {"title": "Public Url", "type": "string", "format": "uri"},
+        "public_url": {"format": "uri", "title": "Public Url", "type": "string"},
         "api_key": {"title": "Api Key", "type": "string"},
         "allowed_hosts": {
             "default": [],
