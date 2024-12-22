@@ -68,12 +68,14 @@ class TestFileViewSet(APITestCase):
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
             genre="Soul",
+            md5="5a11ffe0e6c6d70fcdbad1b734be6482",
         )
         baker.make(
             "storage.File",
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
             genre="R&B",
+            md5="5a11ffe0e6c6d70fcdbad1b734be6483",
         )
         self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
 
@@ -81,14 +83,14 @@ class TestFileViewSet(APITestCase):
         results = self.client.get(path).json()
         self.assertEqual(len(results), 2)
 
-        path = "/api/v2/files?genre=R&B"
-        results = self.client.get(path).json()
-        self.assertEqual(len(results), 1)
-
-        path = f"/api/v2/files?md5={file}"
-        results = self.client.get(path).json()
-        self.assertEqual(len(results), 1)
-
         path = "/api/v2/files?limit=1"
+        results = self.client.get(path).json()
+        self.assertEqual(len(results["results"]), 1)
+
+        path = f"/api/v2/files?md5={file.md5}"
+        results = self.client.get(path).json()
+        self.assertEqual(len(results), 1)
+
+        path = "/api/v2/files?genre=Soul"
         results = self.client.get(path).json()
         self.assertEqual(len(results), 1)
