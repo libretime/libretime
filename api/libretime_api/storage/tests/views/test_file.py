@@ -33,3 +33,30 @@ class TestFileViewSet(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
+
+    def test_filters(self):
+        file = baker.make(
+            "storage.File",
+            mime="audio/mp3",
+            filepath=AUDIO_FILENAME,
+            genre="Soul",
+        )
+        baker.make(
+            "storage.File",
+            mime="audio/mp3",
+            filepath=AUDIO_FILENAME,
+            genre="R&B",
+        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
+
+        path = "/api/v2/files"
+        results = self.client.get(path).json()
+        self.assertEqual(len(results), 2)
+
+        path = "/api/v2/files?genre=R&B"
+        results = self.client.get(path).json()
+        self.assertEqual(len(results), 1)
+
+        path = f"/api/v2/files?md5={file}"
+        results = self.client.get(path).json()
+        self.assertEqual(len(results), 1)

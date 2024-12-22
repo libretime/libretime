@@ -3,8 +3,10 @@ import os
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.encoding import filepath_to_uri
+from django_filters import rest_framework as filters
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.serializers import IntegerField
 
 from ..models import File
@@ -15,6 +17,9 @@ class FileViewSet(viewsets.ModelViewSet):
     queryset = File.objects.all()
     serializer_class = FileSerializer
     model_permission_name = "file"
+    pagination_class = LimitOffsetPagination
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ("md5", "genre")
 
     @action(detail=True, methods=["GET"])
     def download(self, request, pk=None):  # pylint: disable=invalid-name
