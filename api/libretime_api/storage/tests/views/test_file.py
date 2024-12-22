@@ -34,7 +34,7 @@ class TestFileViewSet(APITestCase):
         response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
 
-    def test_filters(self):
+    def test_filters_limits(self):
         file = baker.make(
             "storage.File",
             mime="audio/mp3",
@@ -58,5 +58,9 @@ class TestFileViewSet(APITestCase):
         self.assertEqual(len(results), 1)
 
         path = f"/api/v2/files?md5={file}"
+        results = self.client.get(path).json()
+        self.assertEqual(len(results), 1)
+
+        path = "/api/v2/files?limit=1"
         results = self.client.get(path).json()
         self.assertEqual(len(results), 1)
