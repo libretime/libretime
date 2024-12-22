@@ -10,7 +10,6 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.serializers import IntegerField
 
 from ...schedule.models import Schedule
 from ..models import File
