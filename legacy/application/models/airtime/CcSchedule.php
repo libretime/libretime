@@ -12,7 +12,7 @@ class CcSchedule extends BaseCcSchedule
     /**
      * Get the [optionally formatted] temporal [starts] column value.
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *                       If format is NULL, then the raw DateTime object will be returned.
      *
      * @return mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
@@ -36,7 +36,7 @@ class CcSchedule extends BaseCcSchedule
             return $dt;
         }
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            throw new PropelException('strftime format not supported anymore');
         }
 
         return $dt->format($format);
@@ -45,7 +45,7 @@ class CcSchedule extends BaseCcSchedule
     /**
      * Get the [optionally formatted] temporal [ends] column value.
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *                       If format is NULL, then the raw DateTime object will be returned.
      *
      * @return mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
@@ -69,7 +69,7 @@ class CcSchedule extends BaseCcSchedule
             return $dt;
         }
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            throw new PropelException('strftime format not supported anymore');
         }
 
         return $dt->format($format);
