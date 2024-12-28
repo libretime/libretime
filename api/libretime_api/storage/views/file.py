@@ -5,6 +5,7 @@ from os import remove
 from django.conf import settings
 from django.http import HttpResponse
 from django.utils.encoding import filepath_to_uri
+from django_filters import rest_framework as filters
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
@@ -26,6 +27,8 @@ class FileViewSet(viewsets.ModelViewSet):
     queryset = File.objects.all()
     serializer_class = FileSerializer
     model_permission_name = "file"
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ("md5", "genre")
 
     # pylint: disable=invalid-name,unused-argument
     @action(detail=True, methods=["GET"])
@@ -35,7 +38,8 @@ class FileViewSet(viewsets.ModelViewSet):
         response = HttpResponse()
         # HTTP headers must be USASCII encoded, or Nginx might not find the file and
         # will return a 404.
-        redirect_uri = filepath_to_uri(os.path.join("/api/_media", instance.filepath))
+        redirect_uri = filepath_to_uri(
+            os.path.join("/api/_media", instance.filepath))
         response["X-Accel-Redirect"] = redirect_uri
         return response
 
@@ -45,15 +49,19 @@ class FileViewSet(viewsets.ModelViewSet):
 
         try:
             if instance.filepath is None:
-                logger.warning("file does not have a filepath: %d", instance.id)
+                logger.warning(
+                    "file does not have a filepath: %d", instance.id)
                 return
 
-            path = os.path.join(settings.CONFIG.storage.path, instance.filepath)
+            path = os.path.join(
+                settings.CONFIG.storage.path, instance.filepath)
 
             if not os.path.isfile(path):
-                logger.warning("file does not exist in storage: %d", instance.id)
+                logger.warning(
+                    "file does not exist in storage: %d", instance.id)
                 return
 
             remove(path)
         except OSError as exception:
-            raise APIException("could not delete file from storage") from exception
+            raise APIException(
+                "could not delete file from storage") from exception
