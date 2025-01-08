@@ -62,7 +62,7 @@ jobs:
           sudo -u postgres psql -c 'CREATE DATABASE libretime;'
           sudo -u postgres psql -c "CREATE USER libretime WITH PASSWORD 'libretime';"
           sudo -u postgres psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;'
-          sudo -u postgres psql -c 'GRANT CREATE ON SCHEMA public TO libretime;'
+          sudo -u postgres psql -c 'GRANT ALL ON DATABASE libretime TO libretime;'
           sudo -u postgres psql -c 'ALTER USER libretime CREATEDB;'
 
       - name: Setup PHP
