@@ -22,10 +22,10 @@ dev-certs:
 	cat dev/certs/fake.{key,crt} > dev/certs/fake.pem
 
 dev: .env dev-certs
-	DOCKER_BUILDKIT=1 docker-compose build
-	docker-compose run --rm legacy make build
-	docker-compose run --rm api libretime-api migrate
-	docker-compose up -d
+	DOCKER_BUILDKIT=1 docker compose build
+	docker compose run --rm legacy make build
+	docker compose run --rm api libretime-api migrate
+	docker compose up -d
 
 .PHONY: VERSION
 VERSION:
