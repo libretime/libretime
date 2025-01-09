@@ -17,21 +17,29 @@ Compress with: http://jscompress.com/
             csvEncoding = 'data:text/csv;charset=utf-8,',
             csvOutput = "",
             csvRows = [],
-            BREAK = '\r\n',
+            BREAK = '\r\n', // Use CRLF for line breaks
             DELIMITER = ',',
-			FILENAME = "export.csv";
+			      FILENAME = "export.csv";
 
         // Get and Write the headers
         csvHeaders = Object.keys(csvData[0]);
-        csvOutput += csvHeaders.join(',') + BREAK;
+        csvOutput += csvHeaders.join(DELIMITER) + BREAK;
 
         for (var i = 0; i < csvData.length; i++) {
-            var rowElements = [];
-            for(var k = 0; k < csvHeaders.length; k++) {
-                rowElements.push(csvData[i][csvHeaders[k]]);
-            } // Write the row array based on the headers
-            csvRows.push(rowElements.join(DELIMITER));
-        }
+          var rowElements = [];
+          for (var k = 0; k < csvHeaders.length; k++) {
+            var cell = csvData[i][csvHeaders[k]];
+            if (typeof cell === 'string') {
+                if (cell.includes('"')) {
+                    cell = '"' + cell.replace(/"/g, '""') + '"'; // Escape double quotes by doubling them
+                } else if (cell.includes(DELIMITER) || cell.includes('\r') || cell.includes('\n')) {
+                    cell = '"' + cell + '"'; // Enclose in double quotes if it contains commas, CR, or LF
+                }
+            }
+            rowElements.push(cell);
+          } // Write the row array based on the headers
+          csvRows.push(rowElements.join(DELIMITER));
+      }
 
         csvOutput += csvRows.join(BREAK);
 

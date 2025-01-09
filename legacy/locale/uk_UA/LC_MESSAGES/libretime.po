@@ -7,18 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-09-09 02:14+0000\n"
-"PO-Revision-Date: 2024-09-11 19:09+0000\n"
+"POT-Creation-Date: 2024-12-09 02:37+0000\n"
+"PO-Revision-Date: 2024-10-25 19:16+0000\n"
 "Last-Translator: Ihor Hordiichuk <igor_ck@outlook.com>\n"
-"Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/"
-"legacy/uk/>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/legacy/uk/>\n"
 "Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.8-dev\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.8.2-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -1817,37 +1815,37 @@ msgid "Month"
 msgstr "Місяць"
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:255
+#: application/forms/GeneralPreferences.php:257
 msgid "Sunday"
 msgstr "Неділя"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:256
+#: application/forms/GeneralPreferences.php:258
 msgid "Monday"
 msgstr "Понеділок"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:257
+#: application/forms/GeneralPreferences.php:259
 msgid "Tuesday"
 msgstr "Вівторок"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:258
+#: application/forms/GeneralPreferences.php:260
 msgid "Wednesday"
 msgstr "Середа"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:259
+#: application/forms/GeneralPreferences.php:261
 msgid "Thursday"
 msgstr "Четвер"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:260
+#: application/forms/GeneralPreferences.php:262
 msgid "Friday"
 msgstr "П'ятниця"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:261
+#: application/forms/GeneralPreferences.php:263
 msgid "Saturday"
 msgstr "Субота"
 
@@ -2527,19 +2525,19 @@ msgstr "Відповідних типів треків не знайдено"
 
 #: application/controllers/LocaleController.php:461
 #: application/forms/AddTracktype.php:61
-#: application/forms/GeneralPreferences.php:125
-#: application/forms/GeneralPreferences.php:141
-#: application/forms/GeneralPreferences.php:172
-#: application/forms/GeneralPreferences.php:239
+#: application/forms/GeneralPreferences.php:127
+#: application/forms/GeneralPreferences.php:143
+#: application/forms/GeneralPreferences.php:174
+#: application/forms/GeneralPreferences.php:241
 msgid "Enabled"
 msgstr "Увімкнено"
 
 #: application/controllers/LocaleController.php:462
 #: application/forms/AddTracktype.php:60
-#: application/forms/GeneralPreferences.php:124
-#: application/forms/GeneralPreferences.php:140
-#: application/forms/GeneralPreferences.php:171
-#: application/forms/GeneralPreferences.php:238
+#: application/forms/GeneralPreferences.php:126
+#: application/forms/GeneralPreferences.php:142
+#: application/forms/GeneralPreferences.php:173
+#: application/forms/GeneralPreferences.php:240
 msgid "Disabled"
 msgstr "Вимкнено"
 
@@ -2656,23 +2654,19 @@ msgstr "Нічого не заплановано"
 msgid "Click 'Add' to create one now."
 msgstr "Натисніть «Додати», щоб створити зараз."
 
-#: application/controllers/LoginController.php:47
-msgid "Please enter your username and password."
-msgstr "Будь ласка, введіть своє ім'я користувача та пароль."
-
-#: application/controllers/LoginController.php:145
+#: application/controllers/LoginController.php:138
 msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
 msgstr "Не вдалося надіслати електронний лист. Перевірте налаштування свого поштового сервера та переконайтеся, що його налаштовано належним чином."
 
-#: application/controllers/LoginController.php:148
+#: application/controllers/LoginController.php:141
 msgid "That username or email address could not be found."
 msgstr "Не вдалося знайти це ім’я користувача чи електронну адресу."
 
-#: application/controllers/LoginController.php:151
+#: application/controllers/LoginController.php:144
 msgid "There was a problem with the username or email address you entered."
 msgstr "Виникла проблема з іменем користувача або електронною адресою, яку ви ввели."
 
-#: application/controllers/LoginController.php:229
+#: application/controllers/LoginController.php:222
 msgid "Wrong username or password provided. Please try again."
 msgstr "Вказано неправильне ім'я користувача або пароль. Будь ласка спробуйте ще раз."
 
@@ -2800,17 +2794,34 @@ msgstr "Необхідно вказати час"
 msgid "Must wait at least 1 hour to rebroadcast"
 msgstr "Для повторної трансляції потрібно зачекати принаймні 1 годину"
 
-#: application/forms/AddShowAutoPlaylist.php:18
+#: application/forms/AddShowAutoPlaylist.php:20
 msgid "Add Autoloading Playlist ?"
 msgstr "Додати плейлист з автозавантаженням?"
 
-#: application/forms/AddShowAutoPlaylist.php:25
+#: application/forms/AddShowAutoPlaylist.php:27
 msgid "Select Playlist"
 msgstr "Вибір плейлиста"
 
-#: application/forms/AddShowAutoPlaylist.php:32
+#: application/forms/AddShowAutoPlaylist.php:35
 msgid "Repeat Playlist Until Show is Full ?"
 msgstr "Повторювати список відтворення до заповнення програми?"
+
+#: application/forms/AddShowAutoPlaylist.php:42
+msgid "Default"
+msgstr "Типово"
+
+#: application/forms/AddShowAutoPlaylist.php:42
+#: application/models/Library.php:36 application/models/Library.php:57
+msgid "None"
+msgstr "Жодного"
+
+#: application/forms/AddShowAutoPlaylist.php:45
+msgid "Select Intro Playlist"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:52
+msgid "Select Outro Playlist"
+msgstr ""
 
 #: application/forms/AddShowLiveStream.php:10
 #, php-format
@@ -3004,7 +3015,7 @@ msgstr "Неможливо створити програму в минулому
 msgid "Cannot modify start date/time of the show that is already started"
 msgstr "Неможливо змінити дату/час початку програми, яка вже розпочата"
 
-#: application/forms/AddShowWhen.php:166 application/models/Show.php:326
+#: application/forms/AddShowWhen.php:166 application/models/Show.php:378
 msgid "End date/time cannot be in the past"
 msgstr "Дата/час завершення не можуть бути в минулому"
 
@@ -3233,43 +3244,43 @@ msgstr "За замовчуванням Fade Out (s):"
 msgid "Track Type Upload Default"
 msgstr "Тип доріжки Завантаження за замовчуванням"
 
-#: application/forms/GeneralPreferences.php:110
+#: application/forms/GeneralPreferences.php:112
 msgid "Intro Autoloading Playlist"
 msgstr "Вступний автозавантажуваний плейлист (Intro)"
 
-#: application/forms/GeneralPreferences.php:116
+#: application/forms/GeneralPreferences.php:118
 msgid "Outro Autoloading Playlist"
 msgstr "Завершальний автозавантажувальний плейлист (Outro)"
 
-#: application/forms/GeneralPreferences.php:122
+#: application/forms/GeneralPreferences.php:124
 msgid "Overwrite Podcast Episode Metatags"
 msgstr "Перезаписати метатеги епізоду подкасту"
 
-#: application/forms/GeneralPreferences.php:128
+#: application/forms/GeneralPreferences.php:130
 msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
 msgstr "Якщо ввімкнути цю функцію, метатеги виконавця, назви та альбому для доріжок епізодів подкастів установлюватимуться зі значень каналу подкастів. Зауважте, що вмикати цю функцію рекомендується, щоб забезпечити надійне планування епізодів через смарт-блоки."
 
-#: application/forms/GeneralPreferences.php:138
+#: application/forms/GeneralPreferences.php:140
 msgid "Generate a smartblock and a playlist upon creation of a new podcast"
 msgstr "Створіть смартблок і список відтворення після створення нового подкасту"
 
-#: application/forms/GeneralPreferences.php:144
+#: application/forms/GeneralPreferences.php:146
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr "Якщо цей параметр увімкнено, новий смарт-блок і список відтворення, які відповідають найновішому треку подкасту, будуть створені одразу після створення нового подкасту. Зауважте, що функція «Перезаписати метатеги епізоду подкасту» також має бути ввімкнена, щоб смарт-блок міг надійно знаходити епізоди."
 
-#: application/forms/GeneralPreferences.php:161
+#: application/forms/GeneralPreferences.php:163
 msgid "Trim overbooked shows after autoloading?"
 msgstr "Обрізати переповнені покази після автозавантаження?"
 
-#: application/forms/GeneralPreferences.php:168
+#: application/forms/GeneralPreferences.php:170
 msgid "Public LibreTime API"
 msgstr "Public LibreTime API"
 
-#: application/forms/GeneralPreferences.php:169
+#: application/forms/GeneralPreferences.php:171
 msgid "Required for embeddable schedule widget."
 msgstr "Потрібний для вбудованого віджета розкладу."
 
-#: application/forms/GeneralPreferences.php:175
+#: application/forms/GeneralPreferences.php:177
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
@@ -3277,32 +3288,32 @@ msgstr ""
 "Увімкнення цієї функції дозволить LibreTime надавати дані розкладу\n"
 "                                            до зовнішніх віджетів, які можна вбудувати на ваш веб-сайт."
 
-#: application/forms/GeneralPreferences.php:187
+#: application/forms/GeneralPreferences.php:189
 msgid "Default Language"
 msgstr "Мова за замовчуванням"
 
-#: application/forms/GeneralPreferences.php:194
+#: application/forms/GeneralPreferences.php:196
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr "Часовий пояс станції"
 
-#: application/forms/GeneralPreferences.php:202
+#: application/forms/GeneralPreferences.php:204
 msgid "Week Starts On"
 msgstr "Тиждень починається з"
 
-#: application/forms/GeneralPreferences.php:218
+#: application/forms/GeneralPreferences.php:220
 msgid "Display login button on your Radio Page?"
 msgstr "Відображати кнопку входу на сторінці радіо?"
 
-#: application/forms/GeneralPreferences.php:231
+#: application/forms/GeneralPreferences.php:233
 msgid "Disable the public radio page and redirect to the login page?"
 msgstr "Вимкнути сторінку суспільного радіо і перенаправити на сторінку входу?"
 
-#: application/forms/GeneralPreferences.php:236
+#: application/forms/GeneralPreferences.php:238
 msgid "Feature Previews"
 msgstr "Попередній перегляд функцій"
 
-#: application/forms/GeneralPreferences.php:242
+#: application/forms/GeneralPreferences.php:244
 msgid "Enable this to opt-in to test new features."
 msgstr "Увімкніть це, щоб тестувати нові функції."
 
@@ -3841,10 +3852,6 @@ msgstr "Назва файлу"
 msgid "Select criteria"
 msgstr "Виберіть критерії"
 
-#: application/models/Library.php:36 application/models/Library.php:57
-msgid "None"
-msgstr "Жодного"
-
 #: application/models/Preference.php:538
 #, php-format
 msgid "Powered by %s"
@@ -3906,11 +3913,11 @@ msgstr "Неможливо запланувати плейлист, який м�
 msgid "A selected File does not exist!"
 msgstr "Вибраний файл не існує!"
 
-#: application/models/Show.php:229
+#: application/models/Show.php:281
 msgid "Shows can have a max length of 24 hours."
 msgstr "Програма може тривати не більше 24 годин."
 
-#: application/models/Show.php:341
+#: application/models/Show.php:393
 msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."
@@ -4385,6 +4392,9 @@ msgstr "Веб-потоки"
 
 #~ msgid "Please enter and confirm your new password in the fields below."
 #~ msgstr "Please enter and confirm your new password in the fields below."
+
+#~ msgid "Please enter your username and password."
+#~ msgstr "Будь ласка, введіть своє ім'я користувача та пароль."
 
 #~ msgid "Please upgrade to "
 #~ msgstr "Please upgrade to "
