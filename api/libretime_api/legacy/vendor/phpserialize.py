@@ -2,6 +2,7 @@
 :copyright: 2007-2012 by Armin Ronacher.
 license: BSD
 """
+
 from collections.abc import Iterable
 from io import BytesIO
 
