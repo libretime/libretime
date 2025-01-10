@@ -42,7 +42,7 @@ jobs:
 
       - name: Get pull request commit range
         if: github.event_name == 'pull_request'
-        run: echo "COMMIT_RANGE=origin/${{ github.base_ref }}..${{ github.sha }}" >> $GITHUB_ENV
+        run: echo "COMMIT_RANGE=${{ github.sha }}~1...${{ github.sha }}" >> $GITHUB_ENV
 
       - name: Get push commit range
         if: github.event_name == 'push'
