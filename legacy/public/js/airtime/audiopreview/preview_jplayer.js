@@ -255,7 +255,6 @@ function playOne(uri, mime) {
     key = "flac";
   }
 
-
   if (key) {
     media = {
       title:
