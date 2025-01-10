@@ -42,7 +42,7 @@ class User(AbstractBaseUser):
         choices=Role.choices,
         db_column="type",
     )
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=False)
 
     username = models.CharField(unique=True, max_length=255, db_column="login")
     password = models.CharField(max_length=255, db_column="pass")
