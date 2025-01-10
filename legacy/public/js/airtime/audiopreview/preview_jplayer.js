@@ -27,7 +27,7 @@ $(document).ready(function () {
     [], //array of songs will be filled with below's json call
     {
       swfPath: baseUrl + "js/jplayer",
-      supplied: "oga, mp3, m4v, m4a, wav",
+      supplied: "oga, mp3, m4v, m4a, wav, flac",
       size: {
         width: "0px",
         height: "0px",
@@ -161,6 +161,12 @@ function buildplaylist(p_url, p_playIndex) {
             artist: data[index]["element_artist"],
             wav: data[index]["uri"],
           };
+        } else if (data[index]["element_flac"] != undefined) {
+          media = {
+            title: data[index]["element_title"],
+            artist: data[index]["element_artist"],
+            flac: data[index]["uri"],
+          };
         } else {
           // skip this track since it's not supported
           console.log("continue");
@@ -177,6 +183,8 @@ function buildplaylist(p_url, p_playIndex) {
           key = "m4a";
         } else if (mime.search(/wav/i) > 0) {
           key = "wav";
+        } else if (mime.search(/flac/i) > 0) {
+          key = "flac";
         }
 
         if (key) {
@@ -243,6 +251,8 @@ function playOne(uri, mime) {
     key = "m4a";
   } else if (mime.search(/wav/i) > 0) {
     key = "wav";
+  } else if (mime.search(/flac/i) > 0) {
+    key = "flac";
   }
 
   if (key) {
