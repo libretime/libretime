@@ -86,7 +86,7 @@ class PypoFile(Thread):
             file_size = os.path.getsize(file_path)
 
             with open(file_path, "rb") as file_fd:
-                hasher = hashlib.md5(usedforsecurity=False)
+                hasher = hashlib.new("md5", usedforsecurity=False)
                 while True:
                     data = file_fd.read(8192)
                     if not data:
