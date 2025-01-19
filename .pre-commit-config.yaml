@@ -110,3 +110,11 @@ repos:
         pass_filenames: false
         language: script
         files: ^legacy
+
+      - id: api-schema-update
+        name: api-schema-update
+        description: Ensure API schema is up to date
+        entry: make -C api schema
+        pass_filenames: false
+        language: system
+        files: ^api
