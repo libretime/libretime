@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2024-12-09 02:37+0000\n"
-"PO-Revision-Date: 2025-02-10 18:02+0000\n"
+"PO-Revision-Date: 2025-02-11 19:01+0000\n"
 "Last-Translator: Monstorix <monstorix@outlook.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/libretime/legacy/zh_Hans/>\n"
@@ -587,12 +587,12 @@ msgstr "使用广播站的默认设置"
 
 #: application/common/UsabilityHints.php:65
 msgid "Upload some tracks below to add them to your library!"
-msgstr "请在下方上传一些音频，并将他们添加到您的素材库！"
+msgstr "请在下方上传一些曲目，并将他们添加到您的素材库！"
 
 #: application/common/UsabilityHints.php:69
 #, php-format
 msgid "It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."
-msgstr "看起来您还没有上传任何音频文件。%s现在上传%s。"
+msgstr "看起来您还没有上传任何曲目文件。%s现在上传%s。"
 
 #: application/common/UsabilityHints.php:76
 msgid "Click the 'New Show' button and fill out the required fields."
@@ -619,21 +619,21 @@ msgstr ""
 
 #: application/common/UsabilityHints.php:96
 msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
-msgstr "要开始广播，请单击当前节目并选择“排播音频”"
+msgstr "要开始广播，请单击当前节目并选择“排播曲目”"
 
 #: application/common/UsabilityHints.php:100
 #, php-format
 msgid "It looks like the current show needs more tracks. %sAdd tracks to your show now%s."
-msgstr "看起来当前节目需要填充更多音频。%s现在添加音频到您的节目%s。"
+msgstr "看起来当前节目需要填充更多曲目。%s现在添加曲目到您的节目%s。"
 
 #: application/common/UsabilityHints.php:107
 msgid "Click on the show starting next and select 'Schedule Tracks'"
-msgstr "点击接下来要开始的节目并选择“排播音频”"
+msgstr "点击接下来要开始的节目并选择“排播曲目”"
 
 #: application/common/UsabilityHints.php:111
 #, php-format
 msgid "It looks like the next show is empty. %sAdd tracks to your show now%s."
-msgstr "看起来接下来的节目是空的。%s现在将音频添加到您的节目%s。"
+msgstr "看起来接下来的节目是空的。%s现在将曲目添加到您的节目%s。"
 
 #: application/configs/config-check.php:167
 msgid "LibreTime media analyzer service"
@@ -878,7 +878,7 @@ msgstr "%s 播客"
 
 #: application/controllers/IndexController.php:93
 msgid "No tracks have been published yet."
-msgstr "没有已发布的音频。"
+msgstr "没有已发布的曲目。"
 
 #: application/controllers/LibraryController.php:28
 #: application/controllers/PlaylistController.php:149
@@ -1043,12 +1043,12 @@ msgstr "添加 %s 项"
 
 #: application/controllers/LocaleController.php:49
 msgid "You can only add tracks to smart blocks."
-msgstr "只能将音频添加到智能节目块。"
+msgstr "只能将曲目添加到智能节目块。"
 
 #: application/controllers/LocaleController.php:50
 #: application/controllers/PlaylistController.php:182
 msgid "You can only add tracks, smart blocks, and webstreams to playlists."
-msgstr "只能将音频，智能节目块和网络串流添加到播放列表。"
+msgstr "只能将曲目，智能节目块和网络串流添加到播放列表。"
 
 #: application/controllers/LocaleController.php:53
 msgid "Please select a cursor position on timeline."
@@ -1056,7 +1056,7 @@ msgstr "请在播出时间线中选择一个光标位置。"
 
 #: application/controllers/LocaleController.php:54
 msgid "You haven't added any tracks"
-msgstr "您尚未添加任何音频"
+msgstr "您尚未添加任何曲目"
 
 #: application/controllers/LocaleController.php:55
 msgid "You haven't added any playlists"
@@ -1076,7 +1076,7 @@ msgstr "您尚未添加任何网络串流"
 
 #: application/controllers/LocaleController.php:59
 msgid "Learn about tracks"
-msgstr "了解关于音频的信息"
+msgstr "了解关于曲目的信息"
 
 #: application/controllers/LocaleController.php:60
 msgid "Learn about playlists"
@@ -1172,7 +1172,7 @@ msgstr "已排播"
 #: application/controllers/LocaleController.php:86
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:3
 msgid "Tracks"
-msgstr "音频"
+msgstr "曲目"
 
 #: application/controllers/LocaleController.php:87
 msgid "Playlist"
@@ -2609,7 +2609,7 @@ msgid "<p>If this option is unchecked, the smartblock will schedule as many trac
 msgstr ""
 "<p>如果取消勾选该选项，智能节目块将在指定的时间范围内尽可能多地<strong>完整</"
 "strong>排播已有的曲目。 "
-"这经常会导致音频整体播放时长比设定的节目时长些微偏少。</p><p>如果选中该选项，"
+"这经常会导致曲目整体播放时长比设定的节目时长些微偏少。</p><p>如果选中该选项，"
 "智能节目块还将添加一条超出设定节目时长的曲目以填充播出空档。如果智能节目块所"
 "在的节目时段结束，这条最终曲目可能会被中途打断。</p>"
 
