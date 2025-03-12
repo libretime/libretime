@@ -235,8 +235,8 @@ SQL;
             $row['orig_length'] = $formatter->format();
 
             // XSS exploit prevention
-            $row['track_title'] = htmlspecialchars($row['track_title']);
-            $row['creator'] = htmlspecialchars($row['creator']);
+            $row['track_title'] = htmlspecialchars($row['track_title'] ?? '');
+            $row['creator'] = htmlspecialchars($row['creator'] ?? '');
         }
 
         return $rows;
