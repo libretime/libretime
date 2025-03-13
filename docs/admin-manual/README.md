@@ -4,7 +4,7 @@ title: Administrator manual
 
 Welcome to the **LibreTime administrator manual**, you should find guides and references to setup and configure LibreTime.
 
-:::caution
+:::warning
 
 This documentation assumes that you:
 

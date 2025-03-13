@@ -9,7 +9,7 @@ We recommend using **disposable devices** for your installations, so you can del
 
 If you don't have a way use disposable devices, below are commands that should help you remove most of the LibreTime files from your system.
 
-:::warning
+:::danger
 
 Use these commands at your **own risk**, we can't guarantee that these commands are always up to date.
 
