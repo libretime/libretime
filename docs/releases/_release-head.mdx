@@ -1,6 +1,8 @@
-import TarballLink from '@site/src/components/TarballLink';
+import TarballLink from "@site/src/components/TarballLink";
 
-<p>This version was released the <strong>{props.date}</strong>.</p>
+<p>
+  This version was released on <strong>{props.date}</strong>.
+</p>
 
 :::info
 
@@ -11,6 +13,6 @@ For general discussion or if you need help, you can join the [discourse](https:/
 :::
 
 <p>
-The full tarball for the <code>{props.version}</code> release of
-LibreTime is available <TarballLink version={props.version}>here</TarballLink>.
+  The full tarball for the <code>{props.version}</code> release of LibreTime is
+  available <TarballLink version={props.version}>here</TarballLink>.
 </p>
