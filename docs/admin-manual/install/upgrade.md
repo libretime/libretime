@@ -45,7 +45,7 @@ If you are migrating LibreTime to a new server, you must **not** apply the upgra
 
 :::
 
-:::caution
+:::warning
 
 You might need to run steps before and after the install procedure. Be sure to follow these steps thoroughly.
 
@@ -55,7 +55,7 @@ You might need to run steps before and after the install procedure. Be sure to f
 
 Follow [the install guide](./README.md#download) to download and install the new version, and re-run the `./install` script with the same arguments you used during the initial install.
 
-:::caution
+:::warning
 
 If you are migrating LibreTime to a new server, you must **stop before the [setup tasks](./README.md#setup)** and [restore the backups](../backup.md#restore-a-backup) on the new server.
 
