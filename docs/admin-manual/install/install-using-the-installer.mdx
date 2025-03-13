@@ -3,10 +3,10 @@ title: Install using the installer
 sidebar_position: 20
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-import CodeBlock from '@theme/CodeBlock';
-import vars from '@site/vars';
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import CodeBlock from "@theme/CodeBlock";
+import vars from "@site/vars";
 
 This guide walk you though the steps required to install LibreTime on your system using the installer.
 
@@ -69,13 +69,14 @@ Download the [latest released](https://github.com/libretime/libretime/releases) 
 Or directly from the command-line:
 
 <CodeBlock language="bash">
-wget https://github.com/libretime/libretime/releases/download/{vars.version}/libretime-{vars.version}.tar.gz
+  wget https://github.com/libretime/libretime/releases/download/{vars.version}
+  /libretime-{vars.version}.tar.gz
 </CodeBlock>
 
 And extract the tarball:
 
 <CodeBlock language="bash">
-tar -xvf libretime-{vars.version}.tar.gz && cd libretime
+  tar -xvf libretime-{vars.version}.tar.gz && cd libretime
 </CodeBlock>
 
 </TabItem>
@@ -108,9 +109,7 @@ git pull
 
 And checkout the latest version:
 
-<CodeBlock language="bash">
-git checkout {vars.version}
-</CodeBlock>
+<CodeBlock language="bash">git checkout {vars.version}</CodeBlock>
 
 </TabItem>
 </Tabs>
