@@ -35,6 +35,6 @@ If you are coming from **Airtime**, please follow the [Airtime migration guide](
 
 You can install LibreTime using the one of the following methods:
 
-- [:rocket: Using docker](./install-using-docker.md)
-- [:rocket: Using the installer](./install-using-the-installer.md)
+- [:rocket: Using docker](./install-using-docker.mdx)
+- [:rocket: Using the installer](./install-using-the-installer.mdx)
 - :construction: Using ansible
