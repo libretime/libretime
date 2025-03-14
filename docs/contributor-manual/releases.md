@@ -48,7 +48,7 @@ git commit -m "docs: add release note"
 
 ### 4. Merge the release pull request
 
-Push any changes that we previously made to the release branch:
+Push any changes that were previously made to the release branch:
 
 ```bash
 git push

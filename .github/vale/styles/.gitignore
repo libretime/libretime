@@ -1,4 +1,7 @@
 *
 !Makefile
 !LibreTime
-!Vocab
+!config/
+!config/*
+!config/vocabularies/*
+!config/vocabularies/Docs/*
