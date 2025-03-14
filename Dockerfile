@@ -206,6 +206,21 @@ ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 
 #======================================================================================#
+# Frontend
+#======================================================================================#
+FROM node:22-bookworm-slim AS libretime-frontend
+
+WORKDIR /build
+
+COPY frontend/package.json frontend/yarn.lock .
+RUN --mount=type=cache,target=/root/.cache/yarn \
+    YARN_CACHE_FOLDER=/root/.cache/yarn yarn install
+
+COPY frontend .
+RUN --mount=type=cache,target=/root/.cache/yarn \
+    YARN_CACHE_FOLDER=/root/.cache/yarn yarn build
+
+#======================================================================================#
 # Legacy                                                                               #
 #======================================================================================#
 FROM php:7.4-fpm AS libretime-legacy
@@ -272,6 +287,9 @@ COPY legacy .
 RUN set -eux \
     && make locale-build \
     && composer --no-cache dump-autoload --no-interaction --no-dev
+
+# TODO: place this somewhere useful
+COPY --from=libretime-frontend /build/dist /frontend
 
 # Run
 USER ${UID}:${GID}
