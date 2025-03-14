@@ -4,6 +4,268 @@ info:
   version: 2.0.0
   description: Radio Broadcast & Automation Platform
 paths:
+  /api/v2/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Check the credentials and return the REST Token
+        if the credentials are valid and authenticated.
+        Calls Django Auth login method to register User ID
+        in Django session framework
+
+        Accept the following POST parameters: username, password
+        Return the REST Framework Token Object's key.
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Login"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Login"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Login"
+        required: true
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Login"
+          description: ""
+  /api/v2/auth/logout/:
+    get:
+      operationId: auth_logout_retrieve
+      description: |-
+        Calls Django logout method and delete the Token object
+        assigned to the current User object.
+
+        Accepts/Returns nothing.
+      tags:
+        - auth
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+        - {}
+      responses:
+        "200":
+          description: No response body
+    post:
+      operationId: auth_logout_create
+      description: |-
+        Calls Django logout method and delete the Token object
+        assigned to the current User object.
+
+        Accepts/Returns nothing.
+      tags:
+        - auth
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+        - {}
+      responses:
+        "200":
+          description: No response body
+  /api/v2/auth/password/change/:
+    post:
+      operationId: auth_password_change_create
+      description: |-
+        Calls Django Auth SetPasswordForm save method.
+
+        Accepts the following POST parameters: new_password1, new_password2
+        Returns the success/fail message.
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordChange"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PasswordChange"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PasswordChange"
+        required: true
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestAuthDetail"
+          description: ""
+  /api/v2/auth/password/reset/:
+    post:
+      operationId: auth_password_reset_create
+      description: |-
+        Calls Django Auth PasswordResetForm save method.
+
+        Accepts the following POST parameters: email
+        Returns the success/fail message.
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordReset"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PasswordReset"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PasswordReset"
+        required: true
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestAuthDetail"
+          description: ""
+  /api/v2/auth/password/reset/confirm/:
+    post:
+      operationId: auth_password_reset_confirm_create
+      description: |-
+        Password reset e-mail link is confirmed, therefore
+        this resets the user's password.
+
+        Accepts the following POST parameters: token, uid,
+            new_password1, new_password2
+        Returns the success/fail message.
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordResetConfirm"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PasswordResetConfirm"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PasswordResetConfirm"
+        required: true
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestAuthDetail"
+          description: ""
+  /api/v2/auth/user/:
+    get:
+      operationId: auth_user_retrieve
+      description: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      tags:
+        - auth
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDetails"
+          description: ""
+    put:
+      operationId: auth_user_update
+      description: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserDetails"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/UserDetails"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/UserDetails"
+        required: true
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDetails"
+          description: ""
+    patch:
+      operationId: auth_user_partial_update
+      description: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchedUserDetails"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PatchedUserDetails"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PatchedUserDetails"
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDetails"
+          description: ""
   /api/v2/celery-tasks:
     get:
       operationId: celery_tasks_list
@@ -5711,6 +5973,18 @@ components:
         - id
         - start_time
         - state
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+        - password
     LoginAttempt:
       type: object
       properties:
@@ -5739,6 +6013,46 @@ components:
     NullEnum:
       enum:
         - null
+    PasswordChange:
+      type: object
+      properties:
+        new_password1:
+          type: string
+          maxLength: 128
+        new_password2:
+          type: string
+          maxLength: 128
+      required:
+        - new_password1
+        - new_password2
+    PasswordReset:
+      type: object
+      description: Serializer for requesting a password reset e-mail.
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+        - email
+    PasswordResetConfirm:
+      type: object
+      description: Serializer for confirming a password reset attempt.
+      properties:
+        new_password1:
+          type: string
+          maxLength: 128
+        new_password2:
+          type: string
+          maxLength: 128
+        uid:
+          type: string
+        token:
+          type: string
+      required:
+        - new_password1
+        - new_password2
+        - token
+        - uid
     PatchedCeleryTask:
       type: object
       properties:
@@ -6768,6 +7082,27 @@ components:
           type: string
           nullable: true
           maxLength: 1024
+    PatchedUserDetails:
+      type: object
+      description: User model w/o password
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+        username:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          readOnly: true
+          nullable: true
+        first_name:
+          type: string
+          maxLength: 255
+        last_name:
+          type: string
+          maxLength: 255
     PatchedUserToken:
       type: object
       properties:
@@ -7225,6 +7560,14 @@ components:
         * `4` - Every 3 weeks
         * `5` - Every 4 weeks
         * `2` - Every month
+    RestAuthDetail:
+      type: object
+      properties:
+        detail:
+          type: string
+          readOnly: true
+      required:
+        - detail
     RoleEnum:
       enum:
         - G
@@ -7729,6 +8072,33 @@ components:
         - id
         - last_name
         - role
+        - username
+    UserDetails:
+      type: object
+      description: User model w/o password
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+        username:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          readOnly: true
+          nullable: true
+        first_name:
+          type: string
+          maxLength: 255
+        last_name:
+          type: string
+          maxLength: 255
+      required:
+        - email
+        - first_name
+        - last_name
+        - pk
         - username
     UserToken:
       type: object
