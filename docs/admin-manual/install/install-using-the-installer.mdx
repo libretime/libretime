@@ -68,16 +68,13 @@ Download the [latest released](https://github.com/libretime/libretime/releases) 
 
 Or directly from the command-line:
 
-<CodeBlock language="bash">
-  wget https://github.com/libretime/libretime/releases/download/{vars.version}
-  /libretime-{vars.version}.tar.gz
-</CodeBlock>
+{/* prettier-ignore */}
+<CodeBlock language="bash">wget {"https://github.com/libretime/libretime/releases/download/" + vars.version + "/libretime-" + vars.version + ".tar.gz"}</CodeBlock>
 
 And extract the tarball:
 
-<CodeBlock language="bash">
-  tar -xvf libretime-{vars.version}.tar.gz && cd libretime
-</CodeBlock>
+{/* prettier-ignore */}
+<CodeBlock language="bash">tar -xvf libretime-{vars.version}.tar.gz && cd libretime</CodeBlock>
 
 </TabItem>
 <TabItem label="Git repository" value="git">
