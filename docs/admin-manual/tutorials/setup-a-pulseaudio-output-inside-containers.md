@@ -10,7 +10,7 @@ We assume you already [installed LibreTime using docker-compose](../install/READ
 
 :::
 
-:::note links
+:::note[Links]
 
 - https://github.com/mviereck/x11docker/wiki/Container-sound:-ALSA-or-Pulseaudio#pulseaudio-with-shared-socket
 

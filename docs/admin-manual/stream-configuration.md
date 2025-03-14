@@ -91,7 +91,7 @@ Setting the value of _fallback-override_ to 1 (enabled) means that when the `/li
 
 Connect the other source to the Icecast server with the same parameters defined in the `/etc/libretime/liquidsoap.cfg` file, except for the mount point. This should one of the mount points you have defined in the `/etc/icecast2/icecast.xml` file, such as `/live.ogg` in the example above.
 
-:::tip Streaming with Mixxx
+:::tip[Streaming with Mixxx]
 
 To configure Mixxx for streaming to Icecast, click _Options_, _Preferences_, then _Live Broadcasting_. For server _Type_, select the default of _Icecast 2_ when streaming to Debian or Ubuntu servers.
 
