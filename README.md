@@ -2,6 +2,8 @@
 
 [![Financial Contributors on Open Collective](https://opencollective.com/libretime/all/badge.svg?label=financial+contributors)](https://opencollective.com/libretime)
 
+[![Covered by Argos Visual Testing](https://argos-ci.com/badge.svg)](https://app.argos-ci.com/paddatrapper/website/reference?utm_source=[team-name]&utm_campaign=oss)
+
 LibreTime makes it easy to run your own online or terrestrial radio station. It
 is a community managed fork of the AirTime project.
 
