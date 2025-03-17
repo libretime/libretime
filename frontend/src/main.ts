@@ -17,5 +17,4 @@ const app = createApp(App);
 
 registerPlugins(app);
 
-app.use(i18n);
 app.mount("#app");

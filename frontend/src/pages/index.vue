@@ -1,5 +1,5 @@
 <template>
-  <LogIn />
+  <p>NOT IMPLEMENTED</p>
 </template>
 
 <script lang="ts" setup>

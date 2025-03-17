@@ -1,9 +1,12 @@
-import type { Meta } from "@storybook/vue3";
-
 import LogIn from "./LogIn.vue";
 
-const meta: Meta<typeof LogIn> = {
+export default {
   component: LogIn,
+  title: "Log In",
+  tags: ["autodocs"],
+  args: {},
 };
 
-export default meta;
+export const Default = {
+  args: {},
+};
