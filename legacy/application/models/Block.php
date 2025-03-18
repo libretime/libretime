@@ -1486,7 +1486,7 @@ SQL;
             return $value;
         }
 
-        $dt = new DateTime("now", new DateTimeZone($timeZone));
+        $dt = new DateTime('now', new DateTimeZone($timeZone));
 
         return preg_replace_callback(
             '/now{(.*?)}/',
