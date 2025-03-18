@@ -42,6 +42,9 @@ repos:
         files: \.(js|jsx|ts|tsx|vue)$
         exclude: ^legacy/public.*
         args: [--config, frontend/eslint.config.js]
+        additional_dependencies:
+          - eslint-plugin-vue@9.30.0
+          - eslint-plugin-storybook@0.11.4
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.19.0
