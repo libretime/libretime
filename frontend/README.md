@@ -6,7 +6,7 @@ Vuetify for the UI components. All package management is done with `yarn`.
 
 THIS IS NOT PRODUCTION READY. This is still a work in progress.
 
-## 💡 Usage
+## Usage
 
 This section covers how to start the development server and build your project for production.
 
@@ -38,3 +38,19 @@ To run the storybook server, run the following command. This will open the story
 ```bash
 yarn storybook
 ```
+
+### Tests and Linting
+
+To run the tests and linting, use:
+
+```bash
+yarn lint
+npx prettier -w src
+yarn cypress run # To run end-to-end tests
+yarn cypress open # to develop tests
+```
+
+## Translations
+
+Translations are handled through JSON files in `src/locales/`. The files use
+nested keys to describe individual translations.
