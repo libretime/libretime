@@ -1,19 +1,19 @@
 <template>
   <v-card>
     <v-card-title class="text-h5">
-      Log In
+      {{ $t("components.login.title") }}
     </v-card-title>
     <v-card-text>
       <v-form>
         <v-text-field
           v-model="email"
-          label="Email"
+          :label="$t('components.login.email')"
           type="email"
           required
         />
         <v-text-field
           v-model="password"
-          label="Password"
+          :label="$t('components.login.password')"
           type="password"
           required
         />
@@ -22,7 +22,7 @@
           color="primary"
           @click="login"
         >
-          Log In
+          {{ $t("components.login.title") }}
         </v-btn>
       </v-form>
     </v-card-text>

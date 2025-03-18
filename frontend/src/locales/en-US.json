@@ -1,0 +1,12 @@
+{
+  "App": {
+    "title": "Welcome to LibreTime"
+  },
+  "components": {
+    "login": {
+      "title": "Log In",
+      "email": "Email",
+      "password": "Password"
+    }
+  }
+}
