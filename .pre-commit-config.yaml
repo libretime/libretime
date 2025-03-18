@@ -35,6 +35,14 @@ repos:
         files: \.(md|mdx|yml|yaml|js|jsx|ts|tsx|json|css)$
         exclude: ^(legacy/public(?!/js/airtime)|CHANGELOG.md$|.github/release-please-manifest.json)
 
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.22.0
+    hooks:
+      - id: eslint
+        files: \.(js|jsx|ts|tsx|vue)$
+        exclude: ^legacy/public.*
+        args: [--config, frontend/eslint.config.js]
+
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.19.0
     hooks:
