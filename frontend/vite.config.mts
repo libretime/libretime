@@ -1,9 +1,11 @@
 // Plugins
+import path from 'path'
 import Components from 'unplugin-vue-components/vite'
 import Vue from '@vitejs/plugin-vue'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import ViteFonts from 'unplugin-fonts/vite'
 import VueRouter from 'unplugin-vue-router/vite'
+import VueI18n from '@intlify/unplugin-vue-i18n/vite'
 
 // Utilities
 import { defineConfig } from 'vite'
@@ -22,6 +24,9 @@ export default defineConfig({
       styles: {
         configFile: 'src/styles/settings.scss',
       },
+    }),
+    VueI18n({
+      include: path.resolve(__dirname, 'src/locales/**'),
     }),
     Components(),
     ViteFonts({

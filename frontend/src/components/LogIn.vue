@@ -7,13 +7,13 @@
       <v-form>
         <v-text-field
           v-model="email"
-          :label="$t('components.login.email')"
+          :label="$t('labels.email')"
           type="email"
           required
         />
         <v-text-field
           v-model="password"
-          :label="$t('components.login.password')"
+          :label="$t('labels.password')"
           type="password"
           required
         />
@@ -30,7 +30,6 @@
 </template>
 
 <script setup lang="ts">
-//
 </script>
 
 <script lang="ts">
