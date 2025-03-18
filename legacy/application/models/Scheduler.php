@@ -1346,14 +1346,11 @@ final class Application_Model_Scheduler
     // This is used to determine the duration of a files array
     public function timeLengthOfFiles($files)
     {
-        $timeLength = 0;
-        foreach ($files as $file) {
-            $timeLength += Application_Common_DateHelper::playlistTimeToSeconds($file['cliplength']);
-            $timeLength += $file['fadein'];
-            $timeLength += $file['fadeout'];
-        }
-
-        return $timeLength;
+        return array_reduce(
+            $files,
+            fn ($acc, $file) => $acc + Application_Common_DateHelper::playlistTimeToSeconds($file['cliplength']),
+            0.0
+        );
     }
 
     /*
