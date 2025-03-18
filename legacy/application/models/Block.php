@@ -1480,15 +1480,17 @@ SQL;
         return $storedCrit;
     }
 
-    private function resolveDate($value)
+    private function resolveDate($value, $timeZone)
     {
         if (!is_string($value)) {
             return $value;
         }
 
+        $dt = new DateTime("now", new DateTimeZone($timeZone));
+
         return preg_replace_callback(
             '/now{(.*?)}/',
-            fn ($matches) => date($matches[1]),
+            fn ($matches) => $dt->format($matches[1]),
             $value
         );
     }
@@ -1502,6 +1504,7 @@ SQL;
         $qry->useFkOwnerQuery('subj', 'left join');
 
         $allCriteria = BlockCriteria::criteriaMap();
+        $timeZone = Application_Model_Preference::GetDefaultTimezone();
 
         // Logging::info($storedCrit);
         if (isset($storedCrit['crit'])) {
@@ -1560,7 +1563,7 @@ SQL;
                         $spCriteriaExtra = $criteria['extra'];
                     }
 
-                    $spCriteriaValue = $this->resolveDate($spCriteriaValue);
+                    $spCriteriaValue = $this->resolveDate($spCriteriaValue, $timeZone);
 
                     if ($spCriteriaModifier == CriteriaModifier::STARTS_WITH) {
                         $spCriteriaValue = "{$spCriteriaValue}%";
