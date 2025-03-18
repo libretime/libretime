@@ -11,9 +11,7 @@ import {
   getLocale,
   setI18nLanguage,
   loadLocaleMessages,
-  SUPPORTED_LOCALES,
 } from "@/plugins/vue-i18n";
-import { nextTick } from "vue";
 
 // Types
 import type { I18n } from "vue-i18n";
@@ -51,7 +49,7 @@ export function setupRouter(i18n: I18n): Router {
     localStorage.removeItem("vuetify:dynamic-reload");
   });
 
-  router.beforeEach(async (to) => {
+  router.beforeEach(async () => {
     // load locale messages
     if (!i18n.global.availableLocales.includes(locale)) {
       await loadLocaleMessages(i18n, locale);
