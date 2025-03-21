@@ -40,7 +40,7 @@ The sections that need configured are
 
 - [General](../configuration.md#general)
   - Only `public_url` and `api_key` are needed. `cache_ahead_hours` currently has
-  no effect as playout is hardcoded to cache ahead 1 day.
+    no effect as playout is hardcoded to cache ahead 1 day.
 - [RabbitMQ](../configuration.md#rabbitmq)
 - [Playout](../configuration.md#playout)
   - Make sure to configure the associated liquidsoap host for this block.
