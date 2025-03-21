@@ -6,7 +6,7 @@ This tutorial walks you through the steps required to setup playout for high ava
 
 :::info
 
-We assume you have a way to consume multiple audio inputs (for example icecast). For terrestrial HA you might consider 
+We assume you have a way to consume multiple audio inputs (for example icecast). For terrestrial HA you might consider
 having an audio processor with switching and silence detection capabilities.
 
 :::
@@ -17,7 +17,7 @@ When initially setting up LibreTime, first setup the components in
 the [Create the schedule block](../../contributor-manual/design/architecture.md#create-the-schedule) along with
 the message queue.
 
-If you are going provide multiple icecast or shoutcast streams, please make sure to set all streams you want visible 
+If you are going provide multiple icecast or shoutcast streams, please make sure to set all streams you want visible
 from the LibreTime widget to enabled in this blocks config file.
 
 ## 2. Setup your playout blocks
@@ -38,17 +38,17 @@ configure two blocks for system output to an audio card, and another block for s
 
 The sections that need configured are
 
-- [General](../configuration.md#general) 
-  - Only `public_url` and `api_key` are needed. `cache_ahead_hours` currently has
-    no effect as playout is hardcoded to cache ahead 1 day.
+- [General](../configuration.md#general)
+    - Only `public_url` and `api_key` are needed. `cache_ahead_hours` currently has
+      no effect as playout is hardcoded to cache ahead 1 day.
 - [RabbitMQ](../configuration.md#rabbitmq)
-- [Playout](../configuration.md#playout) 
-  - Make sure to configure the associated liquidsoap host for this block.
+- [Playout](../configuration.md#playout)
+    - Make sure to configure the associated liquidsoap host for this block.
 - [Liquidsoap](../configuration.md#liquidsoap)
 - [Stream](../configuration.md#stream)
-  - Configure the stream outputs you want this playout block to provide and disable the rest.
+    - Configure the stream outputs you want this playout block to provide and disable the rest.
 
 ## 4. Testing
 
-Start all the playout blocks and confirm they get the schedule from the LibreTime web server. Additionally and verify 
+Start all the playout blocks and confirm they get the schedule from the LibreTime web server. Additionally and verify
 their outputs are correct.
