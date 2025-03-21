@@ -39,14 +39,14 @@ configure two blocks for system output to an audio card, and another block for s
 The sections that need configured are
 
 - [General](../configuration.md#general)
-    - Only `public_url` and `api_key` are needed. `cache_ahead_hours` currently has
-      no effect as playout is hardcoded to cache ahead 1 day.
+  - Only `public_url` and `api_key` are needed. `cache_ahead_hours` currently has
+  no effect as playout is hardcoded to cache ahead 1 day.
 - [RabbitMQ](../configuration.md#rabbitmq)
 - [Playout](../configuration.md#playout)
-    - Make sure to configure the associated liquidsoap host for this block.
+  - Make sure to configure the associated liquidsoap host for this block.
 - [Liquidsoap](../configuration.md#liquidsoap)
 - [Stream](../configuration.md#stream)
-    - Configure the stream outputs you want this playout block to provide and disable the rest.
+  - Configure the stream outputs you want this playout block to provide and disable the rest.
 
 ## 4. Testing
 
