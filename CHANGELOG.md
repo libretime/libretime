@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.3.1](https://github.com/libretime/libretime/compare/4.3.0...4.3.1) (2025-03-21)
+
+
+### Bug Fixes
+
+* **legacy:** now macro should use station timezone ([#3143](https://github.com/libretime/libretime/issues/3143)) ([c554863](https://github.com/libretime/libretime/commit/c5548632e4f7067d594d611f6cf78cedc4dfce9e))
+* **legacy:** scheduled show length should not add track fade times ([#3144](https://github.com/libretime/libretime/issues/3144)) ([5743a0f](https://github.com/libretime/libretime/commit/5743a0f5824c7f0a2d401cfec31df2b706316db1))
+
 ## [4.3.0](https://github.com/libretime/libretime/compare/4.2.0...4.3.0) (2025-03-12)
 
 
