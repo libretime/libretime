@@ -1,17 +1,17 @@
-import LogIn from "./LogIn.vue";
+import Info from "./Info.vue";
 
 import type { Meta, StoryObj } from "@storybook/vue3";
 
-const meta: Meta<typeof LogIn> = {
-  component: LogIn,
-  title: "Log In",
+const meta: Meta<typeof Info> = {
+  component: Info,
+  title: "Info",
   tags: ["autodocs"],
   args: {},
 };
 
 export default meta;
 
-type Story = StoryObj<typeof LogIn>;
+type Story = StoryObj<typeof Info>;
 export const Default: Story = {
   args: {},
 };
