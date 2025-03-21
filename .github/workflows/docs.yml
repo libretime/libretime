@@ -34,6 +34,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docs-lint-tools
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install -g mdx2vast
+
       - name: Install Vale
         run: |
           python -m venv venv && source venv/bin/activate
@@ -43,7 +50,7 @@ jobs:
             errata-ai/vale \
             vale_{version}_Linux_64-bit.tar.gz --extract vale \
             /usr/local/bin/vale \
-            --version v3.9.6 \
+            --version v3.10.0 \
             --version-file '{destination}.version'
 
       - name: Add annotations matchers
