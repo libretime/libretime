@@ -13,7 +13,7 @@ Remember to **automate** and **test** the backup process and to have it run regu
 
 :::
 
-:::caution
+:::warning
 
 Feel free to pick the backup software of your choice, but know that rsync and similar tools aren't backup tools. You could use [restic](https://restic.net/) or [borg](https://borgbackup.readthedocs.io/).
 

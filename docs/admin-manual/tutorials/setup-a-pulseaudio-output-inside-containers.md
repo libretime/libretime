@@ -10,7 +10,7 @@ We assume you already [installed LibreTime using docker-compose](../install/READ
 
 :::
 
-:::note links
+:::note[Links]
 
 - https://github.com/mviereck/x11docker/wiki/Container-sound:-ALSA-or-Pulseaudio#pulseaudio-with-shared-socket
 
@@ -38,7 +38,7 @@ See `man default.pa` for more details on how to persist a PulseAudio configurati
 
 :::
 
-:::warning
+:::danger
 
 Make sure that the PulseAudio connection socket is owned by the same user running inside the container. By default the user inside the container will be `1000:1000`, so you should be fine if your host user also has the uid `1000`.
 

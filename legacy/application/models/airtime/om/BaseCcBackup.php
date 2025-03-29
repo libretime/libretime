@@ -102,7 +102,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 	 * Get the [optionally formatted] temporal [fromtime] column value.
 	 *
 	 *
-	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
+	 * @param      string $format The date/time format string (date()-style).
 	 *							If format is NULL, then the raw DateTime object will be returned.
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
@@ -125,7 +125,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
 			return $dt;
 		} elseif (strpos($format, '%') !== false) {
-			return strftime($format, $dt->format('U'));
+			throw new PropelException('strftime format not supported anymore');
 		} else {
 			return $dt->format($format);
 		}
@@ -135,7 +135,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 	 * Get the [optionally formatted] temporal [totime] column value.
 	 *
 	 *
-	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
+	 * @param      string $format The date/time format string (date()-style).
 	 *							If format is NULL, then the raw DateTime object will be returned.
 	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
 	 * @throws     PropelException - if unable to parse/validate the date/time value.
@@ -158,7 +158,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
 			return $dt;
 		} elseif (strpos($format, '%') !== false) {
-			return strftime($format, $dt->format('U'));
+			throw new PropelException('strftime format not supported anymore');
 		} else {
 			return $dt->format($format);
 		}
