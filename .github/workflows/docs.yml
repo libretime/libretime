@@ -50,7 +50,7 @@ jobs:
             errata-ai/vale \
             vale_{version}_Linux_64-bit.tar.gz --extract vale \
             /usr/local/bin/vale \
-            --version v3.10.0 \
+            --version v3.11.2 \
             --version-file '{destination}.version'
 
       - name: Add annotations matchers
