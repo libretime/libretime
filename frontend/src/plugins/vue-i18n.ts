@@ -15,7 +15,10 @@ export function getLocale(i18n: I18n): string {
 export function setLocale(i18n: I18n, locale: Locale): void {
   // I think this should work. We currently don't have any
   // switching in the UI, so I have not yet tested this.
-  const currentlocale = i18n.global.locale as WritableComputedRef<string, string>;
+  const currentlocale = i18n.global.locale as WritableComputedRef<
+    string,
+    string
+  >;
   currentlocale.value = locale;
 }
 
