@@ -74,51 +74,6 @@
                         <?php endif; ?>
                         <div id="slider-range-max" style="width: 99%"></div>
                     </dd>
-                    <dt id="masterMe-label">
-                        <label class="optional"><?php echo $this->form->getElement('masterMe')->getLabel() ?></label>
-                    </dt>
-                    <dd id="masterMe-element" class="radio-list">
-                        <?php $i = 0;
-                        $value = $this->form->getElement('masterMe')->getValue();
-                        ?>
-                        <?php foreach ($this->form->getElement('masterMe')->getMultiOptions() as $radio) : ?>
-                            <label for="masterMe-<?php echo $i ?>">
-                                <input type="radio" value="<?php echo $i ?>" id="masterMe-<?php echo $i ?>" name="masterMe" <?php if ($i == $value) {
-                                                                                                                                    echo 'checked="checked"';
-                                                                                                                                } ?>>
-                                <?php echo $radio ?><br><br>
-                                </input>
-                            </label>
-                            <?php $i = $i + 1; ?>
-                        <?php endforeach; ?>
-                        <?php if ($this->form->getElement('masterMe')->hasErrors()) : ?>
-                            <ul class='errors'>
-                                <?php foreach ($this->form->getElement('masterMe')->getMessages() as $error) : ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </dd>
-                    <dt id="masterMeLufs-label" class="block-display">
-                        <label><?php echo $this->form->getElement('masterMeLufs')->getLabel() ?>:
-                        </label>
-                        <span id="mm_lufs_value" style="border: 0; color: #f6931f; font-weight: bold;">
-                            <?php echo $this->form->getElement('masterMeLufs')->getValue() ?>
-                        </span>
-                        <?php echo _("LUFS") ?>
-                    </dt>
-                    <dd id="masterMeLufs-element" class="block-display">
-                        <?php echo $this->form->getElement('masterMeLufs') ?>
-                        <?php if ($this->form->getElement('masterMeLufs')->hasErrors()) : ?>
-                            <ul class='errors'>
-                                <?php foreach ($this->form->getElement('masterMeLufs')->getMessages() as $error) : ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                        <div id="lufs-range-max" style="width: 99%"></div>
-                    </dd>
-
                 </dl>
             </fieldset>
             <?php echo $this->form->getSubform('live_stream_subform'); ?>

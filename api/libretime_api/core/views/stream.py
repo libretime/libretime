@@ -21,8 +21,6 @@ class StreamPreferencesView(views.APIView):
                     "message_offline",
                     "replay_gain_enabled",
                     "replay_gain_offset",
-                    "master_me_preset",
-                    "master_me_lufs",
                 }
             )
         )

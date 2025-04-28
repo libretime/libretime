@@ -204,14 +204,6 @@ class PreferenceController extends Zend_Controller_Action
                     // Application_Model_RabbitMq::PushSchedule();
                 }
 
-                // handle master_me plugin
-                if (Application_Model_Preference::GetMasterMePreset() != $values['masterMe']) {
-                    Application_Model_Preference::SetMasterMePreset($values['masterMe']);
-                }
-                if (Application_Model_Preference::GetMasterMeLufs() != $values['masterMeLufs']) {
-                    Application_Model_Preference::SetMasterMeLufs($values['masterMeLufs']);
-                }
-
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();
 

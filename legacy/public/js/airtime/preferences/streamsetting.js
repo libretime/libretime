@@ -412,20 +412,6 @@ function setSliderForReplayGain() {
   $("#replayGainModifier").val($("#slider-range-max").slider("value"));
 }
 
-function setSliderForLUFS() {
-  $("#lufs-range-max").slider({
-    range: "max",
-    min: -25,
-    max: -10,
-    value: $("#mm_lufs_value").html(),
-    slide: function (event, ui) {
-      $("#masterMeLufs").val(ui.value);
-      $("#mm_lufs_value").html(ui.value);
-    },
-  });
-  $("#masterMeLufs").val($("#lufs-range-max").slider("value"));
-}
-
 function setPseudoAdminPassword(s1, s2, s3, s4) {
   if (s1) {
     $("#s1_data-admin_pass").val("xxxxxx");
@@ -454,21 +440,8 @@ function getAdminPasswordStatus() {
 $(document).ready(function () {
   setupEventListeners();
   setSliderForReplayGain();
-  setSliderForLUFS();
   getAdminPasswordStatus();
   var s = $("[name^='customStreamSettings']:checked");
-
-  $("#masterMe-element label input").change(function (e) {
-    var x = $('label[for="' + e.target.id + '"]').html();
-    try {
-      x = parseInt(x.match(/([0-9-]+).LUFS/)[1]);
-    } catch (err) {
-      x = -16; // default
-    }
-    $("#masterMeLufs").val(x);
-    $("#lufs-range-max").slider({ value: x });
-    $("#mm_lufs_value").html(x);
-  });
 
   $("[id^='stream_save'], [name^='customStreamSettings']").live(
     "click",
@@ -487,7 +460,6 @@ $(document).ready(function () {
         }
         setupEventListeners();
         setSliderForReplayGain();
-        setSliderForLUFS();
         getAdminPasswordStatus();
       });
     },
