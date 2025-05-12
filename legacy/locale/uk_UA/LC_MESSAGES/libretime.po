@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-06-10 02:02+0000\n"
-"PO-Revision-Date: 2024-02-11 23:11+0000\n"
+"POT-Creation-Date: 2024-12-09 02:37+0000\n"
+"PO-Revision-Date: 2024-10-25 19:16+0000\n"
 "Last-Translator: Ihor Hordiichuk <igor_ck@outlook.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/legacy/uk/>\n"
 "Language: uk_UA\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.8.2-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -354,222 +354,226 @@ msgid "Nauru"
 msgstr "Науруанська"
 
 #: application/common/LocaleHelper.php:101
+msgid "Norwegian Bokmål"
+msgstr "Норвезька Букмол"
+
+#: application/common/LocaleHelper.php:102
 msgid "Nepali"
 msgstr "Непальська"
 
-#: application/common/LocaleHelper.php:102
+#: application/common/LocaleHelper.php:103
 msgid "Dutch"
 msgstr "Голландська"
 
-#: application/common/LocaleHelper.php:103
+#: application/common/LocaleHelper.php:104
 msgid "Norwegian"
 msgstr "Норвезька"
 
-#: application/common/LocaleHelper.php:104
+#: application/common/LocaleHelper.php:105
 msgid "Occitan"
 msgstr "Окситанська"
 
-#: application/common/LocaleHelper.php:105
+#: application/common/LocaleHelper.php:106
 msgid "(Afan)/Oromoor/Oriya"
 msgstr "Оромо"
 
-#: application/common/LocaleHelper.php:106
+#: application/common/LocaleHelper.php:107
 msgid "Punjabi"
 msgstr "Пенджабська"
 
-#: application/common/LocaleHelper.php:107
+#: application/common/LocaleHelper.php:108
 msgid "Polish"
 msgstr "Польська"
 
-#: application/common/LocaleHelper.php:108
+#: application/common/LocaleHelper.php:109
 msgid "Pashto/Pushto"
 msgstr "Пушту"
 
-#: application/common/LocaleHelper.php:109
+#: application/common/LocaleHelper.php:110
 msgid "Portuguese"
 msgstr "Португальська"
 
-#: application/common/LocaleHelper.php:110
+#: application/common/LocaleHelper.php:111
 msgid "Quechua"
 msgstr "Кечуа"
 
-#: application/common/LocaleHelper.php:111
+#: application/common/LocaleHelper.php:112
 msgid "Rhaeto-Romance"
 msgstr "Рето-романська"
 
-#: application/common/LocaleHelper.php:112
+#: application/common/LocaleHelper.php:113
 msgid "Kirundi"
 msgstr "Кірунді"
 
-#: application/common/LocaleHelper.php:113
+#: application/common/LocaleHelper.php:114
 msgid "Romanian"
 msgstr "Румунська"
 
-#: application/common/LocaleHelper.php:114
+#: application/common/LocaleHelper.php:115
 msgid "Russian"
 msgstr "Російська"
 
-#: application/common/LocaleHelper.php:115
+#: application/common/LocaleHelper.php:116
 msgid "Kinyarwanda"
 msgstr "Руандійська"
 
-#: application/common/LocaleHelper.php:116
+#: application/common/LocaleHelper.php:117
 msgid "Sanskrit"
 msgstr "Санскрит"
 
-#: application/common/LocaleHelper.php:117
+#: application/common/LocaleHelper.php:118
 msgid "Sindhi"
 msgstr "Сіндхі"
 
-#: application/common/LocaleHelper.php:118
+#: application/common/LocaleHelper.php:119
 msgid "Sangro"
 msgstr "Санго"
 
-#: application/common/LocaleHelper.php:119
+#: application/common/LocaleHelper.php:120
 msgid "Serbo-Croatian"
 msgstr "Сербохорватська"
 
-#: application/common/LocaleHelper.php:120
+#: application/common/LocaleHelper.php:121
 msgid "Singhalese"
 msgstr "Сингальська"
 
-#: application/common/LocaleHelper.php:121
+#: application/common/LocaleHelper.php:122
 msgid "Slovak"
 msgstr "Словацька"
 
-#: application/common/LocaleHelper.php:122
+#: application/common/LocaleHelper.php:123
 msgid "Slovenian"
 msgstr "Словенська"
 
-#: application/common/LocaleHelper.php:123
+#: application/common/LocaleHelper.php:124
 msgid "Samoan"
 msgstr "Самоанська"
 
-#: application/common/LocaleHelper.php:124
+#: application/common/LocaleHelper.php:125
 msgid "Shona"
 msgstr "Шона"
 
-#: application/common/LocaleHelper.php:125
+#: application/common/LocaleHelper.php:126
 msgid "Somali"
 msgstr "Сомалійська"
 
-#: application/common/LocaleHelper.php:126
+#: application/common/LocaleHelper.php:127
 msgid "Albanian"
 msgstr "Албанська"
 
-#: application/common/LocaleHelper.php:127
+#: application/common/LocaleHelper.php:128
 msgid "Serbian"
 msgstr "Сербська"
 
-#: application/common/LocaleHelper.php:128
+#: application/common/LocaleHelper.php:129
 msgid "Siswati"
 msgstr "Сваті"
 
-#: application/common/LocaleHelper.php:129
+#: application/common/LocaleHelper.php:130
 msgid "Sesotho"
 msgstr "Сесото"
 
-#: application/common/LocaleHelper.php:130
+#: application/common/LocaleHelper.php:131
 msgid "Sundanese"
 msgstr "Сунданська"
 
-#: application/common/LocaleHelper.php:131
+#: application/common/LocaleHelper.php:132
 msgid "Swedish"
 msgstr "Шведська"
 
-#: application/common/LocaleHelper.php:132
+#: application/common/LocaleHelper.php:133
 msgid "Swahili"
 msgstr "Суахілі"
 
-#: application/common/LocaleHelper.php:133
+#: application/common/LocaleHelper.php:134
 msgid "Tamil"
 msgstr "Тамільська"
 
-#: application/common/LocaleHelper.php:134
+#: application/common/LocaleHelper.php:135
 msgid "Tegulu"
 msgstr "Телугу"
 
-#: application/common/LocaleHelper.php:135
+#: application/common/LocaleHelper.php:136
 msgid "Tajik"
 msgstr "Таджицька"
 
-#: application/common/LocaleHelper.php:136
+#: application/common/LocaleHelper.php:137
 msgid "Thai"
 msgstr "Тайська"
 
-#: application/common/LocaleHelper.php:137
+#: application/common/LocaleHelper.php:138
 msgid "Tigrinya"
 msgstr "Тигринья"
 
-#: application/common/LocaleHelper.php:138
+#: application/common/LocaleHelper.php:139
 msgid "Turkmen"
 msgstr "Туркменський"
 
-#: application/common/LocaleHelper.php:139
+#: application/common/LocaleHelper.php:140
 msgid "Tagalog"
 msgstr "Тагальська"
 
-#: application/common/LocaleHelper.php:140
+#: application/common/LocaleHelper.php:141
 msgid "Setswana"
 msgstr "Тсвана"
 
-#: application/common/LocaleHelper.php:141
+#: application/common/LocaleHelper.php:142
 msgid "Tonga"
 msgstr "Тонганська"
 
-#: application/common/LocaleHelper.php:142
+#: application/common/LocaleHelper.php:143
 msgid "Turkish"
 msgstr "Турецька"
 
-#: application/common/LocaleHelper.php:143
+#: application/common/LocaleHelper.php:144
 msgid "Tsonga"
 msgstr "Тсонга"
 
-#: application/common/LocaleHelper.php:144
+#: application/common/LocaleHelper.php:145
 msgid "Tatar"
 msgstr "Татарська"
 
-#: application/common/LocaleHelper.php:145
+#: application/common/LocaleHelper.php:146
 msgid "Twi"
 msgstr "Чві"
 
-#: application/common/LocaleHelper.php:146
+#: application/common/LocaleHelper.php:147
 msgid "Ukrainian"
 msgstr "Українська"
 
-#: application/common/LocaleHelper.php:147
+#: application/common/LocaleHelper.php:148
 msgid "Urdu"
 msgstr "Урду"
 
-#: application/common/LocaleHelper.php:148
+#: application/common/LocaleHelper.php:149
 msgid "Uzbek"
 msgstr "Узбецька"
 
-#: application/common/LocaleHelper.php:149
+#: application/common/LocaleHelper.php:150
 msgid "Vietnamese"
 msgstr "В'єтнамська"
 
-#: application/common/LocaleHelper.php:150
+#: application/common/LocaleHelper.php:151
 msgid "Volapuk"
 msgstr "Волапюк"
 
-#: application/common/LocaleHelper.php:151
+#: application/common/LocaleHelper.php:152
 msgid "Wolof"
 msgstr "Волоф"
 
-#: application/common/LocaleHelper.php:152
+#: application/common/LocaleHelper.php:153
 msgid "Xhosa"
 msgstr "Хоса"
 
-#: application/common/LocaleHelper.php:153
+#: application/common/LocaleHelper.php:154
 msgid "Yoruba"
 msgstr "Юрубський"
 
-#: application/common/LocaleHelper.php:154
+#: application/common/LocaleHelper.php:155
 msgid "Chinese"
 msgstr "Китайська"
 
-#: application/common/LocaleHelper.php:155
+#: application/common/LocaleHelper.php:156
 msgid "Zulu"
 msgstr "Зулуська"
 
@@ -884,7 +888,7 @@ msgstr "Щось пішло не так."
 #: application/controllers/LibraryController.php:91
 #: application/controllers/LocaleController.php:171
 #: application/controllers/ShowbuilderController.php:131
-#: application/forms/SmartBlockCriteria.php:571
+#: application/forms/SmartBlockCriteria.php:413
 msgid "Preview"
 msgstr "Попередній перегляд"
 
@@ -1169,8 +1173,7 @@ msgid "Playlist"
 msgstr "Плейлист"
 
 #: application/controllers/LocaleController.php:88
-#: application/forms/SmartBlockCriteria.php:81
-#: application/models/Block.php:1454 application/models/Block.php:1552
+#: application/models/Criteria.php:171
 #: application/services/HistoryService.php:1051
 #: application/services/HistoryService.php:1086
 #: application/services/HistoryService.php:1101
@@ -1178,8 +1181,7 @@ msgid "Title"
 msgstr "Назва"
 
 #: application/controllers/LocaleController.php:89
-#: application/forms/SmartBlockCriteria.php:66
-#: application/models/Block.php:1438 application/models/Block.php:1536
+#: application/models/Criteria.php:147
 #: application/services/HistoryService.php:1052
 #: application/services/HistoryService.php:1087
 #: application/services/HistoryService.php:1102
@@ -1187,8 +1189,7 @@ msgid "Creator"
 msgstr "Автор"
 
 #: application/controllers/LocaleController.php:90
-#: application/forms/SmartBlockCriteria.php:57
-#: application/models/Block.php:1429 application/models/Block.php:1527
+#: application/models/Criteria.php:146
 #: application/services/HistoryService.php:1053
 msgid "Album"
 msgstr "Альбом"
@@ -1198,111 +1199,95 @@ msgid "Bit Rate"
 msgstr "Bit Rate"
 
 #: application/controllers/LocaleController.php:92
-#: application/forms/SmartBlockCriteria.php:59
-#: application/models/Block.php:1431 application/models/Block.php:1529
+#: application/models/Criteria.php:149
 msgid "BPM"
 msgstr "BPM"
 
 #: application/controllers/LocaleController.php:93
-#: application/forms/SmartBlockCriteria.php:60
-#: application/models/Block.php:1432 application/models/Block.php:1530
+#: application/models/Criteria.php:150
 #: application/services/HistoryService.php:1058
 #: application/services/HistoryService.php:1105
 msgid "Composer"
 msgstr "Композитор"
 
 #: application/controllers/LocaleController.php:94
-#: application/forms/SmartBlockCriteria.php:61
-#: application/models/Block.php:1433 application/models/Block.php:1531
+#: application/models/Criteria.php:151
 #: application/services/HistoryService.php:1063
 msgid "Conductor"
 msgstr "Виконавець"
 
 #: application/controllers/LocaleController.php:95
-#: application/forms/SmartBlockCriteria.php:62
-#: application/models/Block.php:1434 application/models/Block.php:1532
+#: application/models/Criteria.php:152
 #: application/services/HistoryService.php:1060
 #: application/services/HistoryService.php:1106
 msgid "Copyright"
 msgstr "Авторське право"
 
 #: application/controllers/LocaleController.php:96
-#: application/forms/SmartBlockCriteria.php:67
-#: application/models/Block.php:1439 application/models/Block.php:1537
+#: application/models/Criteria.php:156
 msgid "Encoded By"
 msgstr "Закодовано"
 
 #: application/controllers/LocaleController.php:97
-#: application/forms/SmartBlockCriteria.php:68
 #: application/forms/StreamSettingSubForm.php:116
-#: application/models/Block.php:1440 application/models/Block.php:1538
+#: application/models/Criteria.php:160
 #: application/services/HistoryService.php:1055
 msgid "Genre"
 msgstr "Жанр"
 
 #: application/controllers/LocaleController.php:98
-#: application/forms/SmartBlockCriteria.php:69
-#: application/models/Block.php:1441 application/models/Block.php:1539
+#: application/models/Criteria.php:162
 #: application/services/HistoryService.php:1059
 msgid "ISRC"
 msgstr "ISRC"
 
 #: application/controllers/LocaleController.php:99
-#: application/forms/SmartBlockCriteria.php:70
-#: application/models/Block.php:1442 application/models/Block.php:1540
+#: application/models/Criteria.php:163
 #: application/services/HistoryService.php:1057
 msgid "Label"
 msgstr "Label"
 
 #: application/controllers/LocaleController.php:100
-#: application/forms/SmartBlockCriteria.php:71
-#: application/models/Block.php:1443 application/models/Block.php:1541
+#: application/models/Criteria.php:164
 #: application/services/HistoryService.php:1064
 msgid "Language"
 msgstr "Мова"
 
 #: application/controllers/LocaleController.php:101
-#: application/forms/SmartBlockCriteria.php:72
-#: application/models/Block.php:1445 application/models/Block.php:1543
+#: application/models/Criteria.php:158
 msgid "Last Modified"
 msgstr "Остання зміна"
 
 #: application/controllers/LocaleController.php:102
-#: application/forms/SmartBlockCriteria.php:73
-#: application/models/Block.php:1446 application/models/Block.php:1544
+#: application/models/Criteria.php:159
 msgid "Last Played"
 msgstr "Останнє програвання"
 
 #: application/controllers/LocaleController.php:103
-#: application/forms/SmartBlockCriteria.php:74
-#: application/models/Block.php:1447 application/models/Block.php:1545
+#: application/models/Criteria.php:165
 #: application/services/HistoryService.php:1054
 #: application/services/HistoryService.php:1104
 msgid "Length"
 msgstr "Довжина"
 
 #: application/controllers/LocaleController.php:104
-#: application/forms/SmartBlockCriteria.php:76
-#: application/models/Block.php:1449 application/models/Block.php:1547
+#: application/models/Criteria.php:166
 msgid "Mime"
 msgstr "Mime"
 
 #: application/controllers/LocaleController.php:105
-#: application/forms/SmartBlockCriteria.php:77
-#: application/models/Block.php:1450 application/models/Block.php:1548
+#: application/models/Criteria.php:167
 #: application/services/HistoryService.php:1056
 msgid "Mood"
 msgstr "Настрій"
 
 #: application/controllers/LocaleController.php:106
-#: application/forms/SmartBlockCriteria.php:78
-#: application/models/Block.php:1451 application/models/Block.php:1549
+#: application/models/Criteria.php:168
 msgid "Owner"
 msgstr "Власник"
 
 #: application/controllers/LocaleController.php:107
-#: application/forms/SmartBlockCriteria.php:79
-#: application/models/Block.php:1452 application/models/Block.php:1550
+#: application/models/Criteria.php:169
 msgid "Replay Gain"
 msgstr "Вирівнювання гучності"
 
@@ -1311,26 +1296,22 @@ msgid "Sample Rate"
 msgstr "Частота дискретизації"
 
 #: application/controllers/LocaleController.php:109
-#: application/forms/SmartBlockCriteria.php:82
-#: application/models/Block.php:1455 application/models/Block.php:1553
+#: application/models/Criteria.php:172
 msgid "Track Number"
 msgstr "Номер треку"
 
 #: application/controllers/LocaleController.php:110
-#: application/forms/SmartBlockCriteria.php:83
-#: application/models/Block.php:1456 application/models/Block.php:1554
+#: application/models/Criteria.php:157
 msgid "Uploaded"
 msgstr "Завантажено"
 
 #: application/controllers/LocaleController.php:111
-#: application/forms/SmartBlockCriteria.php:84
-#: application/models/Block.php:1457 application/models/Block.php:1555
+#: application/models/Criteria.php:161
 msgid "Website"
 msgstr "Веб-Сайт"
 
 #: application/controllers/LocaleController.php:112
-#: application/forms/SmartBlockCriteria.php:85
-#: application/models/Block.php:1458 application/models/Block.php:1556
+#: application/models/Criteria.php:173
 #: application/services/HistoryService.php:1061
 msgid "Year"
 msgstr "Рік"
@@ -1514,84 +1495,48 @@ msgid "Processing..."
 msgstr "Обробка..."
 
 #: application/controllers/LocaleController.php:161
-#: application/forms/SmartBlockCriteria.php:100
-#: application/forms/SmartBlockCriteria.php:117
-#: application/forms/SmartBlockCriteria.php:133
-#: application/forms/SmartBlockCriteria.php:198
-#: application/forms/SmartBlockCriteria.php:375
-#: application/forms/SmartBlockCriteria.php:629
-#: application/forms/SmartBlockCriteria.php:686
-#: application/models/Block.php:1462 application/models/Block.php:1560
+#: application/models/Criteria.php:28
 msgid "Select modifier"
 msgstr "Виберіть модифікатор"
 
 #: application/controllers/LocaleController.php:162
-#: application/forms/SmartBlockCriteria.php:101
-#: application/models/Block.php:1463 application/models/Block.php:1561
 msgid "contains"
 msgstr "містить"
 
 #: application/controllers/LocaleController.php:163
-#: application/forms/SmartBlockCriteria.php:102
-#: application/models/Block.php:1464 application/models/Block.php:1562
 msgid "does not contain"
 msgstr "не містить"
 
 #: application/controllers/LocaleController.php:164
-#: application/forms/SmartBlockCriteria.php:103
-#: application/forms/SmartBlockCriteria.php:118
-#: application/forms/SmartBlockCriteria.php:137
-#: application/forms/SmartBlockCriteria.php:199
-#: application/models/Block.php:1465 application/models/Block.php:1472
-#: application/models/Block.php:1563 application/models/Block.php:1570
 msgid "is"
 msgstr "є"
 
 #: application/controllers/LocaleController.php:165
-#: application/forms/SmartBlockCriteria.php:104
-#: application/forms/SmartBlockCriteria.php:119
-#: application/forms/SmartBlockCriteria.php:138
-#: application/forms/SmartBlockCriteria.php:200
-#: application/models/Block.php:1466 application/models/Block.php:1473
-#: application/models/Block.php:1564 application/models/Block.php:1571
 msgid "is not"
 msgstr "не"
 
 #: application/controllers/LocaleController.php:166
-#: application/forms/SmartBlockCriteria.php:105
-#: application/models/Block.php:1467 application/models/Block.php:1565
 msgid "starts with"
 msgstr "починається з"
 
 #: application/controllers/LocaleController.php:167
-#: application/forms/SmartBlockCriteria.php:106
-#: application/models/Block.php:1468 application/models/Block.php:1566
 msgid "ends with"
 msgstr "закінчується на"
 
 #: application/controllers/LocaleController.php:168
-#: application/forms/SmartBlockCriteria.php:120
-#: application/forms/SmartBlockCriteria.php:139
-#: application/models/Block.php:1474 application/models/Block.php:1572
 msgid "is greater than"
 msgstr "більше ніж"
 
 #: application/controllers/LocaleController.php:169
-#: application/forms/SmartBlockCriteria.php:121
-#: application/forms/SmartBlockCriteria.php:140
-#: application/models/Block.php:1475 application/models/Block.php:1573
 msgid "is less than"
 msgstr "менше ніж"
 
 #: application/controllers/LocaleController.php:170
-#: application/forms/SmartBlockCriteria.php:122
-#: application/forms/SmartBlockCriteria.php:141
-#: application/models/Block.php:1476 application/models/Block.php:1574
 msgid "is in the range"
 msgstr "знаходиться в діапазоні"
 
 #: application/controllers/LocaleController.php:172
-#: application/forms/SmartBlockCriteria.php:573
+#: application/forms/SmartBlockCriteria.php:415
 msgid "Generate"
 msgstr "Генерувати"
 
@@ -1870,37 +1815,37 @@ msgid "Month"
 msgstr "Місяць"
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:255
+#: application/forms/GeneralPreferences.php:257
 msgid "Sunday"
 msgstr "Неділя"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:256
+#: application/forms/GeneralPreferences.php:258
 msgid "Monday"
 msgstr "Понеділок"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:257
+#: application/forms/GeneralPreferences.php:259
 msgid "Tuesday"
 msgstr "Вівторок"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:258
+#: application/forms/GeneralPreferences.php:260
 msgid "Wednesday"
 msgstr "Середа"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:259
+#: application/forms/GeneralPreferences.php:261
 msgid "Thursday"
 msgstr "Четвер"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:260
+#: application/forms/GeneralPreferences.php:262
 msgid "Friday"
 msgstr "П'ятниця"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:261
+#: application/forms/GeneralPreferences.php:263
 msgid "Saturday"
 msgstr "Субота"
 
@@ -1997,14 +1942,12 @@ msgid "There are no shows scheduled during the specified time period."
 msgstr "На зазначений період часу не заплановано жодної програми."
 
 #: application/controllers/LocaleController.php:289
-#: application/forms/SmartBlockCriteria.php:63
-#: application/models/Block.php:1435 application/models/Block.php:1533
+#: application/models/Criteria.php:153
 msgid "Cue In"
 msgstr "Початок звучання"
 
 #: application/controllers/LocaleController.php:290
-#: application/forms/SmartBlockCriteria.php:64
-#: application/models/Block.php:1436 application/models/Block.php:1534
+#: application/models/Criteria.php:154
 msgid "Cue Out"
 msgstr "Закінчення звучання"
 
@@ -2495,9 +2438,8 @@ msgid "Author"
 msgstr "Автор"
 
 #: application/controllers/LocaleController.php:438
-#: application/forms/SmartBlockCriteria.php:65
 #: application/forms/StreamSettingSubForm.php:132
-#: application/models/Block.php:1437 application/models/Block.php:1535
+#: application/models/Criteria.php:155
 msgid "Description"
 msgstr "Опис"
 
@@ -2583,19 +2525,19 @@ msgstr "Відповідних типів треків не знайдено"
 
 #: application/controllers/LocaleController.php:461
 #: application/forms/AddTracktype.php:61
-#: application/forms/GeneralPreferences.php:125
-#: application/forms/GeneralPreferences.php:141
-#: application/forms/GeneralPreferences.php:172
-#: application/forms/GeneralPreferences.php:239
+#: application/forms/GeneralPreferences.php:127
+#: application/forms/GeneralPreferences.php:143
+#: application/forms/GeneralPreferences.php:174
+#: application/forms/GeneralPreferences.php:241
 msgid "Enabled"
 msgstr "Увімкнено"
 
 #: application/controllers/LocaleController.php:462
 #: application/forms/AddTracktype.php:60
-#: application/forms/GeneralPreferences.php:124
-#: application/forms/GeneralPreferences.php:140
-#: application/forms/GeneralPreferences.php:171
-#: application/forms/GeneralPreferences.php:238
+#: application/forms/GeneralPreferences.php:126
+#: application/forms/GeneralPreferences.php:142
+#: application/forms/GeneralPreferences.php:173
+#: application/forms/GeneralPreferences.php:240
 msgid "Disabled"
 msgstr "Вимкнено"
 
@@ -2712,23 +2654,19 @@ msgstr "Нічого не заплановано"
 msgid "Click 'Add' to create one now."
 msgstr "Натисніть «Додати», щоб створити зараз."
 
-#: application/controllers/LoginController.php:47
-msgid "Please enter your username and password."
-msgstr "Будь ласка, введіть своє ім'я користувача та пароль."
-
-#: application/controllers/LoginController.php:147
+#: application/controllers/LoginController.php:138
 msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
 msgstr "Не вдалося надіслати електронний лист. Перевірте налаштування свого поштового сервера та переконайтеся, що його налаштовано належним чином."
 
-#: application/controllers/LoginController.php:150
+#: application/controllers/LoginController.php:141
 msgid "That username or email address could not be found."
 msgstr "Не вдалося знайти це ім’я користувача чи електронну адресу."
 
-#: application/controllers/LoginController.php:153
+#: application/controllers/LoginController.php:144
 msgid "There was a problem with the username or email address you entered."
 msgstr "Виникла проблема з іменем користувача або електронною адресою, яку ви ввели."
 
-#: application/controllers/LoginController.php:231
+#: application/controllers/LoginController.php:222
 msgid "Wrong username or password provided. Please try again."
 msgstr "Вказано неправильне ім'я користувача або пароль. Будь ласка спробуйте ще раз."
 
@@ -2856,17 +2794,34 @@ msgstr "Необхідно вказати час"
 msgid "Must wait at least 1 hour to rebroadcast"
 msgstr "Для повторної трансляції потрібно зачекати принаймні 1 годину"
 
-#: application/forms/AddShowAutoPlaylist.php:18
+#: application/forms/AddShowAutoPlaylist.php:20
 msgid "Add Autoloading Playlist ?"
 msgstr "Додати плейлист з автозавантаженням?"
 
-#: application/forms/AddShowAutoPlaylist.php:25
+#: application/forms/AddShowAutoPlaylist.php:27
 msgid "Select Playlist"
 msgstr "Вибір плейлиста"
 
-#: application/forms/AddShowAutoPlaylist.php:32
+#: application/forms/AddShowAutoPlaylist.php:35
 msgid "Repeat Playlist Until Show is Full ?"
 msgstr "Повторювати список відтворення до заповнення програми?"
+
+#: application/forms/AddShowAutoPlaylist.php:42
+msgid "Default"
+msgstr "Типово"
+
+#: application/forms/AddShowAutoPlaylist.php:42
+#: application/models/Library.php:36 application/models/Library.php:57
+msgid "None"
+msgstr "Жодного"
+
+#: application/forms/AddShowAutoPlaylist.php:45
+msgid "Select Intro Playlist"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:52
+msgid "Select Outro Playlist"
+msgstr ""
 
 #: application/forms/AddShowLiveStream.php:10
 #, php-format
@@ -3060,7 +3015,7 @@ msgstr "Неможливо створити програму в минулому
 msgid "Cannot modify start date/time of the show that is already started"
 msgstr "Неможливо змінити дату/час початку програми, яка вже розпочата"
 
-#: application/forms/AddShowWhen.php:166 application/models/Show.php:326
+#: application/forms/AddShowWhen.php:166 application/models/Show.php:378
 msgid "End date/time cannot be in the past"
 msgstr "Дата/час завершення не можуть бути в минулому"
 
@@ -3289,43 +3244,43 @@ msgstr "За замовчуванням Fade Out (s):"
 msgid "Track Type Upload Default"
 msgstr "Тип доріжки Завантаження за замовчуванням"
 
-#: application/forms/GeneralPreferences.php:110
+#: application/forms/GeneralPreferences.php:112
 msgid "Intro Autoloading Playlist"
 msgstr "Вступний автозавантажуваний плейлист (Intro)"
 
-#: application/forms/GeneralPreferences.php:116
+#: application/forms/GeneralPreferences.php:118
 msgid "Outro Autoloading Playlist"
 msgstr "Завершальний автозавантажувальний плейлист (Outro)"
 
-#: application/forms/GeneralPreferences.php:122
+#: application/forms/GeneralPreferences.php:124
 msgid "Overwrite Podcast Episode Metatags"
 msgstr "Перезаписати метатеги епізоду подкасту"
 
-#: application/forms/GeneralPreferences.php:128
+#: application/forms/GeneralPreferences.php:130
 msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
 msgstr "Якщо ввімкнути цю функцію, метатеги виконавця, назви та альбому для доріжок епізодів подкастів установлюватимуться зі значень каналу подкастів. Зауважте, що вмикати цю функцію рекомендується, щоб забезпечити надійне планування епізодів через смарт-блоки."
 
-#: application/forms/GeneralPreferences.php:138
+#: application/forms/GeneralPreferences.php:140
 msgid "Generate a smartblock and a playlist upon creation of a new podcast"
 msgstr "Створіть смартблок і список відтворення після створення нового подкасту"
 
-#: application/forms/GeneralPreferences.php:144
+#: application/forms/GeneralPreferences.php:146
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr "Якщо цей параметр увімкнено, новий смарт-блок і список відтворення, які відповідають найновішому треку подкасту, будуть створені одразу після створення нового подкасту. Зауважте, що функція «Перезаписати метатеги епізоду подкасту» також має бути ввімкнена, щоб смарт-блок міг надійно знаходити епізоди."
 
-#: application/forms/GeneralPreferences.php:161
+#: application/forms/GeneralPreferences.php:163
 msgid "Trim overbooked shows after autoloading?"
 msgstr "Обрізати переповнені покази після автозавантаження?"
 
-#: application/forms/GeneralPreferences.php:168
+#: application/forms/GeneralPreferences.php:170
 msgid "Public LibreTime API"
 msgstr "Public LibreTime API"
 
-#: application/forms/GeneralPreferences.php:169
+#: application/forms/GeneralPreferences.php:171
 msgid "Required for embeddable schedule widget."
 msgstr "Потрібний для вбудованого віджета розкладу."
 
-#: application/forms/GeneralPreferences.php:175
+#: application/forms/GeneralPreferences.php:177
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
@@ -3333,32 +3288,32 @@ msgstr ""
 "Увімкнення цієї функції дозволить LibreTime надавати дані розкладу\n"
 "                                            до зовнішніх віджетів, які можна вбудувати на ваш веб-сайт."
 
-#: application/forms/GeneralPreferences.php:187
+#: application/forms/GeneralPreferences.php:189
 msgid "Default Language"
 msgstr "Мова за замовчуванням"
 
-#: application/forms/GeneralPreferences.php:194
+#: application/forms/GeneralPreferences.php:196
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr "Часовий пояс станції"
 
-#: application/forms/GeneralPreferences.php:202
+#: application/forms/GeneralPreferences.php:204
 msgid "Week Starts On"
 msgstr "Тиждень починається з"
 
-#: application/forms/GeneralPreferences.php:218
+#: application/forms/GeneralPreferences.php:220
 msgid "Display login button on your Radio Page?"
 msgstr "Відображати кнопку входу на сторінці радіо?"
 
-#: application/forms/GeneralPreferences.php:231
+#: application/forms/GeneralPreferences.php:233
 msgid "Disable the public radio page and redirect to the login page?"
 msgstr "Вимкнути сторінку суспільного радіо і перенаправити на сторінку входу?"
 
-#: application/forms/GeneralPreferences.php:236
+#: application/forms/GeneralPreferences.php:238
 msgid "Feature Previews"
 msgstr "Попередній перегляд функцій"
 
-#: application/forms/GeneralPreferences.php:242
+#: application/forms/GeneralPreferences.php:244
 msgid "Enable this to opt-in to test new features."
 msgstr "Увімкніть це, щоб тестувати нові функції."
 
@@ -3494,218 +3449,181 @@ msgstr "Усі мої програми:"
 msgid "My Shows"
 msgstr "Мої програми"
 
-#: application/forms/SmartBlockCriteria.php:56
-#: application/models/Block.php:1428 application/models/Block.php:1526
-msgid "Select criteria"
-msgstr "Виберіть критерії"
-
-#: application/forms/SmartBlockCriteria.php:58
-#: application/models/Block.php:1430 application/models/Block.php:1528
-msgid "Bit Rate (Kbps)"
-msgstr "Bit Rate (Kbps)"
-
-#: application/forms/SmartBlockCriteria.php:75
-#: application/models/Block.php:1448 application/models/Block.php:1546
-#: application/services/HistoryService.php:1065
-msgid "Track Type"
-msgstr "Тип треку"
-
-#: application/forms/SmartBlockCriteria.php:80
-#: application/models/Block.php:1453 application/models/Block.php:1551
-msgid "Sample Rate (kHz)"
-msgstr "Частота дискретизації (kHz)"
-
-#: application/forms/SmartBlockCriteria.php:134
-#: application/models/Block.php:1469 application/models/Block.php:1567
-msgid "before"
-msgstr "раніше"
-
-#: application/forms/SmartBlockCriteria.php:135
-#: application/models/Block.php:1470 application/models/Block.php:1568
-msgid "after"
-msgstr "після"
-
-#: application/forms/SmartBlockCriteria.php:136
-#: application/models/Block.php:1471 application/models/Block.php:1569
-msgid "between"
-msgstr "між"
-
-#: application/forms/SmartBlockCriteria.php:152
-#: application/forms/SmartBlockCriteria.php:469
-#: application/forms/SmartBlockCriteria.php:511
+#: application/forms/SmartBlockCriteria.php:14
+#: application/forms/SmartBlockCriteria.php:311
+#: application/forms/SmartBlockCriteria.php:353
 msgid "Select unit of time"
 msgstr "Виберіть одиницю часу"
 
-#: application/forms/SmartBlockCriteria.php:153
+#: application/forms/SmartBlockCriteria.php:15
 msgid "minute(s)"
 msgstr "хвилина(и)"
 
-#: application/forms/SmartBlockCriteria.php:154
+#: application/forms/SmartBlockCriteria.php:16
 msgid "hour(s)"
 msgstr "година(и)"
 
-#: application/forms/SmartBlockCriteria.php:155
+#: application/forms/SmartBlockCriteria.php:17
 msgid "day(s)"
 msgstr "День(Дні)"
 
-#: application/forms/SmartBlockCriteria.php:156
+#: application/forms/SmartBlockCriteria.php:18
 msgid "week(s)"
 msgstr "Тиждень(і)"
 
-#: application/forms/SmartBlockCriteria.php:157
+#: application/forms/SmartBlockCriteria.php:19
 msgid "month(s)"
 msgstr "місяць(і)"
 
-#: application/forms/SmartBlockCriteria.php:158
+#: application/forms/SmartBlockCriteria.php:20
 msgid "year(s)"
 msgstr "Рік(и)"
 
-#: application/forms/SmartBlockCriteria.php:169
+#: application/forms/SmartBlockCriteria.php:31
 msgid "hours"
 msgstr "година(и)"
 
-#: application/forms/SmartBlockCriteria.php:170
+#: application/forms/SmartBlockCriteria.php:32
 msgid "minutes"
 msgstr "хвилина(и)"
 
-#: application/forms/SmartBlockCriteria.php:171
-#: application/models/Block.php:337
+#: application/forms/SmartBlockCriteria.php:33 application/models/Block.php:304
 msgid "items"
 msgstr "елементи"
 
-#: application/forms/SmartBlockCriteria.php:172
+#: application/forms/SmartBlockCriteria.php:34
 msgid "time remaining in show"
 msgstr "час, що залишився у програмі"
 
-#: application/forms/SmartBlockCriteria.php:183
+#: application/forms/SmartBlockCriteria.php:45
 msgid "Randomly"
 msgstr "Довільно"
 
-#: application/forms/SmartBlockCriteria.php:184
+#: application/forms/SmartBlockCriteria.php:46
 msgid "Newest"
 msgstr "Найновіший(і)"
 
-#: application/forms/SmartBlockCriteria.php:185
+#: application/forms/SmartBlockCriteria.php:47
 msgid "Oldest"
 msgstr "Найстаріший(і)"
 
-#: application/forms/SmartBlockCriteria.php:186
+#: application/forms/SmartBlockCriteria.php:48
 msgid "Most recently played"
 msgstr "Нещодавно зіграно"
 
-#: application/forms/SmartBlockCriteria.php:187
+#: application/forms/SmartBlockCriteria.php:49
 msgid "Least recently played"
 msgstr "Нещодавно грали"
 
-#: application/forms/SmartBlockCriteria.php:211
+#: application/forms/SmartBlockCriteria.php:60
 msgid "Select Track Type"
 msgstr "Виберіть тип доріжки"
 
-#: application/forms/SmartBlockCriteria.php:266
+#: application/forms/SmartBlockCriteria.php:115
 msgid "Type:"
 msgstr "Тип:"
 
-#: application/forms/SmartBlockCriteria.php:269
+#: application/forms/SmartBlockCriteria.php:118
 msgid "Dynamic"
 msgstr "Динамічний"
 
-#: application/forms/SmartBlockCriteria.php:270
+#: application/forms/SmartBlockCriteria.php:119
 msgid "Static"
 msgstr "Статичний"
 
-#: application/forms/SmartBlockCriteria.php:435
+#: application/forms/SmartBlockCriteria.php:277
 msgid "Select track type"
 msgstr "Виберіть тип доріжки"
 
-#: application/forms/SmartBlockCriteria.php:521
+#: application/forms/SmartBlockCriteria.php:363
 msgid "Allow Repeated Tracks:"
 msgstr "Дозволити повторення треків:"
 
-#: application/forms/SmartBlockCriteria.php:529
+#: application/forms/SmartBlockCriteria.php:371
 msgid "Allow last track to exceed time limit:"
 msgstr "Дозволити останньому треку перевищити ліміт часу:"
 
-#: application/forms/SmartBlockCriteria.php:538
+#: application/forms/SmartBlockCriteria.php:380
 msgid "Sort Tracks:"
 msgstr "Сортування треків:"
 
-#: application/forms/SmartBlockCriteria.php:556
+#: application/forms/SmartBlockCriteria.php:398
 msgid "Limit to:"
 msgstr "Обмежити в:"
 
-#: application/forms/SmartBlockCriteria.php:568
+#: application/forms/SmartBlockCriteria.php:410
 msgid "Generate playlist content and save criteria"
 msgstr "Створення вмісту списку відтворення та збереження критеріїв"
 
-#: application/forms/SmartBlockCriteria.php:580
+#: application/forms/SmartBlockCriteria.php:422
 msgid "Shuffle playlist content"
 msgstr "Перемішати вміст плейлиста"
 
-#: application/forms/SmartBlockCriteria.php:582
+#: application/forms/SmartBlockCriteria.php:424
 msgid "Shuffle"
 msgstr "Перемішати"
 
-#: application/forms/SmartBlockCriteria.php:811
-#: application/forms/SmartBlockCriteria.php:823
+#: application/forms/SmartBlockCriteria.php:603
+#: application/forms/SmartBlockCriteria.php:615
 msgid "Limit cannot be empty or smaller than 0"
 msgstr "Ліміт не може бути порожнім або меншим за 0"
 
-#: application/forms/SmartBlockCriteria.php:816
+#: application/forms/SmartBlockCriteria.php:608
 msgid "Limit cannot be more than 24 hrs"
 msgstr "Ліміт не може перевищувати 24 год"
 
-#: application/forms/SmartBlockCriteria.php:826
+#: application/forms/SmartBlockCriteria.php:618
 msgid "The value should be an integer"
 msgstr "Значення має бути цілим числом"
 
-#: application/forms/SmartBlockCriteria.php:829
+#: application/forms/SmartBlockCriteria.php:621
 msgid "500 is the max item limit value you can set"
 msgstr "500 максимальне граничне значення"
 
-#: application/forms/SmartBlockCriteria.php:840
+#: application/forms/SmartBlockCriteria.php:632
 msgid "You must select Criteria and Modifier"
 msgstr "Ви повинні вибрати Критерії і Модифікатор"
 
-#: application/forms/SmartBlockCriteria.php:847
+#: application/forms/SmartBlockCriteria.php:639
 msgid "'Length' should be in '00:00:00' format"
 msgstr "'Довжина має бути введена у '00:00:00' форматі"
 
-#: application/forms/SmartBlockCriteria.php:856
+#: application/forms/SmartBlockCriteria.php:648
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr "Для текстового значення допускаються лише невід’ємні цілі числа (наприклад, 1 або 5)"
 
-#: application/forms/SmartBlockCriteria.php:861
-#: application/forms/SmartBlockCriteria.php:886
+#: application/forms/SmartBlockCriteria.php:653
+#: application/forms/SmartBlockCriteria.php:678
 msgid "You must select a time unit for a relative datetime."
 msgstr "Ви повинні вибрати одиницю вимірювання часу для відносної дати та часу."
 
-#: application/forms/SmartBlockCriteria.php:866
-#: application/forms/SmartBlockCriteria.php:891
+#: application/forms/SmartBlockCriteria.php:658
+#: application/forms/SmartBlockCriteria.php:683
 msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
 msgstr "Значення має бути у форматі позначки часу (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
 
-#: application/forms/SmartBlockCriteria.php:881
+#: application/forms/SmartBlockCriteria.php:673
 msgid "Only non-negative integer numbers are allowed for a relative date time"
 msgstr "Для відносної дати й часу дозволено використовувати лише невід’ємні цілі числа"
 
-#: application/forms/SmartBlockCriteria.php:908
+#: application/forms/SmartBlockCriteria.php:700
 msgid "The value has to be numeric"
 msgstr "Значення має бути числовим"
 
-#: application/forms/SmartBlockCriteria.php:913
+#: application/forms/SmartBlockCriteria.php:705
 msgid "The value should be less then 2147483648"
 msgstr "Значення має бути меншим, ніж 2147483648"
 
-#: application/forms/SmartBlockCriteria.php:918
+#: application/forms/SmartBlockCriteria.php:710
 msgid "The value cannot be empty"
 msgstr "Значення не може бути порожнім"
 
-#: application/forms/SmartBlockCriteria.php:923
+#: application/forms/SmartBlockCriteria.php:715
 #, php-format
 msgid "The value should be less than %s characters"
 msgstr "Значення має бути менше ніж %s символів"
 
-#: application/forms/SmartBlockCriteria.php:930
+#: application/forms/SmartBlockCriteria.php:722
 msgid "Value cannot be empty"
 msgstr "Значення не може бути порожнім"
 
@@ -3895,31 +3813,44 @@ msgstr ""
 msgid "%s Password Reset"
 msgstr "%s Скидання паролю"
 
-#: application/models/Block.php:829 application/models/Playlist.php:800
+#: application/models/Block.php:796 application/models/Playlist.php:800
 msgid "Cue in and cue out are null."
 msgstr "Час початку та закінчення звучання треку не заповнені."
 
-#: application/models/Block.php:863 application/models/Block.php:918
+#: application/models/Block.php:830 application/models/Block.php:885
 #: application/models/Playlist.php:838 application/models/Playlist.php:879
 msgid "Can't set cue out to be greater than file length."
 msgstr "Час закінчення звучання не може перевищувати довжину треку."
 
-#: application/models/Block.php:875 application/models/Block.php:895
+#: application/models/Block.php:842 application/models/Block.php:862
 #: application/models/Playlist.php:830 application/models/Playlist.php:853
 msgid "Can't set cue in to be larger than cue out."
 msgstr "Час початку звучання може бути пізніше часу закінчення."
 
-#: application/models/Block.php:930 application/models/Playlist.php:871
+#: application/models/Block.php:897 application/models/Playlist.php:871
 msgid "Can't set cue out to be smaller than cue in."
 msgstr "Час закінчення звучання не може бути раніше початку."
 
-#: application/models/Block.php:1444 application/models/Block.php:1542
-msgid "Upload Time"
-msgstr "Час завантаження"
+#: application/models/Criteria.php:148
+msgid "Bit Rate (Kbps)"
+msgstr "Bit Rate (Kbps)"
 
-#: application/models/Library.php:36 application/models/Library.php:57
-msgid "None"
-msgstr "Жодного"
+#: application/models/Criteria.php:170
+msgid "Sample Rate (kHz)"
+msgstr "Частота дискретизації (kHz)"
+
+#: application/models/Criteria.php:174
+#: application/services/HistoryService.php:1065
+msgid "Track Type"
+msgstr "Тип треку"
+
+#: application/models/Criteria.php:175
+msgid "File Name"
+msgstr "Назва файлу"
+
+#: application/models/Criteria.php:184
+msgid "Select criteria"
+msgstr "Виберіть критерії"
 
 #: application/models/Preference.php:538
 #, php-format
@@ -3982,11 +3913,11 @@ msgstr "Неможливо запланувати плейлист, який м�
 msgid "A selected File does not exist!"
 msgstr "Вибраний файл не існує!"
 
-#: application/models/Show.php:229
+#: application/models/Show.php:281
 msgid "Shows can have a max length of 24 hours."
 msgstr "Програма може тривати не більше 24 годин."
 
-#: application/models/Show.php:341
+#: application/models/Show.php:393
 msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."
@@ -4462,6 +4393,9 @@ msgstr "Веб-потоки"
 #~ msgid "Please enter and confirm your new password in the fields below."
 #~ msgstr "Please enter and confirm your new password in the fields below."
 
+#~ msgid "Please enter your username and password."
+#~ msgstr "Будь ласка, введіть своє ім'я користувача та пароль."
+
 #~ msgid "Please upgrade to "
 #~ msgstr "Please upgrade to "
 
@@ -4610,6 +4544,9 @@ msgstr "Веб-потоки"
 #~ msgid "Update show"
 #~ msgstr "Update show"
 
+#~ msgid "Upload Time"
+#~ msgstr "Час завантаження"
+
 #~ msgid "User Type"
 #~ msgstr "User Type"
 
@@ -4634,8 +4571,17 @@ msgstr "Веб-потоки"
 #~ msgid "Your trial expires in"
 #~ msgstr "Your trial expires in"
 
+#~ msgid "after"
+#~ msgstr "після"
+
 #~ msgid "and"
 #~ msgstr "and"
+
+#~ msgid "before"
+#~ msgstr "раніше"
+
+#~ msgid "between"
+#~ msgstr "між"
 
 #~ msgid "dB"
 #~ msgstr "dB"

@@ -50,13 +50,13 @@ class AudiopreviewController extends Zend_Controller_Action
             $media = Application_Model_StoredFile::RecallById($audioFileID);
             $uri = $baseUrl . 'api/get-media/file/' . $audioFileID;
             $mime = $media->getPropelOrm()->getDbMime();
-            $this->view->audioFileArtist = htmlspecialchars($media->getPropelOrm()->getDbArtistName());
-            $this->view->audioFileTitle = htmlspecialchars($media->getPropelOrm()->getDbTrackTitle());
+            $this->view->audioFileArtist = htmlspecialchars($media->getPropelOrm()->getDbArtistName() ?? '');
+            $this->view->audioFileTitle = htmlspecialchars($media->getPropelOrm()->getDbTrackTitle() ?? '');
         } elseif ($type == 'stream') {
             $webstream = CcWebstreamQuery::create()->findPk($audioFileID);
             $uri = $webstream->getDbUrl();
             $mime = $webstream->getDbMime();
-            $this->view->audioFileTitle = htmlspecialchars($webstream->getDbName());
+            $this->view->audioFileTitle = htmlspecialchars($webstream->getDbName() ?? '');
         } else {
             throw new Exception("Unknown type for audio preview!.Type={$type}");
         }

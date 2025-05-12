@@ -23,28 +23,28 @@ FILES = [
 # 8s  -> 9s: silence
 # 9s  -> 12s: musik
 # 12s -> 15s: pink noise fade out
-Fixture(here / "s1-jointstereo.mp3",    15.0,   6.0,    13.0,   -5.9    ),
-Fixture(here / "s1-mono.mp3",           15.0,   6.0,    13.0,   -2.0    ),
-Fixture(here / "s1-stereo.mp3",         15.0,   6.0,    13.0,   -5.9    ),
-Fixture(here / "s1-mono-12.mp3",        15.0,   9.0,    12.0,   +7.0    ),
-Fixture(here / "s1-stereo-12.mp3",      15.0,   9.0,    12.0,   +6.1    ),
-Fixture(here / "s1-mono+12.mp3",        15.0,   3.5,    13.0,   -17.0   ),
-Fixture(here / "s1-stereo+12.mp3",      15.0,   3.5,    13.0,   -17.8   ),
-Fixture(here / "s1-mono.flac",          15.0,   6.0,    13.0,   -2.3    ),
-Fixture(here / "s1-stereo.flac",        15.0,   6.0,    13.0,   -6.0    ),
-Fixture(here / "s1-mono-12.flac",       15.0,   9.0,    12.0,   +10.0   ),
-Fixture(here / "s1-stereo-12.flac",     15.0,   9.0,    12.0,   +5.9    ),
-Fixture(here / "s1-mono+12.flac",       15.0,   3.5,    13.0,   -12.0   ),
-Fixture(here / "s1-stereo+12.flac",     15.0,   3.5,    13.0,   -14.9   ),
-Fixture(here / "s1-mono.m4a",           15.0,   6.0,    13.0,   -4.5    ),
-Fixture(here / "s1-stereo.m4a",         15.0,   6.0,    13.0,   -5.8    ),
-Fixture(here / "s1-mono.ogg",           15.0,   6.0,    13.0,   -4.9    ),
-Fixture(here / "s1-stereo.ogg",         15.0,   6.0,    13.0,   -5.7    ),
-Fixture(here / "s1-stereo",             15.0,   6.0,    13.0,   -5.7    ),
-Fixture(here / "s1-mono.wav",           15.0,   6.0,    13.0,   -2.3    ),
-Fixture(here / "s1-stereo.wav",         15.0,   6.0,    13.0,   -6.0    ),
+Fixture(here / "s1-jointstereo.mp3",    15.0,   1.4,    15.0,   -5.9    ),
+Fixture(here / "s1-mono.mp3",           15.0,   1.5,    15.0,   -2.0    ),
+Fixture(here / "s1-stereo.mp3",         15.0,   1.4,    15.0,   -5.9    ),
+Fixture(here / "s1-mono-12.mp3",        15.0,   1.2,    15.0,   +7.0    ),
+Fixture(here / "s1-stereo-12.mp3",      15.0,   1.2,    15.0,   +6.1    ),
+Fixture(here / "s1-mono+12.mp3",        15.0,   1.2,    15.0,   -17.0   ),
+Fixture(here / "s1-stereo+12.mp3",      15.0,   1.2,    15.0,   -17.8   ),
+Fixture(here / "s1-mono.flac",          15.0,   1.4,    15.0,   -2.3    ),
+Fixture(here / "s1-stereo.flac",        15.0,   1.4,    15.0,   -6.0    ),
+Fixture(here / "s1-mono-12.flac",       15.0,   2.0,    15.0,   +10.0   ),
+Fixture(here / "s1-stereo-12.flac",     15.0,   1.8,    15.0,   +5.9    ),
+Fixture(here / "s1-mono+12.flac",       15.0,   0.0,    15.0,   -12.0   ),
+Fixture(here / "s1-stereo+12.flac",     15.0,   0.0,    15.0,   -14.9   ),
+Fixture(here / "s1-mono.m4a",           15.0,   1.4,    15.0,   -4.5    ),
+Fixture(here / "s1-stereo.m4a",         15.0,   1.4,    15.0,   -5.8    ),
+Fixture(here / "s1-mono.ogg",           15.0,   1.4,    15.0,   -4.9    ),
+Fixture(here / "s1-stereo.ogg",         15.0,   1.4,    15.0,   -5.7    ),
+Fixture(here / "s1-stereo",             15.0,   1.4,    15.0,   -5.7    ),
+Fixture(here / "s1-mono.wav",           15.0,   1.5,    15.0,   -2.3    ),
+Fixture(here / "s1-stereo.wav",         15.0,   1.4,    15.0,   -6.0    ),
 # sample 1 large (looped for 2 hours)
-Fixture(here / "s1-large.flac",         7200,   6.0,    7198,   -6.0    ),
+Fixture(here / "s1-large.flac",         7200,   1.4,    7200,   -6.0    ),
 # sample 2
 # 0s   -> 1.8s: silence
 # 1.8s        : noise
@@ -96,12 +96,18 @@ tags = {
     "comment": "Test Comment",
 }
 
+mp3Tags = {
+    **tags,
+    "comments": tags["comment"],
+    "description": tags["comment"],
+}
+
 FILES_TAGGED = [
     FixtureMeta(
         here / "s1-jointstereo-tagged.mp3",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(128000, abs=1e2),
             "channels": 2,
             "mime": "audio/mp3",
@@ -111,7 +117,7 @@ FILES_TAGGED = [
         here / "s1-mono-tagged.mp3",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(64000, abs=1e2),
             "channels": 1,
             "mime": "audio/mp3",
@@ -121,7 +127,7 @@ FILES_TAGGED = [
         here / "s1-stereo-tagged.mp3",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(128000, abs=1e2),
             "channels": 2,
             "mime": "audio/mp3",
@@ -151,7 +157,7 @@ FILES_TAGGED = [
         here / "s1-mono-tagged.m4a",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(65000, abs=5e4),
             "channels": 2,  # Weird
             "mime": "audio/mp4",
@@ -161,7 +167,7 @@ FILES_TAGGED = [
         here / "s1-stereo-tagged.m4a",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(128000, abs=1e5),
             "channels": 2,
             "mime": "audio/mp4",
@@ -228,12 +234,18 @@ tags = {
     "comment": "Ł Ą Ż Ę Ć Ń Ś Ź",
 }
 
+mp3Tags = {
+    **tags,
+    "comments": tags["comment"],
+    "description": tags["comment"],
+}
+
 FILES_TAGGED += [
     FixtureMeta(
         here / "s1-jointstereo-tagged-utf8.mp3",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(128000, abs=1e2),
             "channels": 2,
             "mime": "audio/mp3",
@@ -243,7 +255,7 @@ FILES_TAGGED += [
         here / "s1-mono-tagged-utf8.mp3",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(64000, abs=1e2),
             "channels": 1,
             "mime": "audio/mp3",
@@ -253,7 +265,7 @@ FILES_TAGGED += [
         here / "s1-stereo-tagged-utf8.mp3",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(128000, abs=1e2),
             "channels": 2,
             "mime": "audio/mp3",
@@ -283,7 +295,7 @@ FILES_TAGGED += [
         here / "s1-mono-tagged-utf8.m4a",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(65000, abs=5e4),
             "channels": 2,  # Weird
             "mime": "audio/mp4",
@@ -293,7 +305,7 @@ FILES_TAGGED += [
         here / "s1-stereo-tagged-utf8.m4a",
         {
             **meta,
-            **tags,
+            **mp3Tags,
             "bit_rate": approx(128000, abs=1e5),
             "channels": 2,
             "mime": "audio/mp4",

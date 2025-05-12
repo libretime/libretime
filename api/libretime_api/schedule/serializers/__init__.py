@@ -1,5 +1,5 @@
 from .playlist import PlaylistContentSerializer, PlaylistSerializer
-from .schedule import ScheduleSerializer
+from .schedule import ReadScheduleSerializer, WriteScheduleSerializer
 from .show import (
     ShowDaysSerializer,
     ShowHostSerializer,

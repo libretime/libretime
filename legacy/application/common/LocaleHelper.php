@@ -98,6 +98,7 @@ class Application_Common_LocaleHelper
             'mt' => _('Maltese'),
             'my' => _('Burmese'),
             'na' => _('Nauru'),
+            'nb' => _('Norwegian Bokmål'),
             'ne' => _('Nepali'),
             'nl' => _('Dutch'),
             'no' => _('Norwegian'),
