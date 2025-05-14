@@ -62,15 +62,15 @@ class Application_Service_PodcastService
         $podcastArray = [];
         $podcastArray['url'] = $feedUrl;
 
-        $podcastArray['title'] = $rss->get_title() ? htmlspecialchars($rss->get_title()) : '';
-        $podcastArray['description'] = $rss->get_description() ? htmlspecialchars($rss->get_description()) : '';
-        $podcastArray['link'] = $rss->get_link() ? htmlspecialchars($rss->get_link()) : '';
-        $podcastArray['language'] = $rss->get_language() ? htmlspecialchars($rss->get_language()) : '';
-        $podcastArray['copyright'] = $rss->get_copyright() ? htmlspecialchars($rss->get_copyright()) : '';
+        $podcastArray['title'] = htmlspecialchars($rss->get_title() ?? '');
+        $podcastArray['description'] = htmlspecialchars($rss->get_description() ?? '');
+        $podcastArray['link'] = htmlspecialchars($rss->get_link() ?? '');
+        $podcastArray['language'] = htmlspecialchars($rss->get_language() ?? '');
+        $podcastArray['copyright'] = htmlspecialchars($rss->get_copyright() ?? '');
 
         $author = $rss->get_author();
         $name = empty($author) ? '' : $author->get_name();
-        $podcastArray['creator'] = $name ? htmlspecialchars($name) : '';
+        $podcastArray['creator'] = htmlspecialchars($name ?? '');
 
         $categories = [];
         if (is_array($rss->get_categories())) {
@@ -432,7 +432,7 @@ class Application_Service_PodcastService
 
             $imageUrl = Config::getPublicUrl() . 'api/station-logo';
             $image = $channel->addChild('image');
-            $image->addChild('title', htmlspecialchars($podcast->getDbTitle() ? $podcast->getDbTitle() : ''));
+            $image->addChild('title', htmlspecialchars($podcast->getDbTitle() ?? ''));
             self::addEscapedChild($image, 'url', $imageUrl);
             self::addEscapedChild($image, 'link', Config::getPublicUrl());
 

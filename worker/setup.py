@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-version = "4.0.0"  # x-release-please-version
+version = "4.3.0"  # x-release-please-version
 
 setup(
     name="libretime-worker",
@@ -15,12 +15,17 @@ setup(
     },
     license="MIT",
     packages=find_packages(exclude=["*tests*", "*fixtures*"]),
+    entry_points={
+        "console_scripts": [
+            "libretime-worker=libretime_worker.main:cli",
+        ]
+    },
     python_requires=">=3.8",
     install_requires=[
         "celery==4.4.7",
         "kombu==4.6.11",
         "mutagen>=1.45.1,<1.48",
-        "requests>=2.31.0,<2.32",
+        "requests>=2.32.2,<2.33",
     ],
     extras_require={
         "dev": [

@@ -48,7 +48,7 @@ RUN set -eux \
 #======================================================================================#
 # Python base with ffmpeg                                                              #
 #======================================================================================#
-FROM python-base as python-base-ffmpeg
+FROM python-base AS python-base-ffmpeg
 
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
@@ -59,7 +59,7 @@ RUN set -eux \
 #======================================================================================#
 # Analyzer                                                                             #
 #======================================================================================#
-FROM python-base-ffmpeg as libretime-analyzer
+FROM python-base-ffmpeg AS libretime-analyzer
 
 COPY tools/packages.py /tmp/packages.py
 COPY analyzer/packages.ini /tmp/packages.ini
@@ -97,7 +97,7 @@ ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 #======================================================================================#
 # Playout                                                                              #
 #======================================================================================#
-FROM python-base-ffmpeg as libretime-playout
+FROM python-base-ffmpeg AS libretime-playout
 
 COPY tools/packages.py /tmp/packages.py
 COPY playout/packages.ini /tmp/packages.ini
@@ -136,11 +136,12 @@ ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 #======================================================================================#
 # API                                                                                  #
 #======================================================================================#
-FROM python-base as libretime-api
+FROM python-base AS libretime-api
 
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    curl \
     gcc \
     libc6-dev \
     libpq-dev \
@@ -174,13 +175,12 @@ CMD ["/usr/local/bin/gunicorn", \
 ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 
-HEALTHCHECK CMD ["python3", "-c", \
-    "import requests; requests.get('http://localhost:9001/api/v2/version').raise_for_status()"]
+HEALTHCHECK CMD ["curl", "--fail", "http://localhost:9001/api/v2/version"]
 
 #======================================================================================#
 # Worker                                                                               #
 #======================================================================================#
-FROM python-base as libretime-worker
+FROM python-base AS libretime-worker
 
 WORKDIR /src
 
@@ -189,6 +189,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile -r requirements.txt
 
 COPY --from=python-builder /build/shared/*.whl .
+COPY --from=python-builder /build/api-client/*.whl .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile *.whl && rm -Rf *.whl
 
@@ -200,13 +201,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 USER ${UID}:${GID}
 WORKDIR /app
 
-CMD ["/usr/local/bin/celery", "worker", \
-    "--app=libretime_worker.tasks:worker", \
-    "--config=libretime_worker.config", \
-    "--time-limit=1800", \
-    "--concurrency=1", \
-    "--loglevel=info"]
-
+CMD ["/usr/local/bin/libretime-worker"]
 ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 

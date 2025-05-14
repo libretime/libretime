@@ -1265,7 +1265,7 @@ class Application_Model_Preference
 
     public static function setReplayGainModifier($rg_modifier)
     {
-        self::setValue('replay_gain_modifier', $rg_modifier, true);
+        self::setValue('replay_gain_modifier', $rg_modifier, false);
     }
 
     public static function SetHistoryItemTemplate($value)
@@ -1397,6 +1397,26 @@ class Application_Model_Preference
     public static function setRadioPageDisplayLoginButton($value)
     {
         self::setValue('radio_page_display_login_button', $value);
+    }
+
+    public static function getScheduleTrimOverbooked()
+    {
+        return boolval(self::getValue('schedule_trim_overbooked', false));
+    }
+
+    public static function setScheduleTrimOverbooked($value)
+    {
+        self::setValue('schedule_trim_overbooked', $value);
+    }
+
+    public static function getRadioPageDisabled()
+    {
+        return boolval(self::getValue('radio_page_disabled', false));
+    }
+
+    public static function setRadioPageDisabled($value)
+    {
+        self::setValue('radio_page_disabled', $value);
     }
 
     public static function getLangTimezoneSetupComplete()

@@ -372,7 +372,6 @@ class FileDataHelper
     {
         if ($file && file_exists($file)) {
             $im = @imagecreatefromjpeg($file);
-
             $img = $im;
 
             if ($im) {

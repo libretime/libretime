@@ -41,51 +41,18 @@ class Application_Model_Block implements Application_Model_LibraryEditable
     ];
 
     private static $modifier2CriteriaMap = [
-        'contains' => Criteria::ILIKE,
-        'does not contain' => Criteria::NOT_ILIKE,
-        'is' => Criteria::EQUAL,
-        'is not' => Criteria::NOT_EQUAL,
-        'starts with' => Criteria::ILIKE,
-        'ends with' => Criteria::ILIKE,
-        'is greater than' => Criteria::GREATER_THAN,
-        'is less than' => Criteria::LESS_THAN,
-        'is in the range' => Criteria::CUSTOM,
-        'before' => Criteria::CUSTOM,
-        'after' => Criteria::CUSTOM,
-        'between' => Criteria::CUSTOM,
-    ];
-
-    private static $criteria2PeerMap = [
-        0 => 'Select criteria',
-        'album_title' => 'DbAlbumTitle',
-        'artist_name' => 'DbArtistName',
-        'bit_rate' => 'DbBitRate',
-        'bpm' => 'DbBpm',
-        'composer' => 'DbComposer',
-        'conductor' => 'DbConductor',
-        'copyright' => 'DbCopyright',
-        'cuein' => 'DbCuein',
-        'cueout' => 'DbCueout',
-        'description' => 'DbDescription',
-        'encoded_by' => 'DbEncodedBy',
-        'utime' => 'DbUtime',
-        'mtime' => 'DbMtime',
-        'lptime' => 'DbLPtime',
-        'genre' => 'DbGenre',
-        'info_url' => 'DbInfoUrl',
-        'isrc_number' => 'DbIsrcNumber',
-        'label' => 'DbLabel',
-        'language' => 'DbLanguage',
-        'length' => 'DbLength',
-        'mime' => 'DbMime',
-        'mood' => 'DbMood',
-        'owner_id' => 'DbOwnerId',
-        'replay_gain' => 'DbReplayGain',
-        'sample_rate' => 'DbSampleRate',
-        'track_title' => 'DbTrackTitle',
-        'track_number' => 'DbTrackNumber',
-        'year' => 'DbYear',
-        'track_type_id' => 'DbTrackTypeId',
+        CriteriaModifier::CONTAINS => Criteria::ILIKE,
+        CriteriaModifier::DOES_NOT_CONTAIN => Criteria::NOT_ILIKE,
+        CriteriaModifier::IS => Criteria::EQUAL,
+        CriteriaModifier::IS_NOT => Criteria::NOT_EQUAL,
+        CriteriaModifier::STARTS_WITH => Criteria::ILIKE,
+        CriteriaModifier::ENDS_WITH => Criteria::ILIKE,
+        CriteriaModifier::IS_GREATER_THAN => Criteria::GREATER_THAN,
+        CriteriaModifier::IS_LESS_THAN => Criteria::LESS_THAN,
+        CriteriaModifier::IS_IN_THE_RANGE => Criteria::CUSTOM,
+        CriteriaModifier::BEFORE => Criteria::CUSTOM,
+        CriteriaModifier::AFTER => Criteria::CUSTOM,
+        CriteriaModifier::BETWEEN => Criteria::CUSTOM,
     ];
 
     public function __construct($id = null, $con = null)
@@ -268,8 +235,8 @@ SQL;
             $row['orig_length'] = $formatter->format();
 
             // XSS exploit prevention
-            $row['track_title'] = $row['track_title'] ? htmlspecialchars($row['track_title']) : '';
-            $row['creator'] = $row['creator'] ? htmlspecialchars($row['creator']) : '';
+            $row['track_title'] = htmlspecialchars($row['track_title'] ?? '');
+            $row['creator'] = htmlspecialchars($row['creator'] ?? '');
         }
 
         return $rows;
@@ -1333,89 +1300,87 @@ SQL;
         $info = $this->getListofFilesMeetCriteria($show);
         $files = $info['files'];
         $limit = $info['limit'];
-        $repeat = $info['repeat_tracks'];
-        $overflow = $info['overflow_tracks'];
-
-        $insertList = [];
-        $totalTime = 0;
-        $totalItems = 0;
+        $repeat = $info['repeat_tracks'] == 1;
+        $overflow = $info['overflow_tracks'] == 1;
+        $isRandomSort = $info['sort_type'] == 'random';
+        $blockTime = $limit['time'];
+        $blockItems = $limit['items'];
 
         if ($files->isEmpty()) {
-            return $insertList;
+            return [];
         }
 
         // this moves the pointer to the first element in the collection
         $files->getFirst();
         $iterator = $files->getIterator();
 
-        $isBlockFull = false;
-
-        while ($iterator->valid()) {
+        /**
+         * @var Track[] $tracks
+         */
+        $tracks = [];
+        $maxItems = 500;
+        while ($iterator->valid() && count($tracks) < $maxItems) {
             $id = $iterator->current()->getDbId();
             $fileLength = $iterator->current()->getCueLength();
             $length = Application_Common_DateHelper::calculateLengthInSeconds($fileLength);
-            // if the block is setup to allow the overflow of tracks this will add the next track even if it becomes
-            // longer than the time limit
-            if ($overflow == 1) {
-                $insertList[] = ['id' => $id, 'length' => $length];
-                $totalTime += $length;
-                ++$totalItems;
-            }
-            // otherwise we need to check to determine if the track will make the playlist exceed the totalTime before
-            // adding it this could loop through a lot of tracks so I used the totalItems limit to prevent
-            // the algorithm from parsing too many items.
 
-            else {
-                $projectedTime = $totalTime + $length;
-                if ($projectedTime > $limit['time']) {
-                    ++$totalItems;
-                } else {
-                    $insertList[] = ['id' => $id, 'length' => $length];
-                    $totalTime += $length;
-                    ++$totalItems;
-                }
-            }
-            if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
-                $isBlockFull = true;
-
-                break;
-            }
+            $tracks[] = new Track($id, $length);
 
             $iterator->next();
         }
 
-        $sizeOfInsert = count($insertList);
+        /**
+         * @var Track[] $insertList
+         */
+        $insertList = [];
+        $totalTime = 0;
+        if ($isRandomSort && !$overflow && $blockItems === null) {
+            $minTrackLength = min(array_map(fn (Track $item) => $item->length, $tracks));
+            do {
+                $solution = SSPSolution::solve($tracks, $blockTime - $totalTime);
+                $insertList = array_merge($insertList, $solution->tracks);
+                $totalTime += $solution->sum;
+            } while ($repeat && ($blockTime - $totalTime) > $minTrackLength);
+            shuffle($insertList);
+        } else {
+            $isFull = function () use (&$blockItems, &$insertList, &$totalTime, &$blockTime) {
+                return $blockItems !== null && count($insertList) >= $blockItems || $totalTime > $blockTime;
+            };
 
-        // if block is not full and repeat_track is check, fill up more
-        // additionally still don't overflow the limit
-        while (!$isBlockFull && $repeat == 1 && $sizeOfInsert > 0) {
-            Logging::debug('adding repeated tracks.');
-            Logging::debug('total time = ' . $totalTime);
-
-            $randomEleKey = array_rand(array_slice($insertList, 0, $sizeOfInsert));
-            // this will also allow the overflow of tracks so that time limited smart blocks will schedule until they
-            // are longer than the time limit rather than never scheduling past the time limit
-            if ($overflow == 1) {
-                $insertList[] = $insertList[$randomEleKey];
-                $totalTime += $insertList[$randomEleKey]['length'];
-                ++$totalItems;
-            } else {
-                $projectedTime = $totalTime + $insertList[$randomEleKey]['length'];
-                if ($projectedTime > $limit['time']) {
-                    ++$totalItems;
+            $addTrack = function (Track $track) use ($overflow, $blockTime, &$insertList, &$totalTime) {
+                if ($overflow) {
+                    $insertList[] = $track;
+                    $totalTime += $track->length;
                 } else {
-                    $insertList[] = $insertList[$randomEleKey];
-                    $totalTime += $insertList[$randomEleKey]['length'];
-                    ++$totalItems;
+                    $projectedTime = $totalTime + $track->length;
+
+                    if ($projectedTime <= $blockTime) {
+                        $insertList[] = $track;
+                        $totalTime += $track->length;
+                    }
+                }
+            };
+
+            foreach ($tracks as $track) {
+                $addTrack($track);
+
+                if ($isFull()) {
+                    break;
                 }
             }
 
-            if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
-                break;
+            $sizeOfInsert = count($insertList);
+
+            while (!$isFull() && $repeat && $sizeOfInsert > 0) {
+                Logging::debug('adding repeated tracks.');
+                Logging::debug('total time = ' . $totalTime);
+                $track = $insertList[array_rand(array_slice($insertList, 0, $sizeOfInsert))];
+
+                $addTrack($track);
             }
         }
 
-        return $insertList;
+        return array_map(fn (Track $track) => ['id' => $track->id, 'length' => $track->length], $insertList);
     }
 
     /**
@@ -1424,57 +1389,8 @@ SQL;
      */
     public function getCriteria()
     {
-        $criteriaOptions = [
-            0 => _('Select criteria'),
-            'album_title' => _('Album'),
-            'bit_rate' => _('Bit Rate (Kbps)'),
-            'bpm' => _('BPM'),
-            'composer' => _('Composer'),
-            'conductor' => _('Conductor'),
-            'copyright' => _('Copyright'),
-            'cuein' => _('Cue In'),
-            'cueout' => _('Cue Out'),
-            'description' => _('Description'),
-            'artist_name' => _('Creator'),
-            'encoded_by' => _('Encoded By'),
-            'genre' => _('Genre'),
-            'isrc_number' => _('ISRC'),
-            'label' => _('Label'),
-            'language' => _('Language'),
-            'utime' => _('Upload Time'),
-            'mtime' => _('Last Modified'),
-            'lptime' => _('Last Played'),
-            'length' => _('Length'),
-            'track_type_id' => _('Track Type'),
-            'mime' => _('Mime'),
-            'mood' => _('Mood'),
-            'owner_id' => _('Owner'),
-            'replay_gain' => _('Replay Gain'),
-            'sample_rate' => _('Sample Rate (kHz)'),
-            'track_title' => _('Title'),
-            'track_number' => _('Track Number'),
-            'utime' => _('Uploaded'),
-            'info_url' => _('Website'),
-            'year' => _('Year'),
-        ];
-
-        $modifierOptions = [
-            '0' => _('Select modifier'),
-            'contains' => _('contains'),
-            'does not contain' => _('does not contain'),
-            'is' => _('is'),
-            'is not' => _('is not'),
-            'starts with' => _('starts with'),
-            'ends with' => _('ends with'),
-            'before' => _('before'),
-            'after' => _('after'),
-            'between' => _('between'),
-            'is' => _('is'),
-            'is not' => _('is not'),
-            'is greater than' => _('is greater than'),
-            'is less than' => _('is less than'),
-            'is in the range' => _('is in the range'),
-        ];
+        $allCriteria = BlockCriteria::criteriaMap();
+        $allOptions = CriteriaModifier::mapToDisplay();
 
         // Load criteria from db
         $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($this->id);
@@ -1500,14 +1416,15 @@ SQL;
             } elseif ($criteria == 'sort') {
                 $storedCrit['sort'] = ['value' => $value];
             } else {
+                $c = $allCriteria[$criteria];
                 $storedCrit['crit'][$criteria][] = [
                     'criteria' => $criteria,
                     'value' => $value,
                     'modifier' => $modifier,
                     'extra' => $extra,
                     'criteria_group' => $criteriagroup,
-                    'display_name' => $criteriaOptions[$criteria],
-                    'display_modifier' => $modifierOptions[$modifier],
+                    'display_name' => $c->display,
+                    'display_modifier' => $allOptions[$modifier],
                 ];
             }
         }
@@ -1522,57 +1439,8 @@ SQL;
      */
     public function getCriteriaGrouped()
     {
-        $criteriaOptions = [
-            0 => _('Select criteria'),
-            'album_title' => _('Album'),
-            'bit_rate' => _('Bit Rate (Kbps)'),
-            'bpm' => _('BPM'),
-            'composer' => _('Composer'),
-            'conductor' => _('Conductor'),
-            'copyright' => _('Copyright'),
-            'cuein' => _('Cue In'),
-            'cueout' => _('Cue Out'),
-            'description' => _('Description'),
-            'artist_name' => _('Creator'),
-            'encoded_by' => _('Encoded By'),
-            'genre' => _('Genre'),
-            'isrc_number' => _('ISRC'),
-            'label' => _('Label'),
-            'language' => _('Language'),
-            'utime' => _('Upload Time'),
-            'mtime' => _('Last Modified'),
-            'lptime' => _('Last Played'),
-            'length' => _('Length'),
-            'track_type_id' => _('Track Type'),
-            'mime' => _('Mime'),
-            'mood' => _('Mood'),
-            'owner_id' => _('Owner'),
-            'replay_gain' => _('Replay Gain'),
-            'sample_rate' => _('Sample Rate (kHz)'),
-            'track_title' => _('Title'),
-            'track_number' => _('Track Number'),
-            'utime' => _('Uploaded'),
-            'info_url' => _('Website'),
-            'year' => _('Year'),
-        ];
-
-        $modifierOptions = [
-            '0' => _('Select modifier'),
-            'contains' => _('contains'),
-            'does not contain' => _('does not contain'),
-            'is' => _('is'),
-            'is not' => _('is not'),
-            'starts with' => _('starts with'),
-            'ends with' => _('ends with'),
-            'before' => _('before'),
-            'after' => _('after'),
-            'between' => _('between'),
-            'is' => _('is'),
-            'is not' => _('is not'),
-            'is greater than' => _('is greater than'),
-            'is less than' => _('is less than'),
-            'is in the range' => _('is in the range'),
-        ];
+        $criteriaOptions = BlockCriteria::displayCriteria();
+        $modifierOptions = CriteriaModifier::mapToDisplay();
 
         // Load criteria from db
         $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($this->id);
@@ -1612,6 +1480,21 @@ SQL;
         return $storedCrit;
     }
 
+    private function resolveDate($value, $timeZone)
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        $dt = new DateTime('now', new DateTimeZone($timeZone));
+
+        return preg_replace_callback(
+            '/now{(.*?)}/',
+            fn ($matches) => $dt->format($matches[1]),
+            $value
+        );
+    }
+
     // this function return list of propel object
     public function getListofFilesMeetCriteria($showLimit = null)
     {
@@ -1619,6 +1502,9 @@ SQL;
 
         $qry = CcFilesQuery::create();
         $qry->useFkOwnerQuery('subj', 'left join');
+
+        $allCriteria = BlockCriteria::criteriaMap();
+        $timeZone = Application_Model_Preference::GetDefaultTimezone();
 
         // Logging::info($storedCrit);
         if (isset($storedCrit['crit'])) {
@@ -1636,7 +1522,7 @@ SQL;
                     $spCriteria = $criteria['criteria'];
                     $spCriteriaModifier = $criteria['modifier'];
 
-                    $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$spCriteria]);
+                    $column = CcFilesPeer::getTableMap()->getColumnByPhpName($allCriteria[$spCriteria]->peer);
 
                     // data should already be in UTC, do we have to do anything special here anymore?
                     if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
@@ -1677,24 +1563,26 @@ SQL;
                         $spCriteriaExtra = $criteria['extra'];
                     }
 
-                    if ($spCriteriaModifier == 'starts with') {
+                    $spCriteriaValue = $this->resolveDate($spCriteriaValue, $timeZone);
+
+                    if ($spCriteriaModifier == CriteriaModifier::STARTS_WITH) {
                         $spCriteriaValue = "{$spCriteriaValue}%";
-                    } elseif ($spCriteriaModifier == 'ends with') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::ENDS_WITH) {
                         $spCriteriaValue = "%{$spCriteriaValue}";
-                    } elseif ($spCriteriaModifier == 'contains' || $spCriteriaModifier == 'does not contain') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::CONTAINS || $spCriteriaModifier == CriteriaModifier::DOES_NOT_CONTAIN) {
                         $spCriteriaValue = "%{$spCriteriaValue}%";
-                    } elseif ($spCriteriaModifier == 'is in the range') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::IS_IN_THE_RANGE) {
                         $spCriteriaValue = "{$spCriteria} >= '{$spCriteriaValue}' AND {$spCriteria} <= '{$spCriteriaExtra}'";
-                    } elseif ($spCriteriaModifier == 'before') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::BEFORE) {
                         // need to pull in the current time and subtract the value or figure out how to make it relative
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
                         $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') <= '{$dt}'";
-                    } elseif ($spCriteriaModifier == 'after') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::AFTER) {
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
                         $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') >= '{$dt}'";
-                    } elseif ($spCriteriaModifier == 'between') {
+                    } elseif ($spCriteriaModifier == CriteriaModifier::BETWEEN) {
                         $fromrelativedate = new DateTime($spCriteriaValue);
                         $fdt = $fromrelativedate->format(DateTime::ISO8601);
 
@@ -1709,6 +1597,11 @@ SQL;
                         if ($spCriteria == 'owner_id') {
                             $spCriteria = 'subj.login';
                         }
+
+                        if ($spCriteria == 'filepath') {
+                            $spCriteria = "reverse(split_part(reverse(filepath), '/', 1))";
+                        }
+
                         if ($i > 0 && $prevgroup == $group) {
                             $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         } else {
@@ -1741,12 +1634,10 @@ SQL;
             $qry->addDescendingOrderByColumn('utime');
         } elseif ($sortTracks == 'oldest') {
             $qry->addAscendingOrderByColumn('utime');
-        }
-        // these sort additions are needed to override the default postgres NULL sort behavior
-        elseif ($sortTracks == 'mostrecentplay') {
-            $qry->addDescendingOrderByColumn('(lptime IS NULL), lptime');
+        } elseif ($sortTracks == 'mostrecentplay') {
+            $qry->addAscendingOrderByColumn('lptime DESC NULLS LAST, filepath');
         } elseif ($sortTracks == 'leastrecentplay') {
-            $qry->addAscendingOrderByColumn('(lptime IS NOT NULL), lptime');
+            $qry->addAscendingOrderByColumn('lptime ASC NULLS FIRST, filepath');
         } elseif ($sortTracks == 'random') {
             $qry->addAscendingOrderByColumn('random()');
         } else {
@@ -1790,7 +1681,7 @@ SQL;
         try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
 
-            return ['files' => $out, 'limit' => $limits, 'repeat_tracks' => $repeatTracks, 'overflow_tracks' => $overflowTracks, 'count' => $out->count()];
+            return ['files' => $out, 'limit' => $limits, 'repeat_tracks' => $repeatTracks, 'overflow_tracks' => $overflowTracks, 'count' => $out->count(), 'sort_type' => $sortTracks];
         } catch (Exception $e) {
             Logging::info($e);
         }
@@ -1856,6 +1747,140 @@ SQL;
         return $real_files;
     }
     // smart block functions end
+}
+
+class Track
+{
+    public int $id;
+
+    public float $length;
+
+    public function __construct($id, $length)
+    {
+        $this->id = $id;
+        $this->length = $length;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
+}
+
+/**
+ * Using a randomized greedy with local improvement approximation solution for the Subset Sum Problem.
+ *
+ * https://web.stevens.edu/algebraic/Files/SubsetSum/przydatek99fast.pdf
+ */
+class SSPSolution
+{
+    /**
+     * @var Track[]
+     */
+    public array $tracks;
+
+    public float $sum = 0.0;
+
+    public function __construct($tracks = [], $sum = null)
+    {
+        $this->tracks = $tracks;
+        if ($sum !== null) {
+            $this->sum = $sum;
+        } else {
+            foreach ($this->tracks as $track) {
+                $this->sum += $track->length;
+            }
+        }
+    }
+
+    public function add(Track $track): SSPSolution
+    {
+        $new = $this->tracks;
+        $new[] = $track;
+
+        return new SSPSolution($new, $this->sum + $track->length);
+    }
+
+    public function replace(Track $old, Track $new): SSPSolution
+    {
+        return new SSPSolution(array_map(fn (Track $it) => $it === $old ? $new : $it, $this->tracks));
+    }
+
+    public static function isCloseEnough(float $delta): bool
+    {
+        return $delta < 0.25;
+    }
+
+    public static function maxByOrNull(array $array, callable $callback)
+    {
+        $max = null;
+        $v = null;
+        foreach ($array as $item) {
+            $value = $callback($item);
+
+            if ($max === null || $v < $value) {
+                $max = $item;
+                $v = $value;
+            }
+        }
+
+        return $max;
+    }
+
+    /**
+     * @param Track[] $tracks
+     */
+    public static function solve(array $tracks, float $target, int $trials = 50): SSPSolution
+    {
+        $best = new SSPSolution();
+        for ($trial = 0; $trial < $trials; ++$trial) {
+            shuffle($tracks);
+            $initial = array_reduce($tracks, function (SSPSolution $solution, Track $track) use ($target) {
+                $new = $solution->add($track);
+                if ($new->sum <= $target) {
+                    return $new;
+                }
+
+                return $solution;
+            }, new SSPSolution());
+
+            if (count($initial->tracks) == count($tracks)) {
+                return $initial;
+            }
+
+            $acceptedItems = $initial->tracks;
+            shuffle($acceptedItems);
+            $localImprovement = array_reduce($acceptedItems, function (SSPSolution $solution, Track $track) use ($target, $tracks) {
+                $delta = $target - $solution->sum;
+                if (self::isCloseEnough($delta)) {
+                    return $solution;
+                }
+
+                $replacement = self::maxByOrNull(
+                    array_filter(
+                        array_diff($tracks, $solution->tracks),
+                        fn (Track $it) => $it->length > $track->length && $it->length - $track->length <= $delta,
+                    ),
+                    fn (Track $it) => $it->length,
+                );
+
+                if ($replacement === null) {
+                    return $solution;
+                }
+
+                return $solution->replace($track, $replacement);
+            }, $initial);
+
+            if ($localImprovement->sum > $best->sum) {
+                $best = $localImprovement;
+            }
+            if ($best->sum === 0.0) {
+                return $best;
+            }
+        }
+
+        return $best;
+    }
 }
 
 class BlockNotFoundException extends Exception {}

@@ -42,7 +42,7 @@ class CcShow extends BaseCcShow
      *
      * @throws PropelException
      */
-    public function getFirstCcShowDay($criteria = null, PropelPDO $con = null)
+    public function getFirstCcShowDay($criteria = null, ?PropelPDO $con = null)
     {
         /*CcShowPeer::clearInstancePool();
         CcShowPeer::clearRelatedInstancePool();*/
@@ -161,7 +161,7 @@ class CcShow extends BaseCcShow
      *
      * @throws PropelException
      */
-    public function getFutureCcShowInstancess($criteria = null, PropelPDO $con = null)
+    public function getFutureCcShowInstancess($criteria = null, ?PropelPDO $con = null)
     {
         if (null === $this->collCcShowInstancess || null !== $criteria) {
             if ($this->isNew() && null === $this->collCcShowInstancess) {
@@ -246,7 +246,7 @@ class CcShow extends BaseCcShow
      *
      * @throws PropelException
      */
-    public function getCcShowInstancess($criteria = null, PropelPDO $con = null)
+    public function getCcShowInstancess($criteria = null, ?PropelPDO $con = null)
     {
         return CcShowInstancesQuery::create(null, $criteria)
             ->filterByCcShow($this)
@@ -327,6 +327,10 @@ class CcShow extends BaseCcShow
         $info['has_autoplaylist'] = $this->getDbHasAutoPlaylist();
         $info['autoplaylist_id'] = $this->getDbAutoPlaylistId();
         $info['autoplaylist_repeat'] = $this->getDbAutoPlaylistRepeat();
+        $info['override_intro_playlist'] = $this->getDbOverrideIntroPlaylist();
+        $info['intro_playlist_id'] = $this->getDbIntroPlaylistId();
+        $info['override_outro_playlist'] = $this->getDbOverrideOutroPlaylist();
+        $info['outro_playlist_id'] = $this->getDbOutroPlaylistId();
 
         return $info;
     }

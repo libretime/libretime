@@ -1,0 +1,96 @@
+---
+title: LibreTime 3.0.0 alpha 1
+---
+
+import ReleaseHead from "./_release-head.mdx";
+
+<ReleaseHead date="2017-04-20" version="3.0.0-alpha.1" />
+
+## :rocket: Features
+
+- Make overriding of album tag in downloaded Podcasts configurable
+- Configurable master and show sources in settings
+- Version check on main interface against Github
+- updated i18n strings (complete ru_RU translation)
+- Allow closing "Scheduled Shows" tab in Showbuilder
+- FreeIPA Auth Adaptor
+
+## :bug: Bug fixes
+
+- Use `restart=always` in systemd installs
+- Don't depend on hardcoded admin password for autoplaylist feature
+- more legacy upstream branding removal
+- restore table settings (ie. columns and sort) on login
+- translatable radio page
+- line-in recording almost works again
+- no more oopsing on week info API
+
+## :fire: Deprecation and removal
+
+- The `ubuntu` Vagrant box has been replaced with `ubuntu-xenial` and `ubuntu-trusty`. The `debian` box has been replaced with `debian-jessie` and `debian-wheezy`. Users of the old boxes should switch to a new box so we can drop the old box after this release.
+
+## :warning: Known issues
+
+The following issues need a workaround for the time being. Please search the [issues](https://github.com/libretime/libretime/issues) before reporting problems not listed below.
+
+### Outdated silan reports unreliable cue in/out information
+
+Out of the box the installer installs a broken, outdated version of silan on all Debian based Platforms (ie. Ubuntu). This affects all distros supported by the installer except CentOS which doesn't have upstream packages and you may either install from source or use the [0.3.3 packages](https://github.com/radiorabe/centos-rpm-silan) from [RaBe APEL](https://build.opensuse.org/project/show/home:radiorabe:audio).
+
+You can check the version of silan by running with `silan --version` which should report `0.3.3` or with `sudo dpkg -s silan | awk '/Version/ {print $2}'` that will show the exact package version you installed. Please include this information if you file bugs concerning silan.
+
+There are multiple workarounds to this issue and [a bug against the upstream](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=855319) has been opened with Debian. Until this is sorted you should pre-install silan from a source you trust. If your distro hasn't updated to 0.3.3 yet you can also help by asking your distros maintainers for a bump.
+
+The following solutions have been reported to work.
+
+#### Silan from OBS build (https://github.com/libretime/libretime/issues/177#issuecomment-299195796)
+
+Works for all relevant Debian and Ubuntu distros and installs silan `0.3.3~nmu1`.
+
+```bash
+sudo apt-get update
+sudo apt-get install apt-transport-https
+
+# install package signing key from obs
+wget -qO- https://download.opensuse.org/repositories/home:/hairmare:/silan/Debian_7.0/Release.key \
+  | apt-key add -
+
+# add OBS repo to sources list (pick the distro you need)
+
+# Debian Wheezy
+echo 'deb https://download.opensuse.org/repositories/home:/hairmare:/silan/Debian_7.0 ./' \
+  > /etc/apt/sources.list.d/hairmare_silan.list
+# Debian Jessie
+echo 'deb https://download.opensuse.org/repositories/home:/hairmare:/silan/Debian_8.0 ./' \
+  > /etc/apt/sources.list.d/hairmare_silan.list
+# Ubuntu Trusty
+echo 'deb https://download.opensuse.org/repositories/home:/hairmare:/silan/xUbuntu_14.04 ./' \
+  > /etc/apt/sources.list.d/hairmare_silan.list
+# Ubuntu Xenial
+echo 'deb https://download.opensuse.org/repositories/home:/hairmare:/silan/xUbuntu_16.04 ./' \
+  > /etc/apt/sources.list.d/hairmare_silan.list
+
+# update local package database
+apt-get update
+
+# install silan 0.3.3 from obs packages
+apt-get install silan
+```
+
+#### Legacy upstream silan packages (https://github.com/libretime/libretime/issues/197)
+
+Legacy Upstream hosts patched packages for Ubuntu Trusty on `apt.sourcefabric.org`. They install as `0.3.2~trusty~sfo-1`.
+
+```bash
+sudo apt-get update
+sudo apt-get install apt-transport-https
+
+sudo tee -a /etc/apt/sources.list <<EOD
+deb https://apt.sourcefabric.org/ trusty main
+EOD
+
+sudo apt-get update
+sudo apt-get install sourcefabric-keyring
+sudo apt-get update
+sudo apt-get install --reinstall silan=0.3.2~trusty~sfo-1
+```

@@ -232,7 +232,7 @@ class Application_Model_ShowBuilder
         $row['endDate'] = $showEndDT->format('Y-m-d');
         $row['endTime'] = $showEndDT->format('H:i');
         $row['duration'] = floatval($showEndDT->format('U.u')) - floatval($showStartDT->format('U.u'));
-        $row['title'] = $p_item['show_name'] ? htmlspecialchars($p_item['show_name']) : '';
+        $row['title'] = htmlspecialchars($p_item['show_name'] ?? '');
         $row['instance'] = intval($p_item['si_id']);
         $row['image'] = '';
 
@@ -283,9 +283,9 @@ class Application_Model_ShowBuilder
             $formatter = new LengthFormatter(Application_Common_DateHelper::secondsToPlaylistTime($run_time));
             $row['runtime'] = $formatter->format();
 
-            $row['title'] = $p_item['file_track_title'] ? htmlspecialchars($p_item['file_track_title']) : '';
-            $row['creator'] = $p_item['file_artist_name'] ? htmlspecialchars($p_item['file_artist_name']) : '';
-            $row['album'] = $p_item['file_album_title'] ? htmlspecialchars($p_item['file_album_title']) : '';
+            $row['title'] = htmlspecialchars($p_item['file_track_title'] ?? '');
+            $row['creator'] = htmlspecialchars($p_item['file_artist_name'] ?? '');
+            $row['album'] = htmlspecialchars($p_item['file_album_title'] ?? '');
 
             $row['cuein'] = $p_item['cue_in'];
             $row['cueout'] = $p_item['cue_out'];

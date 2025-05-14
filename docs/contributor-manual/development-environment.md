@@ -14,16 +14,16 @@ To setup a docker-compose development environment, run the following commands:
 # Clean and build
 make clean
 cp .env.dev .env
-DOCKER_BUILDKIT=1 docker-compose build
+DOCKER_BUILDKIT=1 docker compose build
 
 # Setup
 make dev-certs
-docker-compose run --rm legacy make build
-docker-compose run --rm api libretime-api migrate
+docker compose run --rm legacy make build
+docker compose run --rm api libretime-api migrate
 
 # Run
-docker-compose up -d
-docker-compose logs -f
+docker compose up -d
+docker compose logs -f
 ```
 
 :::info
@@ -33,7 +33,7 @@ You may also use the following `make clean dev` shortcut:
 ```bash
 make clean dev
 
-docker-compose logs -f
+docker compose logs -f
 ```
 
 :::

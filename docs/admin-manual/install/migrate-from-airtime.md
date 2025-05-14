@@ -17,7 +17,7 @@ To have a better understanding of the next steps, please read the following docu
 
 - [Upgrade documentation](./upgrade.md)
 - [Backup documentation](../backup.md)
-- [Install documentation](./install-using-the-installer.md)
+- [Install documentation](./install-using-the-installer.mdx)
 
 ## Make a backup
 
@@ -45,7 +45,7 @@ The path to your storage was defined during the installation process, the defaul
 
 ## Install
 
-Install LibreTime on a new system by [running the installer](./install-using-the-installer.md#run-the-installer), and **don't run the setup tasks**.
+Install LibreTime on a new system by [running the installer](./install-using-the-installer.mdx#run-the-installer), and **don't run the setup tasks**.
 
 ## Restore the Airtime backup
 

@@ -1,0 +1,138 @@
+---
+title: LibreTime 3.0.0 alpha 10
+---
+
+import ReleaseHead from "./_release-head.mdx";
+
+<ReleaseHead date="2021-10-15" version="3.0.0-alpha.10" />
+
+## :sparkling_heart: Contributors
+
+The LibreTime project wants to thank the following contributors for contributing to this release:
+
+- @jooola
+- @paddatrapper
+- @xabispacebiker
+- @malespiaut
+- @zklosko
+- @brekemeier
+- @jeromelebleu
+- @danielhjames
+- @rjhelms
+- @hairmare
+
+## :rocket: Features
+
+- Support `force_ssl` configuration option in Python applications
+- Move `airtime_mvc` to `legacy` and move all PHP related files under it
+- Support `Authorization: Api-Key` header in API v1
+- Use pip for LibreTime Python package installation
+- Move Python scripts into `/usr/local/bin`
+- Add API v2 (unstable and subject to change)
+
+## :bug: Bug fixes
+
+- Renamed `airtime_analyzer` to `libretime-analyzer`
+- Prevent auto load playlists running on deleted show instances
+- Playout history can be exported as CSV and PDF
+- Explicitly fail if the HTTP requests made by the Python applications fail
+- Fix API v2 schedule endpoint item filtering and overlapping playout
+- Fix pypo overlapping track playout
+- Fix installation when Icecast is already installed
+- Request 1Gb of memory on libvirt Vagrant boxes
+- Clean up CORS setup in the installer
+- Pin the `setuptools` version to ensure older versions of LibreTime can still be installed
+
+## :fire: Deprecation and removal
+
+- Removed broken Soundcloud integration
+- Dropped support for Ubuntu Xenial as it's end-of-life
+- Dropped support for Debian Stretch as it's end-of-life
+- Removed SysV and Upstart init system files
+- Removed broken My Podcasts feature
+
+## :arrow_up: Upgrading
+
+### Packages renaming and new install paths
+
+Once the upgrade has taken place, you need to run the following commands to clean up old scripts and configuration:
+
+```bash
+# Remove the old packages
+sudo pip3 uninstall \
+  airtime-playout \
+  airtime-celery \
+  api_clients
+
+# Remove old entrypoints
+sudo rm -f \
+  /usr/bin/airtime-liquidsoap \
+  /usr/bin/airtime-playout \
+  /usr/bin/pyponotify
+
+# Remove old config files
+sudo rm -f \
+  /etc/logrotate.d/airtime-liquidsoap
+
+# Remove the old runtime and PHP directories
+sudo rm -rf \
+  /var/run/airtime \
+  /run/airtime \
+  /usr/share/airtime/php/airtime_mvc
+
+# Remove old python libraries entrypoints
+sudo rm -f \
+  /usr/bin/airtime-liquidsoap \
+  /usr/bin/airtime-playout \
+  /usr/bin/libretime-analyzer \
+  /usr/bin/libretime-api \
+  /usr/bin/collectiongain \
+  /usr/bin/django-admin \
+  /usr/bin/django-admin.py \
+  /usr/bin/markdown_py \
+  /usr/bin/mid3cp \
+  /usr/bin/mid3iconv \
+  /usr/bin/mid3v2 \
+  /usr/bin/moggsplit \
+  /usr/bin/mutagen-inspect \
+  /usr/bin/mutagen-pony \
+  /usr/bin/pyponotify \
+  /usr/bin/replaygain \
+  /usr/bin/sqlformat
+```
+
+## :warning: Known issues
+
+The following issues may need a workaround for the time being. Please search the [issues](https://github.com/libretime/libretime/issues) before reporting problems not listed below.
+
+### Interface Customization Issues
+
+The UI works best if you don't use it in an opinionated fashion and change just the bare minimal.
+
+### No watched folder support
+
+Currently LibreTime doesn't support watching folders. Uploading files through the web interface works fine and can be automated via a REST API. Re-implementing watched folder support is on the roadmap. Please consider helping out with the code to help speed things along if you want to use the feature. This is tracked in [#70](https://github.com/libretime/libretime/issues/70).
+
+### No line in support
+
+This feature went missing from LibreTime due to the fact that we based our code off of the saas-dev branch of legacy upstream and support for recording hasn't been ported to the new airtime analyzer ingest system. #42 currently tracks the progress being made on line in recording. This is tracked in [#42](https://github.com/libretime/libretime/issues/42).
+
+### Playout won't work if locale is missing
+
+Some minimal OS installs don't have a default locale configured. This only seems to affect some VPS installs as they often don't have a locale setup in the default images provided. This is tracked in [#317](https://github.com/libretime/libretime/issues/317).
+
+You can set up the locale using a combination of the following commands. You might also want to consult the documentation of your VPS provider as it may contain an official way to set up locales when provisioning a VPS.
+
+```bash
+# Set locale using systemds localectl
+localectl set-locale LANG="en_US.utf8"
+```
+
+These instructions don't seem to work on all Debian based distros so you might need to use `update-locale` as follows.
+
+```bash
+#Purge all locales but en_US.UTF-8
+sudo locale-gen --purge en_US.UTF-8
+#Populate LANGUAGE=
+sudo update-locale LANGUAGE="en_US.UTF-8"
+```

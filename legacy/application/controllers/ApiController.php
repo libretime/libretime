@@ -284,11 +284,7 @@ class ApiController extends Zend_Controller_Action
 
             // default to the station timezone
             $timezone = Application_Model_Preference::GetDefaultTimezone();
-            if ($request->getParam('timezone')) {
-                $userDefinedTimezone = strtolower($request->getParam('timezone'));
-            } else {
-                $userDefinedTimezone = '';
-            }
+            $userDefinedTimezone = strtolower($request->getParam('timezone') ?? '');
             $upcase = false; // only upcase the timezone abbreviations
             $this->updateTimezone($userDefinedTimezone, $timezone, $upcase);
 
@@ -414,11 +410,7 @@ class ApiController extends Zend_Controller_Action
 
             // default to the station timezone
             $timezone = Application_Model_Preference::GetDefaultTimezone();
-            if ($request->getParam('timezone')) {
-                $userDefinedTimezone = strtolower($request->getParam('timezone'));
-            } else {
-                $userDefinedTimezone = '';
-            }
+            $userDefinedTimezone = strtolower($request->getParam('timezone') ?? '');
             $upcase = false; // only upcase the timezone abbreviations
             $this->updateTimezone($userDefinedTimezone, $timezone, $upcase);
 

@@ -219,6 +219,7 @@ final class Application_Model_Scheduler
         // if there is a show we need to set a show limit to pass to smart blocks in case they use time remaining
         $showInstance = new Application_Model_ShowInstance($show);
         $showLimit = $showInstance->getSecondsRemaining();
+        $originalShowLimit = $showLimit;
 
         $files = [];
         if ($type === 'audioclip') {
@@ -310,7 +311,7 @@ final class Application_Model_Scheduler
                 }
                 // if this is a playlist it might contain multiple time remaining smart blocks
                 // since the schedule isn't updated until after this insert we need to keep tally
-                $showLimit -= $this->timeLengthOfFiles($files);
+                $showLimit = $originalShowLimit - $this->timeLengthOfFiles($files);
             }
         } elseif ($type == 'stream') {
             // need to return
@@ -1345,14 +1346,11 @@ final class Application_Model_Scheduler
     // This is used to determine the duration of a files array
     public function timeLengthOfFiles($files)
     {
-        $timeLength = 0;
-        foreach ($files as $file) {
-            $timeLength += Application_Common_DateHelper::playlistTimeToSeconds($file['cliplength']);
-            $timeLength += $file['fadein'];
-            $timeLength += $file['fadeout'];
-        }
-
-        return $timeLength;
+        return array_reduce(
+            $files,
+            fn ($acc, $file) => $acc + Application_Common_DateHelper::playlistTimeToSeconds($file['cliplength']),
+            0.0
+        );
     }
 
     /*

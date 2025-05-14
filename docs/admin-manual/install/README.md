@@ -11,7 +11,7 @@ This guide walk you though the steps required to install LibreTime on your syste
 - 2 GB RAM recommended (1 GB required)
 - A static external IP address ([How to setup a static ip using Netplan](../tutorials/setup-a-static-ip-using-netplan.md))
 
-:::warning
+:::danger
 
 Make sure that you have configured a **firewall** and it's not blocking connection to the desired ports.
 
@@ -35,6 +35,6 @@ If you are coming from **Airtime**, please follow the [Airtime migration guide](
 
 You can install LibreTime using the one of the following methods:
 
-- [:rocket: Using docker](./install-using-docker.md)
-- [:rocket: Using the installer](./install-using-the-installer.md)
+- [:rocket: Using docker](./install-using-docker.mdx)
+- [:rocket: Using the installer](./install-using-the-installer.mdx)
 - :construction: Using ansible

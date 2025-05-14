@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-version = "4.0.0"  # x-release-please-version
+version = "4.3.0"  # x-release-please-version
 
 setup(
     name="libretime-analyzer",
@@ -24,7 +24,7 @@ setup(
     install_requires=[
         "mutagen>=1.45.1,<1.48",
         "pika>=1.0.0,<1.4",
-        "requests>=2.31.0,<2.32",
+        "requests>=2.32.2,<2.33",
         "typing_extensions",
     ],
     extras_require={

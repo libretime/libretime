@@ -36,7 +36,7 @@ def probe_replaygain(filepath: Path) -> Optional[float]:
     """
     Probe replaygain will probe the given audio file and return the replaygain if available.
     """
-    cmd = _ffprobe("-i", filepath)
+    cmd = _ffprobe("-i", filepath, errors="backslashreplace")
 
     track_gain_match = _PROBE_REPLAYGAIN_RE.search(cmd.stderr)
 
@@ -75,8 +75,7 @@ def compute_silences(filepath: Path) -> List[Tuple[float, float]]:
     cmd = _ffmpeg(
         *("-i", filepath),
         "-vn",
-        *("-filter", "highpass=frequency=1000"),
-        *("-filter", "silencedetect=noise=0.15:duration=1"),
+        *("-filter", "highpass=frequency=80,silencedetect=noise=-60dB:duration=0.9"),
     )
 
     starts, ends = [], []

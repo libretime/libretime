@@ -17,7 +17,7 @@ from ..liquidsoap.client import LiquidsoapClient
 from ..liquidsoap.models import Info, MessageFormatKind, StreamPreferences, StreamState
 from .events import Events, FileEvent, FileEvents
 from .liquidsoap import Liquidsoap
-from .schedule import get_schedule, receive_schedule
+from .schedule import get_schedule
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +29,7 @@ class PypoFetch(Thread):
     name = "fetch"
     daemon = True
 
+    # pylint: disable=too-many-positional-arguments
     # pylint: disable=too-many-arguments
     def __init__(
         self,
@@ -70,7 +71,7 @@ class PypoFetch(Thread):
             logger.debug("handling event %s: %s", command, message)
 
             if command == "update_schedule":
-                self.schedule_data = receive_schedule(message["schedule"]["media"])
+                self.schedule_data = get_schedule(self.api_client)
                 self.process_schedule(self.schedule_data)
             elif command == "reset_liquidsoap_bootstrap":
                 self.set_bootstrap_variables()

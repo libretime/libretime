@@ -44,44 +44,37 @@ class LoginController extends Zend_Controller_Action
 
         $form = new Application_Form_Login();
 
-        $message = _('Please enter your username and password.');
+        $authAdapter = Application_Model_Auth::getAuthAdapter();
 
-        if ($request->isPost()) {
-            // Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
-            // session_start();
+        if ($authAdapter instanceof LibreTime_Auth_Adaptor_Header || ($request->isPost() && $form->isValid($request->getPost()))) {
+            // get the username and password from the form
+            $username = $form->getValue('username');
+            $password = $form->getValue('password');
+            $locale = $form->getValue('locale');
 
-            if ($form->isValid($request->getPost())) {
-                // get the username and password from the form
-                $username = $form->getValue('username');
-                $password = $form->getValue('password');
-                $locale = $form->getValue('locale');
+            // pass to the adapter the submitted username and password
+            $authAdapter->setIdentity($username)
+                ->setCredential($password);
 
-                $authAdapter = Application_Model_Auth::getAuthAdapter();
+            $result = $auth->authenticate($authAdapter);
+            if ($result->isValid()) {
+                Zend_Session::regenerateId();
+                // all info about this user from the login table omit only the password
+                $userInfo = $authAdapter->getResultRowObject(null, 'password');
 
-                // pass to the adapter the submitted username and password
-                $authAdapter->setIdentity($username)
-                    ->setCredential($password);
+                // the default storage is a session with namespace Zend_Auth
+                $authStorage = $auth->getStorage();
+                $authStorage->write($userInfo);
 
-                $result = $auth->authenticate($authAdapter);
-                if ($result->isValid()) {
-                    Zend_Session::regenerateId();
-                    // all info about this user from the login table omit only the password
-                    $userInfo = $authAdapter->getResultRowObject(null, 'password');
+                Application_Model_LoginAttempts::resetAttempts($_SERVER['REMOTE_ADDR']);
+                Application_Model_Subjects::resetLoginAttempts($username);
 
-                    // the default storage is a session with namespace Zend_Auth
-                    $authStorage = $auth->getStorage();
-                    $authStorage->write($userInfo);
+                // set the user locale in case user changed it in when logging in
+                Application_Model_Preference::SetUserLocale($locale);
 
-                    Application_Model_LoginAttempts::resetAttempts($_SERVER['REMOTE_ADDR']);
-                    Application_Model_Subjects::resetLoginAttempts($username);
-
-                    // set the user locale in case user changed it in when logging in
-                    Application_Model_Preference::SetUserLocale($locale);
-
-                    $this->_redirect('showbuilder');
-                } else {
-                    $form = $this->loginError($username);
-                }
+                $this->_redirect('showbuilder');
+            } else {
+                $form = $this->loginError($username);
             }
         }
 
@@ -108,8 +101,6 @@ class LoginController extends Zend_Controller_Action
 
     public function passwordRestoreAction()
     {
-        $this->view->headScript()->appendFile(Assets::url('js/airtime/login/password-restore.js'), 'text/javascript');
-
         $request = $this->getRequest();
         $stationLocale = Application_Model_Preference::GetDefaultLocale();
 

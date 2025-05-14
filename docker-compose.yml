@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:15
@@ -12,13 +10,13 @@ services:
       test: pg_isready -U libretime
 
   rabbitmq:
-    image: rabbitmq:3.12-alpine
+    image: rabbitmq:3.13-alpine
     environment:
       RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST:-/libretime}
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-libretime}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-libretime} # Change me !
     healthcheck:
-      test: rabbitmq-diagnostics -q ping
+      test: nc -z 127.0.0.1 5672
 
   playout:
     image: ghcr.io/libretime/libretime-playout:${LIBRETIME_VERSION:-latest}

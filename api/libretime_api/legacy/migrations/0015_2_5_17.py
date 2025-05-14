@@ -5,7 +5,7 @@ from django.db import migrations
 from ._migrations import legacy_migration_factory
 
 UP = """
-ALTER TABLE cc_files ADD COLUMN artwork TYPE character varying(255);
+ALTER TABLE cc_files ADD COLUMN artwork VARCHAR(255);
 """
 
 DOWN = None

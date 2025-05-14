@@ -33,8 +33,17 @@ class AutoPlaylistManager
             // call the addPlaylist to show function and don't check for user permission to avoid call to non-existant user object
             $sid = $si->getShowId();
             $playlistrepeat = new Application_Model_Show($sid);
-            $introplaylistid = Application_Model_Preference::GetIntroPlaylist();
-            $outroplaylistid = Application_Model_Preference::GetOutroPlaylist();
+            if ($playlistrepeat->getHasOverrideIntroPlaylist()) {
+                $introplaylistid = $playlistrepeat->getIntroPlaylistId();
+            } else {
+                $introplaylistid = Application_Model_Preference::GetIntroPlaylist();
+            }
+
+            if ($playlistrepeat->getHasOverrideOutroPlaylist()) {
+                $outroplaylistid = $playlistrepeat->getOutroPlaylistId();
+            } else {
+                $outroplaylistid = Application_Model_Preference::GetOutroPlaylist();
+            }
 
             // we want to check and see if we need to repeat this process until the show is 100% scheduled
             // so we create a while loop and break it immediately if repeat until full isn't enabled
@@ -81,6 +90,11 @@ class AutoPlaylistManager
                 $si->addPlaylistToShow($outroplaylistid, false);
             }
             $si->setAutoPlaylistBuilt(true);
+
+            // now trim excessively overbooked shows so the display isn't cluttered with myriads of red off-time blocks
+            if (Application_Model_Preference::getScheduleTrimOverbooked()) {
+                $si->trimOverbooked();
+            }
         }
         Application_Model_Preference::setAutoPlaylistPollLock(microtime(true));
     }

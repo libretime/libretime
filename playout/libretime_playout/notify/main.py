@@ -12,6 +12,7 @@ Main case:
    media id from it, and then calls back to the API to tell about it about it.
 
 """
+
 import logging
 from pathlib import Path
 from typing import Literal, Optional

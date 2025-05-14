@@ -1,9 +1,9 @@
 bandit>=1.7.4,<2
-black>=23.1.0,<24
+black>=23.1.0,<25
 flake8>=6.0.0,<8
 isort>=5.12.0,<6
 mypy>=1.6.0,<2
 pylint>=2.16.1,<4
-pytest-cov>=4.0.0,<5
+pytest-cov>=4.0.0,<6
 pytest-xdist>=3.1.0,<4
-pytest>=7.2.1,<8
+pytest>=7.2.1,<9
