@@ -9,8 +9,11 @@
   "components": {
     "login": {
       "title": "Log In"
-    },
+    }
+  },
+  "pages": {
     "help": {
+      "title": "Help",
       "gettingStarted": {
         "tab": "Getting Started",
         "title": "Welcome to LibreTime!",
