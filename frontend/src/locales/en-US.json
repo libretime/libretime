@@ -9,6 +9,39 @@
   "components": {
     "login": {
       "title": "Log In"
+    },
+    "help": {
+      "gettingStarted": {
+        "tab": "Getting Started",
+        "title": "Welcome to LibreTime!",
+        "intro": "Here's how you can get started using LibreTime to automate your broadcasts:",
+        "step1": {
+          "title": "Upload audio tracks",
+          "description": "Click the 'Upload' button in the left corner to upload tracks to your library."
+        },
+        "step2": {
+          "title": "Schedule a show",
+          "description": "Click on 'Calendar in the navigation bar on the left. From there clikc on the '+ New Show' button and fill out the required fields."
+        },
+        "step3": {
+          "title": "Add tracks to your show",
+          "description": "Click on your show in the calendar and select 'Schedule Show'. In the popup window drag tacks into your show."
+        },
+        "conclusion": "Now you're good to go!",
+        "moreInfo": "For more detailed help, read the user manual."
+      },
+      "userManual": {
+        "tab": "User Manual"
+      },
+      "getHelpOnline": {
+        "tab": "Get Help Online"
+      },
+      "contribute": {
+        "tab": "Contribute to LibreTime"
+      },
+      "whatsNew": {
+        "tab": "What's New"
+      }
     }
   }
 }

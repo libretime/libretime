@@ -1,6 +1,10 @@
 <template>
   <div class="info-section">
-    <slot />
+    <v-card flat>
+      <v-card-text>
+        <slot />
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
