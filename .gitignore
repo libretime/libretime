@@ -12,7 +12,6 @@ VERSION
 /dev/playout/*
 
 /website/
-/frontend/cypress/screenshots
 
 !.gitkeep
 
@@ -156,7 +155,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-
-# Cypress test output
-/frontend/cypress/fixtures/profile.json
-/frontend/cypress/fixtures/users.json
