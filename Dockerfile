@@ -288,9 +288,6 @@ RUN set -eux \
     && make locale-build \
     && composer --no-cache dump-autoload --no-interaction --no-dev
 
-# TODO: place this somewhere useful
-COPY --from=libretime-frontend /build/dist /frontend
-
 # Run
 USER ${UID}:${GID}
 
