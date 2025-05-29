@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.4.0](https://github.com/libretime/libretime/compare/4.3.0...4.4.0) (2025-05-29)
+
+
+### Features
+
+* build and run custom nginx container ([#3155](https://github.com/libretime/libretime/issues/3155)) ([658ce15](https://github.com/libretime/libretime/commit/658ce15185a02902dbab7dc8b789709a8f3bd46d))
+* include nginx config inside libretime-nginx container ([#3157](https://github.com/libretime/libretime/issues/3157)) ([659ac7a](https://github.com/libretime/libretime/commit/659ac7aa77a8c72d642147afe9c59ae3fcb86fd3))
+
+
+### Bug Fixes
+
+* **legacy:** now macro should use station timezone ([#3143](https://github.com/libretime/libretime/issues/3143)) ([c554863](https://github.com/libretime/libretime/commit/c5548632e4f7067d594d611f6cf78cedc4dfce9e))
+* **legacy:** scheduled show length should not add track fade times ([#3144](https://github.com/libretime/libretime/issues/3144)) ([5743a0f](https://github.com/libretime/libretime/commit/5743a0f5824c7f0a2d401cfec31df2b706316db1))
+
 ## [4.3.0](https://github.com/libretime/libretime/compare/4.2.0...4.3.0) (2025-03-12)
 
 

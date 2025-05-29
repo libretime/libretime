@@ -71,7 +71,7 @@ A microservice architecture was rejected as it won't fix or improve any aspect o
 
 :::
 
-:::warning
+:::danger
 
 This document tries to focus on creating and playing a schedule, it doesn't consider features such as monitoring, logging or archiving.
 

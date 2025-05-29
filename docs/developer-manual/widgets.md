@@ -10,7 +10,7 @@ Before using the widgets, make sure LibreTime's Public API is enabled in **Setti
 
 ![](./widgets-widgets_settings.png)
 
-:::tip Note
+:::tip[Note]
 
 LibreTime widgets can't function through VPNs or SSH tunneling. The instance must be accessible from the internet for the widgets to work.
 

@@ -17,7 +17,7 @@ Setting a higher bitrate for your output stream will only benefit your listeners
 
 :::
 
-:::caution
+:::warning
 
 The liquidsoap playout handler version 1.4.3 shipped in Debian Bullseye and 1.4.1 shipped in Ubuntu Focal doesn't support AAC streaming output. If you want to stream AAC, you will need to replace the liquidsoap package with a version that supports AAC. See this [tutorial](./tutorials/setup-liquidsoap-aac-streaming.md) for more information.
 
@@ -91,7 +91,7 @@ Setting the value of _fallback-override_ to 1 (enabled) means that when the `/li
 
 Connect the other source to the Icecast server with the same parameters defined in the `/etc/libretime/liquidsoap.cfg` file, except for the mount point. This should one of the mount points you have defined in the `/etc/icecast2/icecast.xml` file, such as `/live.ogg` in the example above.
 
-:::tip Streaming with Mixxx
+:::tip[Streaming with Mixxx]
 
 To configure Mixxx for streaming to Icecast, click _Options_, _Preferences_, then _Live Broadcasting_. For server _Type_, select the default of _Icecast 2_ when streaming to Debian or Ubuntu servers.
 

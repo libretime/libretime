@@ -78,7 +78,7 @@ storage:
   path: "/srv/libretime"
 ```
 
-:::caution
+:::warning
 
 After editing the `storage.path` field, make sure to update the LibreTime Nginx configuration file with the new value.
 
@@ -102,7 +102,7 @@ In the example below, we are changing the path from `/srv/libretime` to `/mnt/da
 
 The `database` section configure the PostgreSQL connection.
 
-:::caution
+:::warning
 
 Before editing this section be sure to update the PostgreSQL server with the desired values.
 
@@ -139,7 +139,7 @@ database:
 
 The `rabbitmq` section configure the RabbitMQ connection.
 
-:::caution
+:::warning
 
 Before editing this section be sure to update the RabbitMQ server with the desired values.
 
@@ -235,7 +235,7 @@ email:
 
 The `playout` section configure anything related to the playout service.
 
-:::caution
+:::warning
 
 When changing the `playout.liquidsoap_*` entries, make sure to also configure the `liquidsoap.server_listen_*` entries accordingly.
 
@@ -272,7 +272,7 @@ playout:
 
 The `liquidsoap` section configure anything related to the liquidsoap service.
 
-:::caution
+:::warning
 
 When changing the `liquidsoap.server_listen_*` entries, make sure to also configure the `playout.liquidsoap_*` entries accordingly.
 
@@ -399,7 +399,7 @@ stream:
 
 The `stream.outputs.icecast` section configures the icecast output streams.
 
-:::warning
+:::danger
 
 If you configure more than 2 icecast stream on a **single icecast server**, make sure to raise the icecast sources limit:
 

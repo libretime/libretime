@@ -2,9 +2,9 @@
 title: LibreTime 3.0.0 alpha 13
 ---
 
-import ReleaseHead from './\_release-head.md';
+import ReleaseHead from "./_release-head.mdx";
 
-<ReleaseHead date='2022-07-15' version='3.0.0-alpha.13'/>
+<ReleaseHead date="2022-07-15" version="3.0.0-alpha.13" />
 
 ## :sparkling_heart: Contributors
 
@@ -16,7 +16,7 @@ The LibreTime project wants to thank the following contributors for authoring PR
 - Maxime Leroy
 - Mykola
 
-<!-- vale off -->
+{/* vale off */}
 
 ## :rocket: Features
 
@@ -102,7 +102,7 @@ The LibreTime project wants to thank the following contributors for authoring PR
 - use track_type_id in smartblock criteria
 - **legacy:** no invalid track type in smartblock criteria
 
-<!-- vale on -->
+{/* vale on */}
 
 ## :fire: Deprecation and removal
 
@@ -112,7 +112,7 @@ The allowed CORS origins configuration moved from the database to the configurat
 
 ## :arrow_up: Before upgrading
 
-:::caution
+:::warning
 
 Please run this **before the upgrade procedure**.
 
@@ -254,7 +254,7 @@ sudo deluser celery
 
 ### New installer
 
-:::warning
+:::danger
 
 Please be careful when running this new installer, it might not be bug free.
 

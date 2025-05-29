@@ -13,7 +13,7 @@ LibreTime uses [Github pull requests to manage changes](https://docs.github.com/
 - Lint and test the codebase, for example using the `make lint` or `make test` commands inside the app folder you want to check.
 - Push your branch.
 - Create a pull request in Github.
-- We'll review your request and provide feed back.
+- Your request will be reviewed and feedback provided.
 
 ## Project layout
 
