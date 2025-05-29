@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        target: [analyzer, api, legacy, playout, worker]
+        target: [analyzer, api, legacy, nginx, playout, worker]
 
     if: ${{ github.repository_owner == 'libretime' }}
     steps:
@@ -95,6 +95,7 @@ jobs:
             meta-analyzer/docker-metadata-action-bake.json
             meta-api/docker-metadata-action-bake.json
             meta-legacy/docker-metadata-action-bake.json
+            meta-nginx/docker-metadata-action-bake.json
             meta-playout/docker-metadata-action-bake.json
             meta-worker/docker-metadata-action-bake.json
           set: |
