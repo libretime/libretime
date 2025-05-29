@@ -284,6 +284,8 @@ ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 #======================================================================================#
 FROM nginx AS libretime-nginx
 
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=libretime-legacy /var/www/html /var/www/html
 
 ARG LIBRETIME_VERSION
