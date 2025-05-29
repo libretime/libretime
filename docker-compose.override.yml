@@ -67,6 +67,9 @@ services:
       - ./legacy:/var/www/html
 
   nginx:
+    build:
+      context: .
+      target: libretime-nginx
     volumes:
       - ./legacy:/var/www/html
 

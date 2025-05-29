@@ -95,17 +95,15 @@ services:
       - rabbitmq
     volumes:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
-      - libretime_assets:/var/www/html
       - libretime_storage:/srv/libretime
 
   nginx:
-    image: nginx
+    image: ghcr.io/libretime/libretime-nginx:${LIBRETIME_VERSION:-latest}
     ports:
       - 8080:8080
     depends_on:
       - legacy
     volumes:
-      - libretime_assets:/var/www/html:ro
       - libretime_storage:/srv/libretime:ro
       - ${NGINX_CONFIG_FILEPATH:-./nginx.conf}:/etc/nginx/conf.d/default.conf:ro
 
@@ -121,5 +119,4 @@ services:
 volumes:
   postgres_data: {}
   libretime_storage: {}
-  libretime_assets: {}
   libretime_playout: {}
