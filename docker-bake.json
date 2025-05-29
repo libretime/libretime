@@ -1,7 +1,7 @@
 {
   "group": {
     "default": {
-      "targets": ["analyzer", "playout", "api", "worker", "legacy"]
+      "targets": ["analyzer", "playout", "api", "worker", "legacy", "nginx"]
     }
   },
   "target": {
@@ -19,6 +19,9 @@
     },
     "legacy": {
       "target": "libretime-legacy"
+    },
+    "nginx": {
+      "target": "libretime-nginx"
     }
   }
 }
