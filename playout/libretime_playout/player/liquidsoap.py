@@ -37,7 +37,7 @@ def create_liquidsoap_annotation(file_event: FileEvent) -> str:
 
     annotations_str = ",".join(f'{key}="{value}"' for key, value in annotations.items())
 
-    return "annotate:" + annotations_str + ":" + str(file_event.local_filepath)
+    return "annotate:" + annotations_str.replace("\n", "") + ":" + str(file_event.local_filepath)
 
 
 class TelnetLiquidsoap:
