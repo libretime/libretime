@@ -57,7 +57,7 @@ class Application_Model_RabbitMq
 
         $exchange = 'airtime-pypo';
         $data = json_encode($md, JSON_FORCE_OBJECT);
-        self::sendMessage($exchange, 'direct', true, $data);
+        self::sendMessage($exchange, 'fanout', true, $data);
     }
 
     public static function SendMessageToMediaMonitor($event_type, $md)
@@ -88,7 +88,7 @@ class Application_Model_RabbitMq
         }
         $data = json_encode($temp);
 
-        self::sendMessage($exchange, 'direct', true, $data);
+        self::sendMessage($exchange, 'fanout', true, $data);
     }
 
     public static function SendMessageToAnalyzer(
