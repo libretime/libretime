@@ -37,9 +37,7 @@ def create_liquidsoap_annotation(file_event: FileEvent) -> str:
         value = file_event.track_title.replace('"', '\\"').strip().replace("\n", " ")
         annotations["title"] = value
 
-    annotations_str = ",".join(
-        f'{key}="{value}"' for key, value in annotations.items()
-    ).replace("\n", "")
+    annotations_str = ",".join(f'{key}="{value}"' for key, value in annotations.items())
 
     return "annotate:" + annotations_str + ":" + str(file_event.local_filepath)
 
