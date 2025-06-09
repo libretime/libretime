@@ -30,10 +30,12 @@ def create_liquidsoap_annotation(file_event: FileEvent) -> str:
     # the metadata we get from LibreTime. (You can modify metadata in LibreTime's library,
     # which doesn't get saved back to the file.)
     if file_event.artist_name:
-        annotations["artist"] = file_event.artist_name.replace('"', '\\"')
+        value = file_event.artist_name.replace('"', '\\"').strip().replace("\n", " ")
+        annotations["artist"] = value
 
     if file_event.track_title:
-        annotations["title"] = file_event.track_title.replace('"', '\\"')
+        value = file_event.track_title.replace('"', '\\"').strip().replace("\n", " ")
+        annotations["title"] = value
 
     annotations_str = ",".join(f'{key}="{value}"' for key, value in annotations.items())
 
