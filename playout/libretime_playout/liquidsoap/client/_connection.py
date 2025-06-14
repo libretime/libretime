@@ -1,7 +1,6 @@
 import logging
+import socket
 from pathlib import Path
-from socket import AF_UNIX, SOCK_STREAM, create_connection, socket
-from threading import Lock
 from typing import Optional
 
 logger = logging.getLogger(__name__)
@@ -19,8 +18,7 @@ class LiquidsoapConnection:
     _path: Optional[Path] = None
     _timeout: int
 
-    _lock: Lock
-    _sock: Optional[socket] = None
+    _sock: Optional[socket.socket] = None
     _eof = b"END"
 
     def __init__(
@@ -40,7 +38,6 @@ class LiquidsoapConnection:
                 socket instead of the host and port address. Defaults to None.
             timeout: Socket timeout. Defaults to 5.
         """
-        self._lock = Lock()
         self._path = path
         self._host = host
         self._port = port
@@ -50,47 +47,43 @@ class LiquidsoapConnection:
         return f"{self._host}:{self._port}" if self._path is None else str(self._path)
 
     def __enter__(self):
-        try:
-            self.connect()
-            return self
-        except OSError as exception:
-            self._sock = None
-            self._lock.release()
-            raise exception
+        self.connect()
+        return self
 
     def __exit__(self, exc_type, exc_value, _traceback):
         self.close()
 
     def connect(self):
-        logger.debug("trying to acquire lock")
-        # pylint: disable=consider-using-with
-        self._lock.acquire()
-        logger.debug("connecting to %s", self.address())
+        try:
+            logger.debug("connecting to %s", self.address())
 
-        if self._path is not None:
-            self._sock = socket(AF_UNIX, SOCK_STREAM)
-            self._sock.settimeout(self._timeout)
-            self._sock.connect(str(self._path))
-        else:
-            self._sock = create_connection(
-                address=(self._host, self._port),
-                timeout=self._timeout,
-            )
+            if self._path is not None:
+                self._sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                self._sock.settimeout(self._timeout)
+                self._sock.connect(str(self._path))
+            else:
+                self._sock = socket.create_connection(
+                    address=(self._host, self._port),
+                    timeout=self._timeout,
+                )
+
+        except (OSError, ConnectionError):
+            self._sock = None
+            raise
 
     def close(self):
         if self._sock is not None:
             logger.debug("closing connection to %s", self.address())
 
-            self.write("exit")
-            # Reading for clean exit
-            while self._sock.recv(1024):
-                continue
+            try:
+                self.write("exit")
+                # Reading for clean exit
+                while self._sock.recv(1024):
+                    continue
 
-            sock = self._sock
-            self._sock = None
-            sock.close()
-
-        self._lock.release()
+            finally:
+                self._sock.close()
+                self._sock = None
 
     def write(self, *messages: str):
         if self._sock is None:
