@@ -26,7 +26,25 @@ on:
     - cron: 0 1 * * 1
 
 jobs:
-  python:
-    uses: ./.github/workflows/_python.yml
+  lint:
+    uses: ./.github/workflows/_python-lint.yml
     with:
       context: playout
+
+  test-focal:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: playout
+      release: focal
+
+  test-bullseye:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: playout
+      release: bullseye
+
+  test-jammy:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: playout
+      release: jammy
