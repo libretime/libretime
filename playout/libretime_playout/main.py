@@ -6,7 +6,7 @@ import logging
 import os
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from queue import Queue
 from typing import Any, Dict, Optional
@@ -98,7 +98,7 @@ def cli(
     # the local machine is, so that we have a reference for what time the actual
     # log entries were made
     logger.info("Timezone: %s", time.tzname)
-    logger.info("UTC time: %s", datetime.utcnow())
+    logger.info("UTC time: %s", datetime.now(timezone.utc))
 
     api_client = ApiClient(
         base_url=config.general.public_url,

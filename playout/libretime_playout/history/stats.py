@@ -92,7 +92,7 @@ class StatsCollector:
         _timestamp: Optional[datetime] = None,
     ) -> None:
         if _timestamp is None:
-            _timestamp = datetime.utcnow()
+            _timestamp = datetime.now(timezone.utc)
 
         stats: List[Dict[str, Any]] = []
         stats_timestamp = _timestamp.strftime("%Y-%m-%d %H:%M:%S")
