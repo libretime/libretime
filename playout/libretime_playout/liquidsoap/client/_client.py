@@ -20,6 +20,8 @@ class LiquidsoapClientError(Exception):
 class LiquidsoapClient:
     """
     A client to communicate with a running Liquidsoap server.
+
+    The client is not thread safe.
     """
 
     conn: LiquidsoapConnection
@@ -45,7 +47,7 @@ class LiquidsoapClient:
         self.conn.write(f"var.set {name} = {value}")
         result = self.conn.read()
         if f"Variable {name} set" not in result:
-            logger.error(result)
+            logger.error("unexpected response: %s", result)
 
     def version(self) -> Tuple[int, int, int]:
         with self.conn:
