@@ -1,6 +1,6 @@
 import logging
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from threading import Thread
 from time import sleep
 from typing import Any, Dict, List, Optional, Union
@@ -92,7 +92,7 @@ class StatsCollector:
         _timestamp: Optional[datetime] = None,
     ) -> None:
         if _timestamp is None:
-            _timestamp = datetime.utcnow()
+            _timestamp = datetime.now(timezone.utc)
 
         stats: List[Dict[str, Any]] = []
         stats_timestamp = _timestamp.strftime("%Y-%m-%d %H:%M:%S")

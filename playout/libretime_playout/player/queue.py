@@ -1,6 +1,6 @@
 import logging
 from collections import deque
-from datetime import datetime
+from datetime import datetime, timezone
 from queue import Empty, Queue
 from threading import Thread
 from typing import Any, Dict
@@ -48,7 +48,7 @@ class PypoLiqQueue(Thread):
                 self.liquidsoap.play(media_item)
                 if len(schedule_deque):
                     time_until_next_play = seconds_between(
-                        datetime.utcnow(),
+                        datetime.now(timezone.utc),
                         schedule_deque[0].start,
                     )
                 else:
@@ -65,7 +65,7 @@ class PypoLiqQueue(Thread):
 
                 if len(keys):
                     time_until_next_play = seconds_between(
-                        datetime.utcnow(),
+                        datetime.now(timezone.utc),
                         media_schedule[keys[0]].start,
                     )
 
