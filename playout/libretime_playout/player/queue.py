@@ -1,6 +1,6 @@
 import logging
 from collections import deque
-from datetime import datetime
+from datetime import datetime, timezone
 from queue import Empty, Queue
 from threading import Thread
 from typing import Any, Dict
