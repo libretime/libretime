@@ -71,6 +71,7 @@ class LiquidsoapClient:
         with self.conn:
             for queue_id in queues:
                 self.conn.write(f"queues.s{queue_id}_skip")
+                self.conn.read()  # Flush
 
     def queue_push(self, queue_id: int, entry: str, show_name: str) -> None:
         with self.conn:
@@ -86,21 +87,28 @@ class LiquidsoapClient:
     def web_stream_start(self) -> None:
         with self.conn:
             self.conn.write("sources.start_schedule")
+            self.conn.read()  # Flush
             self.conn.write("sources.start_web_stream")
+            self.conn.read()  # Flush
 
     def web_stream_start_buffer(self, schedule_id: int, uri: str) -> None:
         with self.conn:
             self.conn.write(f"web_stream.set_id {schedule_id}")
+            self.conn.read()  # Flush
             self.conn.write(f"http.restart {uri}")
+            self.conn.read()  # Flush
 
     def web_stream_stop(self) -> None:
         with self.conn:
             self.conn.write("sources.stop_web_stream")
+            self.conn.read()  # Flush
 
     def web_stream_stop_buffer(self) -> None:
         with self.conn:
             self.conn.write("http.stop")
+            self.conn.read()  # Flush
             self.conn.write("web_stream.set_id -1")
+            self.conn.read()  # Flush
 
     def source_switch_status(
         self,
@@ -115,6 +123,7 @@ class LiquidsoapClient:
         action = "start" if streaming else "stop"
         with self.conn:
             self.conn.write(f"sources.{action}_{name_map[name]}")
+            self.conn.read()  # Flush
 
     def settings_update(
         self,

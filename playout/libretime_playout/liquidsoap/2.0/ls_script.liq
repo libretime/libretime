@@ -190,29 +190,29 @@ server.register(namespace="sources",
     description="Stop main input source.",
     usage="stop_input_main",
     "stop_input_main",
-    fun (s) -> begin log("sources.stop_input_main") stop_input_main() "Done." end)
+    fun (s) -> begin log("sources.stop_input_main") stop_input_main() "Done" end)
 server.register(namespace="sources",
     description="Start main input source.",
     usage="start_input_main",
     "start_input_main",
-    fun (s) -> begin log("sources.start_input_main") start_input_main() "Done." end)
+    fun (s) -> begin log("sources.start_input_main") start_input_main() "Done" end)
 server.register(namespace="sources",
     description="Stop show input source.",
     usage="stop_input_show",
     "stop_input_show",
-    fun (s) -> begin log("sources.stop_input_show") stop_input_show() "Done." end)
+    fun (s) -> begin log("sources.stop_input_show") stop_input_show() "Done" end)
 server.register(namespace="sources",
     description="Start show input source.",
     usage="start_input_show",
     "start_input_show",
-    fun (s) -> begin log("sources.start_input_show") start_input_show() "Done." end)
+    fun (s) -> begin log("sources.start_input_show") start_input_show() "Done" end)
 server.register(namespace="sources",
     description="Stop schedule source.",
     usage="stop_schedule",
     "stop_schedule",
-    fun (s) -> begin log("sources.stop_schedule") stop_schedule() "Done." end)
+    fun (s) -> begin log("sources.stop_schedule") stop_schedule() "Done" end)
 server.register(namespace="sources",
     description="Start schedule source.",
     usage="start_schedule",
     "start_schedule",
-    fun (s) -> begin log("sources.start_schedule") start_schedule() "Done." end)
+    fun (s) -> begin log("sources.start_schedule") start_schedule() "Done" end)
