@@ -6,7 +6,7 @@ on:
         type: string
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-lint
   cancel-in-progress: true
 
 jobs:
