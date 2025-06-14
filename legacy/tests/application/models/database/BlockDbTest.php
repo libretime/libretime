@@ -9,7 +9,7 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase // PHPUnit_Framewor
 {
     private $_connectionMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         TestHelper::installTestDatabase();
         TestHelper::setupZendBootstrap();
@@ -41,7 +41,7 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase // PHPUnit_Framewor
      */
     public function getDataSet()
     {
-        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/seed_files.yml');
+        return new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/seed_files.yml');
     }
 
     /**

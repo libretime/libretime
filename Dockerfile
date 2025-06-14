@@ -2,7 +2,7 @@ ARG LIBRETIME_VERSION
 #======================================================================================#
 # Python Builder                                                                       #
 #======================================================================================#
-FROM python:3.10-slim-bullseye AS python-builder
+FROM python:3.10-slim-bookworm as python-builder
 
 WORKDIR /build
 
@@ -18,7 +18,7 @@ RUN pip wheel --wheel-dir . --no-deps .
 #======================================================================================#
 # Python base                                                                          #
 #======================================================================================#
-FROM python:3.10-slim-bullseye AS python-base
+FROM python:3.10-slim-bookworm as python-base
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -41,7 +41,7 @@ COPY shared/packages.ini /tmp/packages.ini
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
+    $(python3 /tmp/packages.py --format=line --exclude=python bookworm /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
 
@@ -67,7 +67,7 @@ COPY analyzer/packages.ini /tmp/packages.ini
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
+    $(python3 /tmp/packages.py --format=line --exclude=python bookworm /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
 
@@ -105,7 +105,7 @@ COPY playout/packages.ini /tmp/packages.ini
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
+    $(python3 /tmp/packages.py --format=line --exclude=python bookworm /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
 
@@ -208,7 +208,7 @@ ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 #======================================================================================#
 # Legacy                                                                               #
 #======================================================================================#
-FROM php:7.4-fpm AS libretime-legacy
+FROM php:8.1-fpm as libretime-legacy
 
 ENV LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
 ENV LIBRETIME_LOG_FILEPATH=php://stderr

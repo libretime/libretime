@@ -304,12 +304,12 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      * Get the [optionally formatted] temporal [fadein] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *				 If format is null, then the raw DateTime object will be returned.
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbFadein($format = '%X')
+    public function getDbFadein($format = 'H:i:s')
     {
         if ($this->fadein === null) {
             return null;
@@ -328,7 +328,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            throw new PropelException('strftime format not supported anymore');
         }
 
         return $dt->format($format);
@@ -339,12 +339,12 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      * Get the [optionally formatted] temporal [fadeout] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *				 If format is null, then the raw DateTime object will be returned.
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbFadeout($format = '%X')
+    public function getDbFadeout($format = 'H:i:s')
     {
         if ($this->fadeout === null) {
             return null;
@@ -363,7 +363,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            throw new PropelException('strftime format not supported anymore');
         }
 
         return $dt->format($format);
