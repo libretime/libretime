@@ -27,7 +27,7 @@ class MessageHandler(ConsumerMixin):
         self.fetch_queue = fetch_queue
 
     def get_consumers(self, Consumer, channel):
-        exchange = Exchange("airtime-pypo", "fanout", durable=True, auto_delete=True)
+        exchange = Exchange("playout", "fanout", durable=True, auto_delete=True)
         # RabbitMQ says to avoid temporary queues with well-known names
         # https://www.rabbitmq.com/docs/queues#shared-temporary-queues
         # A server named queue that expires is used so that if the service
