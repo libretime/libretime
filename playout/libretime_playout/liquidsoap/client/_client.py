@@ -100,14 +100,6 @@ class LiquidsoapClient:
             self.conn.write("http.stop")
             self.conn.write("web_stream.set_id -1")
 
-    def source_disconnect(self, name: Literal["master_dj", "live_dj"]) -> None:
-        command_map = {
-            "master_dj": "master_harbor.stop",
-            "live_dj": "live_dj_harbor.stop",
-        }
-        with self.conn:
-            self.conn.write(command_map[name])
-
     def source_switch_status(
         self,
         name: Literal["master_dj", "live_dj", "scheduled_play"],
