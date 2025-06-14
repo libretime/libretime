@@ -1,4 +1,4 @@
-from datetime import datetime, time, timedelta, timezone
+from datetime import datetime, time, timedelta
 from operator import itemgetter
 from typing import Dict
 
@@ -37,7 +37,7 @@ def insert_event(events: Events, event_key: str, event: AnyEvent) -> None:
 def get_schedule(api_client: ApiClient) -> Events:
     stream_preferences = StreamPreferences(**api_client.get_stream_preferences().json())
 
-    current_time = datetime.now(timezone.utc)
+    current_time = datetime.utcnow()
     end_time = current_time + timedelta(days=1)
 
     current_time_str = current_time.isoformat(timespec="seconds")

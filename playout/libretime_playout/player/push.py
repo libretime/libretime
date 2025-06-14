@@ -1,7 +1,7 @@
 import logging
 import math
 import time
-from datetime import datetime, timezone
+from datetime import datetime
 from queue import Queue
 from threading import Thread
 from typing import List, Tuple
@@ -64,7 +64,7 @@ class PypoPush(Thread):
             loops += 1
 
     def separate_present_future(self, events: Events) -> Tuple[List[AnyEvent], Events]:
-        now = datetime.now(timezone.utc)
+        now = datetime.utcnow()
 
         present: List[AnyEvent] = []
         future: Events = {}

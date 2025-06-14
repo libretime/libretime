@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Dict, Literal, Optional, Union
@@ -54,7 +54,7 @@ class BaseEvent(BaseModel):
         return datetime_to_event_key(self.end)
 
     def ended(self) -> bool:
-        return datetime.now(timezone.utc) > self.end
+        return datetime.utcnow() > self.end
 
 
 class FileEvent(BaseEvent):
