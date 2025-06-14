@@ -55,7 +55,7 @@ class Application_Model_RabbitMq
     {
         $md['event_type'] = $event_type;
 
-        $exchange = 'airtime-pypo';
+        $exchange = 'playout';
         $data = json_encode($md, JSON_FORCE_OBJECT);
         self::sendMessage($exchange, 'fanout', true, $data);
     }
@@ -71,7 +71,7 @@ class Application_Model_RabbitMq
 
     public static function SendMessageToShowRecorder($event_type)
     {
-        $exchange = 'airtime-pypo';
+        $exchange = 'playout';
 
         $now = new DateTime('@' . time()); // in UTC timezone
         $end_timestamp = new DateTime('@' . (time() + 3600 * 2)); // in UTC timezone
