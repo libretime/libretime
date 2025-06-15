@@ -4,4 +4,3 @@ from .preference import PreferenceSerializer
 from .service import ServiceRegisterSerializer
 from .stream import StreamPreferencesSerializer, StreamStateSerializer
 from .user import UserSerializer
-from .worker import CeleryTaskSerializer, ThirdPartyTrackReferenceSerializer
