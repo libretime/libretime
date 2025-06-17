@@ -44,7 +44,7 @@ class Schema implements ConfigurationInterface
             /**/->end()
             /**/->scalarNode('dev_env')->defaultValue('production')->end()
             /**/->scalarNode('auth')->defaultValue('local')->end()
-            /**/->integerNode('cache_ahead_hours')->defaultValue(1)->end()
+            /**/->integerNode('cache_ahead_hours')->defaultValue(24)->end()
             ->end()->end()
 
             // Database schema
