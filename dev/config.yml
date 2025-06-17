@@ -2,8 +2,6 @@ general:
   public_url: http://localhost:8080
   api_key: some_secret_api_key
   secret_key: some_secret_key
-  timezone: America/Los_Angeles
-  autoload_lead_time: 4 days
 
 database:
   host: postgres
