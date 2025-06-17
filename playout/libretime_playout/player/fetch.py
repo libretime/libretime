@@ -71,7 +71,8 @@ class PypoFetch(Thread):
             logger.debug("handling event %s: %s", command, message)
 
             if command == "update_schedule":
-                self.schedule_data = get_schedule(self.api_client)
+                self.schedule_data = get_schedule(self.api_client,
+                    self.config.general.cache_ahead_hours)
                 self.process_schedule(self.schedule_data)
             elif command == "reset_liquidsoap_bootstrap":
                 self.set_bootstrap_variables()
@@ -262,7 +263,8 @@ class PypoFetch(Thread):
 
     def manual_schedule_fetch(self) -> bool:
         try:
-            self.schedule_data = get_schedule(self.api_client)
+            self.schedule_data = get_schedule(self.api_client,
+                self.config.general.cache_ahead_hours)
             logger.debug("Received event from API client: %s", self.schedule_data)
             self.process_schedule(self.schedule_data)
             return True
