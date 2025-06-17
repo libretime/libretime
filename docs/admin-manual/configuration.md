@@ -64,6 +64,10 @@ general:
   # LibreTime_Auth_Adaptor_FreeIpa to replace the built-in adaptor.
   # > default is local
   auth: "local"
+  
+  # How far in the future LibreTime should schedule autoloading playlists.
+  # > default is 1 hour
+  autoload_lead_time: 1 hour
 ```
 
 ## Storage
