@@ -57,8 +57,8 @@ general:
   timezone: UTC
 
   # How many hours ahead Playout should cache scheduled media files.
-  # > default is 1
-  cache_ahead_hours: 1
+  # > default is 24
+  cache_ahead_hours: 24
 
   # Authentication adaptor to use for the legacy service, specify a class like
   # LibreTime_Auth_Adaptor_FreeIpa to replace the built-in adaptor.
