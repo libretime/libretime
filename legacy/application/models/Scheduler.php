@@ -219,6 +219,7 @@ final class Application_Model_Scheduler
         // if there is a show we need to set a show limit to pass to smart blocks in case they use time remaining
         $showInstance = new Application_Model_ShowInstance($show);
         $showLimit = $showInstance->getSecondsRemaining();
+        $showStart = $showInstance->getShowInstanceStart(null);
         $originalShowLimit = $showLimit;
 
         $files = [];
@@ -286,7 +287,7 @@ final class Application_Model_Scheduler
                     } else {
                         $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
                         $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
-                        $dynamicFiles = $bl->getListOfFilesUnderLimit($showLimit);
+                        $dynamicFiles = $bl->getListOfFilesUnderLimit($showLimit, $showStart);
                         foreach ($dynamicFiles as $f) {
                             $fileId = $f['id'];
                             $file = CcFilesQuery::create()->findPk($fileId);
@@ -347,7 +348,7 @@ final class Application_Model_Scheduler
             } else {
                 $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
                 $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
-                $dynamicFiles = $bl->getListOfFilesUnderLimit($showLimit);
+                $dynamicFiles = $bl->getListOfFilesUnderLimit($showLimit, $showStart);
                 foreach ($dynamicFiles as $f) {
                     $fileId = $f['id'];
                     $file = CcFilesQuery::create()->findPk($fileId);
