@@ -215,7 +215,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * Get the [optionally formatted] temporal [starts] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *				 If format is null, then the raw DateTime object will be returned.
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
@@ -239,7 +239,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            throw new PropelException('strftime format not supported anymore');
         }
 
         return $dt->format($format);
@@ -250,7 +250,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * Get the [optionally formatted] temporal [ends] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *				 If format is null, then the raw DateTime object will be returned.
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
@@ -274,7 +274,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            throw new PropelException('strftime format not supported anymore');
         }
 
         return $dt->format($format);
@@ -318,12 +318,12 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * Get the [optionally formatted] temporal [fade_in] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *				 If format is null, then the raw DateTime object will be returned.
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbFadeIn($format = '%X')
+    public function getDbFadeIn($format = 'H:i:s')
     {
         if ($this->fade_in === null) {
             return null;
@@ -342,7 +342,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            throw new PropelException('strftime format not supported anymore');
         }
 
         return $dt->format($format);
@@ -353,12 +353,12 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      * Get the [optionally formatted] temporal [fade_out] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *				 If format is null, then the raw DateTime object will be returned.
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbFadeOut($format = '%X')
+    public function getDbFadeOut($format = 'H:i:s')
     {
         if ($this->fade_out === null) {
             return null;
@@ -377,7 +377,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            throw new PropelException('strftime format not supported anymore');
         }
 
         return $dt->format($format);

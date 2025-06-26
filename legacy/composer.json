@@ -16,7 +16,15 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/libretime/propel1"
+      "url": "https://github.com/mp3butcher/propel1"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/mp3butcher/zend-test"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/mp3butcher/dbunit"
     },
     {
       "type": "vcs",
@@ -24,7 +32,7 @@
     }
   ],
   "require": {
-    "php": "^7.4",
+    "php": ">8.1",
     "adbario/php-dot-notation": "^3.0.0",
     "composer/semver": "^3.2",
     "james-heinrich/getid3": "^1.9",
@@ -58,8 +66,8 @@
     "zf1s/zend-view": "^1.13"
   },
   "require-dev": {
-    "phpunit/dbunit": "^2.0",
-    "phpunit/phpunit": "^5.7",
-    "zf1s/zend-test": "^1.13"
+    "phpunit/dbunit": "dev-master",
+    "phpunit/phpunit": "~8.0",
+    "zf1s/zend-test": "dev-master"
   }
 }

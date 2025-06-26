@@ -9,7 +9,7 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 {
     private $_connectionMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         TestHelper::installTestDatabase();
 
@@ -46,7 +46,7 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      */
     public function getDataSet()
     {
-        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(
+        return new PHPUnit\DbUnit\DataSet\YamlDataSet(
             __DIR__ . '/datasets/seed_schedule.yml'
         );
     }
@@ -72,7 +72,7 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 
         // Make sure shows were created correctly
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_checkOverlappingShows.yml'),
+            new PHPUnit\DbUnit\DataSet\YamlDataSet(__DIR__ . '/datasets/test_checkOverlappingShows.yml'),
             $ds
         );
 

@@ -149,7 +149,6 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      */
     public function getDbId()
     {
-
         return $this->id;
     }
 
@@ -157,17 +156,16 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      * Get the [optionally formatted] temporal [first_show] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *				 If format is null, then the raw DateTime object will be returned.
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbFirstShow($format = '%x')
+    public function getDbFirstShow($format = 'Y-m-d')
     {
         if ($this->first_show === null) {
             return null;
         }
-
 
         try {
             $dt = new DateTime($this->first_show);
@@ -180,10 +178,6 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
             return $dt;
         }
 
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        }
-
         return $dt->format($format);
 
     }
@@ -192,17 +186,16 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      * Get the [optionally formatted] temporal [last_show] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *				 If format is null, then the raw DateTime object will be returned.
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbLastShow($format = '%x')
+    public function getDbLastShow($format = 'Y-m-d')
     {
         if ($this->last_show === null) {
             return null;
         }
-
 
         try {
             $dt = new DateTime($this->last_show);
@@ -215,10 +208,6 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
             return $dt;
         }
 
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        }
-
         return $dt->format($format);
 
     }
@@ -227,12 +216,12 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      * Get the [optionally formatted] temporal [start_time] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *				 If format is null, then the raw DateTime object will be returned.
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbStartTime($format = '%X')
+    public function getDbStartTime($format = 'H:i:s')
     {
         if ($this->start_time === null) {
             return null;
@@ -248,10 +237,6 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
         if ($format === null) {
             // Because propel.useDateTimeClass is true, we return a DateTime object.
             return $dt;
-        }
-
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -306,12 +291,12 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      * Get the [optionally formatted] temporal [next_pop_date] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *				 If format is null, then the raw DateTime object will be returned.
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbNextPopDate($format = '%x')
+    public function getDbNextPopDate($format = 'Y-m-d')
     {
         if ($this->next_pop_date === null) {
             return null;
@@ -330,7 +315,7 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            throw new PropelException('strftime format not supported anymore');
         }
 
         return $dt->format($format);

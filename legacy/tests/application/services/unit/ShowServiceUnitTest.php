@@ -1,5 +1,7 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+
 require_once '../application/configs/conf.php';
 
 /**
@@ -7,14 +9,14 @@ require_once '../application/configs/conf.php';
  *
  * @coversNothing
  */
-class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
+class ShowServiceUnitTest extends TestCase
 {
     // needed for accessing private methods
     protected $_reflectionOfShowService;
 
     protected $_showService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_reflectionOfShowService = new ReflectionClass('Application_Service_ShowService');
 
