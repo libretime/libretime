@@ -149,7 +149,7 @@ header_auth:
   groups_header: Remote-Groups # This is the default and could be omitted
   email_header: Remote-Email # This is the default and could be omitted
   name_header: Remote-Name # This is the default and could be omitted
-  group_separator: ',' # This is the default and could be omitted
+  group_separator: "," # This is the default and could be omitted
   proxy_ip: 10.0.0.34
   group_map:
     host: lt-host
