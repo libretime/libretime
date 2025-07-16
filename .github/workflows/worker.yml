@@ -5,7 +5,7 @@ on:
   push:
     branches: [main, stable-*]
     paths:
-      - .github/workflows/_python.yml
+      - .github/workflows/_python-*.yml
       - .github/workflows/worker.yml
       - worker/**
       - tools/python*
@@ -13,7 +13,7 @@ on:
   pull_request:
     branches: [main, stable-*]
     paths:
-      - .github/workflows/_python.yml
+      - .github/workflows/_python-*.yml
       - .github/workflows/worker.yml
       - worker/**
       - tools/python*
@@ -22,7 +22,25 @@ on:
     - cron: 0 1 * * 1
 
 jobs:
-  python:
-    uses: ./.github/workflows/_python.yml
+  lint:
+    uses: ./.github/workflows/_python-lint.yml
     with:
       context: worker
+
+  test-focal:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: worker
+      release: focal
+
+  test-bullseye:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: worker
+      release: bullseye
+
+  test-jammy:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: worker
+      release: jammy

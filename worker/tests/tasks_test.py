@@ -53,7 +53,7 @@ def test_podcast_download_invalid_file(requests_mock):
     assert json.loads(result) == {
         "episodeid": 1,
         "status": 0,
-        "error": "could not determine episode 1 file type",
+        "error": "could not determine podcast episode 1 file type",
     }
 
 
