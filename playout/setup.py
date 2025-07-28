@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-version = "4.3.0"  # x-release-please-version
+version = "4.5.0"  # x-release-please-version
 
 setup(
     name="libretime-playout",
@@ -39,6 +39,7 @@ setup(
             "distro>=1.8.0,<2",
             "requests-mock>=1.10.0,<2",
             "syrupy>=4.0.0,<5",
+            "types-lxml==2025.03.30",
             "types-backports>=0.1.3,<1",
             "types-python-dateutil>=2.8.1,<3",
             "types-requests>=2.31.0,<3",

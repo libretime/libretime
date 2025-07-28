@@ -44,6 +44,24 @@ def test_create_liquidsoap_annotation():
         ":/fake/2.flac"
     )
 
+    file_event.artist_name = "New\nline to space"
+    file_event.track_title = "Trailing\nnewline\n"
+
+    assert create_liquidsoap_annotation(file_event) == (
+        "annotate:"
+        'media_id="2",'
+        'schedule_table_id="1",'
+        'liq_start_next="0",'
+        'liq_fade_in="0.5",'
+        'liq_fade_out="0.5",'
+        'liq_cue_in="13.7008",'
+        'liq_cue_out="315.845",'
+        'replay_gain="11.46 dB",'
+        'artist="New line to space",'
+        'title="Trailing newline"'
+        ":/fake/2.flac"
+    )
+
 
 def test_liquidsoap():
     Liquidsoap(MagicMock())

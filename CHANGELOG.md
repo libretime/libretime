@@ -1,5 +1,37 @@
 # Changelog
 
+## [4.5.0](https://github.com/libretime/libretime/compare/4.4.0...4.5.0) (2025-07-16)
+
+
+### Features
+
+* **legacy:** add config option for group separator in header auth ([#3181](https://github.com/libretime/libretime/issues/3181)) ([f780994](https://github.com/libretime/libretime/commit/f78099499617f556ebb1f0bb79bcca000d284b6e))
+* **playout:** don't clear liquidsoap queue on liquidsoap startup ([#3163](https://github.com/libretime/libretime/issues/3163)) ([0b02ebf](https://github.com/libretime/libretime/commit/0b02ebf1b6786cc051fdd1b518be8e5e38bc9a9f))
+* rename `airtime-pypo` exchange to `playout` ([#3170](https://github.com/libretime/libretime/issues/3170)) ([63ff50b](https://github.com/libretime/libretime/commit/63ff50b82c810567e2a6035fc73eb0e62135517e))
+* use fanout queue type for playout queue ([#3161](https://github.com/libretime/libretime/issues/3161)) ([9e55d3b](https://github.com/libretime/libretime/commit/9e55d3bb6f2fa0f9a4dc858359a99e9d50c826a4))
+
+
+### Bug Fixes
+
+* **playout:** invalid input source disconnect command send to liquidsoap ([#3166](https://github.com/libretime/libretime/issues/3166)) ([908d548](https://github.com/libretime/libretime/commit/908d54805aa559a44f759f5872ac2cf09bc44c9c))
+* **playout:** remove potential deadlock in liquidsoap client ([#3165](https://github.com/libretime/libretime/issues/3165)) ([f33518d](https://github.com/libretime/libretime/commit/f33518d63757fed6ce87e5b16090c77b43913908))
+* **playout:** when metadata has a newline playout stops ([#3160](https://github.com/libretime/libretime/issues/3160)) ([d7987bb](https://github.com/libretime/libretime/commit/d7987bb4ef6d0aa1e7735a857c6e09863aac8354))
+* **worker:** catch mutagen `TypeError` when saving metadata ([#3182](https://github.com/libretime/libretime/issues/3182)) ([107bacf](https://github.com/libretime/libretime/commit/107bacf296d6445a67874a5b355bf67398f87e0e))
+
+## [4.4.0](https://github.com/libretime/libretime/compare/4.3.0...4.4.0) (2025-05-29)
+
+
+### Features
+
+* build and run custom nginx container ([#3155](https://github.com/libretime/libretime/issues/3155)) ([658ce15](https://github.com/libretime/libretime/commit/658ce15185a02902dbab7dc8b789709a8f3bd46d))
+* include nginx config inside libretime-nginx container ([#3157](https://github.com/libretime/libretime/issues/3157)) ([659ac7a](https://github.com/libretime/libretime/commit/659ac7aa77a8c72d642147afe9c59ae3fcb86fd3))
+
+
+### Bug Fixes
+
+* **legacy:** now macro should use station timezone ([#3143](https://github.com/libretime/libretime/issues/3143)) ([c554863](https://github.com/libretime/libretime/commit/c5548632e4f7067d594d611f6cf78cedc4dfce9e))
+* **legacy:** scheduled show length should not add track fade times ([#3144](https://github.com/libretime/libretime/issues/3144)) ([5743a0f](https://github.com/libretime/libretime/commit/5743a0f5824c7f0a2d401cfec31df2b706316db1))
+
 ## [4.3.0](https://github.com/libretime/libretime/compare/4.2.0...4.3.0) (2025-03-12)
 
 

@@ -5,7 +5,7 @@ on:
   push:
     branches: [main, stable-*]
     paths:
-      - .github/workflows/_python.yml
+      - .github/workflows/_python-*.yml
       - .github/workflows/api.yml
       - api/**
       - shared/**
@@ -14,7 +14,7 @@ on:
   pull_request:
     branches: [main, stable-*]
     paths:
-      - .github/workflows/_python.yml
+      - .github/workflows/_python-*.yml
       - .github/workflows/api.yml
       - api/**
       - shared/**
@@ -24,11 +24,10 @@ on:
     - cron: 0 1 * * 1
 
 jobs:
-  python:
-    uses: ./.github/workflows/_python.yml
+  lint:
+    uses: ./.github/workflows/_python-lint.yml
     with:
       context: api
-      test: false
 
   test-with-database:
     runs-on: ubuntu-latest
