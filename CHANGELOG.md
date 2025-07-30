@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.5.1](https://github.com/libretime/libretime/compare/4.5.0...4.5.1) (2025-07-30)
+
+
+### Bug Fixes
+
+* don't escape the json result in /api/live-info ([e10edf8](https://github.com/libretime/libretime/commit/e10edf827562ff3d3dc90dd413ee963aadf15829))
+
 ## [4.5.0](https://github.com/libretime/libretime/compare/4.4.0...4.5.0) (2025-07-16)
 
 
