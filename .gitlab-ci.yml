@@ -1,0 +1,27 @@
+stages:
+  - build
+
+build:
+  stage: build
+  rules:
+    - if: $CI_COMMIT_TAG == null
+
+  image: docker
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login --password-stdin --username "$CI_REGISTRY_USER" "$CI_REGISTRY"
+  script:
+    - |
+      docker buildx bake \
+      --set analyzer.tags=$CI_REGISTRY_IMAGE/analyzer:$CI_COMMIT_SHORT_SHA \
+      --set playout.tags=$CI_REGISTRY_IMAGE/playout:$CI_COMMIT_SHORT_SHA \
+      --set api.tags=$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHORT_SHA \
+      --set worker.tags=$CI_REGISTRY_IMAGE/worker:$CI_COMMIT_SHORT_SHA \
+      --set legacy.tags=$CI_REGISTRY_IMAGE/legacy:$CI_COMMIT_SHORT_SHA \
+      --set nginx.tags=$CI_REGISTRY_IMAGE/nginx:$CI_COMMIT_SHORT_SHA \
+      --set *.args.LIBRETIME_VERSION=$CI_COMMIT_SHORT_SHA \
+      --push
