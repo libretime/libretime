@@ -1295,9 +1295,9 @@ SQL;
         }
     }
 
-    public function getListOfFilesUnderLimit($show = null, $resolveDateTime = null)
+    public function getListOfFilesUnderLimit($show = null, $showStartTime = null)
     {
-        $info = $this->getListofFilesMeetCriteria($show, $resolveDateTime);
+        $info = $this->getListofFilesMeetCriteria($show, $showStartTime);
         $files = $info['files'];
         $limit = $info['limit'];
         $repeat = $info['repeat_tracks'] == 1;
@@ -1497,7 +1497,7 @@ SQL;
     }
 
     // this function return list of propel object
-    public function getListofFilesMeetCriteria($showLimit = null, $resolveDateTime = null)
+    public function getListofFilesMeetCriteria($showLimit = null, $showStartTime = null)
     {
         $storedCrit = $this->getCriteria();
 
@@ -1564,7 +1564,7 @@ SQL;
                         $spCriteriaExtra = $criteria['extra'];
                     }
 
-                    $spCriteriaValue = $this->resolveDate($spCriteriaValue, $resolveDateTime, $timeZone);
+                    $spCriteriaValue = $this->resolveDate($spCriteriaValue, $showStartTime, $timeZone);
 
                     if ($spCriteriaModifier == CriteriaModifier::STARTS_WITH) {
                         $spCriteriaValue = "{$spCriteriaValue}%";
