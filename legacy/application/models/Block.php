@@ -1480,13 +1480,13 @@ SQL;
         return $storedCrit;
     }
 
-    private function resolveDate($value, ?DateTime $dateTime, string $timeZone)
+    private function resolveDate($value, ?DateTime $resolveTo, string $timeZone)
     {
         if (!is_string($value)) {
             return $value;
         }
 
-        $dt = $dateTime ?: new DateTime('now');
+        $dt = $resolveTo ?: new DateTime('now');
         $dt->setTimezone(new DateTimeZone($timeZone));
 
         return preg_replace_callback(
