@@ -1642,15 +1642,16 @@ class ApiController extends Zend_Controller_Action
 
     private function returnJsonOrJsonp($request, $result)
     {
-        $callback = $request->getParam('callback');
         $response = $this->getResponse();
-        $response->setHeader('Content-Type', 'application/json');
 
         $body = $this->_helper->json->encodeJson($result, false);
 
+        $callback = $request->getParam('callback');
         if ($callback) {
             $response->setHeader('Content-Type', 'application/javascript');
             $body = sprintf('%s(%s)', $callback, $body);
+        } else {
+            $response->setHeader('Content-Type', 'application/json');
         }
         $response->setBody($body);
 
