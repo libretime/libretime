@@ -667,8 +667,8 @@ final class Application_Model_Scheduler
                         Application_Common_Database::SINGLE
                     );
 
-                    $show_sql = 'SELECT * FROM cc_show WHERE id IN (' .
-                        'SELECT show_id FROM cc_show_instances WHERE id = ' . $ccSchedule['instance_id'] . ')';
+                    $show_sql = 'SELECT * FROM cc_show WHERE id IN ('
+                        . 'SELECT show_id FROM cc_show_instances WHERE id = ' . $ccSchedule['instance_id'] . ')';
                     $ccShow = Application_Common_Database::prepareAndExecute(
                         $show_sql,
                         [],
@@ -685,8 +685,8 @@ final class Application_Model_Scheduler
                         }
                     }
                 } else {
-                    $show_sql = 'SELECT * FROM cc_show WHERE id IN (' .
-                        'SELECT show_id FROM cc_show_instances WHERE id = ' . $schedule['instance'] . ')';
+                    $show_sql = 'SELECT * FROM cc_show WHERE id IN ('
+                        . 'SELECT show_id FROM cc_show_instances WHERE id = ' . $schedule['instance'] . ')';
                     $ccShow = Application_Common_Database::prepareAndExecute(
                         $show_sql,
                         [],
@@ -732,10 +732,10 @@ final class Application_Model_Scheduler
                          */
                         $pos = $ccSchedule['position'];
 
-                        $linkedItem_sql = 'SELECT ends FROM cc_schedule ' .
-                            "WHERE instance_id = {$instanceId} " .
-                            "AND position = {$pos} " .
-                            'AND playout_status != -1';
+                        $linkedItem_sql = 'SELECT ends FROM cc_schedule '
+                            . "WHERE instance_id = {$instanceId} "
+                            . "AND position = {$pos} "
+                            . 'AND playout_status != -1';
                         $linkedItemEnds = Application_Common_Database::prepareAndExecute(
                             $linkedItem_sql,
                             [],
@@ -746,8 +746,8 @@ final class Application_Model_Scheduler
                             // With dynamic smart blocks there may be different number of items in
                             // each show. In case the position does not exist we need to select
                             // the end time of the last position
-                            $maxPos_sql = 'SELECT max(position) from cc_schedule ' .
-                                "WHERE instance_id = {$instanceId}";
+                            $maxPos_sql = 'SELECT max(position) from cc_schedule '
+                                . "WHERE instance_id = {$instanceId}";
                             $pos = Application_Common_Database::prepareAndExecute(
                                 $maxPos_sql,
                                 [],
@@ -759,10 +759,10 @@ final class Application_Model_Scheduler
                                 $pos = 0;
                                 $nextStartDT = new DateTime($instance->getDbStarts(), new DateTimeZone('UTC'));
                             } else {
-                                $linkedItem_sql = 'SELECT ends FROM cc_schedule ' .
-                                    "WHERE instance_id = {$instanceId} " .
-                                    "AND position = {$pos} " .
-                                    'AND playout_status != -1';
+                                $linkedItem_sql = 'SELECT ends FROM cc_schedule '
+                                    . "WHERE instance_id = {$instanceId} "
+                                    . "AND position = {$pos} "
+                                    . 'AND playout_status != -1';
                                 $linkedItemEnds = Application_Common_Database::prepareAndExecute(
                                     $linkedItem_sql,
                                     [],
@@ -849,8 +849,8 @@ final class Application_Model_Scheduler
                             $adjustFromDT = clone $nextStartDT;
                             $doUpdate = true;
 
-                            $movedItem_sql = 'SELECT * FROM cc_schedule ' .
-                                'WHERE id = ' . $file['sched_id'];
+                            $movedItem_sql = 'SELECT * FROM cc_schedule '
+                                . 'WHERE id = ' . $file['sched_id'];
                             $sched = Application_Common_Database::prepareAndExecute(
                                 $movedItem_sql,
                                 [],
@@ -870,9 +870,9 @@ final class Application_Model_Scheduler
                              * relative item is by its position
                              */
                             if ($linked) {
-                                $movedItem_sql = 'SELECT * FROM cc_schedule ' .
-                                    "WHERE position = {$originalPosition} " .
-                                    "AND instance_id = {$instanceId}";
+                                $movedItem_sql = 'SELECT * FROM cc_schedule '
+                                    . "WHERE position = {$originalPosition} "
+                                    . "AND instance_id = {$instanceId}";
 
                                 $sched = Application_Common_Database::prepareAndExecute(
                                     $movedItem_sql,
@@ -942,30 +942,30 @@ final class Application_Model_Scheduler
 
                         $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
                         if ($doInsert) {
-                            $values[] = '(' .
-                                "'{$nextStartDT->format(DEFAULT_MICROTIME_FORMAT)}', " .
-                                "'{$endTimeDT->format(DEFAULT_MICROTIME_FORMAT)}', " .
-                                "'{$file['cuein']}', " .
-                                "'{$file['cueout']}', " .
-                                "'{$file['fadein']}', " .
-                                "'{$file['fadeout']}', " .
-                                "'{$file['cliplength']}', " .
-                                "{$pos}, " .
-                                "{$instanceId}, " .
-                                "{$fileId}, " .
-                                "{$streamId})";
+                            $values[] = '('
+                                . "'{$nextStartDT->format(DEFAULT_MICROTIME_FORMAT)}', "
+                                . "'{$endTimeDT->format(DEFAULT_MICROTIME_FORMAT)}', "
+                                . "'{$file['cuein']}', "
+                                . "'{$file['cueout']}', "
+                                . "'{$file['fadein']}', "
+                                . "'{$file['fadeout']}', "
+                                . "'{$file['cliplength']}', "
+                                . "{$pos}, "
+                                . "{$instanceId}, "
+                                . "{$fileId}, "
+                                . "{$streamId})";
                         } elseif ($doUpdate) {
-                            $update_sql = 'UPDATE cc_schedule SET ' .
-                                "starts = '{$nextStartDT->format(DEFAULT_MICROTIME_FORMAT)}', " .
-                                "ends = '{$endTimeDT->format(DEFAULT_MICROTIME_FORMAT)}', " .
-                                "cue_in = '{$file['cuein']}', " .
-                                "cue_out = '{$file['cueout']}', " .
-                                "fade_in = '{$file['fadein']}', " .
-                                "fade_out = '{$file['fadeout']}', " .
-                                "clip_length = '{$file['cliplength']}', " .
-                                "position = {$pos}, " .
-                                "instance_id = {$instanceId} " .
-                                "WHERE id = {$sched['id']}";
+                            $update_sql = 'UPDATE cc_schedule SET '
+                                . "starts = '{$nextStartDT->format(DEFAULT_MICROTIME_FORMAT)}', "
+                                . "ends = '{$endTimeDT->format(DEFAULT_MICROTIME_FORMAT)}', "
+                                . "cue_in = '{$file['cuein']}', "
+                                . "cue_out = '{$file['cueout']}', "
+                                . "fade_in = '{$file['fadein']}', "
+                                . "fade_out = '{$file['fadeout']}', "
+                                . "clip_length = '{$file['cliplength']}', "
+                                . "position = {$pos}, "
+                                . "instance_id = {$instanceId} "
+                                . "WHERE id = {$sched['id']}";
 
                             Application_Common_Database::prepareAndExecute(
                                 $update_sql,
@@ -978,10 +978,10 @@ final class Application_Model_Scheduler
                         ++$pos;
                     } // all files have been inserted/moved
                     if ($doInsert) {
-                        $insert_sql = 'INSERT INTO cc_schedule ' .
-                            '(starts, ends, cue_in, cue_out, fade_in, fade_out, ' .
-                            'clip_length, position, instance_id, file_id, stream_id) VALUES ' .
-                            implode(',', $values) . ' RETURNING id';
+                        $insert_sql = 'INSERT INTO cc_schedule '
+                            . '(starts, ends, cue_in, cue_out, fade_in, fade_out, '
+                            . 'clip_length, position, instance_id, file_id, stream_id) VALUES '
+                            . implode(',', $values) . ' RETURNING id';
 
                         $stmt = $this->con->prepare($insert_sql);
                         if ($stmt->execute()) {
@@ -1006,9 +1006,9 @@ final class Application_Model_Scheduler
                     }
 
                     if ($adjustSched === true) {
-                        $followingItems_sql = 'SELECT * FROM cc_schedule ' .
-                            "WHERE starts >= '{$initalStartDT->format(DEFAULT_MICROTIME_FORMAT)}' " .
-                            "AND instance_id = {$instanceId} ";
+                        $followingItems_sql = 'SELECT * FROM cc_schedule '
+                            . "WHERE starts >= '{$initalStartDT->format(DEFAULT_MICROTIME_FORMAT)}' "
+                            . "AND instance_id = {$instanceId} ";
                         if (count($excludeIds) > 0) {
                             $followingItems_sql .= 'AND id NOT IN (' . implode(',', $excludeIds) . ') ';
                         }
@@ -1023,11 +1023,11 @@ final class Application_Model_Scheduler
                         foreach ($followingSchedItems as $item) {
                             $endTimeDT = $this->findEndTime($nextStartDT, $item['clip_length']);
                             $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
-                            $update_sql = 'UPDATE cc_schedule SET ' .
-                                "starts = '{$nextStartDT->format(DEFAULT_MICROTIME_FORMAT)}', " .
-                                "ends = '{$endTimeDT->format(DEFAULT_MICROTIME_FORMAT)}', " .
-                                "position = {$pos} " .
-                                "WHERE id = {$item['id']}";
+                            $update_sql = 'UPDATE cc_schedule SET '
+                                . "starts = '{$nextStartDT->format(DEFAULT_MICROTIME_FORMAT)}', "
+                                . "ends = '{$endTimeDT->format(DEFAULT_MICROTIME_FORMAT)}', "
+                                . "position = {$pos} "
+                                . "WHERE id = {$item['id']}";
                             Application_Common_Database::prepareAndExecute(
                                 $update_sql,
                                 [],

@@ -364,8 +364,8 @@ class Application_Service_ShowFormService
 
     private function populateFormStyle($form)
     {
-        $src = $this->ccShow->getDbImagePath() ?
-            $this->imagePathToDataUri($this->ccShow->getDbImagePath()) : '';
+        $src = $this->ccShow->getDbImagePath()
+            ? $this->imagePathToDataUri($this->ccShow->getDbImagePath()) : '';
 
         $form->populate(
             [
@@ -405,8 +405,8 @@ class Application_Service_ShowFormService
         }
 
         // return the data URI - data:{mime};base64,{data}
-        return ($imageData === null || $imageData === '') ?
-            '' : 'data: ' . mime_content_type($path) . ';base64,' . $imageData;
+        return ($imageData === null || $imageData === '')
+            ? '' : 'data: ' . mime_content_type($path) . ';base64,' . $imageData;
     }
 
     private function populateFormLive($form)

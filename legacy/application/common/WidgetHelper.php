@@ -164,8 +164,9 @@ class WidgetHelper
         foreach ($arr as &$a) {
             if (is_array($a)) {
                 if (array_key_exists('image_path', $a)) {
-                    $a['image_path'] = $a['image_path'] && $a['image_path'] !== '' ?
-                        Config::getPublicUrl() . 'api/show-logo?id=' . $a['id'] : '';
+                    $a['image_path'] = $a['image_path'] && $a['image_path'] !== ''
+                        ? Config::getPublicUrl() . 'api/show-logo?id=' . $a['id']
+                        : '';
                 } else {
                     self::findAndConvertPaths($a);
                 }

@@ -1661,9 +1661,9 @@ SQL;
                     $limits['items'] = null;
                 }
             } else {
-                $limits['time'] = $storedCrit['limit']['modifier'] == 'hours' ?
-                    intval(floatval($storedCrit['limit']['value']) * 60 * 60) :
-                    intval($storedCrit['limit']['value'] * 60);
+                $limits['time'] = $storedCrit['limit']['modifier'] == 'hours'
+                    ? intval(floatval($storedCrit['limit']['value']) * 60 * 60)
+                    : intval($storedCrit['limit']['value'] * 60);
                 $limits['items'] = null;
             }
         }
