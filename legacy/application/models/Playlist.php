@@ -410,31 +410,31 @@ SQL;
                 $entry['cliplength'] = $obj->getDbLength();
 
                 if ($obj instanceof CcFiles && $obj) {
-                    $entry['cuein'] = isset($p_item['cuein']) ?
-                        $p_item['cuein'] : $obj->getDbCuein();
+                    $entry['cuein'] = isset($p_item['cuein'])
+                        ? $p_item['cuein'] : $obj->getDbCuein();
 
-                    $entry['cueout'] = isset($p_item['cueout']) ?
-                        $p_item['cueout'] : $obj->getDbCueout();
+                    $entry['cueout'] = isset($p_item['cueout'])
+                        ? $p_item['cueout'] : $obj->getDbCueout();
 
-                    $cue_in = isset($p_item['cueInSec']) ?
-                        $p_item['cueInSec'] : Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
+                    $cue_in = isset($p_item['cueInSec'])
+                        ? $p_item['cueInSec'] : Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
 
-                    $cue_out = isset($p_item['cueOutSec']) ?
-                        $p_item['cueOutSec'] : Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
+                    $cue_out = isset($p_item['cueOutSec'])
+                        ? $p_item['cueOutSec'] : Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
 
-                    $entry['cliplength'] = isset($p_item['length']) ?
-                        $p_item['length'] : Application_Common_DateHelper::secondsToPlaylistTime($cue_out - $cue_in);
+                    $entry['cliplength'] = isset($p_item['length'])
+                        ? $p_item['length'] : Application_Common_DateHelper::secondsToPlaylistTime($cue_out - $cue_in);
                 } elseif ($obj instanceof CcWebstream && $obj) {
                     $entry['cuein'] = '00:00:00';
                     $entry['cueout'] = $entry['cliplength'];
                 }
                 $entry['ftype'] = $objType;
 
-                $entry['fadein'] = isset($p_item['fadein']) ?
-                    $p_item['fadein'] : $entry['fadein'];
+                $entry['fadein'] = isset($p_item['fadein'])
+                    ? $p_item['fadein'] : $entry['fadein'];
 
-                $entry['fadeout'] = isset($p_item['fadeout']) ?
-                    $p_item['fadeout'] : $entry['fadeout'];
+                $entry['fadeout'] = isset($p_item['fadeout'])
+                    ? $p_item['fadeout'] : $entry['fadeout'];
             }
 
             return $entry;

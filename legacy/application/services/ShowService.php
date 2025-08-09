@@ -77,8 +77,9 @@ class Application_Service_ShowService
 
             // DateTime in shows's local time
             $newStartDateTime = new DateTime(
-                $showData['add_show_start_date'] . ' ' .
-                    $showData['add_show_start_time'],
+                $showData['add_show_start_date']
+                . ' '
+                . $showData['add_show_start_time'],
                 new DateTimeZone($showData['add_show_timezone'])
             );
 
@@ -1055,8 +1056,9 @@ SQL;
         $showId = $this->ccShow->getDbId();
         // DateTime in show's local time
         $newStartDateTime = new DateTime(
-            $showData['add_show_start_date'] . ' ' .
-                $showData['add_show_start_time'],
+            $showData['add_show_start_date']
+            . ' '
+            . $showData['add_show_start_time'],
             new DateTimeZone($showData['add_show_timezone'])
         );
 
@@ -1333,10 +1335,9 @@ SQL;
         }
 
         // We will only need this if the repeat type is MONTHLY_WEEKLY
-        [$weekNumberOfMonth, $dayOfWeek] =
-            self::getMonthlyWeeklyRepeatInterval(
-                new DateTime($first_show, new DateTimeZone($timezone))
-            );
+        [$weekNumberOfMonth, $dayOfWeek] = self::getMonthlyWeeklyRepeatInterval(
+            new DateTime($first_show, new DateTimeZone($timezone))
+        );
 
         $this->repeatType = $showDay->getDbRepeatType();
 
@@ -1520,8 +1521,8 @@ SQL;
         $tempDT = clone $dt;
         $fifthWeekExists = false;
         do {
-            $nextDT = date_create($weekNumberOfMonth . ' ' . $dayOfWeek .
-                ' of ' . $tempDT->format('F') . ' ' . $tempDT->format('Y'));
+            $nextDT = date_create($weekNumberOfMonth . ' ' . $dayOfWeek
+                . ' of ' . $tempDT->format('F') . ' ' . $tempDT->format('Y'));
             $nextDT->setTimezone(new DateTimeZone($timezone));
 
             /* We have to check if the next date is in the same month in case
@@ -1918,8 +1919,8 @@ SQL;
         if (isset($offset)) {
             // $offset["hours"] and $offset["mins"] represents the start time
             // of a rebroadcast show
-            $startDateTime = new DateTime($startDateTime->format('Y-m-d') . ' ' .
-                $offset['hours'] . ':' . $offset['mins'], $timezone);
+            $startDateTime = new DateTime($startDateTime->format('Y-m-d') . ' '
+                . $offset['hours'] . ':' . $offset['mins'], $timezone);
             $startDateTime->add(new DateInterval("P{$offset['days']}D"));
         }
 

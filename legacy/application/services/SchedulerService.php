@@ -189,8 +189,8 @@ class Application_Service_SchedulerService
         }
 
         $linkedShowSchedule_sql = $con->prepare(
-            'select * from cc_schedule where instance_id = :instance_id ' .
-                'order by starts'
+            'select * from cc_schedule where instance_id = :instance_id '
+                . 'order by starts'
         );
         $linkedShowSchedule_sql->bindParam(':instance_id', $instanceId);
         $linkedShowSchedule_sql->execute();
@@ -216,8 +216,8 @@ class Application_Service_SchedulerService
 
         // get time_filled so we can update cc_show_instances
         if (!empty($linkedShowSchedule)) {
-            $timeFilled_sql = 'SELECT time_filled FROM cc_show_instances ' .
-                "WHERE id = {$linkedShowSchedule[0]['instance_id']}";
+            $timeFilled_sql = 'SELECT time_filled FROM cc_show_instances '
+                . "WHERE id = {$linkedShowSchedule[0]['instance_id']}";
             $timeFilled = Application_Common_Database::prepareAndExecute(
                 $timeFilled_sql,
                 [],
@@ -245,8 +245,8 @@ class Application_Service_SchedulerService
                     self::clearShowInstanceContents($id);
 
                     // Now fill the show instance with the same content that $linkedShowSchedule has.
-                    $instanceStart_sql = 'SELECT starts FROM cc_show_instances ' .
-                        "WHERE id = {$id} " . 'ORDER BY starts';
+                    $instanceStart_sql = 'SELECT starts FROM cc_show_instances '
+                        . "WHERE id = {$id} " . 'ORDER BY starts';
 
                     // What's tricky here is that when we copy the content, we have to adjust
                     // the start and end times of each track so they're inside the new show instance's time slot.
@@ -275,13 +275,13 @@ class Application_Service_SchedulerService
                             $item['stream_id'] = 'null';
                         }
 
-                        $values[] = '(' . "'{$nextStartDT->format(DEFAULT_TIMESTAMP_FORMAT)}', " .
-                            "'{$endTimeDT->format(DEFAULT_TIMESTAMP_FORMAT)}', " .
-                            "'{$item['clip_length']}', " .
-                            "'{$item['fade_in']}', '{$item['fade_out']}', " .
-                            "'{$item['cue_in']}', '{$item['cue_out']}', " .
-                            "{$item['file_id']}, {$item['stream_id']}, " .
-                            "{$id}, {$item['position']})";
+                        $values[] = '(' . "'{$nextStartDT->format(DEFAULT_TIMESTAMP_FORMAT)}', "
+                            . "'{$endTimeDT->format(DEFAULT_TIMESTAMP_FORMAT)}', "
+                            . "'{$item['clip_length']}', "
+                            . "'{$item['fade_in']}', '{$item['fade_out']}', "
+                            . "'{$item['cue_in']}', '{$item['cue_out']}', "
+                            . "{$item['file_id']}, {$item['stream_id']}, "
+                            . "{$id}, {$item['position']})";
 
                         $nextStartDT = self::findTimeDifference(
                             $endTimeDT,
@@ -290,10 +290,10 @@ class Application_Service_SchedulerService
                     } // foreach show item
 
                     if (!empty($values)) {
-                        $insert_sql = 'INSERT INTO cc_schedule (starts, ends, ' .
-                            'clip_length, fade_in, fade_out, cue_in, cue_out, ' .
-                            'file_id, stream_id, instance_id, position)  VALUES ' .
-                            implode(',', $values);
+                        $insert_sql = 'INSERT INTO cc_schedule (starts, ends, '
+                            . 'clip_length, fade_in, fade_out, cue_in, cue_out, '
+                            . 'file_id, stream_id, instance_id, position)  VALUES '
+                            . implode(',', $values);
                         Application_Common_Database::prepareAndExecute(
                             $insert_sql,
                             [],
