@@ -88,6 +88,7 @@ jobs:
       - name: Build
         uses: docker/bake-action@v6
         with:
+          source: .
           pull: true
           push: ${{ github.event_name == 'push' }}
           files: |
