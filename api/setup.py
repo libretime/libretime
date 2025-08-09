@@ -36,7 +36,7 @@ setup(
     extras_require={
         "prod": [
             "gunicorn>=22.0.0,<23.1",
-            "psycopg[c]>=3.1.8,<3.2",
+            "psycopg[c]>=3.1.8,<3.3",
             "uvicorn[standard]>=0.17.6,<0.36.0",
         ],
         "dev": [
@@ -44,7 +44,7 @@ setup(
             "django-stubs>=5.1.0,<6",
             "djangorestframework-stubs>=1.8.0,<4",
             "model_bakery>=1.10.1,<2",
-            "psycopg[binary]>=3.1.8,<4",
+            "psycopg[binary]>=3.1.8,<3.3",
             "pylint-django>=2.5.3,<3",
             "pytest-django>=4.5.2,<5",
             "requests-mock>=1.10.0,<2",
