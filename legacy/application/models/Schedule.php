@@ -990,7 +990,7 @@ SQL;
                 // make sure we are not dealing with a float
                 $cache_ahead_hours = intval($cache_ahead_hours);
             } else {
-                $cache_ahead_hours = 24;
+                $cache_ahead_hours = 3;
             }
 
             $t2->add(new DateInterval('PT' . $cache_ahead_hours . 'H'));

@@ -44,7 +44,8 @@ class Schema implements ConfigurationInterface
             /**/->end()
             /**/->scalarNode('dev_env')->defaultValue('production')->end()
             /**/->scalarNode('auth')->defaultValue('local')->end()
-            /**/->integerNode('cache_ahead_hours')->defaultValue(24)->end()
+            /**/// DEPRECATED
+            /**/->integerNode('cache_ahead_hours')->defaultValue(-1)->end()
             ->end()->end()
 
             // Database schema
@@ -364,7 +365,12 @@ class Config
 
         $legacy_values['dev_env'] = $values['general']['dev_env'];
         $legacy_values['auth'] = $values['general']['auth'];
-        $legacy_values['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
+
+        $cache_ahead_hours = $values['general']['cache_ahead_hours'];
+        if (intval($cache_ahead_hours) < 0) {
+            $cache_ahead_hours = $values['playout']['cache_ahead_hours'];
+        }
+        $legacy_values['cache_ahead_hours'] = $cache_ahead_hours;
 
         // SAAS remaining fields
         $legacy_values['stationId'] = '';

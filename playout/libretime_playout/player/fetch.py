@@ -62,6 +62,12 @@ class PypoFetch(Thread):
         self.schedule_data: Events = {}
         logger.info("PypoFetch: init complete")
 
+    def _get_cache_ahead_hours(self):
+        cache_ahead_hours = self.config.general.cache_ahead_hours
+        if cache_ahead_hours < 0:
+            cache_ahead_hours = self.config.playout.cache_ahead_hours
+        return cache_ahead_hours
+
     # Handle a message from RabbitMQ, put it into our yucky global var.
     # Hopefully there is a better way to do this.
 
@@ -72,7 +78,7 @@ class PypoFetch(Thread):
 
             if command == "update_schedule":
                 self.schedule_data = get_schedule(
-                    self.api_client, self.config.general.cache_ahead_hours
+                    self.api_client, self._get_cache_ahead_hours()
                 )
                 self.process_schedule(self.schedule_data)
             elif command == "reset_liquidsoap_bootstrap":
@@ -265,7 +271,7 @@ class PypoFetch(Thread):
     def manual_schedule_fetch(self) -> bool:
         try:
             self.schedule_data = get_schedule(
-                self.api_client, self.config.general.cache_ahead_hours
+                self.api_client, self._get_cache_ahead_hours()
             )
             logger.debug("Received event from API client: %s", self.schedule_data)
             self.process_schedule(self.schedule_data)

@@ -21,9 +21,8 @@ general:
   # > default is UTC
   timezone: UTC
 
-  # How many hours ahead Playout should cache scheduled media files.
-  # > default is 24
-  cache_ahead_hours: 24
+  # DEPRECATED: Use [playout.cache_ahead_hours] instead.
+  cache_ahead_hours: 3
 
   # Authentication adaptor to use for the legacy service, specify a class like
   # LibreTime_Auth_Adaptor_FreeIpa to replace the built-in adaptor.
@@ -106,6 +105,10 @@ playout:
   # Liquidsoap connection port.
   # > default is 1234
   liquidsoap_port: 1234
+
+  # How many hours ahead Playout should cache scheduled media files.
+  # > default is 3
+  cache_ahead_hours: 3
 
   # The format for recordings.
   # > must be one of (ogg, mp3)
