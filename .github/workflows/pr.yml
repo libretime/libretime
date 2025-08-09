@@ -20,6 +20,7 @@ jobs:
             analyzer
             api
             api-client
+            frontend
             installer
             legacy
             playout
