@@ -10,11 +10,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-12-09 02:37+0000\n"
+"POT-Creation-Date: 2025-08-11 03:03+0000\n"
 "PO-Revision-Date: 2025-02-11 19:01+0000\n"
 "Last-Translator: Monstorix <monstorix@outlook.com>\n"
-"Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
-"projects/libretime/legacy/zh_Hans/>\n"
+"Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/projects/libretime/legacy/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -613,8 +612,7 @@ msgid ""
 "Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.\n"
 "                    %sCreate an unlinked show now%s."
 msgstr ""
-"链式重播节目需要预先在开始广播前添加曲目。要开始广播，请取消当前的链式重播节"
-"目，并重新安排单播节目。\n"
+"链式重播节目需要预先在开始广播前添加曲目。要开始广播，请取消当前的链式重播节目，并重新安排单播节目。\n"
 "%s创建单播节目%s。"
 
 #: application/common/UsabilityHints.php:96
@@ -799,18 +797,18 @@ msgstr "您没有访问该资源的权限。"
 msgid "You are not allowed to access this resource. "
 msgstr "您没有访问该资源的权限。 "
 
-#: application/controllers/ApiController.php:920
-#: application/controllers/ApiController.php:941
-#: application/controllers/ApiController.php:953
+#: application/controllers/ApiController.php:919
+#: application/controllers/ApiController.php:940
+#: application/controllers/ApiController.php:952
 #, php-format
 msgid "File does not exist in %s"
 msgstr "位于 %s 的文件不存在"
 
-#: application/controllers/ApiController.php:1007
+#: application/controllers/ApiController.php:1006
 msgid "Bad request. no 'mode' parameter passed."
 msgstr "请求错误。没有提供“模式” (mode) 参数。"
 
-#: application/controllers/ApiController.php:1020
+#: application/controllers/ApiController.php:1019
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "请求错误。提供的“模式” (mode) 参数无效"
 
@@ -835,8 +833,7 @@ msgid ""
 "            2. Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 "要配置并使用嵌入式播放器，您必须：<br><br>\n"
-"            1. 在设置 &gt; 串流中启用以下任意格式的流： MP3、 AAC 或 OGG<br>"
-"\n"
+"            1. 在设置 &gt; 串流中启用以下任意格式的流： MP3、 AAC 或 OGG<br>\n"
 "            2. 在设置 &gt; 偏好设置中启用 LibreTime 公共 API"
 
 #: application/controllers/EmbeddablewidgetsController.php:35
@@ -894,7 +891,7 @@ msgstr "发生错误。"
 #: application/controllers/LibraryController.php:91
 #: application/controllers/LocaleController.php:171
 #: application/controllers/ShowbuilderController.php:131
-#: application/forms/SmartBlockCriteria.php:413
+#: application/forms/SmartBlockCriteria.php:411
 msgid "Preview"
 msgstr "预览"
 
@@ -926,7 +923,7 @@ msgid "Edit..."
 msgstr "编辑…"
 
 #: application/controllers/LibraryController.php:126
-#: application/controllers/ScheduleController.php:732
+#: application/controllers/ScheduleController.php:729
 msgid "Download"
 msgstr "下载"
 
@@ -1180,23 +1177,23 @@ msgstr "播放列表"
 
 #: application/controllers/LocaleController.php:88
 #: application/models/Criteria.php:171
-#: application/services/HistoryService.php:1051
-#: application/services/HistoryService.php:1086
-#: application/services/HistoryService.php:1101
+#: application/services/HistoryService.php:1050
+#: application/services/HistoryService.php:1085
+#: application/services/HistoryService.php:1100
 msgid "Title"
 msgstr "标题"
 
 #: application/controllers/LocaleController.php:89
 #: application/models/Criteria.php:147
-#: application/services/HistoryService.php:1052
-#: application/services/HistoryService.php:1087
-#: application/services/HistoryService.php:1102
+#: application/services/HistoryService.php:1051
+#: application/services/HistoryService.php:1086
+#: application/services/HistoryService.php:1101
 msgid "Creator"
 msgstr "作者"
 
 #: application/controllers/LocaleController.php:90
 #: application/models/Criteria.php:146
-#: application/services/HistoryService.php:1053
+#: application/services/HistoryService.php:1052
 msgid "Album"
 msgstr "专辑"
 
@@ -1211,21 +1208,21 @@ msgstr "每分钟节拍数"
 
 #: application/controllers/LocaleController.php:93
 #: application/models/Criteria.php:150
-#: application/services/HistoryService.php:1058
-#: application/services/HistoryService.php:1105
+#: application/services/HistoryService.php:1057
+#: application/services/HistoryService.php:1104
 msgid "Composer"
 msgstr "作曲"
 
 #: application/controllers/LocaleController.php:94
 #: application/models/Criteria.php:151
-#: application/services/HistoryService.php:1063
+#: application/services/HistoryService.php:1062
 msgid "Conductor"
 msgstr "指挥"
 
 #: application/controllers/LocaleController.php:95
 #: application/models/Criteria.php:152
-#: application/services/HistoryService.php:1060
-#: application/services/HistoryService.php:1106
+#: application/services/HistoryService.php:1059
+#: application/services/HistoryService.php:1105
 msgid "Copyright"
 msgstr "版权"
 
@@ -1237,25 +1234,25 @@ msgstr "编码"
 #: application/controllers/LocaleController.php:97
 #: application/forms/StreamSettingSubForm.php:116
 #: application/models/Criteria.php:160
-#: application/services/HistoryService.php:1055
+#: application/services/HistoryService.php:1054
 msgid "Genre"
 msgstr "流派"
 
 #: application/controllers/LocaleController.php:98
 #: application/models/Criteria.php:162
-#: application/services/HistoryService.php:1059
+#: application/services/HistoryService.php:1058
 msgid "ISRC"
 msgstr "ISRC"
 
 #: application/controllers/LocaleController.php:99
 #: application/models/Criteria.php:163
-#: application/services/HistoryService.php:1057
+#: application/services/HistoryService.php:1056
 msgid "Label"
 msgstr "标签"
 
 #: application/controllers/LocaleController.php:100
 #: application/models/Criteria.php:164
-#: application/services/HistoryService.php:1064
+#: application/services/HistoryService.php:1063
 msgid "Language"
 msgstr "语种"
 
@@ -1271,8 +1268,8 @@ msgstr "上次播放于"
 
 #: application/controllers/LocaleController.php:103
 #: application/models/Criteria.php:165
-#: application/services/HistoryService.php:1054
-#: application/services/HistoryService.php:1104
+#: application/services/HistoryService.php:1053
+#: application/services/HistoryService.php:1103
 msgid "Length"
 msgstr "时长"
 
@@ -1283,7 +1280,7 @@ msgstr "MIME 类型"
 
 #: application/controllers/LocaleController.php:105
 #: application/models/Criteria.php:167
-#: application/services/HistoryService.php:1056
+#: application/services/HistoryService.php:1055
 msgid "Mood"
 msgstr "情绪风格"
 
@@ -1318,7 +1315,7 @@ msgstr "网址"
 
 #: application/controllers/LocaleController.php:112
 #: application/models/Criteria.php:173
-#: application/services/HistoryService.php:1061
+#: application/services/HistoryService.php:1060
 msgid "Year"
 msgstr "年代"
 
@@ -1447,8 +1444,7 @@ msgstr "播放列表已经随机化"
 
 #: application/controllers/LocaleController.php:145
 msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
-msgstr "我们不知道文件的状态。这可能是由于文件位于无法访问的远程位置或者不再由程序监"
-"控的目录。"
+msgstr "我们不知道文件的状态。这可能是由于文件位于无法访问的远程位置或者不再由程序监控的目录。"
 
 #: application/controllers/LocaleController.php:147
 #, php-format
@@ -1474,20 +1470,16 @@ msgstr "图像文件格式只能是jpg，jpeg，png或者gif"
 
 #: application/controllers/LocaleController.php:154
 msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
-msgstr "静态的智能节目块将会保存条件设置并即刻生成所有内容。这可以让您在排播节目前在"
-"素材库编辑并预览它。"
+msgstr "静态的智能节目块将会保存条件设置并即刻生成所有内容。这可以让您在排播节目前在素材库编辑并预览它。"
 
 #: application/controllers/LocaleController.php:155
 msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
-msgstr "动态的智能节目块将只保存条件设置，播出的内容将在每次节目排播时动态生成。因此"
-"，您不能在素材库中直接编辑和预览它。"
+msgstr "动态的智能节目块将只保存条件设置，播出的内容将在每次节目排播时动态生成。因此，您不能在素材库中直接编辑和预览它。"
 
 #: application/controllers/LocaleController.php:156
 #, php-format
 msgid "The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
-msgstr "如果 %s "
-"无法找到足够的符合筛选条件的曲目，智能节目块将无法达到设定的长度。若您允许单"
-"条曲目可被多次添加和播放，请启用该选项。"
+msgstr "如果 %s 无法找到足够的符合筛选条件的曲目，智能节目块将无法达到设定的长度。若您允许单条曲目可被多次添加和播放，请启用该选项。"
 
 #: application/controllers/LocaleController.php:157
 msgid "Smart block shuffled"
@@ -1547,7 +1539,7 @@ msgid "is in the range"
 msgstr "处于"
 
 #: application/controllers/LocaleController.php:172
-#: application/forms/SmartBlockCriteria.php:415
+#: application/forms/SmartBlockCriteria.php:413
 msgid "Generate"
 msgstr "生成"
 
@@ -1582,8 +1574,7 @@ msgstr "指定的路径无法访问。"
 #: application/controllers/LocaleController.php:181
 #, php-format
 msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
-msgstr "某些类型的输出流需要第三方软件的设置。您可以参阅有关启用 %sAAC+%s 和 "
-"%sOpus%s 格式的信息。"
+msgstr "某些类型的输出流需要第三方软件的设置。您可以参阅有关启用 %sAAC+%s 和 %sOpus%s 格式的信息。"
 
 #: application/controllers/LocaleController.php:182
 msgid "Connected to the streaming server"
@@ -1605,11 +1596,7 @@ msgstr "无法连接流服务器"
 #: application/controllers/LocaleController.php:186
 #, php-format
 msgid "If %s is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
-msgstr ""
-"如果 %s "
-"位于路由器或防火墙之后，您可能需要配置端口转发，而此处的信息也会不正确。这时"
-"您需要手动修改本字段的值，以确保显示正确的主机、端口和挂载点信息，供节目编辑"
-"连接。此处允许的数值范围是 1024 到 49151。"
+msgstr "如果 %s 位于路由器或防火墙之后，您可能需要配置端口转发，而此处的信息也会不正确。这时您需要手动修改本字段的值，以确保显示正确的主机、端口和挂载点信息，供节目编辑连接。此处允许的数值范围是 1024 到 49151。"
 
 #: application/controllers/LocaleController.php:187
 #, php-format
@@ -1618,13 +1605,7 @@ msgstr "更多细节，请阅读%s%s指南%s"
 
 #: application/controllers/LocaleController.php:188
 msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
-msgstr ""
-"勾选此项会启用 OGG "
-"格式音频流的元数据（流的元数据包括歌曲名，歌手/作者，节目名等，会显示在音频播"
-"放器中）。VLC 和 mplayer 在播放 OGG 或 VORBIS "
-"格式媒体流时存在已知的问题，即如果输出流已启用元数据，则会在每首歌的间隙发生"
-"断流问题。如果您使用 OGG "
-"格式推流，且听众不使用上述媒体播放器，可以随意勾选此项。"
+msgstr "勾选此项会启用 OGG 格式音频流的元数据（流的元数据包括歌曲名，歌手/作者，节目名等，会显示在音频播放器中）。VLC 和 mplayer 在播放 OGG 或 VORBIS 格式媒体流时存在已知的问题，即如果输出流已启用元数据，则会在每首歌的间隙发生断流问题。如果您使用 OGG 格式推流，且听众不使用上述媒体播放器，可以随意勾选此项。"
 
 #: application/controllers/LocaleController.php:189
 msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
@@ -1649,8 +1630,7 @@ msgstr "警告：此选项会重启串流，可能会造成听众短时间断线
 
 #: application/controllers/LocaleController.php:194
 msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
-msgstr "此处填写 Icecast 或者 SHOUTcast "
-"的管理员用户名和密码，用于获取收听数据的统计。"
+msgstr "此处填写 Icecast 或者 SHOUTcast 的管理员用户名和密码，用于获取收听数据的统计。"
 
 #: application/controllers/LocaleController.php:198
 msgid "Warning: You cannot change this field while the show is currently playing"
@@ -1678,13 +1658,11 @@ msgstr "警告：节目取消链式重播后无法再次进行链接"
 
 #: application/controllers/LocaleController.php:205
 msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
-msgstr "将重播节目链接之后，相同时段的节目内容（如曲目等）会保持一致，您的更改将同步"
-"到所有时段"
+msgstr "将重播节目链接之后，相同时段的节目内容（如曲目等）会保持一致，您的更改将同步到所有时段"
 
 #: application/controllers/LocaleController.php:206
 msgid "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
-msgstr "默认的时区设置与播出工作站的系统设置相同。播出日程表中的节目时间则由用户设置"
-"中的“界面时区”选项指定以本地时区显示。"
+msgstr "默认的时区设置与播出工作站的系统设置相同。播出日程表中的节目时间则由用户设置中的“界面时区”选项指定以本地时区显示。"
 
 #: application/controllers/LocaleController.php:210
 msgid "Show"
@@ -2576,9 +2554,7 @@ msgstr "类型"
 
 #: application/controllers/LocaleController.php:465
 msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>More information</a>"
-msgstr ""
-"自动加载的播放列表内容将在开播前一小时添加到节目中。<a target='_blank' "
-"href='https://libretime.org/docs/user-manual/playlists/'>了解更多信息</a>"
+msgstr "自动加载的播放列表内容将在开播前一小时添加到节目中。<a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>了解更多信息</a>"
 
 #: application/controllers/LocaleController.php:466
 msgid "Podcast settings saved"
@@ -2606,12 +2582,7 @@ msgstr "现在试试"
 
 #: application/controllers/LocaleController.php:472
 msgid "<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"
-msgstr ""
-"<p>如果取消勾选该选项，智能节目块将在指定的时间范围内尽可能多地<strong>完整</"
-"strong>排播已有的曲目。 "
-"这经常会导致曲目整体播放时长比设定的节目时长些微偏少。</p><p>如果选中该选项，"
-"智能节目块还将添加一条超出设定节目时长的曲目以填充播出空档。如果智能节目块所"
-"在的节目时段结束，这条最终曲目可能会被中途打断。</p>"
+msgstr "<p>如果取消勾选该选项，智能节目块将在指定的时间范围内尽可能多地<strong>完整</strong>排播已有的曲目。 这经常会导致曲目整体播放时长比设定的节目时长些微偏少。</p><p>如果选中该选项，智能节目块还将添加一条超出设定节目时长的曲目以填充播出空档。如果智能节目块所在的节目时段结束，这条最终曲目可能会被中途打断。</p>"
 
 #: application/controllers/LocaleController.php:473
 msgid "Playlist preview"
@@ -2736,23 +2707,23 @@ msgstr "未知播放列表"
 msgid "Preferences updated."
 msgstr "偏好设置已更新。"
 
-#: application/controllers/PreferenceController.php:210
+#: application/controllers/PreferenceController.php:211
 msgid "Stream Setting Updated."
 msgstr "串流设置已更新。"
 
-#: application/controllers/PreferenceController.php:255
+#: application/controllers/PreferenceController.php:256
 msgid "path should be specified"
 msgstr "请指定路径"
 
-#: application/controllers/PreferenceController.php:298
+#: application/controllers/PreferenceController.php:299
 msgid "Problem with Liquidsoap..."
 msgstr "Liquidsoap 出错..."
 
-#: application/controllers/PreferenceController.php:341
+#: application/controllers/PreferenceController.php:342
 msgid "Request method not accepted"
 msgstr "请求的方式不被接受"
 
-#: application/controllers/ScheduleController.php:390
+#: application/controllers/ScheduleController.php:389
 #, php-format
 msgid "Rebroadcast of show %s from %s at %s"
 msgstr "节目 %s 是节目 %s 的重播，时间是 %s"
@@ -3063,8 +3034,8 @@ msgstr "节目时长不能为 0"
 msgid "Cannot have duration greater than 24h"
 msgstr "节目时长不能超过 24 小时"
 
-#: application/forms/AddShowWhen.php:315 application/forms/AddShowWhen.php:346
-#: application/forms/AddShowWhen.php:351
+#: application/forms/AddShowWhen.php:314 application/forms/AddShowWhen.php:345
+#: application/forms/AddShowWhen.php:350
 #: application/services/CalendarService.php:323
 msgid "Cannot schedule overlapping shows"
 msgstr "节目之间不能相互重叠"
@@ -3224,12 +3195,12 @@ msgid "Publish..."
 msgstr "发布…"
 
 #: application/forms/EditHistoryItem.php:32
-#: application/services/HistoryService.php:1084
+#: application/services/HistoryService.php:1083
 msgid "Start Time"
 msgstr "开始时间"
 
 #: application/forms/EditHistoryItem.php:44
-#: application/services/HistoryService.php:1085
+#: application/services/HistoryService.php:1084
 msgid "End Time"
 msgstr "结束时间"
 
@@ -3290,8 +3261,7 @@ msgstr "覆盖播客单集的元数据标签"
 
 #: application/forms/GeneralPreferences.php:130
 msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
-msgstr "启用该功能将从订阅源地址获取并设定播客单集的艺术家、标题和专辑元数据。推荐启"
-"用该功能，以确保智能节目块的筛选排播功能正常运作。"
+msgstr "启用该功能将从订阅源地址获取并设定播客单集的艺术家、标题和专辑元数据。推荐启用该功能，以确保智能节目块的筛选排播功能正常运作。"
 
 #: application/forms/GeneralPreferences.php:140
 msgid "Generate a smartblock and a playlist upon creation of a new podcast"
@@ -3299,10 +3269,7 @@ msgstr "在创建新播客节目时生成智能节目块和播放列表"
 
 #: application/forms/GeneralPreferences.php:146
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
-msgstr ""
-"若启用该选项，系统会在播客节目创建时立刻生成匹配最新单集曲目的智能节目块和播"
-"放列表。必须同时启用“覆盖播客单集的元数据标签”功能以确保智能节目块正确筛选节"
-"目。"
+msgstr "若启用该选项，系统会在播客节目创建时立刻生成匹配最新单集曲目的智能节目块和播放列表。必须同时启用“覆盖播客单集的元数据标签”功能以确保智能节目块正确筛选节目。"
 
 #: application/forms/GeneralPreferences.php:163
 msgid "Trim overbooked shows after autoloading?"
@@ -3486,8 +3453,8 @@ msgid "My Shows"
 msgstr "我的节目"
 
 #: application/forms/SmartBlockCriteria.php:14
-#: application/forms/SmartBlockCriteria.php:311
-#: application/forms/SmartBlockCriteria.php:353
+#: application/forms/SmartBlockCriteria.php:309
+#: application/forms/SmartBlockCriteria.php:351
 msgid "Select unit of time"
 msgstr "选择时间单位"
 
@@ -3555,111 +3522,111 @@ msgstr "最近播放最少"
 msgid "Select Track Type"
 msgstr "选择曲目类型"
 
-#: application/forms/SmartBlockCriteria.php:115
+#: application/forms/SmartBlockCriteria.php:113
 msgid "Type:"
 msgstr "类型："
 
-#: application/forms/SmartBlockCriteria.php:118
+#: application/forms/SmartBlockCriteria.php:116
 msgid "Dynamic"
 msgstr "动态"
 
-#: application/forms/SmartBlockCriteria.php:119
+#: application/forms/SmartBlockCriteria.php:117
 msgid "Static"
 msgstr "静态"
 
-#: application/forms/SmartBlockCriteria.php:277
+#: application/forms/SmartBlockCriteria.php:275
 msgid "Select track type"
 msgstr "选择曲目类型"
 
-#: application/forms/SmartBlockCriteria.php:363
+#: application/forms/SmartBlockCriteria.php:361
 msgid "Allow Repeated Tracks:"
 msgstr "允许重复曲目："
 
-#: application/forms/SmartBlockCriteria.php:371
+#: application/forms/SmartBlockCriteria.php:369
 msgid "Allow last track to exceed time limit:"
 msgstr "允许最后的曲目超出节目时间限制："
 
-#: application/forms/SmartBlockCriteria.php:380
+#: application/forms/SmartBlockCriteria.php:378
 msgid "Sort Tracks:"
 msgstr "曲目排序："
 
-#: application/forms/SmartBlockCriteria.php:398
+#: application/forms/SmartBlockCriteria.php:396
 msgid "Limit to:"
 msgstr "限制到："
 
-#: application/forms/SmartBlockCriteria.php:410
+#: application/forms/SmartBlockCriteria.php:408
 msgid "Generate playlist content and save criteria"
 msgstr "保存条件设置并生成播放列表内容"
 
-#: application/forms/SmartBlockCriteria.php:422
+#: application/forms/SmartBlockCriteria.php:420
 msgid "Shuffle playlist content"
 msgstr "随机打乱歌曲次序"
 
-#: application/forms/SmartBlockCriteria.php:424
+#: application/forms/SmartBlockCriteria.php:422
 msgid "Shuffle"
 msgstr "随机"
 
-#: application/forms/SmartBlockCriteria.php:603
-#: application/forms/SmartBlockCriteria.php:615
+#: application/forms/SmartBlockCriteria.php:601
+#: application/forms/SmartBlockCriteria.php:613
 msgid "Limit cannot be empty or smaller than 0"
 msgstr "限制条件的数量不能为空或负数"
 
-#: application/forms/SmartBlockCriteria.php:608
+#: application/forms/SmartBlockCriteria.php:606
 msgid "Limit cannot be more than 24 hrs"
 msgstr "限制条件的时长不能大于 24 小时"
 
-#: application/forms/SmartBlockCriteria.php:618
+#: application/forms/SmartBlockCriteria.php:616
 msgid "The value should be an integer"
 msgstr "值只能为整数"
 
-#: application/forms/SmartBlockCriteria.php:621
+#: application/forms/SmartBlockCriteria.php:619
 msgid "500 is the max item limit value you can set"
 msgstr "最多只能设定 500 个限制条件"
 
-#: application/forms/SmartBlockCriteria.php:632
+#: application/forms/SmartBlockCriteria.php:630
 msgid "You must select Criteria and Modifier"
 msgstr "条件和操作符不能为空"
 
-#: application/forms/SmartBlockCriteria.php:639
+#: application/forms/SmartBlockCriteria.php:637
 msgid "'Length' should be in '00:00:00' format"
 msgstr "“长度”的格式应为 “00:00:00”"
 
-#: application/forms/SmartBlockCriteria.php:648
+#: application/forms/SmartBlockCriteria.php:646
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr "文本值仅允许输入非负数（如 1 或 5）"
 
-#: application/forms/SmartBlockCriteria.php:653
-#: application/forms/SmartBlockCriteria.php:678
+#: application/forms/SmartBlockCriteria.php:651
+#: application/forms/SmartBlockCriteria.php:676
 msgid "You must select a time unit for a relative datetime."
 msgstr "您必须为相对日期时间选择一个单位。"
 
-#: application/forms/SmartBlockCriteria.php:658
-#: application/forms/SmartBlockCriteria.php:683
+#: application/forms/SmartBlockCriteria.php:656
+#: application/forms/SmartBlockCriteria.php:681
 msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
 msgstr "该处的值应使用时间戳格式（如 0000-00-00 或 0000-00-00 00:00:00）"
 
-#: application/forms/SmartBlockCriteria.php:673
+#: application/forms/SmartBlockCriteria.php:671
 msgid "Only non-negative integer numbers are allowed for a relative date time"
 msgstr "相对日期时间仅允许输入非负整数"
 
-#: application/forms/SmartBlockCriteria.php:700
+#: application/forms/SmartBlockCriteria.php:698
 msgid "The value has to be numeric"
 msgstr "该处的值应该为数字"
 
-#: application/forms/SmartBlockCriteria.php:705
+#: application/forms/SmartBlockCriteria.php:703
 msgid "The value should be less then 2147483648"
 msgstr "该处的值不能大于2147483648"
 
-#: application/forms/SmartBlockCriteria.php:710
+#: application/forms/SmartBlockCriteria.php:708
 msgid "The value cannot be empty"
 msgstr "值不能为空"
 
-#: application/forms/SmartBlockCriteria.php:715
+#: application/forms/SmartBlockCriteria.php:713
 #, php-format
 msgid "The value should be less than %s characters"
 msgstr "该处的值不能小于 %s 个字符"
 
-#: application/forms/SmartBlockCriteria.php:722
+#: application/forms/SmartBlockCriteria.php:720
 msgid "Value cannot be empty"
 msgstr "值不能为空"
 
@@ -3876,7 +3843,7 @@ msgid "Sample Rate (kHz)"
 msgstr "取样率（KHz）"
 
 #: application/models/Criteria.php:174
-#: application/services/HistoryService.php:1065
+#: application/services/HistoryService.php:1064
 msgid "Track Type"
 msgstr "曲目类型"
 
@@ -3913,8 +3880,8 @@ msgstr "您正浏览的节目日程表已过期！（节目安排不匹配）"
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "您正浏览的节目日程表已过期！（单期栏目不匹配）"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
-#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:493
+#: application/models/Scheduler.php:531 application/models/Scheduler.php:570
 msgid "The schedule you're viewing is out of date!"
 msgstr "您正浏览的节目日程表已过期！"
 
@@ -3945,7 +3912,7 @@ msgstr "节目广播期间您无法更改链式重播节目的内容！"
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr "无法排播包含丢失文件的播放列表。"
 
-#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
+#: application/models/Scheduler.php:230 application/models/Scheduler.php:322
 msgid "A selected File does not exist!"
 msgstr "某个选中的文件不存在！"
 
@@ -4078,11 +4045,11 @@ msgstr "未找到已录制的节目录音，因此已删除该节目安排！"
 msgid "Must wait 1 hour to rebroadcast."
 msgstr "重播节目必须设置于 1 小时之后。"
 
-#: application/services/HistoryService.php:1062
+#: application/services/HistoryService.php:1061
 msgid "Track"
 msgstr "曲目"
 
-#: application/services/HistoryService.php:1103
+#: application/services/HistoryService.php:1102
 msgid "Played"
 msgstr "已播放"
 
