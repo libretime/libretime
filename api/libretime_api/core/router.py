@@ -2,14 +2,12 @@ from django.urls import path
 from rest_framework import routers
 
 from .views import (
-    CeleryTaskViewSet,
     InfoView,
     LoginAttemptViewSet,
     PreferenceViewSet,
     ServiceRegisterViewSet,
     StreamPreferencesView,
     StreamStateView,
-    ThirdPartyTrackReferenceViewSet,
     UserTokenViewSet,
     UserViewSet,
     VersionView,
@@ -21,8 +19,6 @@ router.register("preferences", PreferenceViewSet)
 router.register("service-registers", ServiceRegisterViewSet)
 router.register("users", UserViewSet)
 router.register("user-tokens", UserTokenViewSet)
-router.register("celery-tasks", CeleryTaskViewSet)
-router.register("third-party-track-references", ThirdPartyTrackReferenceViewSet)
 
 urls = [
     *router.urls,

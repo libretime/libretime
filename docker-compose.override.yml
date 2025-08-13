@@ -42,13 +42,6 @@ services:
     volumes:
       - ./analyzer:/src
 
-  worker:
-    build:
-      context: .
-      target: libretime-worker
-    volumes:
-      - ./worker:/src
-
   api:
     build:
       context: .
@@ -58,6 +51,13 @@ services:
     command: /usr/local/bin/libretime-api runserver 0.0.0.0:9001
     environment:
       LIBRETIME_DEBUG: "true"
+
+  worker:
+    build:
+      context: .
+      target: libretime-api
+    volumes:
+      - ./api:/src
 
   legacy:
     build:
