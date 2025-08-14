@@ -24,7 +24,7 @@
     }
   ],
   "require": {
-    "php": "^7.4",
+    "php": "^8.0",
     "adbario/php-dot-notation": "^3.0.0",
     "composer/semver": "^3.2",
     "james-heinrich/getid3": "^1.9",
