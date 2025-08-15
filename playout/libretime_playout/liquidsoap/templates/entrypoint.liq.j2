@@ -39,6 +39,8 @@ input_fade_transition = interactive.float("input_fade_transition", {{ preference
 
 %include "{{ paths.lib_filepath }}"
 
+{% include "/usr/lib/ladspa/processor_plugin.liq.j2" ignore missing %}
+
 {% include "outputs.liq.j2" %}
 
 gateway("started")
