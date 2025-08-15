@@ -109,9 +109,9 @@ class AutoPlaylistManager
     {
         // setting now so that past shows aren't referenced
         $now = new DateTime('now', new DateTimeZone('UTC'));
-        // only build playlists for shows that start up to an hour from now
+        $leadTimeInterval = DateInterval::createFromDateString(Config::get('general.autoload_lead_time'));
         $future = clone $now;
-        $future->add(new DateInterval('PT1H'));
+        $future->add($leadTimeInterval);
 
         return CcShowInstancesQuery::create()
             ->filterByDbModifiedInstance(false)
