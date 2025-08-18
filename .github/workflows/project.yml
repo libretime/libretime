@@ -21,6 +21,16 @@ jobs:
         with:
           python-version: "3.12"
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+          cache-dependency-path: "frontend/yarn.lock"
+
+      - name: Install packages
+        run: yarn install --frozen-lockfile
+        working-directory: frontend
+
       - uses: actions/cache@v4
         with:
           path: ~/.cache/pip

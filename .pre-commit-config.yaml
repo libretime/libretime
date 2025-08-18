@@ -38,7 +38,20 @@ repos:
         additional_dependencies: [prettier@3.6.2]
 
         files: \.(md|mdx|yml|yaml|js|jsx|ts|tsx|json|css)$
-        exclude: ^(legacy/public(?!/js/airtime)|CHANGELOG.md$|.github/release-please-manifest.json)
+        exclude: ^(legacy/public(?!/js/airtime)|CHANGELOG.md$|.github/release-please-manifest.json|frontend/components.d.ts)
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.27.0
+    hooks:
+      - id: eslint
+        files: \.(js|jsx|ts|tsx|vue)$
+        exclude: ^legacy/public.*
+        language: node
+        entry: frontend/node_modules/.bin/eslint
+        args: [--config, frontend/eslint.config.js]
+        additional_dependencies:
+          - eslint-plugin-vue@9.30.0
+          - eslint-plugin-storybook@0.11.4
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.20.0
