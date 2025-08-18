@@ -24,7 +24,10 @@ services:
     ulimits:
       nofile: 1024
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+      liquidsoap:
+        condition: service_healthy
     volumes:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
       - libretime_playout:/app
@@ -41,12 +44,15 @@ services:
       - 8001:8001
       - 8002:8002
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     volumes:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
       - libretime_playout:/app
     environment:
       LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
+    healthcheck:
+      test: test -f radio.liq
 
   analyzer:
     image: ghcr.io/libretime/libretime-analyzer:${LIBRETIME_VERSION:-latest}
@@ -54,7 +60,8 @@ services:
     ulimits:
       nofile: 1024
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     volumes:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
       - libretime_storage:/srv/libretime
@@ -67,7 +74,8 @@ services:
     ulimits:
       nofile: 1024
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     volumes:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
     environment:
@@ -79,11 +87,15 @@ services:
     ulimits:
       nofile: 1024
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     volumes:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
       - libretime_storage:/srv/libretime
+    healthcheck:
+      test: python3 -c "import requests; requests.get('http://localhost:9001/api/v2/version').raise_for_status()"
 
   legacy:
     image: ghcr.io/libretime/libretime-legacy:${LIBRETIME_VERSION:-latest}
@@ -91,8 +103,10 @@ services:
     ulimits:
       nofile: 1024
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     volumes:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
       - libretime_storage:/srv/libretime
@@ -102,7 +116,8 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - legacy
+      legacy:
+        condition: service_started
     volumes:
       - libretime_storage:/srv/libretime:ro
 
