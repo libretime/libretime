@@ -61,18 +61,6 @@ services:
     environment:
       LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
 
-  worker:
-    image: ghcr.io/libretime/libretime-worker:${LIBRETIME_VERSION:-latest}
-    init: true
-    ulimits:
-      nofile: 1024
-    depends_on:
-      - rabbitmq
-    volumes:
-      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
-    environment:
-      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
-
   api:
     image: ghcr.io/libretime/libretime-api:${LIBRETIME_VERSION:-latest}
     init: true
@@ -84,6 +72,20 @@ services:
     volumes:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
       - libretime_storage:/srv/libretime
+
+  worker:
+    image: ghcr.io/libretime/libretime-api:${LIBRETIME_VERSION:-latest}
+    init: true
+    ulimits:
+      nofile: 1024
+    command: ["celery", "--app=libretime_api.worker", "worker", "--beat"]
+    depends_on:
+      - postgres
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+    environment:
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
 
   legacy:
     image: ghcr.io/libretime/libretime-legacy:${LIBRETIME_VERSION:-latest}

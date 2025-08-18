@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3664fa9473d4b70e3c383b59ca794c82",
+    "content-hash": "25ec1df514e3f0b583c2fc2a63bc93da",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -377,80 +377,6 @@
                 }
             ],
             "time": "2021-06-28T04:27:21+00:00"
-        },
-        {
-            "name": "libretime/celery-php",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/libretime/celery-php.git",
-                "reference": "21cf869c5c182aa9296333fcad5f0d27f33ce5b6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/libretime/celery-php/zipball/21cf869c5c182aa9296333fcad5f0d27f33ce5b6",
-                "reference": "21cf869c5c182aa9296333fcad5f0d27f33ce5b6",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0"
-            },
-            "require-dev": {
-                "ext-amqp": "*",
-                "php-amqplib/php-amqplib": ">=3.0",
-                "phpunit/phpunit": "<6.0.0",
-                "predis/predis": "*"
-            },
-            "suggest": {
-                "ext-amqp": "Adds support for the AMQP extension for PHP backend",
-                "php-amqplib/php-amqplib": "Adds support for the php-amqplib, AMQP library for PHP, backend",
-                "predis/predis": "Adds support for the predis, PHP client library for Redis, backend"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Celery\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Celery\\Tests\\": "tests/"
-                }
-            },
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "GDR!",
-                    "email": "info@massivescale.net",
-                    "homepage": "http://massivescale.net/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP client for Celery task queue",
-            "homepage": "https://github.com/gjedeer/celery-php/",
-            "keywords": [
-                "amqp",
-                "celery",
-                "cron",
-                "python",
-                "queue",
-                "redis",
-                "task"
-            ],
-            "support": {
-                "issues": "https://github.com/gjedeer/celery-php/issues",
-                "docs": "https://github.com/gjedeer/celery-php/",
-                "source": "https://github.com/libretime/celery-php/tree/main"
-            },
-            "time": "2023-01-12T15:55:18+00:00"
         },
         {
             "name": "libretime/propel1",
@@ -5071,7 +4997,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "libretime/celery-php": 20,
         "libretime/propel1": 20
     },
     "prefer-stable": false,
@@ -5079,6 +5004,6 @@
     "platform": {
         "php": "^7.4"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
