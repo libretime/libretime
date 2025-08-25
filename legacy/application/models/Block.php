@@ -1295,9 +1295,9 @@ SQL;
         }
     }
 
-    public function getListOfFilesUnderLimit($show = null)
+    public function getListOfFilesUnderLimit($show = null, $showStartTime = null)
     {
-        $info = $this->getListofFilesMeetCriteria($show);
+        $info = $this->getListofFilesMeetCriteria($show, $showStartTime);
         $files = $info['files'];
         $limit = $info['limit'];
         $repeat = $info['repeat_tracks'] == 1;
@@ -1480,13 +1480,14 @@ SQL;
         return $storedCrit;
     }
 
-    private function resolveDate($value, $timeZone)
+    private function resolveDate($value, ?DateTime $resolveTo, string $timeZone)
     {
         if (!is_string($value)) {
             return $value;
         }
 
-        $dt = new DateTime('now', new DateTimeZone($timeZone));
+        $dt = $resolveTo ?: new DateTime('now');
+        $dt->setTimezone(new DateTimeZone($timeZone));
 
         return preg_replace_callback(
             '/now{(.*?)}/',
@@ -1496,7 +1497,7 @@ SQL;
     }
 
     // this function return list of propel object
-    public function getListofFilesMeetCriteria($showLimit = null)
+    public function getListofFilesMeetCriteria($showLimit = null, $showStartTime = null)
     {
         $storedCrit = $this->getCriteria();
 
@@ -1563,7 +1564,7 @@ SQL;
                         $spCriteriaExtra = $criteria['extra'];
                     }
 
-                    $spCriteriaValue = $this->resolveDate($spCriteriaValue, $timeZone);
+                    $spCriteriaValue = $this->resolveDate($spCriteriaValue, $showStartTime, $timeZone);
 
                     if ($spCriteriaModifier == CriteriaModifier::STARTS_WITH) {
                         $spCriteriaValue = "{$spCriteriaValue}%";
@@ -1660,9 +1661,9 @@ SQL;
                     $limits['items'] = null;
                 }
             } else {
-                $limits['time'] = $storedCrit['limit']['modifier'] == 'hours' ?
-                    intval(floatval($storedCrit['limit']['value']) * 60 * 60) :
-                    intval($storedCrit['limit']['value'] * 60);
+                $limits['time'] = $storedCrit['limit']['modifier'] == 'hours'
+                    ? intval(floatval($storedCrit['limit']['value']) * 60 * 60)
+                    : intval($storedCrit['limit']['value'] * 60);
                 $limits['items'] = null;
             }
         }

@@ -28,7 +28,7 @@ setup(
         "backports.zoneinfo>=0.2.1,<0.3;python_version<'3.9'",
         "jinja2>=3.0.3,<3.2",
         "kombu==4.6.11",
-        "lxml>=4.5.0,<6.0.0",
+        "lxml>=4.5.0,<6.1.0",
         "mutagen>=1.45.1,<1.48",
         "python-dateutil>=2.8.1,<2.10",
         "requests>=2.32.2,<2.33",

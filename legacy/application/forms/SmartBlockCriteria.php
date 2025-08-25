@@ -78,11 +78,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 foreach ($criteria[$column] as &$constraint) {
                     // convert to appropriate timezone timestamps only if the modifier is not a relative time
                     if (!in_array($constraint['modifier'], ['before', 'after', 'between'])) {
-                        $constraint['value'] =
-                            Application_Common_DateHelper::UTCStringToUserTimezoneString($constraint['value']);
+                        $constraint['value'] = Application_Common_DateHelper::UTCStringToUserTimezoneString($constraint['value']);
                         if (isset($constraint['extra'])) {
-                            $constraint['extra'] =
-                                Application_Common_DateHelper::UTCStringToUserTimezoneString($constraint['extra']);
+                            $constraint['extra'] = Application_Common_DateHelper::UTCStringToUserTimezoneString($constraint['extra']);
                         }
                     }
                 }
