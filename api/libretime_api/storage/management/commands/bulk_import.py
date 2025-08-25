@@ -152,9 +152,8 @@ class Importer:
     ) -> None:
         if library is not None and not self._check_library(library):
             raise ValueError(f"provided library {library} does not exist")
-        else:
-            # convert from Name to ID
-            library_int = Library.objects.get(code=library).id if library else 0
+
+        library_int = Library.objects.get(code=library).id if library else 0
 
         allowed_extensions = [
             (x if x.startswith(".") else "." + x) for x in allowed_extensions
