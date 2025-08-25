@@ -21,6 +21,8 @@ class Library(models.Model):
         default=True,
         db_column="analyze_cue_points",
     )
+    
+    id = models.AutoField(primary_key=True)
 
     class Meta:
         managed = False
