@@ -208,7 +208,7 @@ ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 #======================================================================================#
 # Legacy                                                                               #
 #======================================================================================#
-FROM php:7.4-fpm AS libretime-legacy
+FROM php:8.4-fpm AS libretime-legacy
 
 ENV LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
 ENV LIBRETIME_LOG_FILEPATH=php://stderr
