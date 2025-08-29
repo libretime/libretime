@@ -1,5 +1,4 @@
 import json
-import os
 from email.message import EmailMessage
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -8,66 +7,21 @@ from urllib.parse import urlsplit
 
 import mutagen
 import requests
-from celery import Celery, signals
-from celery.schedules import crontab
+from celery import shared_task
 from celery.utils.log import get_task_logger
-from libretime_api_client.v1 import ApiClient as LegacyClient
+from django.conf import settings
+from django_celery_results.models import TaskResult
 from mutagen import MutagenError
 from requests import RequestException, Response
 
-from . import PACKAGE, VERSION
-from .config import config
+from ..storage.models import File
+from .models import PodcastEpisode
 
-worker = Celery()
 logger = get_task_logger(__name__)
 
-legacy_client = LegacyClient(
-    base_url=config.general.public_url,
-    api_key=config.general.api_key,
-)
 
-
-@signals.worker_init.connect
-def init_sentry(**_kwargs):
-    if "SENTRY_DSN" in os.environ:
-        logger.info("installing sentry")
-        # pylint: disable=import-outside-toplevel
-        import sentry_sdk
-        from sentry_sdk.integrations.celery import CeleryIntegration
-
-        sentry_sdk.init(
-            traces_sample_rate=1.0,
-            release=f"{PACKAGE}@{VERSION}",
-            integrations=[
-                CeleryIntegration(),
-            ],
-        )
-
-
-worker.conf.beat_schedule = {
-    "legacy-trigger-task-manager": {
-        "task": "libretime_worker.tasks.legacy_trigger_task_manager",
-        "schedule": crontab(minute="*/5"),
-    },
-}
-
-
-@worker.task()
-def legacy_trigger_task_manager():
-    """
-    Trigger the legacy task manager to perform background tasks.
-    """
-    legacy_client.trigger_task_manager()
-
-
-class PodcastDownloadException(Exception):
-    """
-    An error occurred during the podcast download task.
-    """
-
-
-@worker.task(name="podcast-download", acks_late=True)
-def podcast_download(
+@shared_task(acks_late=True, time_limit=900)
+def download_episode(
     episode_id: int,
     episode_url: str,
     episode_title: Optional[str],
@@ -85,9 +39,11 @@ def podcast_download(
         override_album: Whether to override the album metadata.
 
     Returns:
-        Status of the podcast download as JSON string.
+        Status of the podcast download.
     """
-    result: Dict[str, Any] = {"episodeid": episode_id}
+    result: Dict[str, Any] = {"episode_id": episode_id}
+
+    episode = PodcastEpisode.objects.get(pk=episode_id)
     tmp_file = None
 
     try:
@@ -104,16 +60,15 @@ def podcast_download(
                         tmp_file.write(chunk)
 
         except RequestException as exception:
-            raise PodcastDownloadException(
-                f"could not download podcast episode {episode_id}: {exception}"
-            ) from exception
+            logger.exception("could not download podcast episode %s", episode_id)
+            raise exception
 
         # Save metadata to podcast episode file
         try:
             metadata = mutagen.File(tmp_file.name, easy=True)
             if metadata is None:
-                raise PodcastDownloadException(
-                    f"could not determine podcast episode {episode_id} file type"
+                raise MutagenError(
+                    f"could not determine episode {episode_id} file type"
                 )
 
             if override_album:
@@ -129,39 +84,42 @@ def podcast_download(
             metadata.save()
             logger.debug("saved metadata %s", metadata)
 
-        except (MutagenError, TypeError) as exception:
-            raise PodcastDownloadException(
-                f"could not save podcast episode {episode_id} metadata: {exception}"
-            ) from exception
+        except MutagenError as exception:
+            logger.exception("could not save episode %s metadata", episode_id)
+            raise exception
 
         # Upload podcast episode file
         try:
             with requests.post(
-                f"{config.general.public_url}/rest/media",
+                f"{settings.CONFIG.general.public_url}/rest/media",
                 files={"file": (filename, open(tmp_file.name, "rb"))},
-                auth=(config.general.api_key, ""),
+                auth=(settings.CONFIG.general.api_key, ""),
                 timeout=30,
             ) as upload_resp:
                 upload_resp.raise_for_status()
                 upload_payload = upload_resp.json()
 
-                result["fileid"] = upload_payload["id"]
-                result["status"] = 1
+                file_id = upload_payload["id"]
+                result["file_id"] = file_id
 
         except RequestException as exception:
-            raise PodcastDownloadException(
-                f"could not upload podcast episode {episode_id}: {exception}"
-            ) from exception
+            logger.exception("could not upload episode %s", episode_id)
+            raise exception
 
-    except PodcastDownloadException as exception:
-        logger.exception(exception)
-        result["status"] = 0
-        result["error"] = str(exception)
+        file = File.objects.get(pk=file_id)
+        episode.file = file
+        episode.save()
 
-    if tmp_file is not None:
-        Path(tmp_file.name).unlink()
+    except (RequestException, MutagenError) as exception:
+        logger.error(exception)
+        episode.delete()
+        raise
 
-    return json.dumps(result)
+    finally:
+        if tmp_file is not None:
+            Path(tmp_file.name).unlink()
+
+    return result
 
 
 def extract_filename(response: Response) -> str:
@@ -183,3 +141,39 @@ def extract_filename(response: Response) -> str:
         return params["filename"]
 
     return Path(urlsplit(response.url).path).name
+
+
+@shared_task()
+def delete_failed_download():
+    """
+    Delete any podcast episodes that failed to download.
+
+    Returns:
+        Number of deleted episodes.
+    """
+    pending_tasks = TaskResult.objects.filter(
+        task_name=download_episode.name,
+        status__in=["PENDING", "STARTED", "RETRY"],
+    ).all()
+
+    pending_episode_ids = []
+    for task in pending_tasks:
+        if not task.task_kwargs:
+            continue
+
+        kwargs = json.loads(task.task_kwargs)
+        if "episode_id" in kwargs:
+            pending_episode_ids.append(kwargs["episode_id"])
+
+    failed_episodes = (
+        PodcastEpisode.objects.filter(file__isnull=True)
+        .exclude(pk__in=pending_episode_ids)
+        .all()
+    )
+    if failed_episodes.count() > 0:
+        logger.info(
+            "deleting podcast episodes: %s",
+            failed_episodes.values_list("id", flat=True),
+        )
+        count, _ = failed_episodes.delete()
+        return count

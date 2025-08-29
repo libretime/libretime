@@ -481,36 +481,6 @@
       <reference local="template_id" foreign="id" />
     </foreign-key>
   </table>
-  <table name="third_party_track_references" phpName="ThirdPartyTrackReferences">
-    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
-    <column name="service" phpName="DbService" type="VARCHAR" size="256" required="true" />
-    <!-- Make foreign ID a VARCHAR field in case a service uses hashes or other non-integer identifiers -->
-    <column name="foreign_id" phpName="DbForeignId" type="VARCHAR" size="256" />
-    <column name="file_id" phpName="DbFileId" type="INTEGER" default="0" />
-    <column name="upload_time" phpName="DbUploadTime" type="TIMESTAMP" />
-    <column name="status" phpName="DbStatus" type="VARCHAR" size="256" />
-    <unique name="foreign_id_unique">
-      <unique-column name="foreign_id" />
-    </unique>
-    <foreign-key foreignTable="cc_files" name="track_reference_fkey" onDelete="CASCADE">
-      <reference local="file_id" foreign="id" />
-    </foreign-key>
-  </table>
-
-  <table name="celery_tasks" phpName="CeleryTasks">
-    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
-    <column name="task_id" phpName="DbTaskId" type="VARCHAR" size="256" required="true" />
-    <column name="track_reference" phpName="DbTrackReference" type="INTEGER" required="true" />
-    <column name="name" phpName="DbName" type="VARCHAR" size="256" />
-    <column name="dispatch_time" phpName="DbDispatchTime" type="TIMESTAMP" />
-    <column name="status" phpName="DbStatus" type="VARCHAR" size="256" required="true" />
-    <unique name="id_unique">
-      <unique-column name="id" />
-    </unique>
-    <foreign-key foreignTable="third_party_track_references" name="celery_service_fkey" onDelete="CASCADE">
-      <reference local="track_reference" foreign="id" />
-    </foreign-key>
-  </table>
 
   <table name="podcast" phpName="Podcast">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
