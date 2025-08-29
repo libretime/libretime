@@ -7,6 +7,8 @@ known_first_party = ["libretime_api"]
 load-plugins = "pylint_django"
 django-settings-module = "libretime_api.settings.testing"
 
+ignore = "libretime_api/legacy/vendor"
+
 [tool.pylint.messages_control]
 extension-pkg-whitelist = "pydantic"
 disable = [
@@ -23,10 +25,7 @@ disable = [
 max-parents = 15
 
 [tool.mypy]
-plugins = [
-  "mypy_django_plugin.main",
-  "mypy_drf_plugin.main",
-]
+plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
 ignore_missing_imports = true
 
 [tool.django-stubs]
@@ -41,10 +40,7 @@ DJANGO_SETTINGS_MODULE = "libretime_api.settings.testing"
 [tool.coverage.run]
 plugins = ["django_coverage_plugin"]
 source = ["libretime_api"]
-omit = [
-  "*/migrations/*",
-  "*/tests/*",
-]
+omit = ["*/migrations/*", "*/tests/*"]
 
 [build-system]
 requires = ["setuptools", "wheel"]
