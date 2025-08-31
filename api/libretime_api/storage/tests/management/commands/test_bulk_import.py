@@ -30,6 +30,7 @@ def _import_paths(tmp_path: Path):
 def _library():
     return baker.make(
         "storage.Library",
+        id=1,
         code="MUS",
         name="Music",
         description="Some music",
@@ -62,8 +63,8 @@ def test_importer(
 ):
     importer.import_dir(import_paths[0], library.code, [".mp3"])
 
-    importer._handle_file.assert_called_with(import_paths[1], library.code)
-    importer._upload_file.assert_called_with(import_paths[1], library.code)
+    importer._handle_file.assert_called_with(import_paths[1], library.id)
+    importer._upload_file.assert_called_with(import_paths[1], library.id)
     importer._delete_file.assert_not_called()
 
 
@@ -76,8 +77,8 @@ def test_importer_and_delete(
     importer.delete_after_upload = True
     importer.import_dir(import_paths[0], library.code, [".mp3"])
 
-    importer._handle_file.assert_called_with(import_paths[1], library.code)
-    importer._upload_file.assert_called_with(import_paths[1], library.code)
+    importer._handle_file.assert_called_with(import_paths[1], library.id)
+    importer._upload_file.assert_called_with(import_paths[1], library.id)
     importer._delete_file.assert_called_with(import_paths[1])
 
 
@@ -87,11 +88,11 @@ def test_importer_existing_file(
     importer: MockImporter,
     library,
 ):
-    baker.make("storage.File", md5="46305a7cf42ee53976c88d337e47e940")
+    baker.make("storage.File", id=1, md5="46305a7cf42ee53976c88d337e47e940")
 
     importer.import_dir(import_paths[0], library.code, [".mp3"])
 
-    importer._handle_file.assert_called_with(import_paths[1], library.code)
+    importer._handle_file.assert_called_with(import_paths[1], library.id)
     importer._upload_file.assert_not_called()
     importer._delete_file.assert_not_called()
 
@@ -102,12 +103,12 @@ def test_importer_existing_file_and_delete(
     importer: MockImporter,
     library,
 ):
-    baker.make("storage.File", md5="46305a7cf42ee53976c88d337e47e940")
+    baker.make("storage.File", id=1, md5="46305a7cf42ee53976c88d337e47e940")
 
     importer.delete_if_exists = True
     importer.import_dir(import_paths[0], library.code, [".mp3"])
 
-    importer._handle_file.assert_called_with(import_paths[1], library.code)
+    importer._handle_file.assert_called_with(import_paths[1], library.id)
     importer._upload_file.assert_not_called()
     importer._delete_file.assert_called_with(import_paths[1])
 
