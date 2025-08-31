@@ -124,6 +124,9 @@ COPY playout .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --editable .[sentry]
 
+# create plugin dir for liquidsoap
+RUN mkdir -p /usr/lib/ladspa
+
 # Run
 USER ${UID}:${GID}
 WORKDIR /app
