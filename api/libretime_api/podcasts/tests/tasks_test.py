@@ -3,8 +3,7 @@ import json
 import pytest
 from requests import Response
 
-from libretime_worker.tasks import extract_filename, podcast_download
-
+from ..tasks import download_episode, extract_filename
 from .fixtures import fixtures_path
 
 
@@ -17,14 +16,14 @@ from .fixtures import fixtures_path
     ],
 )
 @pytest.mark.parametrize("override_album", [(True), (False)])
-def test_podcast_download(requests_mock, file, override_album):
+def test_download_episode(requests_mock, file, override_album):
     episode_url = f"https://remote.example.org/{file}"
     episode_filepath = fixtures_path / file
 
     requests_mock.get(episode_url, content=episode_filepath.read_bytes())
     requests_mock.post("http://localhost/rest/media", json={"id": 1})
 
-    result = podcast_download(
+    result = download_episode(
         episode_id=1,
         episode_url=episode_url,
         episode_title="My episode",
@@ -43,7 +42,7 @@ def test_podcast_download_invalid_file(requests_mock):
     requests_mock.get(episode_url, content=b"some invalid content")
     requests_mock.post("http://localhost/rest/media", json={"id": 1})
 
-    result = podcast_download(
+    result = download_episode(
         episode_id=1,
         episode_url=episode_url,
         episode_title="My episode",

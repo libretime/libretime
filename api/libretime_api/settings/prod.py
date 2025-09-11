@@ -5,6 +5,13 @@ from ._internal import (
     API_VERSION,
     AUTH_PASSWORD_VALIDATORS,
     AUTH_USER_MODEL,
+    CELERY_EVENT_QUEUE_EXPIRES,
+    CELERY_RESULT_BACKEND,
+    CELERY_RESULT_EXPIRES,
+    CELERY_RESULT_EXTENDED,
+    CELERY_RESULT_PERSISTENT,
+    CELERY_TASK_TRACK_STARTED,
+    CELERY_WORKER_CONCURRENCY,
     DEBUG,
     DEFAULT_AUTO_FIELD,
     INSTALLED_APPS,
@@ -63,7 +70,7 @@ DATABASES = {
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
-USE_TZ = True
+USE_TZ = False
 
 # Email
 # https://docs.djangoproject.com/en/4.2/topics/email/
@@ -81,3 +88,8 @@ EMAIL_SSL_KEYFILE = CONFIG.email.key_file
 EMAIL_SSL_CERTFILE = CONFIG.email.cert_file
 
 DEFAULT_FROM_EMAIL = CONFIG.email.from_email
+
+# Celery
+# https://docs.celeryq.dev/en/stable/userguide/configuration.html#configuration
+
+CELERY_BROKER_URL = CONFIG.rabbitmq.url

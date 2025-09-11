@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_celery_results",
     "rest_framework",
     "django_filters",
     "drf_spectacular",
@@ -197,3 +198,15 @@ if "SENTRY_DSN" in environ:
             DjangoIntegration(),
         ],
     )
+
+# Celery
+# https://docs.celeryq.dev/en/stable/userguide/configuration.html#configuration
+
+# CELERY_BROKER_URL
+CELERY_WORKER_CONCURRENCY = 2
+CELERY_EVENT_QUEUE_EXPIRES = 900
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_RESULT_PERSISTENT = True
+CELERY_RESULT_EXPIRES = 24 * 60 * 60  # Clean task result from backend after 24 hours
+CELERY_RESULT_EXTENDED = True
+CELERY_TASK_TRACK_STARTED = True
