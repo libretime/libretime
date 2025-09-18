@@ -94,7 +94,7 @@ class Importer:
                     ("file", (filepath.name, filepath.open("rb"))),
                 ],
                 timeout=30,
-                cookies={"tt_upload": str(library_int)} if library_int != 0 else {},
+                cookies={"tt_upload": str(library_int)} if library_int not in (None, 0) else {},
             )
             resp.raise_for_status()
 
