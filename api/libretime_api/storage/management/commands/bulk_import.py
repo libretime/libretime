@@ -94,7 +94,11 @@ class Importer:
                     ("file", (filepath.name, filepath.open("rb"))),
                 ],
                 timeout=30,
-                cookies={"tt_upload": str(library_int)} if library_int not in (None, 0) else {},
+                cookies=(
+                    {"tt_upload": str(library_int)}
+                    if library_int not in (None, 0)
+                    else {}
+                ),
             )
             resp.raise_for_status()
 
@@ -156,8 +160,8 @@ class Importer:
         if library:
             try:
                 library_int = Library.objects.get(code=library).id
-            except Library.DoesNotExist:
-                raise ValueError(f"provided library {library} does not exist")
+            except Library.DoesNotExist as exc:
+                raise ValueError(f"provided library {library} does not exist") from exc
         else:
             library_int = 0
 
