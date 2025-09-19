@@ -447,7 +447,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
     requests_mock.get(f"{base_url}/api/v2/files/5", json=FILE_5)
     requests_mock.get(f"{base_url}/api/v2/webstreams/1", json=WEBSTREAM_1)
 
-    assert get_schedule(api_client) == {
+    assert get_schedule(api_client, 24) == {
         "2022-09-05-11-00-00": FileEvent(
             start=datetime(2022, 9, 5, 11, 0),
             end=datetime(2022, 9, 5, 11, 5, 2),

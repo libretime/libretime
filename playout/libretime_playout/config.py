@@ -20,6 +20,8 @@ class PlayoutConfig(BaseModel):
     liquidsoap_host: str = "localhost"
     liquidsoap_port: int = 1234
 
+    cache_ahead_hours: int = 3
+
     record_file_format: Literal["mp3", "ogg"] = "ogg"  # record_file_type
     record_bitrate: int = 256
     record_samplerate: int = 44100

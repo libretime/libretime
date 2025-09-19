@@ -34,11 +34,11 @@ def insert_event(events: Events, event_key: str, event: AnyEvent) -> None:
     events[key] = event
 
 
-def get_schedule(api_client: ApiClient) -> Events:
+def get_schedule(api_client: ApiClient, cache_ahead_hours: int) -> Events:
     stream_preferences = StreamPreferences(**api_client.get_stream_preferences().json())
 
     current_time = datetime.utcnow()
-    end_time = current_time + timedelta(days=1)
+    end_time = current_time + timedelta(hours=cache_ahead_hours)
 
     current_time_str = current_time.isoformat(timespec="seconds")
     end_time_str = end_time.isoformat(timespec="seconds")
