@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.6.0](https://github.com/libretime/libretime/compare/4.5.0...4.6.0) (2025-09-19)
+
+
+### Features
+
+* **legacy:** now macro should use show start time when available ([#3175](https://github.com/libretime/libretime/issues/3175)) ([5d7df2f](https://github.com/libretime/libretime/commit/5d7df2feb7ba6149aab188aaf9ac36589bdc4cc2))
+* **legacy:** persist database connections ([#3186](https://github.com/libretime/libretime/issues/3186)) ([14bb3e8](https://github.com/libretime/libretime/commit/14bb3e8889f4a9e46ee0acf639e3b73c76d3af58))
+
+
+### Bug Fixes
+
+* **api:** file upload with library ([#3213](https://github.com/libretime/libretime/issues/3213)) ([643504e](https://github.com/libretime/libretime/commit/643504edc974a5f39cc0b39b7ee6a4bd39431b70))
+* **legacy:** do not send content-type header twice ([#3187](https://github.com/libretime/libretime/issues/3187)) ([9d3a880](https://github.com/libretime/libretime/commit/9d3a88093ef60a1731a3e2be582f16c10ec40644))
+
 ## [4.5.0](https://github.com/libretime/libretime/compare/4.4.0...4.5.0) (2025-07-16)
 
 
