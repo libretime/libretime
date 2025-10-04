@@ -16,6 +16,7 @@ from .fixtures import fixtures_path
     ],
 )
 @pytest.mark.parametrize("override_album", [(True), (False)])
+@pytest.mark.django_db
 def test_download_episode(requests_mock, file, override_album):
     episode_url = f"https://remote.example.org/{file}"
     episode_filepath = fixtures_path / file
@@ -36,7 +37,7 @@ def test_download_episode(requests_mock, file, override_album):
         "status": 1,
     }
 
-
+@pytest.mark.django_db
 def test_podcast_download_invalid_file(requests_mock):
     episode_url = "https://remote.example.org/invalid"
     requests_mock.get(episode_url, content=b"some invalid content")
