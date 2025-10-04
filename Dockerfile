@@ -155,6 +155,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile -r requirements.txt
 
 COPY --from=python-builder /build/shared/*.whl .
+COPY --from=python-builder /build/api-client/*.whl .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile *.whl && rm -Rf *.whl
 
@@ -181,22 +182,7 @@ HEALTHCHECK CMD ["curl", "--fail", "http://localhost:9001/api/v2/version"]
 #======================================================================================#
 # Worker                                                                               #
 #======================================================================================#
-FROM python-base AS libretime-worker
-
-WORKDIR /src
-
-COPY worker/requirements.txt .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-compile -r requirements.txt
-
-COPY --from=python-builder /build/shared/*.whl .
-COPY --from=python-builder /build/api-client/*.whl .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-compile *.whl && rm -Rf *.whl
-
-COPY worker .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --editable .[sentry]
+FROM libretime-api AS libretime-worker
 
 # Run
 USER ${UID}:${GID}

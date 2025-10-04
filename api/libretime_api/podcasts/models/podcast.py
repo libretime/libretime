@@ -22,6 +22,7 @@ class Podcast(models.Model):
         on_delete=models.DO_NOTHING,
         blank=True,
         null=True,
+        db_column="owner",
     )
 
     def get_owner(self):
