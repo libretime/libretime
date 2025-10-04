@@ -630,9 +630,14 @@ install_packages $(list_packages "$SCRIPT_DIR/api")
 
 install_python_app "$SCRIPT_DIR/api[prod]"
 link_python_app libretime-api
+link_python_app libretime-worker
 
 install_service "libretime-api.service" "$SCRIPT_DIR/api/install/systemd/libretime-api.service"
 install_service "libretime-api.socket" "$SCRIPT_DIR/api/install/systemd/libretime-api.socket"
+install_service "libretime-worker.service" "$SCRIPT_DIR/api/install/systemd/libretime-worker.service"
+
+info "creating libretime-worker working directory"
+mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/worker"
 
 # Install Playout
 ########################################################################################
@@ -676,19 +681,6 @@ info "creating libretime-analyzer working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/analyzer"
 
 install_service "libretime-analyzer.service" "$SCRIPT_DIR/analyzer/install/systemd/libretime-analyzer.service"
-
-# Install Worker
-########################################################################################
-
-section "Worker"
-
-install_python_app "$SCRIPT_DIR/worker"
-link_python_app libretime-worker
-
-info "creating libretime-worker working directory"
-mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/worker"
-
-install_service "libretime-worker.service" "$SCRIPT_DIR/worker/install/systemd/libretime-worker.service"
 
 # Install Legacy
 ########################################################################################

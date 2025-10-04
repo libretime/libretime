@@ -26,6 +26,7 @@ class ImportEpisodeException(Exception):
     """
 
 
+# pylint: disable=too-many-locals
 @shared_task(acks_late=True, time_limit=900)
 def import_episode(
     episode_id: int,
@@ -188,3 +189,4 @@ def clean_failed_imports():
         )
         count, _ = failed_episodes.delete()
         return count
+    return 0
