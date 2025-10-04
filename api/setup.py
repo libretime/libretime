@@ -33,10 +33,8 @@ setup(
         "djangorestframework>=3.14.0,<3.16",
         "drf-spectacular>=0.22.1,<0.29",
         "requests>=2.32.2,<2.33",
-        # Worker
         "celery>=5.5.0,<5.6",
         "mutagen>=1.45.1,<1.48",
-        "requests>=2.32.2,<2.33",
     ],
     extras_require={
         "prod": [
