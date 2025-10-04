@@ -20,14 +20,14 @@ from .models import PodcastEpisode
 logger = get_task_logger(__name__)
 
 
-class DownloadEpisodeException(Exception):
+class ImportEpisodeException(Exception):
     """
-    An error occurred during the podcast download task.
+    An error occurred during the podcast import task.
     """
 
 
 @shared_task(acks_late=True, time_limit=900)
-def download_episode(
+def import_episode(
     episode_id: int,
     episode_url: str,
     episode_title: Optional[str],
@@ -35,7 +35,7 @@ def download_episode(
     override_album: bool,
 ):
     """
-    Download a podcast episode.
+    Download a podcast episode and upload to our storage.
 
     If the download failed, deletes the podcast episode object.
 
@@ -68,15 +68,15 @@ def download_episode(
                         tmp_file.write(chunk)
 
         except RequestException as exc:
-            raise DownloadEpisodeException(
-                f"could not download podcast episode {episode_id}: {exc}"
+            raise ImportEpisodeException(
+                f"could not download podcast episode: {exc}"
             ) from exc
 
         # Save metadata to podcast episode file
         try:
             metadata = mutagen.File(tmp_file.name, easy=True)
             if metadata is None:
-                raise DownloadEpisodeException(
+                raise ImportEpisodeException(
                     f"could not determine podcast episode {episode_id} file type"
                 )
 
@@ -94,7 +94,7 @@ def download_episode(
             logger.debug("saved metadata %s", metadata)
 
         except (MutagenError, TypeError) as exc:
-            raise DownloadEpisodeException(
+            raise ImportEpisodeException(
                 f"could not save podcast episode {episode_id} metadata: {exc}"
             ) from exc
 
@@ -113,7 +113,7 @@ def download_episode(
                 result["file_id"] = file_id
 
         except RequestException as exc:
-            raise DownloadEpisodeException(
+            raise ImportEpisodeException(
                 f"could not upload podcast episode {episode_id}: {exc}"
             ) from exc
 
@@ -121,7 +121,7 @@ def download_episode(
         episode.file = file
         episode.save()
 
-    except DownloadEpisodeException as exc:
+    except ImportEpisodeException as exc:
         logger.exception(exc)
         episode.delete()
         raise
@@ -155,7 +155,7 @@ def extract_filename(response: Response) -> str:
 
 
 @shared_task()
-def clean_failed_download():
+def clean_failed_imports():
     """
     Clean any podcast episodes that failed to download.
 
@@ -163,7 +163,7 @@ def clean_failed_download():
         Number of deleted episodes.
     """
     pending_tasks = TaskResult.objects.filter(
-        task_name=download_episode.name,
+        task_name=import_episode.name,
         status__in=["PENDING", "STARTED", "RETRY"],
     ).all()
 

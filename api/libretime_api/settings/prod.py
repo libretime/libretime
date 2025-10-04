@@ -70,7 +70,7 @@ DATABASES = {
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
-USE_TZ = False
+USE_TZ = True
 
 # Email
 # https://docs.djangoproject.com/en/4.2/topics/email/

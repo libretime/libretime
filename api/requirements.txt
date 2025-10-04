@@ -11,5 +11,4 @@ gunicorn>=22.0.0,<23.1
 mutagen>=1.45.1,<1.48
 psycopg[c]>=3.1.8,<3.3
 requests>=2.32.2,<2.33
-requests>=2.32.2,<2.33
 uvicorn[standard]>=0.17.6,<0.36.0

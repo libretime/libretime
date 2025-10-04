@@ -5283,11 +5283,9 @@ components:
           type: integer
           nullable: true
       required:
-        - accessed
         - id
         - mime
         - name
-        - size
     FileImportStatusEnum:
       enum:
         - 0

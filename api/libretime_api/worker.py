@@ -21,8 +21,8 @@ app.autodiscover_tasks(
 )
 
 app.conf.beat_schedule = {
-    "podcasts-clean-failed-download": {
-        "task": "libretime_api.podcasts.tasks.clean_failed_download",
+    "podcasts-clean-failed-imports": {
+        "task": "libretime_api.podcasts.tasks.clean_failed_imports",
         "schedule": crontab(hour="*"),
     },
     "legacy-trigger-task-manager": {
