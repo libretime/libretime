@@ -95,9 +95,7 @@ class Importer:
                 ],
                 timeout=30,
                 cookies=(
-                    {"tt_upload": str(library_id)}
-                    if library_id not in (None, 0)
-                    else {}
+                    {"tt_upload": str(library_id)} if library_id is not None else {}
                 ),
             )
             resp.raise_for_status()
@@ -145,25 +143,19 @@ class Importer:
 
             self._handle_file(sub_path.resolve(), library_id)
 
-    def _check_library(self, library: str) -> bool:
-        return Library.objects.filter(code=library).exists()
-
     def import_dir(
         self,
         path: Path,
         library: Optional[str],
         allowed_extensions: List[str],
     ) -> None:
-        if library is not None and not self._check_library(library):
-            raise ValueError(f"provided library {library} does not exist")
-
-        if library:
+        if library is not None:
             try:
                 library_id = Library.objects.get(code=library).id
             except Library.DoesNotExist as exc:
                 raise ValueError(f"provided library {library} does not exist") from exc
         else:
-            library_id = 0
+            library_id = None
 
         allowed_extensions = [
             (x if x.startswith(".") else "." + x) for x in allowed_extensions
