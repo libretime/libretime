@@ -234,10 +234,9 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                 } elseif ($formData['add_show_repeat_type'] == 2 && $formData['add_show_monthly_repeat_type'] == 2) {
                     $interval = 'P1M';
                 } elseif ($formData['add_show_repeat_type'] == 2 && $formData['add_show_monthly_repeat_type'] == 3) {
-                    [$weekNumberOfMonth, $dayOfWeek] =
-                        Application_Service_ShowService::getMonthlyWeeklyRepeatInterval(
-                            new DateTime($start_time, $showTimezone)
-                        );
+                    [$weekNumberOfMonth, $dayOfWeek] = Application_Service_ShowService::getMonthlyWeeklyRepeatInterval(
+                        new DateTime($start_time, $showTimezone)
+                    );
                 }
 
                 /* Check first show

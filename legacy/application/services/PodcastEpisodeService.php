@@ -466,8 +466,9 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             // Logging::info($enclosure);
             $itemId = $item->get_id();
             $ingested = in_array($itemId, $episodeIds) ? (empty($episodeFiles[$itemId]) ? -1 : 1) : 0;
-            $file = $ingested > 0 && !empty($episodeFiles[$itemId]) ?
-                CcFiles::getSanitizedFileById($episodeFiles[$itemId]) : [];
+            $file = $ingested > 0 && !empty($episodeFiles[$itemId])
+                ? CcFiles::getSanitizedFileById($episodeFiles[$itemId])
+                : [];
             // If the analyzer hasn't finished with the file, leave it as pending
             if (!empty($file) && $file['import_status'] == CcFiles::IMPORT_STATUS_PENDING) {
                 $ingested = -1;

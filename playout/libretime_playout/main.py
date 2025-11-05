@@ -111,11 +111,12 @@ def cli(
     )
     wait_for_legacy(legacy_client)
 
-    liq_client = LiquidsoapClient(
-        host=config.playout.liquidsoap_host,
-        port=config.playout.liquidsoap_port,
+    wait_for_liquidsoap(
+        LiquidsoapClient(
+            host=config.playout.liquidsoap_host,
+            port=config.playout.liquidsoap_port,
+        )
     )
-    wait_for_liquidsoap(liq_client)
 
     fetch_queue: "Queue[Dict[str, Any]]" = Queue()
     push_queue: "Queue[Events]" = Queue()
@@ -125,7 +126,12 @@ def cli(
     # priority, and retrieve it.
     file_queue: "Queue[FileEvents]" = Queue()
 
-    liquidsoap = Liquidsoap(liq_client)
+    liquidsoap = Liquidsoap(
+        LiquidsoapClient(
+            host=config.playout.liquidsoap_host,
+            port=config.playout.liquidsoap_port,
+        )
+    )
 
     PypoFile(file_queue, api_client).start()
 
@@ -133,7 +139,10 @@ def cli(
         fetch_queue,
         push_queue,
         file_queue,
-        liq_client,
+        LiquidsoapClient(
+            host=config.playout.liquidsoap_host,
+            port=config.playout.liquidsoap_port,
+        ),
         liquidsoap,
         config,
         api_client,

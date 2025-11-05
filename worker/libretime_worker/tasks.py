@@ -60,6 +60,12 @@ def legacy_trigger_task_manager():
     legacy_client.trigger_task_manager()
 
 
+class PodcastDownloadException(Exception):
+    """
+    An error occurred during the podcast download task.
+    """
+
+
 @worker.task(name="podcast-download", acks_late=True)
 def podcast_download(
     episode_id: int,
@@ -98,15 +104,16 @@ def podcast_download(
                         tmp_file.write(chunk)
 
         except RequestException as exception:
-            logger.exception("could not download podcast episode %s", episode_id)
-            raise exception
+            raise PodcastDownloadException(
+                f"could not download podcast episode {episode_id}: {exception}"
+            ) from exception
 
         # Save metadata to podcast episode file
         try:
             metadata = mutagen.File(tmp_file.name, easy=True)
             if metadata is None:
-                raise MutagenError(
-                    f"could not determine episode {episode_id} file type"
+                raise PodcastDownloadException(
+                    f"could not determine podcast episode {episode_id} file type"
                 )
 
             if override_album:
@@ -122,9 +129,10 @@ def podcast_download(
             metadata.save()
             logger.debug("saved metadata %s", metadata)
 
-        except MutagenError as exception:
-            logger.exception("could not save episode %s metadata", episode_id)
-            raise exception
+        except (MutagenError, TypeError) as exception:
+            raise PodcastDownloadException(
+                f"could not save podcast episode {episode_id} metadata: {exception}"
+            ) from exception
 
         # Upload podcast episode file
         try:
@@ -141,10 +149,12 @@ def podcast_download(
                 result["status"] = 1
 
         except RequestException as exception:
-            logger.exception("could not upload episode %s", episode_id)
-            raise exception
+            raise PodcastDownloadException(
+                f"could not upload podcast episode {episode_id}: {exception}"
+            ) from exception
 
-    except (RequestException, MutagenError) as exception:
+    except PodcastDownloadException as exception:
+        logger.exception(exception)
         result["status"] = 0
         result["error"] = str(exception)
 

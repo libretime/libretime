@@ -11,11 +11,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-12-09 02:37+0000\n"
+"POT-Creation-Date: 2025-08-11 03:03+0000\n"
 "PO-Revision-Date: 2025-01-08 09:00+0000\n"
 "Last-Translator: marmotte <serge@e.email>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/"
-"fr/>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/fr/>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -606,9 +605,7 @@ msgstr "Vous n'avez pas encore programmé d'émissions. %sCréer une émission%s
 
 #: application/common/UsabilityHints.php:89
 msgid "To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'."
-msgstr ""
-"Pour commencer la diffusion, annulez l'émission actuellement liée en "
-"cliquant dessus puis en sélectionnant \"Annuler l'émission\"."
+msgstr "Pour commencer la diffusion, annulez l'émission actuellement liée en cliquant dessus puis en sélectionnant \"Annuler l'émission\"."
 
 #: application/common/UsabilityHints.php:92
 #, php-format
@@ -616,16 +613,12 @@ msgid ""
 "Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.\n"
 "                    %sCreate an unlinked show now%s."
 msgstr ""
-"Les émissions liées doivent être remplies avec des pistes avant de "
-"commencer. Pour commencer à diffuser, annulez l'émission liée actuelle et "
-"programmer une émission dé-lié\n"
+"Les émissions liées doivent être remplies avec des pistes avant de commencer. Pour commencer à diffuser, annulez l'émission liée actuelle et programmer une émission dé-lié\n"
 "…%sCréer une émission non liée%s."
 
 #: application/common/UsabilityHints.php:96
 msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
-msgstr ""
-"Pour commencer la diffusion, cliquez sur une émission et sélectionnez "
-"\"Ajouter des pistes\""
+msgstr "Pour commencer la diffusion, cliquez sur une émission et sélectionnez \"Ajouter des pistes\""
 
 #: application/common/UsabilityHints.php:100
 #, php-format
@@ -805,18 +798,18 @@ msgstr "Vous n'avez pas le droit d'accéder à cette ressource."
 msgid "You are not allowed to access this resource. "
 msgstr "Vous n'avez pas le droit d'accéder à cette ressource. "
 
-#: application/controllers/ApiController.php:920
-#: application/controllers/ApiController.php:941
-#: application/controllers/ApiController.php:953
+#: application/controllers/ApiController.php:919
+#: application/controllers/ApiController.php:940
+#: application/controllers/ApiController.php:952
 #, php-format
 msgid "File does not exist in %s"
 msgstr "Le fichier n'existe pas dans %s"
 
-#: application/controllers/ApiController.php:1007
+#: application/controllers/ApiController.php:1006
 msgid "Bad request. no 'mode' parameter passed."
 msgstr "Mauvaise requête. pas de « mode » paramètre passé."
 
-#: application/controllers/ApiController.php:1020
+#: application/controllers/ApiController.php:1019
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "Mauvaise requête. Le paramètre « mode » est invalide"
 
@@ -899,7 +892,7 @@ msgstr "Quelque chose s'est mal passé."
 #: application/controllers/LibraryController.php:91
 #: application/controllers/LocaleController.php:171
 #: application/controllers/ShowbuilderController.php:131
-#: application/forms/SmartBlockCriteria.php:413
+#: application/forms/SmartBlockCriteria.php:411
 msgid "Preview"
 msgstr "Prévisualisation"
 
@@ -931,7 +924,7 @@ msgid "Edit..."
 msgstr "Modifier…"
 
 #: application/controllers/LibraryController.php:126
-#: application/controllers/ScheduleController.php:732
+#: application/controllers/ScheduleController.php:729
 msgid "Download"
 msgstr "Téléchargement"
 
@@ -967,9 +960,7 @@ msgstr "Copie de %s"
 
 #: application/controllers/ListenerstatController.php:46
 msgid "Please make sure admin user/password is correct on Settings->Streams page."
-msgstr ""
-"Veuillez vous assurer que l’administrateur a un mot de passe correct dans la "
-"page Préférences -&gt; Flux."
+msgstr "Veuillez vous assurer que l’administrateur a un mot de passe correct dans la page Préférences -&gt; Flux."
 
 #: application/controllers/LocaleController.php:27
 msgid "Audio Player"
@@ -1187,23 +1178,23 @@ msgstr "Playlist"
 
 #: application/controllers/LocaleController.php:88
 #: application/models/Criteria.php:171
-#: application/services/HistoryService.php:1051
-#: application/services/HistoryService.php:1086
-#: application/services/HistoryService.php:1101
+#: application/services/HistoryService.php:1050
+#: application/services/HistoryService.php:1085
+#: application/services/HistoryService.php:1100
 msgid "Title"
 msgstr "Titre"
 
 #: application/controllers/LocaleController.php:89
 #: application/models/Criteria.php:147
-#: application/services/HistoryService.php:1052
-#: application/services/HistoryService.php:1087
-#: application/services/HistoryService.php:1102
+#: application/services/HistoryService.php:1051
+#: application/services/HistoryService.php:1086
+#: application/services/HistoryService.php:1101
 msgid "Creator"
 msgstr "Créateur"
 
 #: application/controllers/LocaleController.php:90
 #: application/models/Criteria.php:146
-#: application/services/HistoryService.php:1053
+#: application/services/HistoryService.php:1052
 msgid "Album"
 msgstr "Album"
 
@@ -1218,21 +1209,21 @@ msgstr "BPM"
 
 #: application/controllers/LocaleController.php:93
 #: application/models/Criteria.php:150
-#: application/services/HistoryService.php:1058
-#: application/services/HistoryService.php:1105
+#: application/services/HistoryService.php:1057
+#: application/services/HistoryService.php:1104
 msgid "Composer"
 msgstr "Compositeur"
 
 #: application/controllers/LocaleController.php:94
 #: application/models/Criteria.php:151
-#: application/services/HistoryService.php:1063
+#: application/services/HistoryService.php:1062
 msgid "Conductor"
 msgstr "Chef d'orchestre"
 
 #: application/controllers/LocaleController.php:95
 #: application/models/Criteria.php:152
-#: application/services/HistoryService.php:1060
-#: application/services/HistoryService.php:1106
+#: application/services/HistoryService.php:1059
+#: application/services/HistoryService.php:1105
 msgid "Copyright"
 msgstr "Droit d'Auteur"
 
@@ -1244,25 +1235,25 @@ msgstr "Encodé Par"
 #: application/controllers/LocaleController.php:97
 #: application/forms/StreamSettingSubForm.php:116
 #: application/models/Criteria.php:160
-#: application/services/HistoryService.php:1055
+#: application/services/HistoryService.php:1054
 msgid "Genre"
 msgstr "Genre"
 
 #: application/controllers/LocaleController.php:98
 #: application/models/Criteria.php:162
-#: application/services/HistoryService.php:1059
+#: application/services/HistoryService.php:1058
 msgid "ISRC"
 msgstr "ISRC"
 
 #: application/controllers/LocaleController.php:99
 #: application/models/Criteria.php:163
-#: application/services/HistoryService.php:1057
+#: application/services/HistoryService.php:1056
 msgid "Label"
 msgstr "Label"
 
 #: application/controllers/LocaleController.php:100
 #: application/models/Criteria.php:164
-#: application/services/HistoryService.php:1064
+#: application/services/HistoryService.php:1063
 msgid "Language"
 msgstr "Langue"
 
@@ -1278,8 +1269,8 @@ msgstr "Dernier Joué"
 
 #: application/controllers/LocaleController.php:103
 #: application/models/Criteria.php:165
-#: application/services/HistoryService.php:1054
-#: application/services/HistoryService.php:1104
+#: application/services/HistoryService.php:1053
+#: application/services/HistoryService.php:1103
 msgid "Length"
 msgstr "Durée"
 
@@ -1290,7 +1281,7 @@ msgstr "MIME"
 
 #: application/controllers/LocaleController.php:105
 #: application/models/Criteria.php:167
-#: application/services/HistoryService.php:1056
+#: application/services/HistoryService.php:1055
 msgid "Mood"
 msgstr "Humeur"
 
@@ -1325,7 +1316,7 @@ msgstr "Site Internet"
 
 #: application/controllers/LocaleController.php:112
 #: application/models/Criteria.php:173
-#: application/services/HistoryService.php:1061
+#: application/services/HistoryService.php:1060
 msgid "Year"
 msgstr "Année"
 
@@ -1418,10 +1409,7 @@ msgstr "Section Podcast"
 #: application/controllers/LocaleController.php:135
 #, php-format
 msgid "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
-msgstr ""
-"Vous êtes en train de téléverser des fichiers. %s Aller vers un autre écran "
-"pour annuler le processus de téléversement. %s Êtes-vous sûr de vouloir "
-"quitter la page ?"
+msgstr "Vous êtes en train de téléverser des fichiers. %s Aller vers un autre écran pour annuler le processus de téléversement. %s Êtes-vous sûr de vouloir quitter la page ?"
 
 #: application/controllers/LocaleController.php:137
 msgid "Open Media Builder"
@@ -1552,7 +1540,7 @@ msgid "is in the range"
 msgstr "est dans le champ"
 
 #: application/controllers/LocaleController.php:172
-#: application/forms/SmartBlockCriteria.php:415
+#: application/forms/SmartBlockCriteria.php:413
 msgid "Generate"
 msgstr "Générer"
 
@@ -1655,9 +1643,7 @@ msgstr "Aucun résultat trouvé"
 
 #: application/controllers/LocaleController.php:200
 msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
-msgstr ""
-"Cela suit le même modèle de sécurité que pour les émissions : seul les "
-"utilisateurs affectés à l' émission peuvent se connecter."
+msgstr "Cela suit le même modèle de sécurité que pour les émissions : seul les utilisateurs affectés à l' émission peuvent se connecter."
 
 #: application/controllers/LocaleController.php:201
 msgid "Specify custom authentication which will work only for this show."
@@ -2687,8 +2673,7 @@ msgstr "Il y a un problème avec l'identifiant ou adresse courriel que vous avez
 
 #: application/controllers/LoginController.php:222
 msgid "Wrong username or password provided. Please try again."
-msgstr ""
-"Mauvais nom d'utilisateur ou mot de passe fourni. Veuillez essayer à nouveau."
+msgstr "Mauvais nom d'utilisateur ou mot de passe fourni. Veuillez essayer à nouveau."
 
 #: application/controllers/PlaylistController.php:52
 #, php-format
@@ -2724,23 +2709,23 @@ msgstr "Liste de lecture inconnue"
 msgid "Preferences updated."
 msgstr "Préférences mises à jour."
 
-#: application/controllers/PreferenceController.php:210
+#: application/controllers/PreferenceController.php:211
 msgid "Stream Setting Updated."
 msgstr "Réglages du flux mis à jour."
 
-#: application/controllers/PreferenceController.php:255
+#: application/controllers/PreferenceController.php:256
 msgid "path should be specified"
 msgstr "le chemin doit être spécifié"
 
-#: application/controllers/PreferenceController.php:298
+#: application/controllers/PreferenceController.php:299
 msgid "Problem with Liquidsoap..."
 msgstr "Problème avec Liquidsoap..."
 
-#: application/controllers/PreferenceController.php:341
+#: application/controllers/PreferenceController.php:342
 msgid "Request method not accepted"
 msgstr "Cette méthode de requête ne peut aboutir"
 
-#: application/controllers/ScheduleController.php:390
+#: application/controllers/ScheduleController.php:389
 #, php-format
 msgid "Rebroadcast of show %s from %s at %s"
 msgstr "Rediffusion de l'émission %s de %s à %s"
@@ -3051,8 +3036,8 @@ msgstr "Ne peut pas avoir une durée de 00h 00m"
 msgid "Cannot have duration greater than 24h"
 msgstr "Ne peut pas avoir une durée supérieure à 24h"
 
-#: application/forms/AddShowWhen.php:315 application/forms/AddShowWhen.php:346
-#: application/forms/AddShowWhen.php:351
+#: application/forms/AddShowWhen.php:314 application/forms/AddShowWhen.php:345
+#: application/forms/AddShowWhen.php:350
 #: application/services/CalendarService.php:323
 msgid "Cannot schedule overlapping shows"
 msgstr "Ne peut pas programmer des émissions qui se chevauchent"
@@ -3212,12 +3197,12 @@ msgid "Publish..."
 msgstr "Publier..."
 
 #: application/forms/EditHistoryItem.php:32
-#: application/services/HistoryService.php:1084
+#: application/services/HistoryService.php:1083
 msgid "Start Time"
 msgstr "Heure de Début"
 
 #: application/forms/EditHistoryItem.php:44
-#: application/services/HistoryService.php:1085
+#: application/services/HistoryService.php:1084
 msgid "End Time"
 msgstr "Heure de Fin"
 
@@ -3327,9 +3312,7 @@ msgstr "Afficher le bouton de connexion sur votre page radio ?"
 
 #: application/forms/GeneralPreferences.php:233
 msgid "Disable the public radio page and redirect to the login page?"
-msgstr ""
-"Désactiver la page de la radio pour le public et rediriger directement vers "
-"la page de connexion ?"
+msgstr "Désactiver la page de la radio pour le public et rediriger directement vers la page de connexion ?"
 
 #: application/forms/GeneralPreferences.php:238
 msgid "Feature Previews"
@@ -3472,8 +3455,8 @@ msgid "My Shows"
 msgstr "Mes émissions"
 
 #: application/forms/SmartBlockCriteria.php:14
-#: application/forms/SmartBlockCriteria.php:311
-#: application/forms/SmartBlockCriteria.php:353
+#: application/forms/SmartBlockCriteria.php:309
+#: application/forms/SmartBlockCriteria.php:351
 msgid "Select unit of time"
 msgstr "Sélectionner une unité de temps"
 
@@ -3542,112 +3525,112 @@ msgstr "Les moins joués récemment"
 msgid "Select Track Type"
 msgstr "Sélectionner un type de piste"
 
-#: application/forms/SmartBlockCriteria.php:115
+#: application/forms/SmartBlockCriteria.php:113
 msgid "Type:"
 msgstr "Type :"
 
-#: application/forms/SmartBlockCriteria.php:118
+#: application/forms/SmartBlockCriteria.php:116
 msgid "Dynamic"
 msgstr "Dynamique"
 
-#: application/forms/SmartBlockCriteria.php:119
+#: application/forms/SmartBlockCriteria.php:117
 msgid "Static"
 msgstr "Statique"
 
-#: application/forms/SmartBlockCriteria.php:277
+#: application/forms/SmartBlockCriteria.php:275
 #, fuzzy
 msgid "Select track type"
 msgstr "Sélectionner un type de piste"
 
-#: application/forms/SmartBlockCriteria.php:363
+#: application/forms/SmartBlockCriteria.php:361
 msgid "Allow Repeated Tracks:"
 msgstr "Autoriser la répétition de pistes :"
 
-#: application/forms/SmartBlockCriteria.php:371
+#: application/forms/SmartBlockCriteria.php:369
 msgid "Allow last track to exceed time limit:"
 msgstr "Autoriser la dernière piste à dépasser l'horaire :"
 
-#: application/forms/SmartBlockCriteria.php:380
+#: application/forms/SmartBlockCriteria.php:378
 msgid "Sort Tracks:"
 msgstr "Trier les pistes :"
 
-#: application/forms/SmartBlockCriteria.php:398
+#: application/forms/SmartBlockCriteria.php:396
 msgid "Limit to:"
 msgstr "Limiter à :"
 
-#: application/forms/SmartBlockCriteria.php:410
+#: application/forms/SmartBlockCriteria.php:408
 msgid "Generate playlist content and save criteria"
 msgstr "Génération de la liste de lecture et sauvegarde des critères"
 
-#: application/forms/SmartBlockCriteria.php:422
+#: application/forms/SmartBlockCriteria.php:420
 msgid "Shuffle playlist content"
 msgstr "Contenu de la liste de lecture aléatoire"
 
-#: application/forms/SmartBlockCriteria.php:424
+#: application/forms/SmartBlockCriteria.php:422
 msgid "Shuffle"
 msgstr "Aléatoire"
 
-#: application/forms/SmartBlockCriteria.php:603
-#: application/forms/SmartBlockCriteria.php:615
+#: application/forms/SmartBlockCriteria.php:601
+#: application/forms/SmartBlockCriteria.php:613
 msgid "Limit cannot be empty or smaller than 0"
 msgstr "La Limite ne peut être vide ou plus petite que 0"
 
-#: application/forms/SmartBlockCriteria.php:608
+#: application/forms/SmartBlockCriteria.php:606
 msgid "Limit cannot be more than 24 hrs"
 msgstr "La Limite ne peut être supérieure à 24 heures"
 
-#: application/forms/SmartBlockCriteria.php:618
+#: application/forms/SmartBlockCriteria.php:616
 msgid "The value should be an integer"
 msgstr "La valeur doit être un entier"
 
-#: application/forms/SmartBlockCriteria.php:621
+#: application/forms/SmartBlockCriteria.php:619
 msgid "500 is the max item limit value you can set"
 msgstr "500 est la valeur maximale de l'élément que vous pouvez définir"
 
-#: application/forms/SmartBlockCriteria.php:632
+#: application/forms/SmartBlockCriteria.php:630
 msgid "You must select Criteria and Modifier"
 msgstr "Vous devez sélectionner Critères et Modification"
 
-#: application/forms/SmartBlockCriteria.php:639
+#: application/forms/SmartBlockCriteria.php:637
 msgid "'Length' should be in '00:00:00' format"
 msgstr "La 'Durée' doit être au format '00:00:00'"
 
-#: application/forms/SmartBlockCriteria.php:648
+#: application/forms/SmartBlockCriteria.php:646
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr "Seuls les entiers positifs sont autorisés (de 1 à 5) pour la valeur de texte"
 
-#: application/forms/SmartBlockCriteria.php:653
-#: application/forms/SmartBlockCriteria.php:678
+#: application/forms/SmartBlockCriteria.php:651
+#: application/forms/SmartBlockCriteria.php:676
 msgid "You must select a time unit for a relative datetime."
 msgstr "Vous devez sélectionner une unité de temps pour une date relative."
 
-#: application/forms/SmartBlockCriteria.php:658
-#: application/forms/SmartBlockCriteria.php:683
+#: application/forms/SmartBlockCriteria.php:656
+#: application/forms/SmartBlockCriteria.php:681
 msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
 msgstr "La valeur doit être en format d'horodatage (par exemple 0000-00-00 ou 0000-00-00 00:00:00)"
 
-#: application/forms/SmartBlockCriteria.php:673
+#: application/forms/SmartBlockCriteria.php:671
 msgid "Only non-negative integer numbers are allowed for a relative date time"
 msgstr "Seuls les entiers positifs sont autorisés pour les dates relatives"
 
-#: application/forms/SmartBlockCriteria.php:700
+#: application/forms/SmartBlockCriteria.php:698
 msgid "The value has to be numeric"
 msgstr "La valeur doit être numérique"
 
-#: application/forms/SmartBlockCriteria.php:705
+#: application/forms/SmartBlockCriteria.php:703
 msgid "The value should be less then 2147483648"
 msgstr "La valeur doit être inférieure à 2147483648"
 
-#: application/forms/SmartBlockCriteria.php:710
+#: application/forms/SmartBlockCriteria.php:708
 msgid "The value cannot be empty"
 msgstr "La valeur ne peut pas être vide"
 
-#: application/forms/SmartBlockCriteria.php:715
+#: application/forms/SmartBlockCriteria.php:713
 #, php-format
 msgid "The value should be less than %s characters"
 msgstr "La valeur doit être inférieure à %s caractères"
 
-#: application/forms/SmartBlockCriteria.php:722
+#: application/forms/SmartBlockCriteria.php:720
 msgid "Value cannot be empty"
 msgstr "La Valeur ne peut pas être vide"
 
@@ -3864,7 +3847,7 @@ msgid "Sample Rate (kHz)"
 msgstr "Taux d'échantillonage (Khz)"
 
 #: application/models/Criteria.php:174
-#: application/services/HistoryService.php:1065
+#: application/services/HistoryService.php:1064
 msgid "Track Type"
 msgstr "Type de piste"
 
@@ -3901,8 +3884,8 @@ msgstr "Le calendrier que vous consultez n'est pas à jour ! (décalage calend
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "La programmation que vous consultez n'est pas à jour ! (décalage d'instance)"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
-#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:493
+#: application/models/Scheduler.php:531 application/models/Scheduler.php:570
 msgid "The schedule you're viewing is out of date!"
 msgstr "Le calendrier que vous consultez n'est pas à jour !"
 
@@ -3933,7 +3916,7 @@ msgstr "Le contenu des émissions liées ne peut pas être changé en cours de d
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr "Vous ne pouvez pas programmer une liste de lecture qui contient des fichiers manquants."
 
-#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
+#: application/models/Scheduler.php:230 application/models/Scheduler.php:322
 msgid "A selected File does not exist!"
 msgstr "Un fichier sélectionne n'existe pas !"
 
@@ -4066,11 +4049,11 @@ msgstr "L'émission a été effacée parce que l'enregistrement de l'émission n
 msgid "Must wait 1 hour to rebroadcast."
 msgstr "Doit attendre 1 heure pour retransmettre."
 
-#: application/services/HistoryService.php:1062
+#: application/services/HistoryService.php:1061
 msgid "Track"
 msgstr "Piste"
 
-#: application/services/HistoryService.php:1103
+#: application/services/HistoryService.php:1102
 msgid "Played"
 msgstr "Joué"
 

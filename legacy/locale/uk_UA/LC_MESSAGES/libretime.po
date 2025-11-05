@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2024-12-09 02:37+0000\n"
+"POT-Creation-Date: 2025-08-11 03:03+0000\n"
 "PO-Revision-Date: 2024-10-25 19:16+0000\n"
 "Last-Translator: Ihor Hordiichuk <igor_ck@outlook.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/legacy/uk/>\n"
@@ -794,18 +794,18 @@ msgstr "Ви не маєте доступу до цього ресурсу."
 msgid "You are not allowed to access this resource. "
 msgstr "Ви не маєте доступу до цього ресурсу. "
 
-#: application/controllers/ApiController.php:920
-#: application/controllers/ApiController.php:941
-#: application/controllers/ApiController.php:953
+#: application/controllers/ApiController.php:919
+#: application/controllers/ApiController.php:940
+#: application/controllers/ApiController.php:952
 #, php-format
 msgid "File does not exist in %s"
 msgstr "Файл не існує в %s"
 
-#: application/controllers/ApiController.php:1007
+#: application/controllers/ApiController.php:1006
 msgid "Bad request. no 'mode' parameter passed."
 msgstr "Неправильний запит. параметр 'mode' не передано."
 
-#: application/controllers/ApiController.php:1020
+#: application/controllers/ApiController.php:1019
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "Неправильний запит. Параметр 'mode' недійсний"
 
@@ -888,7 +888,7 @@ msgstr "Щось пішло не так."
 #: application/controllers/LibraryController.php:91
 #: application/controllers/LocaleController.php:171
 #: application/controllers/ShowbuilderController.php:131
-#: application/forms/SmartBlockCriteria.php:413
+#: application/forms/SmartBlockCriteria.php:411
 msgid "Preview"
 msgstr "Попередній перегляд"
 
@@ -920,7 +920,7 @@ msgid "Edit..."
 msgstr "Редагувати..."
 
 #: application/controllers/LibraryController.php:126
-#: application/controllers/ScheduleController.php:732
+#: application/controllers/ScheduleController.php:729
 msgid "Download"
 msgstr "Завантажити"
 
@@ -1174,23 +1174,23 @@ msgstr "Плейлист"
 
 #: application/controllers/LocaleController.php:88
 #: application/models/Criteria.php:171
-#: application/services/HistoryService.php:1051
-#: application/services/HistoryService.php:1086
-#: application/services/HistoryService.php:1101
+#: application/services/HistoryService.php:1050
+#: application/services/HistoryService.php:1085
+#: application/services/HistoryService.php:1100
 msgid "Title"
 msgstr "Назва"
 
 #: application/controllers/LocaleController.php:89
 #: application/models/Criteria.php:147
-#: application/services/HistoryService.php:1052
-#: application/services/HistoryService.php:1087
-#: application/services/HistoryService.php:1102
+#: application/services/HistoryService.php:1051
+#: application/services/HistoryService.php:1086
+#: application/services/HistoryService.php:1101
 msgid "Creator"
 msgstr "Автор"
 
 #: application/controllers/LocaleController.php:90
 #: application/models/Criteria.php:146
-#: application/services/HistoryService.php:1053
+#: application/services/HistoryService.php:1052
 msgid "Album"
 msgstr "Альбом"
 
@@ -1205,21 +1205,21 @@ msgstr "BPM"
 
 #: application/controllers/LocaleController.php:93
 #: application/models/Criteria.php:150
-#: application/services/HistoryService.php:1058
-#: application/services/HistoryService.php:1105
+#: application/services/HistoryService.php:1057
+#: application/services/HistoryService.php:1104
 msgid "Composer"
 msgstr "Композитор"
 
 #: application/controllers/LocaleController.php:94
 #: application/models/Criteria.php:151
-#: application/services/HistoryService.php:1063
+#: application/services/HistoryService.php:1062
 msgid "Conductor"
 msgstr "Виконавець"
 
 #: application/controllers/LocaleController.php:95
 #: application/models/Criteria.php:152
-#: application/services/HistoryService.php:1060
-#: application/services/HistoryService.php:1106
+#: application/services/HistoryService.php:1059
+#: application/services/HistoryService.php:1105
 msgid "Copyright"
 msgstr "Авторське право"
 
@@ -1231,25 +1231,25 @@ msgstr "Закодовано"
 #: application/controllers/LocaleController.php:97
 #: application/forms/StreamSettingSubForm.php:116
 #: application/models/Criteria.php:160
-#: application/services/HistoryService.php:1055
+#: application/services/HistoryService.php:1054
 msgid "Genre"
 msgstr "Жанр"
 
 #: application/controllers/LocaleController.php:98
 #: application/models/Criteria.php:162
-#: application/services/HistoryService.php:1059
+#: application/services/HistoryService.php:1058
 msgid "ISRC"
 msgstr "ISRC"
 
 #: application/controllers/LocaleController.php:99
 #: application/models/Criteria.php:163
-#: application/services/HistoryService.php:1057
+#: application/services/HistoryService.php:1056
 msgid "Label"
 msgstr "Label"
 
 #: application/controllers/LocaleController.php:100
 #: application/models/Criteria.php:164
-#: application/services/HistoryService.php:1064
+#: application/services/HistoryService.php:1063
 msgid "Language"
 msgstr "Мова"
 
@@ -1265,8 +1265,8 @@ msgstr "Останнє програвання"
 
 #: application/controllers/LocaleController.php:103
 #: application/models/Criteria.php:165
-#: application/services/HistoryService.php:1054
-#: application/services/HistoryService.php:1104
+#: application/services/HistoryService.php:1053
+#: application/services/HistoryService.php:1103
 msgid "Length"
 msgstr "Довжина"
 
@@ -1277,7 +1277,7 @@ msgstr "Mime"
 
 #: application/controllers/LocaleController.php:105
 #: application/models/Criteria.php:167
-#: application/services/HistoryService.php:1056
+#: application/services/HistoryService.php:1055
 msgid "Mood"
 msgstr "Настрій"
 
@@ -1312,7 +1312,7 @@ msgstr "Веб-Сайт"
 
 #: application/controllers/LocaleController.php:112
 #: application/models/Criteria.php:173
-#: application/services/HistoryService.php:1061
+#: application/services/HistoryService.php:1060
 msgid "Year"
 msgstr "Рік"
 
@@ -1536,7 +1536,7 @@ msgid "is in the range"
 msgstr "знаходиться в діапазоні"
 
 #: application/controllers/LocaleController.php:172
-#: application/forms/SmartBlockCriteria.php:415
+#: application/forms/SmartBlockCriteria.php:413
 msgid "Generate"
 msgstr "Генерувати"
 
@@ -2704,23 +2704,23 @@ msgstr "Невідомий плейлист"
 msgid "Preferences updated."
 msgstr "Налаштування оновлено."
 
-#: application/controllers/PreferenceController.php:210
+#: application/controllers/PreferenceController.php:211
 msgid "Stream Setting Updated."
 msgstr "Налаштування потоку оновлено."
 
-#: application/controllers/PreferenceController.php:255
+#: application/controllers/PreferenceController.php:256
 msgid "path should be specified"
 msgstr "слід вказати шлях"
 
-#: application/controllers/PreferenceController.php:298
+#: application/controllers/PreferenceController.php:299
 msgid "Problem with Liquidsoap..."
 msgstr "Проблема з Liquidsoap..."
 
-#: application/controllers/PreferenceController.php:341
+#: application/controllers/PreferenceController.php:342
 msgid "Request method not accepted"
 msgstr "Метод запиту не прийнято"
 
-#: application/controllers/ScheduleController.php:390
+#: application/controllers/ScheduleController.php:389
 #, php-format
 msgid "Rebroadcast of show %s from %s at %s"
 msgstr "Ретрансяція програми %s від %s в %s"
@@ -3031,8 +3031,8 @@ msgstr "Не може мати тривалість 00год 00хв"
 msgid "Cannot have duration greater than 24h"
 msgstr "Тривалість не може перевищувати 24 год"
 
-#: application/forms/AddShowWhen.php:315 application/forms/AddShowWhen.php:346
-#: application/forms/AddShowWhen.php:351
+#: application/forms/AddShowWhen.php:314 application/forms/AddShowWhen.php:345
+#: application/forms/AddShowWhen.php:350
 #: application/services/CalendarService.php:323
 msgid "Cannot schedule overlapping shows"
 msgstr "Неможливо запланувати накладені програми"
@@ -3192,12 +3192,12 @@ msgid "Publish..."
 msgstr "Опублікувати..."
 
 #: application/forms/EditHistoryItem.php:32
-#: application/services/HistoryService.php:1084
+#: application/services/HistoryService.php:1083
 msgid "Start Time"
 msgstr "Час початку"
 
 #: application/forms/EditHistoryItem.php:44
-#: application/services/HistoryService.php:1085
+#: application/services/HistoryService.php:1084
 msgid "End Time"
 msgstr "Час закінчення"
 
@@ -3450,8 +3450,8 @@ msgid "My Shows"
 msgstr "Мої програми"
 
 #: application/forms/SmartBlockCriteria.php:14
-#: application/forms/SmartBlockCriteria.php:311
-#: application/forms/SmartBlockCriteria.php:353
+#: application/forms/SmartBlockCriteria.php:309
+#: application/forms/SmartBlockCriteria.php:351
 msgid "Select unit of time"
 msgstr "Виберіть одиницю часу"
 
@@ -3519,111 +3519,111 @@ msgstr "Нещодавно грали"
 msgid "Select Track Type"
 msgstr "Виберіть тип доріжки"
 
-#: application/forms/SmartBlockCriteria.php:115
+#: application/forms/SmartBlockCriteria.php:113
 msgid "Type:"
 msgstr "Тип:"
 
-#: application/forms/SmartBlockCriteria.php:118
+#: application/forms/SmartBlockCriteria.php:116
 msgid "Dynamic"
 msgstr "Динамічний"
 
-#: application/forms/SmartBlockCriteria.php:119
+#: application/forms/SmartBlockCriteria.php:117
 msgid "Static"
 msgstr "Статичний"
 
-#: application/forms/SmartBlockCriteria.php:277
+#: application/forms/SmartBlockCriteria.php:275
 msgid "Select track type"
 msgstr "Виберіть тип доріжки"
 
-#: application/forms/SmartBlockCriteria.php:363
+#: application/forms/SmartBlockCriteria.php:361
 msgid "Allow Repeated Tracks:"
 msgstr "Дозволити повторення треків:"
 
-#: application/forms/SmartBlockCriteria.php:371
+#: application/forms/SmartBlockCriteria.php:369
 msgid "Allow last track to exceed time limit:"
 msgstr "Дозволити останньому треку перевищити ліміт часу:"
 
-#: application/forms/SmartBlockCriteria.php:380
+#: application/forms/SmartBlockCriteria.php:378
 msgid "Sort Tracks:"
 msgstr "Сортування треків:"
 
-#: application/forms/SmartBlockCriteria.php:398
+#: application/forms/SmartBlockCriteria.php:396
 msgid "Limit to:"
 msgstr "Обмежити в:"
 
-#: application/forms/SmartBlockCriteria.php:410
+#: application/forms/SmartBlockCriteria.php:408
 msgid "Generate playlist content and save criteria"
 msgstr "Створення вмісту списку відтворення та збереження критеріїв"
 
-#: application/forms/SmartBlockCriteria.php:422
+#: application/forms/SmartBlockCriteria.php:420
 msgid "Shuffle playlist content"
 msgstr "Перемішати вміст плейлиста"
 
-#: application/forms/SmartBlockCriteria.php:424
+#: application/forms/SmartBlockCriteria.php:422
 msgid "Shuffle"
 msgstr "Перемішати"
 
-#: application/forms/SmartBlockCriteria.php:603
-#: application/forms/SmartBlockCriteria.php:615
+#: application/forms/SmartBlockCriteria.php:601
+#: application/forms/SmartBlockCriteria.php:613
 msgid "Limit cannot be empty or smaller than 0"
 msgstr "Ліміт не може бути порожнім або меншим за 0"
 
-#: application/forms/SmartBlockCriteria.php:608
+#: application/forms/SmartBlockCriteria.php:606
 msgid "Limit cannot be more than 24 hrs"
 msgstr "Ліміт не може перевищувати 24 год"
 
-#: application/forms/SmartBlockCriteria.php:618
+#: application/forms/SmartBlockCriteria.php:616
 msgid "The value should be an integer"
 msgstr "Значення має бути цілим числом"
 
-#: application/forms/SmartBlockCriteria.php:621
+#: application/forms/SmartBlockCriteria.php:619
 msgid "500 is the max item limit value you can set"
 msgstr "500 максимальне граничне значення"
 
-#: application/forms/SmartBlockCriteria.php:632
+#: application/forms/SmartBlockCriteria.php:630
 msgid "You must select Criteria and Modifier"
 msgstr "Ви повинні вибрати Критерії і Модифікатор"
 
-#: application/forms/SmartBlockCriteria.php:639
+#: application/forms/SmartBlockCriteria.php:637
 msgid "'Length' should be in '00:00:00' format"
 msgstr "'Довжина має бути введена у '00:00:00' форматі"
 
-#: application/forms/SmartBlockCriteria.php:648
+#: application/forms/SmartBlockCriteria.php:646
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr "Для текстового значення допускаються лише невід’ємні цілі числа (наприклад, 1 або 5)"
 
-#: application/forms/SmartBlockCriteria.php:653
-#: application/forms/SmartBlockCriteria.php:678
+#: application/forms/SmartBlockCriteria.php:651
+#: application/forms/SmartBlockCriteria.php:676
 msgid "You must select a time unit for a relative datetime."
 msgstr "Ви повинні вибрати одиницю вимірювання часу для відносної дати та часу."
 
-#: application/forms/SmartBlockCriteria.php:658
-#: application/forms/SmartBlockCriteria.php:683
+#: application/forms/SmartBlockCriteria.php:656
+#: application/forms/SmartBlockCriteria.php:681
 msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
 msgstr "Значення має бути у форматі позначки часу (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
 
-#: application/forms/SmartBlockCriteria.php:673
+#: application/forms/SmartBlockCriteria.php:671
 msgid "Only non-negative integer numbers are allowed for a relative date time"
 msgstr "Для відносної дати й часу дозволено використовувати лише невід’ємні цілі числа"
 
-#: application/forms/SmartBlockCriteria.php:700
+#: application/forms/SmartBlockCriteria.php:698
 msgid "The value has to be numeric"
 msgstr "Значення має бути числовим"
 
-#: application/forms/SmartBlockCriteria.php:705
+#: application/forms/SmartBlockCriteria.php:703
 msgid "The value should be less then 2147483648"
 msgstr "Значення має бути меншим, ніж 2147483648"
 
-#: application/forms/SmartBlockCriteria.php:710
+#: application/forms/SmartBlockCriteria.php:708
 msgid "The value cannot be empty"
 msgstr "Значення не може бути порожнім"
 
-#: application/forms/SmartBlockCriteria.php:715
+#: application/forms/SmartBlockCriteria.php:713
 #, php-format
 msgid "The value should be less than %s characters"
 msgstr "Значення має бути менше ніж %s символів"
 
-#: application/forms/SmartBlockCriteria.php:722
+#: application/forms/SmartBlockCriteria.php:720
 msgid "Value cannot be empty"
 msgstr "Значення не може бути порожнім"
 
@@ -3840,7 +3840,7 @@ msgid "Sample Rate (kHz)"
 msgstr "Частота дискретизації (kHz)"
 
 #: application/models/Criteria.php:174
-#: application/services/HistoryService.php:1065
+#: application/services/HistoryService.php:1064
 msgid "Track Type"
 msgstr "Тип треку"
 
@@ -3877,8 +3877,8 @@ msgstr "Розклад, який ви переглядаєте, застарів
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "Розклад, який ви переглядаєте, застарів! (невідповідність екземплярів)"
 
-#: application/models/Scheduler.php:138 application/models/Scheduler.php:492
-#: application/models/Scheduler.php:530 application/models/Scheduler.php:569
+#: application/models/Scheduler.php:138 application/models/Scheduler.php:493
+#: application/models/Scheduler.php:531 application/models/Scheduler.php:570
 msgid "The schedule you're viewing is out of date!"
 msgstr "Розклад, який ви переглядаєте, застарів!"
 
@@ -3909,7 +3909,7 @@ msgstr "Вміст пов’язаних програм не можна змін
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr "Неможливо запланувати плейлист, який містить відсутні файли."
 
-#: application/models/Scheduler.php:229 application/models/Scheduler.php:321
+#: application/models/Scheduler.php:230 application/models/Scheduler.php:322
 msgid "A selected File does not exist!"
 msgstr "Вибраний файл не існує!"
 
@@ -4042,11 +4042,11 @@ msgstr "Програму видалено, оскільки записаної �
 msgid "Must wait 1 hour to rebroadcast."
 msgstr "Для повторної трансляції потрібно почекати 1 годину."
 
-#: application/services/HistoryService.php:1062
+#: application/services/HistoryService.php:1061
 msgid "Track"
 msgstr "Трек"
 
-#: application/services/HistoryService.php:1103
+#: application/services/HistoryService.php:1102
 msgid "Played"
 msgstr "Програно"
 

@@ -824,12 +824,11 @@ class ApiController extends Zend_Controller_Action
         $endDateTime = clone $nowDateTime;
         $endDateTime = $endDateTime->add(new DateInterval('PT2H'));
 
-        $this->view->shows =
-            Application_Model_Show::getShows(
-                $nowDateTime,
-                $endDateTime,
-                $onlyRecord = true
-            );
+        $this->view->shows = Application_Model_Show::getShows(
+            $nowDateTime,
+            $endDateTime,
+            $onlyRecord = true
+        );
 
         $this->view->is_recording = false;
         $this->view->server_timezone = Application_Model_Preference::GetDefaultTimezone();
@@ -1048,8 +1047,7 @@ class ApiController extends Zend_Controller_Action
         $dir_id = $request->getParam('dir_id');
         $all = $request->getParam('all');
 
-        $this->view->files =
-            Application_Model_StoredFile::listAllFiles($dir_id, $all);
+        $this->view->files = Application_Model_StoredFile::listAllFiles($dir_id, $all);
     }
 
     public function getStreamSettingAction()
@@ -1349,8 +1347,7 @@ class ApiController extends Zend_Controller_Action
         $streams = ['s1', 's2', 's3', 's4'];
         $stream_params = [];
         foreach ($streams as $s) {
-            $stream_params[$s] =
-                Application_Model_StreamSetting::getStreamDataNormalized($s);
+            $stream_params[$s] = Application_Model_StreamSetting::getStreamDataNormalized($s);
         }
         $this->view->stream_params = $stream_params;
     }
@@ -1642,15 +1639,16 @@ class ApiController extends Zend_Controller_Action
 
     private function returnJsonOrJsonp($request, $result)
     {
-        $callback = $request->getParam('callback');
         $response = $this->getResponse();
-        $response->setHeader('Content-Type', 'application/json');
 
         $body = $this->_helper->json->encodeJson($result, false);
 
+        $callback = $request->getParam('callback');
         if ($callback) {
             $response->setHeader('Content-Type', 'application/javascript');
             $body = sprintf('%s(%s)', $callback, $body);
+        } else {
+            $response->setHeader('Content-Type', 'application/json');
         }
         $response->setBody($body);
 

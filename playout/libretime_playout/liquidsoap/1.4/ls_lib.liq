@@ -152,7 +152,7 @@ def input.http_restart(~id,~initial_url="http://dummy/url")
                           log(string_of(server.execute("#{id}.start"))) ;
                           (-1.)
                         else 0.5 end})
-                    "OK"
+                    "Done"
                   end)
 
   source

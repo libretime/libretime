@@ -105,6 +105,7 @@ class Schema implements ConfigurationInterface
             /**/->scalarNode('groups_header')->defaultValue('Remote-Groups')->end()
             /**/->scalarNode('email_header')->defaultValue('Remote-Email')->end()
             /**/->scalarNode('name_header')->defaultValue('Remote-Name')->end()
+            /**/->scalarNode('group_separator')->defaultValue(',')->end()
             /**/->scalarNode('proxy_ip')->end()
             /**/->scalarNode('locale')->defaultValue('en-US')->end()
             /**/->arrayNode('group_map')->children()

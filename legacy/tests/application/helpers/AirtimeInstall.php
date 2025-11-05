@@ -131,8 +131,8 @@ class AirtimeInstall
         } catch (Exception $e) {
             echo $e->getMessage() . PHP_EOL;
             echo 'Database connection problem.' . PHP_EOL;
-            echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists" .
-                ' with corresponding permissions.' . PHP_EOL;
+            echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists"
+                . ' with corresponding permissions.' . PHP_EOL;
             if ($p_exitOnError) {
                 exit(1);
             }

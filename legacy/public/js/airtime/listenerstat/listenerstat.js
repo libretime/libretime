@@ -1,9 +1,9 @@
 $(document).ready(function () {
   listenerstat_content = $("#listenerstat_content");
-  (dateStartId = "#his_date_start"),
+  ((dateStartId = "#his_date_start"),
     (timeStartId = "#his_time_start"),
     (dateEndId = "#his_date_end"),
-    (timeEndId = "#his_time_end");
+    (timeEndId = "#his_time_end"));
 
   // set width dynamically
   var width = $("#listenerstat_content").width();
