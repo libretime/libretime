@@ -1,0 +1,67 @@
+<div id="master-panel">
+  <div class="logo-container">
+    <img class="logo" src="data:image/png;base64,<?php echo Application_Model_Preference::GetStationLogo(); ?>" />
+  </div>
+  <div class="now-playing-artwork" id="now-playing-artwork">
+    <div class="now-playing-artwork_containter" id="now-playing-artwork_containter"></div>
+  </div>
+  <div class="now-playing-block">
+    <div class="text-row"><strong><?php echo _("Previous:"); ?></strong> <span id='previous'></span> <span id='prev-length'></span></div>
+    <div class="now-playing-info song">
+      <div class="time-flow"><span class="song-length" id="song-length"></span><span class="time-elapsed" id="time-elapsed"></span><span class="time-remaining" id="time-remaining"></span></div>
+      <span id='current'></span>
+    </div>
+    <div class="progressbar">
+      <div class="progress-song" id="progress-bar" style="width:0%;"></div>
+    </div>
+    <div class="text-row next-song"><strong><?php echo _("Next:"); ?></strong> <span id='next'></span> <span id='next-length'></span></div>
+  </div>
+  <div class="show-block">
+    <div class="text-row">&nbsp;</div>
+    <div class="now-playing-info show">
+      <div class="recording-show" style="display: none;"></div>
+      <span id="playlist"></span>
+      <span id="show-length" class="show-length"></span>
+    </div>
+    <div class="progressbar">
+      <div class="progress-show" id='progress-show' style="width:0%;"></div>
+    </div>
+  </div>
+  <div class="source-info-block">
+    <h3><?php echo _("Source Streams") ?></h3>
+    <ul style="padding-top: 10px;">
+      <li>
+        <div id="master_dj_div" class="source-label">
+          <a id="master_dj" class="source-kick-button" onclick="kickSource(this)"></a>
+          <?php echo _("Master Source") ?>
+        </div>
+        <div class="line-to-switch"></div>
+        <a href="#" id="master_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->master_dj_switch ?></span></a>
+        <div class="line-to-on-air"></div>
+      </li>
+      <li>
+        <div id="live_dj_div" class="source-label">
+          <a id="live_dj" class="source-kick-button" onclick="kickSource(this)"></a>
+          <?php echo _("Show Source") ?>
+        </div>
+        <div class="line-to-switch"></div>
+        <a href="#" id="live_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->live_dj_switch ?></span></a>
+        <div class="line-to-on-air"></div>
+      </li>
+    </ul>
+  </div>
+  <div class="on-air-block">
+    <h3>&nbsp;</h3>
+    <div class="on-air-info off" id="on-air-info"><?php echo _("ON AIR") ?></div>
+    <a href="#" class="listen-control-button"><span><?php echo _("Listen") ?></span></a>
+  </div>
+  <div class="time-info-block pull-right">
+    <div class="time" id="time"></div>
+    <div class="personal-block">
+      <a id="current-user" href=<?php echo $this->baseUrl . "/user/edit-user" ?>><span class="name"><?php echo $this->escape($this->loggedInAs()); ?></span></a>
+      <span>|</span>
+      <a href=<?php echo $this->baseUrl . "/login/logout" ?>><?php echo _("Logout") ?></a>
+    </div>
+  </div>
+</div>
+<div id="jquery_jplayer_1" class="jp-jplayer" style="width:0px; height:0px;"></div>

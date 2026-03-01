@@ -1,0 +1,95 @@
+<div class="ui-widget prefpanel simple-formblock clearfix padded-strong stream-config">
+    <h2 style="float:left"><?php echo _("Stream Settings") ?></h2>
+    <?php $baseUrl = Config::getBasePath(); ?>
+    <form method="post" id="stream_form" enctype="application/x-www-form-urlencoded">
+        <button name="stream_save" id="stream_save_top" type="button" class="btn right-floated"><?php echo _("Save") ?></button>
+        <?php echo $this->form->getElement('csrf') ?>
+        <div style="clear:both"></div>
+        <?php echo $this->statusMsg; ?>
+        <div style="float: left; margin-right: 10px; width: 50%; overflow: auto;">
+
+            <h3><?php echo _("Global") ?></h3>
+            <fieldset class="padded stream-setting-global">
+                <dl class="zend_form">
+                    <dt id="streamFormat-label">
+                        <label class="optional"><?php echo $this->form->getElement('streamFormat')->getLabel() ?></label>
+                    </dt>
+                    <br>
+                    <dd id="streamFormat-element" class="radio-list">
+                        <?php $i = 0;
+                        $value = $this->form->getElement('streamFormat')->getValue();
+                        ?>
+                        <?php foreach ($this->form->getElement('streamFormat')->getMultiOptions() as $radio) : ?>
+                            <label for="streamFormat-<?php echo $i ?>">
+                                <input type="radio" value="<?php echo $i ?>" id="streamFormat-<?php echo $i ?>" name="streamFormat" <?php if ($i == $value) {
+                                                                                                                                        echo 'checked="checked"';
+                                                                                                                                    } ?>>
+                                <?php echo $radio ?><br><br>
+                                </input>
+                            </label>
+                            <?php $i = $i + 1; ?>
+                        <?php endforeach; ?>
+                        <?php if ($this->form->getElement('streamFormat')->hasErrors()) : ?>
+                            <ul class='errors'>
+                                <?php foreach ($this->form->getElement('streamFormat')->getMessages() as $error) : ?>
+                                    <li><?php echo $error; ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    </dd>
+
+                    <dt id="offAirMeta-label">
+                        <label>
+                            <?php echo $this->form->getElement('offAirMeta')->getLabel() ?> :
+                        </label>
+                    </dt>
+                    <dd id="offAirMeta-element">
+                        <?php echo $this->form->getElement('offAirMeta') ?>
+                    </dd>
+
+                    <dt id="enableReplayGain-label">
+                        <label>
+                            <?php echo $this->form->getElement('enableReplayGain')->getLabel() ?> :
+                        </label>
+                    </dt>
+                    <dd id="enableReplayGain-element">
+                        <?php echo $this->form->getElement('enableReplayGain') ?>
+                    </dd>
+                    <dt id="replayGainModifier-label" class="block-display">
+                        <label><?php echo $this->form->getElement('replayGainModifier')->getLabel() ?>:
+                        </label>
+                        <span id="rg_modifier_value" style="border: 0; color: #f6931f; font-weight: bold;">
+                            <?php echo $this->form->getElement('replayGainModifier')->getValue() ?>
+                        </span>
+                        <?php echo _("dB") ?>
+                    </dt>
+                    <dd id="replayGainModifier-element" class="block-display">
+                        <?php echo $this->form->getElement('replayGainModifier') ?>
+                        <?php if ($this->form->getElement('replayGainModifier')->hasErrors()) : ?>
+                            <ul class='errors'>
+                                <?php foreach ($this->form->getElement('replayGainModifier')->getMessages() as $error) : ?>
+                                    <li><?php echo $error; ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                        <div id="slider-range-max" style="width: 99%"></div>
+                    </dd>
+                </dl>
+            </fieldset>
+            <?php echo $this->form->getSubform('live_stream_subform'); ?>
+        </div>
+        <div style="float: left; width: 48%;">
+            <h3><?php echo _("Output Streams") ?></h3>
+            <fieldset class="padded">
+                <?php
+                for ($i = 1; $i <= $this->num_stream; $i++) {
+                    echo $this->form->getSubform("s" . $i . "_subform");
+                }
+                ?>
+            </fieldset>
+            <br />
+            <div style="clear: both"></div>
+            <button name="stream_save" id="stream_save_bottom" type="button" class="btn right-floated"><?php echo _("Save") ?></button>
+        </div>
+    </form>
+</div>

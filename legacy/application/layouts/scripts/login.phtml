@@ -1,0 +1,32 @@
+<?php echo $this->doctype() ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <?php echo $this->headTitle() ?>
+    <?php echo $this->headLink() ?>
+    <?php echo $this->headScript() ?>
+</head>
+<body>
+
+    <div id="login-page">
+        <?php echo $this->layout()->content ?>
+    </div>
+    <div class="footer">
+        <?php
+            $company = COMPANY_NAME . " " . COMPANY_SUFFIX;
+            $licenseSiteAnchor = "<a href='" . LICENSE_URL . "'>"
+                                  . LICENSE_VERSION
+                              . "</a>";
+            $companySiteAnchor = "<a href='" . COMPANY_SITE_URL . "'>"
+                                  . $company
+                                . "</a>";
+            echo sprintf(_('%1$s copyright &copy; %2$s All rights reserved.<br />'
+                . 'Maintained and distributed under the %3$s by %4$s'),
+            PRODUCT_NAME, $company,
+            $licenseSiteAnchor,
+            $companySiteAnchor);
+        ?>
+    </div>
+
+</body>
+</html>

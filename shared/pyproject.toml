@@ -1,0 +1,29 @@
+[tool.isort]
+profile = "black"
+combine_as_imports = true
+known_first_party = ["libretime_shared"]
+
+[tool.pylint.messages_control]
+extension-pkg-whitelist = "pydantic"
+disable = [
+  "missing-class-docstring",
+  "missing-function-docstring",
+  "missing-module-docstring",
+]
+
+[tool.mypy]
+allow_redefinition = true
+disallow_incomplete_defs= true
+disallow_untyped_calls= true
+disallow_untyped_defs= true
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "DEBUG"
+
+[tool.coverage.run]
+source = ["libretime_shared"]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

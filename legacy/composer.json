@@ -1,0 +1,65 @@
+{
+  "config": {
+    "sort-packages": true
+  },
+  "autoload": {
+    "classmap": [
+      "application/"
+    ]
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/application/",
+      "vendor/phpunit/dbunit/src/"
+    ]
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/libretime/propel1"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/libretime/celery-php"
+    }
+  ],
+  "require": {
+    "php": "^7.4",
+    "adbario/php-dot-notation": "^3.0.0",
+    "composer/semver": "^3.2",
+    "james-heinrich/getid3": "^1.9",
+    "league/uri": "^6.7",
+    "libretime/celery-php": "dev-main",
+    "libretime/propel1": "dev-main",
+    "php-amqplib/php-amqplib": "^3.0",
+    "simplepie/simplepie": "^1.5",
+    "symfony/config": "^5.4",
+    "zf1s/zend-acl": "^1.13",
+    "zf1s/zend-application": "^1.13",
+    "zf1s/zend-auth": "^1.13",
+    "zf1s/zend-cache": "^1.13",
+    "zf1s/zend-controller": "^1.13",
+    "zf1s/zend-date": "^1.13",
+    "zf1s/zend-db": "^1.13",
+    "zf1s/zend-file": "^1.13",
+    "zf1s/zend-file-transfer": "^1.13",
+    "zf1s/zend-filter": "^1.13",
+    "zf1s/zend-form": "^1.13",
+    "zf1s/zend-http": "^1.13",
+    "zf1s/zend-json": "^1.13",
+    "zf1s/zend-layout": "^1.13",
+    "zf1s/zend-loader": "^1.13",
+    "zf1s/zend-log": "^1.13",
+    "zf1s/zend-navigation": "^1.13",
+    "zf1s/zend-rest": "^1.13",
+    "zf1s/zend-session": "^1.13",
+    "zf1s/zend-validate": "^1.13",
+    "zf1s/zend-version": "^1.13",
+    "zf1s/zend-view": "^1.13"
+  },
+  "require-dev": {
+    "phpunit/dbunit": "^2.0",
+    "phpunit/phpunit": "^5.7",
+    "zf1s/zend-test": "^1.13"
+  }
+}

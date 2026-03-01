@@ -1,0 +1,48 @@
+name: API Client
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, stable-*]
+    paths:
+      - .github/workflows/_python-*.yml
+      - .github/workflows/api-client.yml
+      - api-client/**
+      - shared/**
+      - tools/python*
+
+  pull_request:
+    branches: [main, stable-*]
+    paths:
+      - .github/workflows/_python-*.yml
+      - .github/workflows/api-client.yml
+      - api-client/**
+      - shared/**
+      - tools/python*
+
+  schedule:
+    - cron: 0 1 * * 1
+
+jobs:
+  lint:
+    uses: ./.github/workflows/_python-lint.yml
+    with:
+      context: api-client
+
+  test-focal:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: api-client
+      release: focal
+
+  test-bullseye:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: api-client
+      release: bullseye
+
+  test-jammy:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: api-client
+      release: jammy

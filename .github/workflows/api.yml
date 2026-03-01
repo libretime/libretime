@@ -1,0 +1,82 @@
+name: API
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, stable-*]
+    paths:
+      - .github/workflows/_python-*.yml
+      - .github/workflows/api.yml
+      - api/**
+      - shared/**
+      - tools/python*
+
+  pull_request:
+    branches: [main, stable-*]
+    paths:
+      - .github/workflows/_python-*.yml
+      - .github/workflows/api.yml
+      - api/**
+      - shared/**
+      - tools/python*
+
+  schedule:
+    - cron: 0 1 * * 1
+
+jobs:
+  lint:
+    uses: ./.github/workflows/_python-lint.yml
+    with:
+      context: api
+
+  test-with-database:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        release:
+          - focal
+          - bullseye
+          - jammy
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: libretime
+          POSTGRES_PASSWORD: libretime
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    container:
+      image: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
+      options: --user 1001:1001
+    defaults:
+      run:
+        shell: bash
+    env:
+      LIBRETIME_DATABASE_HOST: postgres
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ matrix.release }}-pip-api-${{ hashFiles('api/**/setup.py') }}
+          restore-keys: |
+            ${{ matrix.release }}-pip-api
+
+      - name: Test
+        run: make test-coverage
+        working-directory: api
+
+      - name: Report coverage
+        uses: codecov/codecov-action@v5
+        with:
+          files: api/coverage.xml
+          flags: api
+          name: api

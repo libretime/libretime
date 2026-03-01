@@ -1,0 +1,8 @@
+;FFMETADATA1
+album=Test Album
+artist=Test Artist
+title=Test Title
+track=1/10
+date=1999
+genre=Test Genre
+comment=Test Comment

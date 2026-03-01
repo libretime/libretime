@@ -1,0 +1,120 @@
+name: Legacy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, stable-*]
+    paths:
+      - .github/workflows/legacy.yml
+      - api/**
+      - legacy/**
+
+  pull_request:
+    branches: [main, stable-*]
+    paths:
+      - .github/workflows/legacy.yml
+      - api/**
+      - legacy/**
+
+  schedule:
+    - cron: 0 1 * * 1
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php-version: "7.4" # Focal, Bullseye
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Lint
+        run: make lint
+        working-directory: legacy
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php-version: "7.4" # Focal, Bullseye
+
+    env:
+      ENVIRONMENT: testing
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup PostgreSQL
+        run: |
+          sudo systemctl start postgresql.service
+          pg_isready
+          sudo -u postgres psql -c 'CREATE DATABASE libretime;'
+          sudo -u postgres psql -c "CREATE USER libretime WITH PASSWORD 'libretime';"
+          sudo -u postgres psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;'
+          sudo -u postgres psql -c 'ALTER DATABASE libretime OWNER TO libretime;'
+          sudo -u postgres psql -c 'ALTER USER libretime CREATEDB;'
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Run tests
+        run: make test
+        working-directory: legacy
+
+  locale:
+    runs-on: ubuntu-latest
+
+    if: >
+      github.repository_owner == 'libretime' && (
+        github.event_name == 'schedule' ||
+        github.event_name == 'workflow_dispatch'
+      )
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.LIBRETIME_BOT_TOKEN }}
+
+      - name: Install dependencies
+        run: |
+          DEBIAN_FRONTEND=noninteractive sudo apt-get update
+          DEBIAN_FRONTEND=noninteractive sudo apt-get install -y gettext
+
+      - name: Update locales
+        run: |
+          git config --global user.name "libretime-bot"
+          git config --global user.email "libretime-bot@users.noreply.github.com"
+
+          git pull
+
+          make -C legacy/locale update
+
+          git add legacy/locale
+          git diff-index --quiet HEAD -- legacy/locale || {
+            git commit --message "chore(legacy): update locales"
+            git push
+          }

@@ -1,0 +1,55 @@
+<?php if (isset($this->obj)) : ?>
+    <input class="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>" />
+    <input class="obj_lastMod" type="hidden" value="<?php echo "1"; //$this->obj->getLastModified('U');
+                                                    ?>" />
+    <input class="obj_type" type="hidden" value="webstream" />
+    <div class="status" style="display:none;"></div>
+
+    <div class="inner_editor_title">
+        <H2><?php echo (_("Editing ")); ?>"<span class="title_obj_name"><?php if (isset($this->unsavedName)) echo $this->unsavedName;
+                                                                        else echo $this->escape($this->obj->getName()); ?></span>"</H2>
+    </div>
+
+    <div class="inner_editor_wrapper">
+
+
+        <dl class="zend_form side_playlist playlist_editor">
+            <dt>
+                <label><?php echo (_("Name:")); ?></label>
+            </dt>
+            <dd>
+                <div id="name-error" class="errors" style="display:none;"></div>
+                <input class="playlist_name_display" type="text" contenteditable="true" value="<?php echo $this->escape($this->obj->getName()); ?>">
+            </dd>
+
+            <dt id="description-label"><label for="description"><?php echo _("Description") ?></label></dt>
+            <dd id="description-element">
+                <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->obj->getDescription(); ?></textarea>
+            </dd>
+            <dt id="submit-label" style="display: none;">&nbsp;</dt>
+            <div id="url-error" class="errors" style="display:none;"></div>
+            <dt id="streamurl-label"><label for="streamurl"><?php echo _("Stream URL:"); ?></label></dt>
+            <dd id="streamurl-element">
+                <input type="url" value="<?php echo $this->obj->getUrl(); ?>" size="40" />
+            </dd>
+            <div id="length-error" class="errors" style="display:none;"></div>
+            <dt id="streamlength-label"><label for="streamlength"><?php echo _("Default Length:"); ?></label></dt>
+            <dd id="streamlength-element">
+                <input type="text" value="<?php echo $this->obj->getDefaultLength() ?>" />
+            </dd>
+        </dl>
+    </div>
+
+
+    <div class="btn-toolbar clearfix">
+        <div class="btn-group pull-right">
+            <button class="btn" type="button" id="webstream_cancel" name="submit"><?php echo _("Cancel") ?></button>
+        </div>
+        <div class="btn-group pull-right">
+            <button class="btn" type="submit" id="webstream_save" name="submit"><?php echo _("Save") ?></button>
+        </div>
+    </div>
+
+<?php else : ?>
+    <div><?php echo _("No webstream") ?></div>
+<?php endif; ?>

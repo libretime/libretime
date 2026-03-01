@@ -1,0 +1,23 @@
+{
+"sEmptyTable":     "Ця таблиця не містить даних",
+"sInfo":           "Показано від _START_ по _END_ з _TOTAL_ записів",
+"sInfoEmpty":      "Показано від 0 по 0 з 0 записів",
+"sInfoFiltered":   "(відфільтровано з _MAX_ записів)",
+"sInfoPostFix":    "",
+"sInfoThousands":  ",",
+"sLengthMenu":     "Показати _MENU_ записів",
+"sLoadingRecords": "Завантаження...",
+"sProcessing":     "Опрацювання...",
+"sSearch":         "",
+"sZeroRecords":    "Не знайдено жодних записів",
+"oPaginate": {
+    "sFirst":    "Перша",
+    "sLast":     "Остання",
+    "sNext":     "Наступна",
+    "sPrevious": "Попередня"
+},
+"oAria": {
+    "sSortAscending":  ": активуйте, щоб сортувати колонку за зростанням",
+    "sSortDescending": ": активуйте, щоб сортувати колонку за спаданням"
+}
+}

@@ -1,0 +1,42 @@
+<?php echo $this->csrf ?>
+
+<div id="library_content" class="lib-content tabs content-pane wide-panel">
+    <div>
+        <h2 id="library_title"><?php echo _("Dashboard") . " - " ?><span id="library_filter"></span></h2>
+    </div>
+    <div class="panel-header">
+        <div id="advanced-options" class="btn-group">
+            <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+                <span id="lib-filter-message"></span>
+                <span class="caret"></span>
+            </button>
+            <div id="advanced_search" class="advanced_search form-horizontal dropdown-menu"></div>
+        </div>
+    </div>
+    <div class="outer-datatable-wrapper">
+        <table id="library_display" cellpadding="0" cellspacing="0" class="datatable"></table>
+        <table id="podcast_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+    </div>
+</div>
+
+<div id="show_builder" class="sb-content content-pane wide-panel">
+    <div class="panel-header">
+        <ul class="nav nav-tabs">
+            <li id="schedule-tab" data-tab-id="0" role="presentation" class="active">
+                <a href="javascript:void(0)" class="tab-name" title="<?php echo _("Scheduled Shows") ?>">
+                    <?php echo _("Scheduled Shows") ?>
+                    <span href='#' class='lib_pl_close icon-remove'></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="outer-datatable-wrapper active-tab">
+        <table id="show_builder_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+        <div class="sb-timerange">
+            <?php echo $this->sb_form; ?>
+        </div>
+    </div>
+</div>
+
+<?php echo $this->dialog ?>
+<?php echo $this->lang_tz_popup_form; ?>

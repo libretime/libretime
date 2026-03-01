@@ -1,0 +1,31 @@
+.landing-page-content {
+    margin: 0 auto;
+    width: 100%;
+    color: #fff;
+    padding-top: 60px;
+    /*position: relative;*/
+}
+
+.station-info {
+    /*position: absolute;*/
+}
+
+/*@media (min-width: 640px) {
+    .station-info {
+        float:left;
+        margin-right: 20px;
+        width: 200px;
+    }
+
+    .player {
+        overflow: hidden;
+    }
+}
+
+@media (max-width: 640px) {
+    .station-info {
+       float: none;
+        margin-right: 0px;
+        width: auto;
+    }
+}*/

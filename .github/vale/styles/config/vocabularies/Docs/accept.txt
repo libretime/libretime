@@ -1,0 +1,7 @@
+(?i)icecast
+(?i)liquidsoap
+(?i)playout
+(?i)rabbitmq
+
+(?i)ogg
+(?i)vorbis

@@ -1,0 +1,127 @@
+---
+name: Bug report
+description: Create a report to help us improve
+labels: ["is: bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Thanks for opening a new bug report!
+
+        Please make sure of the following:
+        - You agree to follow [this project's Code of Conduct](https://github.com/libretime/organization/blob/main/CODE_OF_CONDUCT.md)
+        - You have verified that your issue [hasn't already been created](https://github.com/libretime/libretime/issues?q=is%3Aopen+is%3Aissue+label%3A%22is%3A+feature-request%22).
+        - You will gather and properly fill all the requested information.
+
+        Some useful links:
+        - [Install documentation](https://libretime.org/docs/admin-manual/setup/install/)
+        - [Troubleshooting documentation](https://libretime.org/docs/admin-manual/troubleshooting/).
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: To reproduce
+      description: Steps to reproduce the behavior.
+      value: |
+        1. Go to ...
+        2. Click on ...
+        3. Scroll down to ...
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output or error messages
+      description: |
+        Please copy and paste any relevant log output or error messages.
+
+        *To help you gather relevant logs, please read the [troubleshooting documentation](https://libretime.org/docs/admin-manual/troubleshooting/#logs).*
+
+        *This will be automatically formatted into code, so no need for backticks.*
+      render: shell
+
+  - type: input
+    id: version
+    attributes:
+      label: LibreTime version
+      description: |
+        The version of LibreTime your are running.
+
+        For example `3.0.0-beta.1` or `main-c9bc3a12987e74e0980fc8adcc4702d9f8ad4249`
+
+        *You can find the LibreTime version on the Settings > Status page.*
+      value: 3.0.0-beta.1
+    validations:
+      required: true
+
+  - type: textarea
+    id: installation-environment
+    attributes:
+      label: Installation method and OS / Environment
+      description: |
+        The method used to install and the operating system / environment your installation is running on.
+
+        For example:
+        ```
+        Operating system: Ubuntu Focal or Debian Bullseye
+        Method: Installer script or Docker compose
+        ```
+      value: |
+        Operating system:
+        Method:
+    validations:
+      required: true
+
+  - type: textarea
+    id: installation-details
+    attributes:
+      label: Installation details
+      description: |
+        Any details about your installation that haven't been covered by the above.
+
+        For example the content of your `docker-compose.yml` file, or the command used to run the installation script.
+
+  - type: textarea
+    id: client-environment
+    attributes:
+      label: Client Environment
+      description: |
+        Environment information used to access LibreTime.
+
+        For example:
+        ```
+        Operating system: Ubuntu Focal or Debian Bullseye
+        Browser: Firefox 105.0.1 or Chrome 106.0.5249.61
+        ```
+
+        *Please complete the following information if applicable.*
+      value: |
+        Operating system:
+        Browser:
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: |
+        Screenshots to help explain your problem.
+        *Please complete the following information if applicable.*

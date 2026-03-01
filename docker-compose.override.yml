@@ -1,0 +1,91 @@
+#
+# This file is used for development. It it not intended for production!
+# See https://libretime.org/docs/developer-manual/development/environment/#docker-compose
+#
+services:
+  postgres:
+    ports:
+      - 5432:5432
+
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  playout:
+    build:
+      context: .
+      target: libretime-playout
+    volumes:
+      - ./playout:/src
+      - ./dev/playout:/app
+
+  liquidsoap:
+    build:
+      context: .
+      target: libretime-playout
+    ports:
+      - 1234:1234
+    volumes:
+      - ./playout:/src
+      - ./dev/playout:/app
+      - ./dev/certs:/certs
+      ## See https://libretime.org/docs/admin-manual/tutorials/setup-a-pulseaudio-output-inside-containers/
+      # - ./dev/pulse.socket:/tmp/pulse.socket
+      # - ./docker/pulse.client.conf:/etc/pulse/client.conf
+
+  analyzer:
+    build:
+      context: .
+      target: libretime-analyzer
+    volumes:
+      - ./analyzer:/src
+
+  worker:
+    build:
+      context: .
+      target: libretime-worker
+    volumes:
+      - ./worker:/src
+
+  api:
+    build:
+      context: .
+      target: libretime-api
+    volumes:
+      - ./api:/src
+    command: /usr/local/bin/libretime-api runserver 0.0.0.0:9001
+    environment:
+      LIBRETIME_DEBUG: "true"
+
+  legacy:
+    build:
+      context: .
+      target: libretime-legacy
+    volumes:
+      - ./legacy:/var/www/html
+
+  nginx:
+    build:
+      context: .
+      target: libretime-nginx
+    volumes:
+      - ./legacy:/var/www/html
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+  icecast:
+    ports:
+      - 8000:8000
+      - 8443:8443
+    environment:
+      ICECAST_MAX_SOURCES: 10
+    volumes:
+      - ./dev/certs:/certs
+      - ./dev/icecast.xml:/etc/icecast.xml
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - 8025:8025
+      - 1025:1025

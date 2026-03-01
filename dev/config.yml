@@ -1,0 +1,71 @@
+general:
+  public_url: http://localhost:8080
+  api_key: some_secret_api_key
+  secret_key: some_secret_key
+
+database:
+  host: postgres
+
+rabbitmq:
+  host: rabbitmq
+
+email:
+  host: mailpit
+  port: 1025
+
+playout:
+  liquidsoap_host: liquidsoap
+
+liquidsoap:
+  server_listen_address: 0.0.0.0
+
+  harbor_ssl_certificate: /certs/fake.crt
+  harbor_ssl_private_key: /certs/fake.key
+
+stream:
+  inputs:
+    main:
+      public_url: https://localhost:8001/main
+      mount: main
+      port: 8001
+      secure: true
+
+  outputs:
+    .default_icecast_output: &default_icecast_output
+      host: icecast
+      port: 8000
+      source_password: hackme
+      admin_password: hackme
+      name: LibreTime!
+      description: LibreTime Radio!
+      website: https://libretime.org
+      genre: various
+
+    icecast:
+      - <<: *default_icecast_output
+        enabled: true
+        mount: main.ogg
+        public_url: https://localhost:8443/main.ogg
+        audio:
+          format: ogg
+          bitrate: 256
+
+      - <<: *default_icecast_output
+        enabled: true
+        mount: main.opus
+        public_url: https://localhost:8443/main.opus
+        audio:
+          format: opus
+          bitrate: 256
+
+      - <<: *default_icecast_output
+        enabled: true
+        mount: main.mp3
+        public_url: https://localhost:8443/main.mp3
+        audio:
+          format: mp3
+          bitrate: 256
+
+    system:
+      - enabled: false
+        kind: pulseaudio

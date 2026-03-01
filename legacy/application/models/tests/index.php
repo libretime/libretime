@@ -1,0 +1,5 @@
+<?php
+
+header('location: ../');
+
+exit;

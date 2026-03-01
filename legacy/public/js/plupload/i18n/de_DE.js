@@ -1,0 +1,27 @@
+// German
+plupload.addI18n({
+    '%d files queued': '%d Dateien in der Warteschlange',
+    'Add files to the upload queue and click the start button.' : '\'Dateien\' hinzuf&uuml;gen und auf \'Hochladen\' klicken.',
+    'Add files' : 'Dateien', // hinzuf&uuml;gen',
+    'Add Files': 'Dateien', // hinzuf&uuml;gen',
+    'Drag files here.' : 'Ziehe Dateien hier hin. (Drag &amp; Drop)',
+    'File extension error.': 'Fehler bei Dateiendung',
+    'File size error.': 'Fehler bei Dateigr&ouml;ße',
+    'Filename' : 'Dateiname',
+    'Generic error.': 'Typischer Fehler',
+    'HTTP Error.': 'HTTP-Fehler',
+    'Init error.': 'Initialisierungsfehler',
+    'IO error.': 'Ein/Ausgabe-Fehler',
+    'N/A' : 'Nicht verf&uuml;gbar',
+    'Security error.': 'Sicherheitsfehler',
+    'Select files' : 'Dateien hochladen',
+    'Size' : 'Gr&ouml;&szlig;e',
+    'Start upload': 'Hochladen',
+    'Start Upload': 'Hochladen',
+    'Start uploading queue' : 'Hochladen starten',
+    'Status' : 'Status',
+    'Stop current upload' : 'Aktuelles Hochladen stoppen',
+    'Stop Upload': 'Hochladen stoppen',
+    'Uploaded %d/%d files': '%d/%d Dateien sind hochgeladen',
+    "Error: Invalid file extension: " : $.i18n._("Error: Invalid file extension: ")
+});

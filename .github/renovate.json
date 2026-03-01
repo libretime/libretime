@@ -1,0 +1,35 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base", ":enablePreCommit", ":preserveSemverRanges"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "commitMessageAction": "lock file maintenance",
+    "commitMessageExtra": "({{packageFile}})",
+    "branchTopic": "lock-file-maintenance-{{packageFile}}",
+    "schedule": ["after 4am and before 5am on monday"],
+    "automerge": true,
+    "automergeType": "branch"
+  },
+  "baseBranches": ["main"],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "addLabels": ["ci"]
+    },
+    {
+      "matchManagers": ["composer"],
+      "addLabels": ["php"]
+    },
+    {
+      "matchManagers": ["pip_setup", "pip_requirements"],
+      "addLabels": ["python"],
+      "rangeStrategy": "widen"
+    },
+    {
+      "matchManagers": ["github-actions", "pre-commit"],
+      "automerge": true,
+      "automergeType": "branch"
+    }
+  ]
+}

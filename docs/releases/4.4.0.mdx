@@ -1,0 +1,60 @@
+---
+title: LibreTime 4.4.0
+---
+
+import ReleaseHead from "./_release-head.mdx";
+
+<ReleaseHead date="2025-05-29" version="4.4.0" />
+
+## :sparkling_heart: Contributors
+
+The LibreTime project wants to thank the following contributors for authoring PRs to this release:
+
+- @dakriy
+- @jooola
+- @paddatrapper
+
+## :rocket: Features
+
+Please see the [changelog](https://github.com/libretime/libretime/blob/main/CHANGELOG.md).
+
+## :bug: Bug fixes
+
+Please see the [changelog](https://github.com/libretime/libretime/blob/main/CHANGELOG.md).
+
+## :arrow_up: Upgrading
+
+### Docker nginx container
+
+When deploying using Docker, we now require using our custom nginx container
+`libretime/libretime-nginx`. This new image embeds the legacy app assets and the
+`nginx.conf`.
+
+For existing installation, consider updating your `docker-compose.yml` file as follows:
+
+```git
+   legacy:
+     image: ghcr.io/libretime/libretime-legacy:${LIBRETIME_VERSION:-latest}
+     init: true
+     ulimits:
+       nofile: 1024
+     depends_on:
+       - postgres
+       - rabbitmq
+     volumes:
+       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+-      - libretime_assets:/var/www/html
+       - libretime_storage:/srv/libretime
+
+   nginx:
+-    image: nginx
++    image: ghcr.io/libretime/libretime-nginx:${LIBRETIME_VERSION:-latest}
+     ports:
+       - 8080:8080
+     depends_on:
+       - legacy
+     volumes:
+-      - libretime_assets:/var/www/html:ro
+       - libretime_storage:/srv/libretime:ro
+       - ${NGINX_CONFIG_FILEPATH:-./nginx.conf}:/etc/nginx/conf.d/default.conf:ro
+```

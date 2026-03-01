@@ -1,0 +1,21 @@
+<form method="<?php echo $this->element->getMethod() ?>" enctype="multipart/form-data">
+    <?php echo $this->element->getElement('csrf') ?>
+
+    <?php echo $this->element->getSubform('preferences_general') ?>
+
+    <h3 class="collapsible-header" id="tunein-pref-heading"><span class="arrow-icon"></span><?php echo _("TuneIn Settings"); ?></h3>
+    <div class="collapsible-content" id="tunein-settings">
+        <?php echo $this->element->getSubform('preferences_tunein') ?>
+    </div>
+
+    <!-- Hide the 'dangerous settings' by default -->
+    <h3 class="collapsible-header closed" id="dangerous-heading"><span class="arrow-icon"></span><?php echo _("Dangerous Options") ?></h3>
+    <div class="collapsible-content" id="dangerous-settings" style="display:none;">
+        <?php echo $this->element->getSubform('preferences_danger') ?>
+    </div>
+
+    <br>
+
+    <?php echo $this->element->submit->render() ?>
+
+</form>

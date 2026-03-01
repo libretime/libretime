@@ -1,0 +1,36 @@
+---
+coverage:
+  status:
+    project: off
+    patch: off
+
+flags:
+  analyzer:
+    paths:
+      - analyzer/
+    carryforward: true
+
+  api:
+    paths:
+      - api/
+    carryforward: true
+
+  api-client:
+    paths:
+      - api-client/
+    carryforward: true
+
+  playout:
+    paths:
+      - playout/
+    carryforward: true
+
+  shared:
+    paths:
+      - shared/
+    carryforward: true
+
+  worker:
+    paths:
+      - worker/
+    carryforward: true

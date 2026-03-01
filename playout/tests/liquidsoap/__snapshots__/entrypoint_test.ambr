@@ -1,0 +1,415 @@
+# serializer version: 1
+# name: test_generate_entrypoint[stream_config0-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_main_secure = false
+  input_show_mount = "show"
+  input_show_port = 8002
+  input_show_secure = false
+  
+  # Settings
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  
+  
+  gateway("started")
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config1-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_main_secure = false
+  input_show_mount = "show"
+  input_show_port = 8002
+  input_show_secure = false
+  
+  # Settings
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  set("harbor.ssl.certificate", "/fake/ssl.cert")
+  set("harbor.ssl.private_key", "/fake/ssl.key")
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  
+  
+  gateway("started")
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config2-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_main_secure = false
+  input_show_mount = "show"
+  input_show_port = 8002
+  input_show_secure = false
+  
+  # Settings
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  # icecast:1
+  output_icecast_1_source = s
+  # Disable ogg metadata
+  output_icecast_1_source = add(normalize=false, [amplify(0.00001, noise()), output_icecast_1_source])
+  output.icecast(
+    id="icecast:1",
+    host="localhost",
+    port=8000,
+    mount="main",
+    user="source",
+    password="hackme",
+    fallible = true,
+    name="LibreTime!",
+    description="LibreTime Radio! Stream #1",
+    genre="various",
+    url="https://libretime.org",
+    on_connect=make_ouput_on_connect_handler("1"),
+    on_error=make_ouput_on_error_handler("1"),
+    %ogg(%vorbis(
+      quality=0.8,
+      channels=2
+    )),
+    output_icecast_1_source,
+  )
+  
+  
+  
+  gateway("started")
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config3-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_main_secure = false
+  input_show_mount = "show"
+  input_show_port = 8002
+  input_show_secure = false
+  
+  # Settings
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  # shoutcast:1
+  output_shoutcast_1_source = s
+  output.shoutcast(
+    id="shoutcast:1",
+    host="localhost",
+    port=8000,
+    user="source",
+    password="hackme",
+    fallible = true,
+    name="",
+    genre="various",
+    url="https://libretime.org",
+    on_connect=make_ouput_on_connect_handler("1"),
+    on_error=make_ouput_on_error_handler("1"),
+    %mp3(
+      bitrate=256,
+      stereo=true
+    ),
+    output_shoutcast_1_source,
+  )
+  
+  
+  
+  gateway("started")
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config4-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_main_secure = false
+  input_show_mount = "show"
+  input_show_port = 8002
+  input_show_secure = false
+  
+  # Settings
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  # icecast:1
+  output_icecast_1_source = s
+  # Disable ogg metadata
+  output_icecast_1_source = add(normalize=false, [amplify(0.00001, noise()), output_icecast_1_source])
+  output.icecast(
+    id="icecast:1",
+    host="localhost",
+    port=8000,
+    mount="main",
+    user="source",
+    password="hackme",
+    fallible = true,
+    name="",
+    description="",
+    genre="",
+    url="",
+    on_connect=make_ouput_on_connect_handler("1"),
+    on_error=make_ouput_on_error_handler("1"),
+    %ogg(%vorbis(
+      quality=0.8,
+      channels=2
+    )),
+    output_icecast_1_source,
+  )
+  
+  # shoutcast:2
+  output_shoutcast_2_source = s
+  output.shoutcast(
+    id="shoutcast:2",
+    host="localhost",
+    port=8000,
+    user="source",
+    password="hackme",
+    fallible = true,
+    name="",
+    genre="",
+    url="",
+    on_connect=make_ouput_on_connect_handler("2"),
+    on_error=make_ouput_on_error_handler("2"),
+    %mp3(
+      bitrate=256,
+      stereo=true
+    ),
+    output_shoutcast_2_source,
+  )
+  
+  
+  
+  gateway("started")
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config5-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_main_secure = false
+  input_show_mount = "show"
+  input_show_port = 8002
+  input_show_secure = false
+  
+  # Settings
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  # pulseaudio:1
+  %ifndef output.pulseaudio
+  log("output.pulseaudio is not defined!")
+  %endif
+  %ifdef output.pulseaudio
+  output.pulseaudio(
+    id="pulseaudio:1",
+    s
+  )
+  %endif
+  
+  
+  
+  gateway("started")
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config6-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_main_secure = false
+  input_show_mount = "show"
+  input_show_port = 8002
+  input_show_secure = false
+  
+  # Settings
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  # pulseaudio:1
+  %ifndef output.pulseaudio
+  log("output.pulseaudio is not defined!")
+  %endif
+  %ifdef output.pulseaudio
+  output.pulseaudio(
+    id="pulseaudio:1",
+    device="alsa_output.pci-0000_00_sink",
+    s
+  )
+  %endif
+  
+  
+  
+  gateway("started")
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config7-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_main_secure = false
+  input_show_mount = "show"
+  input_show_port = 8002
+  input_show_secure = false
+  
+  # Settings
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  
+  
+  gateway("started")
+  
+  '''
+# ---

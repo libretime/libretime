@@ -1,0 +1,121 @@
+services:
+  postgres:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-libretime}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-libretime} # Change me !
+    healthcheck:
+      test: pg_isready -U libretime
+
+  rabbitmq:
+    image: rabbitmq:3.13-alpine
+    environment:
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST:-/libretime}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-libretime}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-libretime} # Change me !
+    healthcheck:
+      test: nc -z 127.0.0.1 5672
+
+  playout:
+    image: ghcr.io/libretime/libretime-playout:${LIBRETIME_VERSION:-latest}
+    init: true
+    ulimits:
+      nofile: 1024
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+      - libretime_playout:/app
+    environment:
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
+
+  liquidsoap:
+    image: ghcr.io/libretime/libretime-playout:${LIBRETIME_VERSION:-latest}
+    command: /usr/local/bin/libretime-liquidsoap
+    init: true
+    ulimits:
+      nofile: 1024
+    ports:
+      - 8001:8001
+      - 8002:8002
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+      - libretime_playout:/app
+    environment:
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
+
+  analyzer:
+    image: ghcr.io/libretime/libretime-analyzer:${LIBRETIME_VERSION:-latest}
+    init: true
+    ulimits:
+      nofile: 1024
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+      - libretime_storage:/srv/libretime
+    environment:
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
+
+  worker:
+    image: ghcr.io/libretime/libretime-worker:${LIBRETIME_VERSION:-latest}
+    init: true
+    ulimits:
+      nofile: 1024
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+    environment:
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
+
+  api:
+    image: ghcr.io/libretime/libretime-api:${LIBRETIME_VERSION:-latest}
+    init: true
+    ulimits:
+      nofile: 1024
+    depends_on:
+      - postgres
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+      - libretime_storage:/srv/libretime
+
+  legacy:
+    image: ghcr.io/libretime/libretime-legacy:${LIBRETIME_VERSION:-latest}
+    init: true
+    ulimits:
+      nofile: 1024
+    depends_on:
+      - postgres
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+      - libretime_storage:/srv/libretime
+
+  nginx:
+    image: ghcr.io/libretime/libretime-nginx:${LIBRETIME_VERSION:-latest}
+    ports:
+      - 8080:8080
+    depends_on:
+      - legacy
+    volumes:
+      - libretime_storage:/srv/libretime:ro
+
+  icecast:
+    image: ghcr.io/libretime/icecast:2.4.4
+    ports:
+      - 8000:8000
+    environment:
+      ICECAST_SOURCE_PASSWORD: ${ICECAST_SOURCE_PASSWORD:-hackme} # Change me !
+      ICECAST_ADMIN_PASSWORD: ${ICECAST_ADMIN_PASSWORD:-hackme} # Change me !
+      ICECAST_RELAY_PASSWORD: ${ICECAST_RELAY_PASSWORD:-hackme} # Change me !
+
+volumes:
+  postgres_data: {}
+  libretime_storage: {}
+  libretime_playout: {}

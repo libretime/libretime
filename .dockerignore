@@ -1,0 +1,13 @@
+*/install/
+*/Makefile
+*/README.md
+*/tests/
+*/tools/
+.*
+
+# Specific ignores
+api/schema.yml
+
+# Required files
+!legacy/install/php/libretime-legacy.ini
+!legacy/Makefile

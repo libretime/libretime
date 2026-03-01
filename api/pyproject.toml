@@ -1,0 +1,51 @@
+[tool.isort]
+profile = "black"
+combine_as_imports = true
+known_first_party = ["libretime_api"]
+
+[tool.pylint.master]
+load-plugins = "pylint_django"
+django-settings-module = "libretime_api.settings.testing"
+
+[tool.pylint.messages_control]
+extension-pkg-whitelist = "pydantic"
+disable = [
+  "duplicate-code",
+  "fixme",
+  "missing-class-docstring",
+  "missing-function-docstring",
+  "missing-module-docstring",
+  "too-few-public-methods",
+  "too-many-arguments",
+]
+
+[tool.pylint.design]
+max-parents = 15
+
+[tool.mypy]
+plugins = [
+  "mypy_django_plugin.main",
+  "mypy_drf_plugin.main",
+]
+ignore_missing_imports = true
+
+[tool.django-stubs]
+django_settings_module = "libretime_api.settings.testing"
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "DEBUG"
+
+DJANGO_SETTINGS_MODULE = "libretime_api.settings.testing"
+
+[tool.coverage.run]
+plugins = ["django_coverage_plugin"]
+source = ["libretime_api"]
+omit = [
+  "*/migrations/*",
+  "*/tests/*",
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

@@ -1,0 +1,68 @@
+#station_podcast {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#station_podcast .angular_wrapper {
+    flex-flow: row;
+    overflow: hidden;
+}
+
+#station_podcast .inner_editor_title h2 {
+    width: 40%;
+}
+
+#station_podcast .inner_editor_title * {
+    margin: 0;
+}
+
+#station_podcast .inner_editor_title button {
+    margin: 0 0 0 4px;
+}
+
+#station_podcast .collapsible-header {
+    margin: 0 0 20px;
+    top: 20px;
+}
+
+#station_podcast .dataTables_wrapper {
+    margin-left: 10px
+}
+
+#station_podcast .dataTables_filter input {
+    width: 100%;
+}
+
+.station_podcast_wrapper {
+    padding: 8px;
+    overflow-x: hidden;
+}
+
+#station_podcast_help_text {
+    padding-top: 20px;
+    font-size: 14px;
+    text-align: center;
+    padding: 0 10px;
+    margin-top: 0;
+}
+
+#podcast-settings label:nth-child(even) {
+    width: 100%;
+    text-align: left;
+}
+
+#podcast-settings #podcast-privacy-options label {
+    width: 12%;
+    text-align: left;
+}
+
+#podcast-settings label > input {
+    width: auto;
+    margin: 6px 6px 0 0%;
+}
+
+label {
+    text-align: right;
+    line-height: 26px;
+}

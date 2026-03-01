@@ -1,0 +1,15 @@
+<div class="ui-widget prefpanel simple-formblock clearfix padded-strong preferences">
+    <h2 id="preferences_header"><?php echo _("General") ?></h2>
+    <?php $baseUrl = Config::getBasePath(); ?>
+    <form method="post" id="pref_form" enctype="multipart/form-data">
+
+        <?php echo $this->form->getElement('submit')->render() ?>
+        <div style="clear:both"></div>
+
+        <?php
+        echo $this->statusMsg;
+        echo $this->form;
+        ?>
+        <br />
+    </form>
+</div>

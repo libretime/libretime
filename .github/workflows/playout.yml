@@ -1,0 +1,50 @@
+name: Playout
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, stable-*]
+    paths:
+      - .github/workflows/_python-*.yml
+      - .github/workflows/playout.yml
+      - playout/**
+      - api-client/**
+      - shared/**
+      - tools/python*
+
+  pull_request:
+    branches: [main, stable-*]
+    paths:
+      - .github/workflows/_python-*.yml
+      - .github/workflows/playout.yml
+      - playout/**
+      - api-client/**
+      - shared/**
+      - tools/python*
+
+  schedule:
+    - cron: 0 1 * * 1
+
+jobs:
+  lint:
+    uses: ./.github/workflows/_python-lint.yml
+    with:
+      context: playout
+
+  test-focal:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: playout
+      release: focal
+
+  test-bullseye:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: playout
+      release: bullseye
+
+  test-jammy:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: playout
+      release: jammy

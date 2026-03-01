@@ -1,0 +1,10 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+packages:
+  - git
+
+runcmd:
+  - git clone https://github.com/libretime/libretime /root/libretime
+  - cd /root/libretime
+  - HOME=/root bash install "http://$(ip route get 8.8.8.8 | awk '{print $7}'):8080"

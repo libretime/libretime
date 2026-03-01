@@ -1,0 +1,6 @@
+extends: substitution
+message: Consider using '%s'
+level: warning
+ignorecase: false
+swap:
+  Libretime: LibreTime

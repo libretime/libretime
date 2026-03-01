@@ -1,0 +1,85 @@
+name: Docs
+
+on:
+  push:
+    branches: [main, stable-*]
+    paths:
+      - .github/vale/**
+      - .github/workflows/docs.yml
+      - docs/**
+
+  pull_request:
+    branches: [main, stable-*]
+    paths:
+      - .github/vale/**
+      - .github/workflows/docs.yml
+      - docs/**
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/bin/vale*
+          key: ${{ runner.os }}-docs-lint-tools
+          restore-keys: |
+            ${{ runner.os }}-docs-lint-tools
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install -g mdx2vast
+
+      - name: Install Vale
+        run: |
+          python -m venv venv && source venv/bin/activate
+          pip install gh-release-install
+
+          sudo venv/bin/gh-release-install \
+            errata-ai/vale \
+            vale_{version}_Linux_64-bit.tar.gz --extract vale \
+            /usr/local/bin/vale \
+            --version v3.11.2 \
+            --version-file '{destination}.version'
+
+      - name: Add annotations matchers
+        run: |
+          echo "::add-matcher::.github/annotations/vale.json"
+
+      - name: Run Vale
+        run: |
+          vale sync
+          vale --output line docs || true
+          vale --output line --minAlertLevel=error docs/releases
+
+  sync:
+    name: Sync
+    if: >
+      github.repository_owner == 'libretime' &&
+      github.event_name == 'push'
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/checkout@v5
+        with:
+          repository: libretime/website
+          path: website
+          ssh-key: "${{ secrets.WEBSITE_DEPLOY_KEY }}"
+
+      - name: Sync docs changes
+        run: tools/ci-sync-docs.sh ${{ github.event.before }}..${{ github.sha }}

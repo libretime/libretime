@@ -1,0 +1,160 @@
+---
+title: LibreTime 3.0.0 alpha 7
+---
+
+import ReleaseHead from "./_release-head.mdx";
+
+<ReleaseHead date="2019-04-22" version="3.0.0-alpha.7" />
+
+## :sparkling_heart: Contributors
+
+The LibreTime project wants to thank the following contributors for contributing to this release:
+
+- @robbt
+- @frecuencialibre
+- @detobate
+- @greenjon
+- @xabispacebiker
+- @mikeopensauce
+- @paddatrapper
+- @hairmare
+- @ryanrain
+
+## :rocket: Features
+
+- Set default focus to search field on library page.
+- PHP 7.2 and 7.3 compatibility (for Ubuntu 18.04.1 LTS (Bionic Beaver) and other modern distros)
+- "Podcast Album Override" is now "Podcast Metadata Override " and additionally overrides the track title with the title from the RSS feed. The artist field is set to the podcast name in LibreTime.
+- Allowed users to customize the title of podcasts
+- Disabled the creation of smartblocks and playlists for new podcasts by default and added a generate button under the edit podcast tab
+- Better libvirt integration in Vagrant setup.
+- Debian 11 (Buster) support
+- Add columns for uploaded and genre to default library view, sorts it by uploaded and removes album column by default
+- Add more details to the information returned by the API `onAirLightAction` call
+- Update Spanish translations
+- Allow admins to edit the owner of a track
+- Added system-wide intro and outro playlists for autoloading playlists
+- Added show-source info to live-info-v2 API
+- Update much of the documentation
+- Allow program managers to view listeners statistics
+
+## :bug: Bug fixes
+
+- Fix DOS line-endings in vendorized PHP dependencies for packaging.
+- Fix overlapping show names if show doesn't fit in calendar.
+- Fall back to treating file as MP3 if it isn't recognized by mutagen.
+- Remove defunct support-setting page.
+- Remove legacy AAC code, fix AAC support for SHOUTcast.
+- Display Settings menu for all users.
+- Make "Time Remaining" Smartblock work in Playlist.
+- Fix non-audio enclosure crash when importing badly formed podcast feeds
+- Fix flac files not playing out
+- Fix 500 error when making API call `onAirLightAction`
+- Fix warning message shown in `schedule` API call
+- Fix bug where many empty playlists were created when using autoloading
+- Passed show variable to smartblocks loaded via playlist to fix time remaining smartblocks with autoloading playlists.
+- Restore top right user setting link and logout link to UI
+- Fix an unnecessary type conversion to seconds that caused errors with PHP 7.2
+- Fix import errors on podcast episodes with long descriptions
+- Fix issue with multiple time remaining smartblocks in a single playlist not detecting remaining time correctly
+- Fix occasional empty administration page due to null previous file reference
+
+## :fire: Deprecation and removal
+
+### Deprecation of Debian 8 (Jessie)
+
+This info is an early warning that we're deprecating a major os version.
+
+Debian 9 (Stretch) is now available and Jessie is EOL since June 2018.
+
+## :warning: Known issues
+
+The following issues may need a workaround for the time being. Please search the [issues](https://github.com/libretime/libretime/issues) before reporting problems not listed below.
+
+### Installer Issues
+
+The installer is generally a bit unstable, we hope to be able to offer some reasonable packages at some point. Some of the GUI driven parts before the first login are also in a somewhat questionable state.
+
+For now the installer distro selection is pretty good at auto detecting your os and usually does an ok job depending on your distro. You should usually not need to pass a --distribution and --release parameter, those are still supported for the time being but their use isn't recommended.
+
+The UI works best if you don't use it in an opinionated fashion and change just the bare minimal.
+
+If you want to skip the installer GUI completely you can configure LibreTime using `airtime_mvc/build/airtime.example.conf` as an template. Due to some python/PHP differences you must remove all comments from the example to use it 😞. You'll also have to create some folder structures manually and check if the music dir got properly created directly in the database. Referencing a second `install -fiap` install on a non productive system for reference can help with this type of bootstrap.
+
+### Media-Monitor config needs manual removing
+
+If you are using the `install` script you should most likely remove the `[media-monitor]` config section from your `/etc/airtime/airtime.conf` file to ensure you don't run into the problems described in
+https://github.com/libretime/libretime/issues/450. We recommend you do this before running the update since there are no known LibreTime releases that depend on the config value.
+
+### Outdated silan reports unreliable cue in/out information
+
+Out of the box the installer installs a broken, outdated version of silan (0.3.2) on some Debian based Platforms (ie. Ubuntu). This affects Ubuntu 16.04, Debian Jessie and Debian Stretch. CentOS doesn't have upstream packages and you may either install from source or use the [0.3.3 packages](https://github.com/radiorabe/centos-rpm-silan) from [RaBe APEL](https://build.opensuse.org/project/show/home:radiorabe:audio).
+
+Check your version of silan by running `silan --version`. This should report `0.3.3` or higher. If not please see the [Silan Installation](https://github.com/libretime/libretime/wiki/Silan-Installation) wiki page for more details & workarounds.
+
+To date silan 0.3.3 or higher is in Debian testing & Ubuntu Bionic. You can check the upstream progress the [Debian PTS](https://tracker.debian.org/pkg/silan) and [Ubuntu launchpad](https://launchpad.net/ubuntu/+source/silan). This section will get removed once the package is in stable.
+
+tldr: **[Silan Installation](https://github.com/libretime/libretime/wiki/Silan-Installation)**
+
+### Liquidsoap Support
+
+LibreTime currently only supports liquidsoap `< 1.3.0` out of the box. If you install a current version of liquidsoap [using OPAM](https://www.liquidsoap.info/) or through the [Rabe Liquidsoap Distribution for CentOS (RaBe LSD)](https://build.opensuse.org/project/show/home:radiorabe:liquidsoap) you will most likely have liquidsoap `1.3.2` or `1.3.3` installed.
+
+#352 reports that liquidsoap `< 1.3.0` can exhibit issues on Debian Stretch installs. One fix for the issue is to install liquidsoap `1.3.0` and to use the following patching steps.
+
+You can check your liquidsoap version by running `liquidsoap --version`.
+
+If you already have liquidsoap >= 1.3.0 you have a couple of options.
+
+#### Liquidsoap 1.3.0 Patchset (#192)
+
+You can patch your installation of LibreTime to support liquidsoap 1.3.0.
+
+An up to date patch is available through GitHub and can be applied to an unpacked tarball as follows.
+
+```bash
+cd libretime-3.0.0-alpha.7/
+curl -L https://github.com/libretime/libretime/compare/main...radiorabe:feature/liquidsoap-1.3.0.patch | patch -p1
+```
+
+Git users can pull from the branch at https://github.com/libretime/libretime/compare/main...radiorabe:feature/liquidsoap-1.3.0 directly.
+
+#### Install old liquidsoap from opam (#192)
+
+You can downgrade an OPAM install of liquidsoap by running the following command.
+
+```bash
+opam install "liquidsoap<1.3.0"
+```
+
+### No watched folder support
+
+Currently LibreTime doesn't support watching folders. Uploading files through the web interface works fine and can be automated via a REST API. Re-implementing watched folder support is on the roadmap. Please consider helping out with the code to help speed things along if you want to use the feature.
+
+### No line in support
+
+This feature went missing from LibreTime due to the fact that we based our code off of the saas-dev branch of legacy upstream and support for recording hasn't been ported to the new airtime analyzer ingest system. #42 currently tracks the progress being made on line in recording.
+
+### Playout won't work if locale is missing
+
+Some minimal OS installs don't have a default locale configured. This only seems to affect some VPS installs as they often don't have a locale setup in the default images provided.
+
+You can set up the locale using a combination of the following commands. You might also want to consult the documentation of your VPS provider as it may contain an official way to set up locales when provisioning a VPS.
+
+```bash
+# Set locale using systemds localectl
+localectl set-locale LANG="en_US.utf8"
+```
+
+These instructions don't seem to work on all Debian based distros so you might need to use `update-locale` as follows.
+
+```bash
+#Purge all locales but en_US.UTF-8
+sudo locale-gen --purge en_US.UTF-8
+#Populate LANGUAGE=
+sudo update-locale LANGUAGE="en_US.UTF-8"
+```
+
+### Lack of i18n toolchain is disturbing
+
+Some translations might miss the tarball. They didn't get lost, but the build chain needs fixing. Work is in #301 and additional work is needed as it has become clear that we probably want to support bidirectional translation syncing with zanata.

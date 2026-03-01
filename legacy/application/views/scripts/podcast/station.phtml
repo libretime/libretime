@@ -1,0 +1,155 @@
+<div id="station_podcast">
+    <div class="angular_wrapper" ng-controller="StationPodcast">
+        <div class="station_podcast_wrapper content-pane">
+            <div class="inner_editor_title">
+                <h2>
+                    <span class="title_obj_name"><?php echo _("My Podcast") ?></span>
+                </h2>
+                <button ng-click="savePodcast()" class="btn" title='<?php echo _("Save station podcast") ?>' type="button">
+                    <?php echo _("Save") ?>
+                </button>
+                <a href="{{podcast.url}}" target="_blank">
+                    <button class="btn"><?php echo _("View Feed") ?></button>
+                </a>
+                <div class='success' style='display:none'></div>
+            </div>
+            <form class="podcast-metadata">
+                <?php echo $this->form->getElement('csrf') ?>
+                <input ng-value="podcast.id" class="obj_id" type="hidden" />
+
+                <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("General Fields") ?></h3>
+                <div class="collapsible-content">
+                    <fieldset class="padded">
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Name") ?></label>
+                            <input name="podcast_name" ng-model="podcast.title" type="text" />
+                        </div>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Creator") ?></label>
+                            <input name="podcast_creator" ng-model="podcast.creator" type="text" />
+                        </div>
+
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Description") ?></label>
+                            <textarea name="podcast_description" ng-model="podcast.description"></textarea>
+                        </div>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Language") ?></label>
+                            <select name="podcast_language" ng-model="podcast.language">
+                                <?php
+                                foreach (Application_Common_LocaleHelper::getISO6391LanguageCodes() as $code => $lang) {
+                                    echo "<option value='$code'>$lang</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Copyright") ?></label>
+                            <input name="podcast_copyright" ng-model="podcast.copyright" type="text" />
+                        </div>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Link") ?></label>
+                            <input name="podcast_link" ng-model="podcast.link" type="url" />
+                        </div>
+                    </fieldset>
+                </div>
+
+                <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("iTunes Fields") ?></h3>
+                <div class="collapsible-content">
+                    <fieldset class="padded">
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Author") ?></label>
+                            <input name="podcast_itunes_author" ng-model="podcast.itunes_author" type="text" />
+                        </div>
+
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Keywords") ?></label>
+                            <input name="podcast_itunes_keywords" ng-model="podcast.itunes_keywords" type="text" />
+                        </div>
+
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Summary") ?></label>
+                            <textarea name="podcast_itunes_summary" ng-model="podcast.itunes_summary"></textarea>
+                        </div>
+
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Subtitle") ?></label>
+                            <textarea name="podcast_itunes_subtitle" ng-model="podcast.itunes_subtitle"></textarea>
+                        </div>
+
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Category") ?></label>
+                            <input name="podcast_itunes_category" ng-model="podcast.itunes_category" type="text" />
+                        </div>
+
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Explicit") ?></label>
+                            <input name="podcast_itunes_explicit" ng-model="podcast.itunes_explicit" type="checkbox" />
+                        </div>
+                    </fieldset>
+                </div>
+
+                <h3 class="collapsible-header" id="podcast-heading"><span class="arrow-icon"></span><?php echo _("Privacy Settings"); ?></h3>
+                <div class="collapsible-content" id="podcast-settings">
+                    <fieldset class="padded">
+                        <dl>
+                            <div class="podcast-metadata-row">
+                                <?php echo $this->form->getSubform('preferences_podcast')->getElement("stationPodcastPrivacy")->renderLabel() ?>
+                                <div id="podcast-privacy-options">
+                                    <?php echo $this->form->getSubform('preferences_podcast')->getElement("stationPodcastPrivacy")->renderViewHelper() ?>
+                                </div>
+                            </div>
+                            <div style="clear:both"></div>
+                            <div class="podcast-metadata-row">
+                                <dt>
+                                    <label for="stationPodcastFeedUrl" class="optional"><?php echo _("Feed URL"); ?></label>
+                                </dt>
+                                <dd>
+                                    <input type="url" ng-model="podcast.url" disabled="disabled" class="input_text" />
+                                </dd>
+                            </div>
+                        </dl>
+                    </fieldset>
+                </div>
+
+                <p id="station_podcast_help_text">
+                    <?php echo (sprintf(
+                        _("For detailed information on what these metadata fields mean, please see the %sRSS specification%s
+                    or %sApple's podcasting documentation%s."),
+                        '<a href="http://cyber.law.harvard.edu/rss/rss.html#requiredChannelElements">',
+                        '</a>',
+                        '<a target="_blank" href="http://www.apple.com/ca/itunes/podcasts/specs.html">',
+                        "</a>"
+                    )); ?>
+                </p>
+            </form>
+
+            <div class="btn-toolbar clearfix">
+                <div class='btn-group pull-right'>
+                    <button ng-click="savePodcast()" class="btn" title='<?php echo _("Save station podcast") ?>' type="button">
+                        <?php echo _("Save") ?>
+                    </button>
+                </div>
+                <div class='success' style='display:none'></div>
+            </div>
+        </div>
+
+        <table class="datatable podcast_episodes" cellpadding="0" cellspacing="0"></table>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        <?php echo "var podcast = " . $this->podcast . ";" ?>
+        AIRTIME.podcast.podcastApp.value('podcast', podcast);
+        AIRTIME.podcast.podcastApp.value('tab', null);
+        var wrapper = $(".angular_wrapper");
+        angular.bootstrap(wrapper.get(0), ["podcast"]);
+    });
+
+    $('.collapsible-header').click(function() {
+        $(this).next().toggle('fast');
+        $(this).toggleClass("closed");
+        return false;
+    });
+</script>

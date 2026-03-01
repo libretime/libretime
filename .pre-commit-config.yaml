@@ -1,0 +1,125 @@
+---
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: check-symlinks
+      - id: destroyed-symlinks
+
+      - id: check-json
+      - id: check-yaml
+      - id: check-xml
+      - id: check-toml
+
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+        exclude: \.json$
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: trailing-whitespace
+        exclude: \.ambr$
+
+      - id: name-tests-test
+        exclude: ^api
+
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier
+        entry: prettier --write --ignore-unknown
+        language: node
+        types: [text]
+        additional_dependencies: [prettier@3.6.2]
+
+        files: \.(md|mdx|yml|yaml|js|jsx|ts|tsx|json|css)$
+        exclude: ^(legacy/public(?!/js/airtime)|CHANGELOG.md$|.github/release-please-manifest.json)
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.20.0
+    hooks:
+      - id: pyupgrade
+        args: [--py38-plus]
+
+  - repo: https://github.com/adamchainz/django-upgrade
+    rev: 1.28.0
+    hooks:
+      - id: django-upgrade
+        args: [--target-version, "4.2"]
+
+  - repo: https://github.com/pycqa/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+        args: [--resolve-all-configs]
+
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 25.1.0
+    hooks:
+      - id: black
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        args: [--ignore-words=.codespellignore]
+        exclude: (^api/schema.yml|^legacy.*|yarn\.lock)$
+
+  - repo: local
+    hooks:
+      - id: shfmt
+        name: shfmt
+        language: docker_image
+        entry: mvdan/shfmt -i 2 -ci -sr -kp -w
+        types: [shell]
+
+      - id: shellcheck
+        name: shellcheck
+        language: docker_image
+        entry: koalaman/shellcheck --color=always --severity=warning
+        types: [shell]
+
+      - id: requirements.txt
+        name: requirements.txt
+        description: Generate requirements.txt
+        entry: tools/extract_requirements.py dev sentry
+        pass_filenames: false
+        language: script
+        files: setup.py$
+
+      - id: config.yml
+        name: config.yml
+        description: Update config files
+        entry: tools/update-config-files.sh
+        pass_filenames: false
+        language: script
+        files: ^installer/config.yml$
+
+      - id: legacy-migrations-version
+        name: legacy-migrations-version
+        description: Ensure valid schema version for migrations
+        entry: tools/legacy-migrations-version.sh
+        pass_filenames: false
+        language: script
+        files: ^api/libretime_api/legacy/migrations
+
+      - id: legacy-assets-checksum-update
+        name: legacy-assets-checksum-update
+        description: Update legacy assets checksum
+        entry: legacy/tools/assets-checksum-update.py
+        pass_filenames: false
+        language: script
+        files: ^legacy
+
+      - id: api-schema-update
+        name: api-schema-update
+        description: Ensure API schema is up to date
+        entry: make -C api schema
+        pass_filenames: false
+        language: system
+        files: ^api

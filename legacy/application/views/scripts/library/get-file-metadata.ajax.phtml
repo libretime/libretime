@@ -1,0 +1,223 @@
+<?php
+//XSS exploit prevention
+foreach ($this->md as $key => &$value) {
+    $value = $this->escape($value);
+}
+?>
+<?php if ($this->type == "audioclip") : ?>
+    <table class='library-track-md'>
+        <tr>
+            <td><?php echo _("Title:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_TITLE"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Creator:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_CREATOR"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Album:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_SOURCE"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Track:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_TRACKNUMBER"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Length:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_DURATION"]); ?></td>
+        </tr>
+        <tr>
+            <td class='file-md-qtip-nowrap'><?php echo _("Sample Rate:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_SAMPLERATE"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Bit Rate:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_BITRATE"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Mood:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_MOOD"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Genre:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_GENRE"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Year:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_YEAR"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Label:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_LABEL"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("BPM:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_BPM"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Composer:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_COMPOSER"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Conductor:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_CONDUCTOR"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Copyright:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_COPYRIGHT"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Isrc Number:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_ISRC"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Website:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_URL"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Artwork:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_ARTWORK"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Artwork Data:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_ARTWORK_DATA"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Language:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_LANGUAGE"]); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo _("Track Type:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_TRACK_TYPE"]); ?></td>
+        </tr>
+        <tr>
+            <td class='file-md-qtip-nowrap'><?php echo _("File Path:"); ?></td>
+            <td><?php echo ($this->md["MDATA_KEY_FILEPATH"]); ?></td>
+        </tr>
+    </table>
+<?php endif; ?>
+
+<?php if ($this->type == "playlist" || $this->type == "block") : ?>
+    <div class='file-md-qtip-left'>
+        <span><?php echo _("Name:"); ?></span><span><?php echo ($this->md["dc:title"]); ?></span><br />
+        <span><?php echo _("Creator:"); ?></span><span><?php echo ($this->md["dc:creator"]); ?></span><br />
+        <?php if ($this->type == "block" && $this->blType == "Dynamic") { ?>
+            <span><?php echo _("Length:"); ?></span><span><?php echo $this->block->getLength(); ?></span><br />
+        <?php } else { ?>
+            <span><?php echo _("Length:"); ?></span><span><?php echo ($this->md["dcterms:extent"]); ?></span><br />
+        <?php } ?>
+        <span><?php echo _("Description:"); ?></span><span><?php echo ($this->md["dc:description"]); ?></span>
+    </div>
+
+    <?php if ($this->type == "playlist") { ?>
+        <div class='file-md-qtip-legend'>
+            <span class='webstream'>o</span> <span><?php echo _("Web Stream"); ?></span><br />
+            <span class='dynamic'>o</span> <span><?php echo _("Dynamic Smart Block"); ?></span><br />
+            <span class='static'>o</span> <span><?php echo _("Static Smart Block"); ?></span><br />
+            <span>o</span> <span><?php echo _("Audio Track"); ?></span>
+        </div>
+
+    <?php } ?>
+
+    <?php if ($this->type == "playlist" || ($this->type == "block" && $this->blType == "Static")) { ?>
+        <?php
+        //XSS exploit prevention
+        /*foreach ($this->contents as &$item) {
+            foreach ($item as $key => &$value) {
+                $value = $this->escape($value);
+            }
+        }*/
+        ?>
+        <?php if ($this->type == "playlist") { ?>
+            <div class='file-md-qtip-left'><span><?php echo _("Playlist Contents: "); ?></span></div>
+        <?php } else { ?>
+            <div class='file-md-qtip-left'><span><?php echo _("Static Smart Block Contents: "); ?></span></div>
+        <?php } ?>
+        <table class='library-get-file-md'>
+            <?php foreach ($this->contents as $row) : ?>
+                <?php
+                $titleMaxStrLen = 35;
+                if (mb_strlen($row["track_title"], 'UTF-8') > $titleMaxStrLen) {
+                    $row["track_title"] = mb_substr($row["track_title"], 0, 34, 'UTF-8') . "...";
+                }
+                $artistMaxStrLen = 22;
+                if (mb_strlen($row["creator"], 'UTF-8') > $artistMaxStrLen) {
+                    $row["creator"] = mb_substr($row["creator"], 0, 21, 'UTF-8') . "...";
+                }
+                ?>
+                <?php if ($row["type"] == 2) {
+                    $bl = new Application_Model_Block($row["item_id"]);
+                    $isStatic = $bl->isStatic(); ?>
+                    <tr class='file-md-qtip-playlist <?php if ($isStatic) echo 'static';
+                                                        else echo 'dynamic'; ?>'>
+                        <td class='file-md-qtip-row-width-title file-md-qtip-nowrap'><?php echo $row["track_title"] ?></td>
+                        <td class='file-md-qtip-row-width-artist file-md-qtip-nowrap'><?php echo $row["creator"] ?></td>
+                        <td class='file-md-qtip-row-width-small'><?php echo $bl->getLength(); ?></td>
+                    </tr>
+                <?php } else if ($row["type"] == 1) { ?>
+                    <tr class='file-md-qtip-playlist webstream'>
+                        <td class='file-md-qtip-row-width-title file-md-qtip-nowrap'><?php echo $row["track_title"] ?></td>
+                        <td class='file-md-qtip-row-width-artist file-md-qtip-nowrap'><?php echo $row["creator"] ?></td>
+                        <td class='file-md-qtip-row-width-small'><?php echo $row["length"] ?></td>
+                    </tr>
+                <?php } else { ?>
+                    <tr>
+                        <td class='file-md-qtip-row-width-title file-md-qtip-nowrap'><?php echo $row["track_title"] ?></td>
+                        <td class='file-md-qtip-row-width-artist file-md-qtip-nowrap'><?php echo $row["creator"] ?></td>
+                        <td class='file-md-qtip-row-width-small'><?php echo $row["length"] ?></td>
+                    </tr>
+                <?php } ?>
+            <?php endforeach; ?>
+        </table>
+
+    <?php } elseif ($this->blType == "Dynamic") { ?>
+        <div class='file-md-qtip-left'><span><?php echo _("Dynamic Smart Block Criteria: "); ?></span></div>
+        <table class='library-get-file-md table-small'>
+            <?php foreach ($this->contents["crit"] as &$criterias) : ?>
+                <?php foreach ($criterias as &$crit) : ?>
+                    <?php
+                    // XSS exploit prevention
+                    //$crit["value"] = htmlspecialchars($crit["value"]);
+                    //$crit["extra"] = htmlspecialchars($crit["extra"]);
+
+                    $valMaxStrLen = 25;
+                    if (strlen($crit["value"]) > $valMaxStrLen) {
+                        $crit["value"] = substr($crit["value"], 0, 24) . "...";
+                    }
+                    $critMaxStrLen = 13;
+                    if (strlen($crit["display_name"]) > $critMaxStrLen) {
+                        $crit["display_name"] = substr($crit["display_name"], 0, 12) . "...";
+                    }
+                    $modMaxStrLen = 16;
+                    if (strlen($crit["modifier"]) > $modMaxStrLen) {
+                        $crit["modifier"] = substr($crit["modifier"], 0, 15) . "...";
+                    }
+                    ?>
+                    <tr>
+                        <td class='file-md-qtip-criteria-width-small file-md-qtip-nowrap'><?php echo $crit["display_name"] ?></td>
+                        <td class='file-md-qtip-criteria-width-small file-md-qtip-nowrap'><?php echo $crit["modifier"] ?></td>
+                        <td class='file-md-qtip-criteria-width file-md-qtip-nowrap'><?php echo $crit["value"] ?>
+                            <?php if (isset($crit["extra"])) { ?>
+                                to <?php echo $crit["extra"] ?></td>
+                    <?php } ?>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+            <tr>
+                <td><?php echo _("Limit to ") ?></td>
+                <td><?php echo $this->contents["limit"]["value"] ?> <?php echo $this->contents["limit"]["modifier"] ?></td>
+            </tr>
+        </table>
+    <?php } ?>
+<?php endif; ?>
+
+<?php if ($this->type == "stream") : ?>
+
+    <div><span><?php echo _("Name:"); ?></span><span><?php echo ($this->md["name"]); ?></span></div>
+    <div><span><?php echo _("Length:"); ?></span><span><?php echo ($this->md["length"]); ?></span></div>
+    <div><span><?php echo _("Creator:"); ?></span><span><?php echo ($this->md["login"]); ?></span></div>
+    <div><span><?php echo _("Description:"); ?></span><span><?php echo ($this->md["description"]); ?></span></div>
+    <div><span><?php echo _("URL:"); ?></span><span><?php echo ($this->md["url"]); ?></span></div>
+
+
+<?php endif; ?>

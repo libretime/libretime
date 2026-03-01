@@ -1,0 +1,51 @@
+<div class="angular_wrapper" ng-controller="Podcast">
+    <div class="inner_editor_title">
+        <h2>
+            <?php echo _("Editing ") ?>"<span ng-bind="podcast.title" class="title_obj_name"></span>"
+        </h2>
+    </div>
+    <div class="inner_editor_wrapper">
+        <form class="podcast-metadata">
+            <input ng-value="podcast.id" class="obj_id" type="hidden" />
+            <div class="podcast-metadata-row">
+                <label for="podcast_name"><?php echo _("Podcast Name: ") ?></label>
+                <input name="podcast_name" type="text" ng-model="podcast.title" value={{podcast.title}}>
+            </div>
+            <div class="podcast-metadata-row">
+                <label for="podcast_url"><?php echo _("Podcast URL: ") ?></label>
+                <a href="{{podcast.url}}" target="_blank" class="podcast-url">{{podcast.url}}</a>
+            </div>
+            <div class="podcast-metadata-row">
+                <label for="podcast_auto_ingest"><?php echo _("Download latest episodes:") ?></label>
+                <div>
+                    <input name="podcast_auto_ingest" id="podcast_auto_ingest" ng-model="podcast.auto_ingest" type="checkbox" />
+                </div>
+            </div>
+            <div class="podcast-metadata-row">
+                <label><?php echo _("Scheduling:") ?></label>
+                <div>
+                    <button ng-click="createSmartblock()" class="btn" type="button" name="smartblock">
+                        <?php echo _("Generate Smartblock and Playlist") ?>
+                    </button>
+                    <div class='pc-sb-success success' style='display:none'>&quot;{{podcast.title}}&quot; <br> <?php echo _("Smartblock and Playlist generated") ?></span></div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <table class="datatable podcast_episodes" cellpadding="0" cellspacing="0"></table>
+
+    <div class="btn-toolbar clearfix">
+        <div class="btn-group pull-right">
+            <button ng-click="discard()" class="btn" type="button" name="cancel">
+                <?php echo _("Cancel") ?>
+            </button>
+        </div>
+        <div class='btn-group pull-right'>
+            <button ng-click="savePodcast()" class="btn" title='<?php echo _("Save podcast") ?>' type="button">
+                <?php echo _("Save") ?>
+            </button>
+        </div>
+        <div class='pc-save-success success' style='display:none'></div>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+;FFMETADATA1
+album=Ä ä Ü ü ß
+artist=てすと
+title=ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃ
+track=1/10
+date=1999
+genre=Я Б Г Д Ж Й
+comment=Ł Ą Ż Ę Ć Ń Ś Ź

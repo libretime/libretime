@@ -1,0 +1,215 @@
+.airtime_player {
+    width: 270px;
+    height: 191px;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+    background: rgba(53, 53, 53, 0.9);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+    -moz-box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+}
+
+.airtime_header {
+    background: rgba(53, 53, 53, 0.9);
+    -webkit-box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+    -moz-box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+    height: 37px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.airtime_box {
+    margin-top: 15px;
+    float: left;
+    width: 100%;
+    height: 52px;
+}
+.station_name {
+    font-size: 14px;
+    padding-top: 10px;
+    padding-left: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 30px;
+}
+.airtime_pro {
+    margin: 6px 20px;
+    color: #fff;
+    font-size: 11px;
+    text-decoration: none;
+    display:inline-block;
+    float:right;
+}
+.airtime_pro_logo {
+    background: url("embed-player-images/airtime_logo.png") center no-repeat;
+    width: 16px;
+    height: 16px;
+    display:inline-block;
+}
+
+/*.airtime_pro span {
+    display: inline-block;
+    vertical-align: 2px;
+    margin-right: 5px;
+}
+.airtime_pro:hover span {
+    display: inline-block;
+    vertical-align: 2px;
+    margin-right: 5px;
+}*/
+.airtime_box .airtime_button {
+    text-indent: -9999px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background: rgb(100,100,100);
+    background: -moz-linear-gradient(top, rgba(107, 107, 107, 1) 0%, rgba(88,88,88,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(100,100,100,1)), color-stop(100%,rgba(88,88,88,1)));
+    background: -webkit-linear-gradient(top, rgba(107, 107, 107, 1) 0%,rgba(88,88,88,1) 100%);
+    background: -o-linear-gradient(top, rgba(107, 107, 107, 1) 0%,rgba(88,88,88,1) 100%);
+    background: -ms-linear-gradient(top, rgba(107, 107, 107, 1) 0%,rgba(88,88,88,1) 100%);
+    background: linear-gradient(to bottom, rgba(107, 107, 107, 1) 0%,rgba(88,88,88,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#646464', endColorstr='#585858',GradientType=0 );
+    -webkit-box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset;
+    -moz-box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset;
+    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset;
+    width: 47px;
+    height: 47px;
+    display: inline-block;
+    float: left;
+    cursor: pointer;
+    margin-left: 20px;
+    margin-right: 15px;
+}
+
+.airtime_box .airtime_button:hover {
+    background: rgb(147,147,147);
+    background: -moz-linear-gradient(top, rgba(147,147,147,1) 0%, rgba(117,117,117,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(147,147,147,1)), color-stop(100%,rgba(117,117,117,1)));
+    background: -webkit-linear-gradient(top, rgba(147,147,147,1) 0%,rgba(117,117,117,1) 100%);
+    background: -o-linear-gradient(top, rgba(147,147,147,1) 0%,rgba(117,117,117,1) 100%);
+    background: -ms-linear-gradient(top, rgba(147,147,147,1) 0%,rgba(117,117,117,1) 100%);
+    background: linear-gradient(to bottom, rgba(147,147,147,1) 0%,rgba(117,117,117,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#939393', endColorstr='#757575',GradientType=0 );
+}
+
+.airtime_box .airtime_button .play_button {
+    display: block;
+    background: url("embed-player-images/play_button.png") center no-repeat;
+    width: 47px;
+    height: 47px;
+}
+
+.airtime_box .airtime_button .stop_button {
+    display: block;
+    background: url("embed-player-images/pause_button.png") center no-repeat;
+    width: 47px;
+    height: 47px;
+}
+
+.hide_button {
+    display:none !important;
+}
+
+.now_playing {
+    margin-top: 8px;
+    margin-left: 15px;
+    margin-right: 15px;
+    display: block;
+    font-size: 14px;
+    color: #fff;
+    width: 170px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.now_playing span {
+    display: block;
+    color: #aaaaaa;
+    width: 170px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.airtime_volume {
+    padding: 10px 0px 15px 0px;
+    clear: both;
+}
+
+.airtime_volume .volume_control {
+    margin-left: 55px;
+    float: left;
+    display: inline-block;
+}
+
+.airtime_volume .mute {
+    background: url("embed-player-images/mute.png") center no-repeat;
+    display: block;
+    margin-top: -4px;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.airtime_volume_bar {
+    border-color: #262526 #262526 #5E5E5E;
+    border-style: solid;
+    border-width: 1px;
+    background-color: #393939;
+    width: auto;
+    height: 5px;
+    cursor: pointer;
+    margin-left: 80px;
+    margin-right: 40px;
+}
+
+.airtime_volume_bar_value {
+    background-color: #ff9122;
+    width: 0px;
+    height: 5px;
+}
+
+.airtime_schedule {
+    margin: 10px 20px 5px 20px;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #aaaaaa;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0px;
+}
+
+.airtime_next {
+    float: left;
+    margin: 0px;
+    margin-top: 1px;
+}
+
+.schedule_list {
+    list-style: none;
+    padding-left: 0px;
+    padding-bottom: 10px;
+    margin-top: 0px;
+    margin-left: 60px;
+    margin-bottom: 0px;
+    line-height: 130%;
+    height: 20px;
+}
+
+.schedule_list li {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.airtime-pro-orange {
+    color: #ff5d1a;
+}

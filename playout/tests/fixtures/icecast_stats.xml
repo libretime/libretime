@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<icestats>
+    <admin>icemaster@radio.org</admin>
+    <client_connections>3935</client_connections>
+    <clients>7</clients>
+    <connections>4201</connections>
+    <file_connections>14</file_connections>
+    <host>localhost</host>
+    <listener_connections>117</listener_connections>
+    <listeners>5</listeners>
+    <location>Moon</location>
+    <server_id>Icecast 2.4.4</server_id>
+    <server_start>Tue, 15 Mar 2022 18:29:12 +0100</server_start>
+    <server_start_iso8601>2022-03-15T18:29:12+0100</server_start_iso8601>
+    <source_client_connections>2</source_client_connections>
+    <source_relay_connections>0</source_relay_connections>
+    <source_total_connections>2</source_total_connections>
+    <sources>2</sources>
+    <stats>0</stats>
+    <stats_connections>0</stats_connections>
+    <source mount="/main.mp3">
+        <audio_info>channels=2;samplerate=44100;bitrate=320</audio_info>
+        <bitrate>320</bitrate>
+        <channels>2</channels>
+        <genre>various</genre>
+        <listener_peak>7</listener_peak>
+        <listeners>3</listeners>
+        <listenurl>http://localhost:8800/main.mp3</listenurl>
+        <max_listeners>unlimited</max_listeners>
+        <public>1</public>
+        <samplerate>44100</samplerate>
+        <server_description>Main (mp3 320kbps)</server_description>
+        <server_name>Radio</server_name>
+        <server_type>audio/mpeg</server_type>
+        <server_url>https://www.radio.org</server_url>
+        <slow_listeners>2</slow_listeners>
+        <source_ip>192.168.100.20</source_ip>
+        <stream_start>Tue, 15 Mar 2022 18:29:19 +0100</stream_start>
+        <stream_start_iso8601>2022-03-15T18:29:19+0100</stream_start_iso8601>
+        <title>Robert Glasper Experiment/Lupe Fiasco/Bilal - Always Shine</title>
+        <total_bytes_read>6110388200</total_bytes_read>
+        <total_bytes_sent>20338244727</total_bytes_sent>
+        <user_agent>Liquidsoap/1.4.4 (Unix; OCaml 4.10.0)</user_agent>
+    </source>
+    <source mount="/main.ogg">
+        <audio_bitrate>256000</audio_bitrate>
+        <audio_channels>2</audio_channels>
+        <audio_info>channels=2;quality=0.8;samplerate=44100</audio_info>
+        <audio_samplerate>44100</audio_samplerate>
+        <channels>2</channels>
+        <genre>various</genre>
+        <ice-bitrate>256</ice-bitrate>
+        <listener_peak>4</listener_peak>
+        <listeners>2</listeners>
+        <listenurl>http://localhost:8800/main.ogg</listenurl>
+        <max_listeners>unlimited</max_listeners>
+        <public>1</public>
+        <quality>0.8</quality>
+        <samplerate>44100</samplerate>
+        <server_description>Main (ogg 256kbps)</server_description>
+        <server_name>Radio</server_name>
+        <server_type>application/ogg</server_type>
+        <server_url>https://www.radio.org</server_url>
+        <slow_listeners>2</slow_listeners>
+        <source_ip>192.168.100.20</source_ip>
+        <stream_start>Tue, 15 Mar 2022 18:29:19 +0100</stream_start>
+        <stream_start_iso8601>2022-03-15T18:29:19+0100</stream_start_iso8601>
+        <subtype>Vorbis</subtype>
+        <title>Robert Glasper Experiment/Lupe Fiasco/Bilal - Always Shine</title>
+        <total_bytes_read>4499297657</total_bytes_read>
+        <total_bytes_sent>9051758982</total_bytes_sent>
+        <user_agent>Liquidsoap/1.4.4 (Unix; OCaml 4.10.0)</user_agent>
+    </source>
+</icestats>
