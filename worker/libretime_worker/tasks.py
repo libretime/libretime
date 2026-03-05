@@ -94,7 +94,9 @@ def podcast_download(
         # Download podcast episode file
         try:
             headers = {"User-Agent": f"LibreTime/{VERSION}"}
-            with requests.get(episode_url, headers=headers, stream=True, timeout=30) as resp:
+            with requests.get(
+                episode_url, headers=headers, stream=True, timeout=30
+            ) as resp:
                 resp.raise_for_status()
 
                 filename = extract_filename(resp)
