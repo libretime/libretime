@@ -742,6 +742,11 @@ else
   chown -R "$LIBRETIME_USER:$LIBRETIME_USER" "$LEGACY_WEB_ROOT"
 fi
 
+if [[ -f "$LEGACY_WEB_ROOT/vendor-zf1-php82.patch" ]]; then
+  info "applying PHP 8.2 vendor compatibility patch"
+  patch -p1 -d "$LEGACY_WEB_ROOT" < "$LEGACY_WEB_ROOT/vendor-zf1-php82.patch"
+fi
+
 PHP_VERSION="$(php-config --version | awk -F . '{ print $1 "." $2 }')"
 
 info "deploying libretime-legacy php-fpm config"
