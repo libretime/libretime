@@ -10,6 +10,7 @@ class Rest_RouteController extends Zend_Controller_Router_Route
      */
     protected $_front;
 
+    protected $_dispatcher;
     protected $_actionKey = 'action';
 
     /**
