@@ -11,6 +11,7 @@ define('REPEAT_QUAD_WEEKLY', 5);
 
 class Application_Service_ShowService
 {
+    protected $linkedShowContent;
     private $ccShow;
     private $isRecorded;
     private $isRebroadcast;

@@ -3,6 +3,7 @@
 class Application_Model_Webstream implements Application_Model_LibraryEditable
 {
     private $id;
+    private $webstream;
 
     public function __construct($webstream)
     {
