@@ -357,6 +357,7 @@
     <column name="login" phpName="DbLogin" type="VARCHAR" size="255" required="true" defaultValue="" />
     <column name="pass" phpName="DbPass" type="VARCHAR" size="255" required="true" defaultValue="" />
     <column name="type" phpName="DbType" type="CHAR" size="1" required="true" defaultValue="U" />
+    <column name="is_active" phpName="DbIsActive" type="BOOLEAN" required="true" defaultValue="false" />
     <column name="first_name" phpName="DbFirstName" type="VARCHAR" size="255" required="true" defaultValue="" />
     <column name="last_name" phpName="DbLastName" type="VARCHAR" size="255" required="true" defaultValue="" />
     <column name="lastlogin" phpName="DbLastlogin" type="TIMESTAMP" required="false" />
