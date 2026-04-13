@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2025-08-11 03:03+0000\n"
+"POT-Creation-Date: 2026-04-13 04:19+0000\n"
 "PO-Revision-Date: 2024-11-27 10:57+0000\n"
 "Last-Translator: gfbdrgng <hnaofegnp@hldrive.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/libretime/legacy/ru/>\n"
@@ -3936,47 +3936,47 @@ msgstr ""
 msgid "Rebroadcast of %s from %s"
 msgstr "Ретрансляция %s из %s"
 
-#: application/models/Webstream.php:165
+#: application/models/Webstream.php:166
 msgid "Length needs to be greater than 0 minutes"
 msgstr "Длительность должна быть более 0 минут"
 
-#: application/models/Webstream.php:169
+#: application/models/Webstream.php:170
 msgid "Length should be of form \"00h 00m\""
 msgstr "Длительность должна быть указана в формате '00h 00min'"
 
-#: application/models/Webstream.php:182
+#: application/models/Webstream.php:183
 msgid "URL should be of form \"https://example.org\""
 msgstr "URL должен быть в формате \"http://домен\""
 
-#: application/models/Webstream.php:185
+#: application/models/Webstream.php:186
 msgid "URL should be 512 characters or less"
 msgstr "Длина URL должна составлять не более 512 символов"
 
-#: application/models/Webstream.php:190
+#: application/models/Webstream.php:191
 msgid "No MIME type found for webstream."
 msgstr "Для веб-потока не найдено MIME типа."
 
-#: application/models/Webstream.php:206
+#: application/models/Webstream.php:207
 msgid "Webstream name cannot be empty"
 msgstr "Имя веб-потока должно быть заполнено"
 
-#: application/models/Webstream.php:276
+#: application/models/Webstream.php:277
 msgid "Could not parse XSPF playlist"
 msgstr "Не удалось анализировать XSPF Плейлист"
 
-#: application/models/Webstream.php:297
+#: application/models/Webstream.php:298
 msgid "Could not parse PLS playlist"
 msgstr "Не удалось анализировать PLS Плейлист"
 
-#: application/models/Webstream.php:316
+#: application/models/Webstream.php:317
 msgid "Could not parse M3U playlist"
 msgstr "Не удалось анализировать M3U Плейлист"
 
-#: application/models/Webstream.php:329
+#: application/models/Webstream.php:330
 msgid "Invalid webstream - This appears to be a file download."
 msgstr "Неверный веб-поток - скорее всего это загрузка файла."
 
-#: application/models/Webstream.php:333
+#: application/models/Webstream.php:334
 #, php-format
 msgid "Unrecognized stream type: %s"
 msgstr "Нераспознанный тип потока: %s"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2025-08-11 03:03+0000\n"
+"POT-Creation-Date: 2026-04-13 04:19+0000\n"
 "PO-Revision-Date: 2015-09-05 08:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Serbian (Serbia)\n"
@@ -3909,47 +3909,47 @@ msgstr ""
 msgid "Rebroadcast of %s from %s"
 msgstr "Реемитовање од %s од %s"
 
-#: application/models/Webstream.php:165
+#: application/models/Webstream.php:166
 msgid "Length needs to be greater than 0 minutes"
 msgstr "Дужина мора да буде већа од 0 минута"
 
-#: application/models/Webstream.php:169
+#: application/models/Webstream.php:170
 msgid "Length should be of form \"00h 00m\""
 msgstr "Дужина мора да буде у облику \"00h 00m\""
 
-#: application/models/Webstream.php:182
+#: application/models/Webstream.php:183
 msgid "URL should be of form \"https://example.org\""
 msgstr "URL мора да буде у облику \"https://example.org\""
 
-#: application/models/Webstream.php:185
+#: application/models/Webstream.php:186
 msgid "URL should be 512 characters or less"
 msgstr "URL мора да буде 512 знакова или мање"
 
-#: application/models/Webstream.php:190
+#: application/models/Webstream.php:191
 msgid "No MIME type found for webstream."
 msgstr "Не постоји MIME тип за пренос."
 
-#: application/models/Webstream.php:206
+#: application/models/Webstream.php:207
 msgid "Webstream name cannot be empty"
 msgstr "Име преноса не може да да буде празно"
 
-#: application/models/Webstream.php:276
+#: application/models/Webstream.php:277
 msgid "Could not parse XSPF playlist"
 msgstr "Нисмо могли анализирати XSPF списак песама"
 
-#: application/models/Webstream.php:297
+#: application/models/Webstream.php:298
 msgid "Could not parse PLS playlist"
 msgstr "Нисмо могли анализирати PLS списак песама"
 
-#: application/models/Webstream.php:316
+#: application/models/Webstream.php:317
 msgid "Could not parse M3U playlist"
 msgstr "Нисмо могли анализирати M3U списак песама"
 
-#: application/models/Webstream.php:329
+#: application/models/Webstream.php:330
 msgid "Invalid webstream - This appears to be a file download."
 msgstr "Неважећи пренос - Чини се да је ово преузимање."
 
-#: application/models/Webstream.php:333
+#: application/models/Webstream.php:334
 #, php-format
 msgid "Unrecognized stream type: %s"
 msgstr "Непознати преносни тип: %s"
