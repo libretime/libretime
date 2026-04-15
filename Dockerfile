@@ -124,6 +124,10 @@ COPY playout .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --editable .[sentry]
 
+RUN set -eux \
+    && _vine_site=$(python3 -c "import site; print(site.getsitepackages()[0])") \
+    && patch -p1 --forward --reject-file=- -d "$_vine_site" < vine-python311.patch || true
+
 # Run
 USER ${UID}:${GID}
 WORKDIR /app
