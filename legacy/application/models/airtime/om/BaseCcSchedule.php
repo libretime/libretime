@@ -239,7 +239,14 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -274,7 +281,14 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -342,7 +356,14 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);
@@ -377,7 +398,14 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
         }
 
         return $dt->format($format);

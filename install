@@ -647,6 +647,12 @@ link_python_app libretime-liquidsoap
 link_python_app libretime-playout
 link_python_app libretime-playout-notify
 
+if [[ -f "$SCRIPT_DIR/playout/vine-python311.patch" ]]; then
+  info "applying vine Python 3.11 compatibility patch"
+  _vine_site=$(find "$VENV_DIR/lib" -maxdepth 2 -name "site-packages" -type d | head -1)
+  patch -p1 --forward --reject-file=- -d "$_vine_site" < "$SCRIPT_DIR/playout/vine-python311.patch" || true
+fi
+
 info "creating libretime-playout working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/playout"
 

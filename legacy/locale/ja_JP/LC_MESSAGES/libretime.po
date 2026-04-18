@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2025-08-11 03:03+0000\n"
+"POT-Creation-Date: 2026-04-13 04:19+0000\n"
 "PO-Revision-Date: 2021-10-17 08:09+0000\n"
 "Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/libretime/legacy/ja/>\n"
@@ -3910,47 +3910,47 @@ msgstr ""
 msgid "Rebroadcast of %s from %s"
 msgstr "%sの再配信%sから"
 
-#: application/models/Webstream.php:165
+#: application/models/Webstream.php:166
 msgid "Length needs to be greater than 0 minutes"
 msgstr "再生時間は0分以上である必要があります。"
 
-#: application/models/Webstream.php:169
+#: application/models/Webstream.php:170
 msgid "Length should be of form \"00h 00m\""
 msgstr "時間は \"00h 00m\"の形式にしてください。"
 
-#: application/models/Webstream.php:182
+#: application/models/Webstream.php:183
 msgid "URL should be of form \"https://example.org\""
 msgstr "URL は\"https://example.org\"の形式で入力してください。"
 
-#: application/models/Webstream.php:185
+#: application/models/Webstream.php:186
 msgid "URL should be 512 characters or less"
 msgstr "URLは512文字以下にしてください。"
 
-#: application/models/Webstream.php:190
+#: application/models/Webstream.php:191
 msgid "No MIME type found for webstream."
 msgstr "ウェブ配信用のMIMEタイプは見つかりませんでした。"
 
-#: application/models/Webstream.php:206
+#: application/models/Webstream.php:207
 msgid "Webstream name cannot be empty"
 msgstr "ウェブ配信名を入力して下さい。"
 
-#: application/models/Webstream.php:276
+#: application/models/Webstream.php:277
 msgid "Could not parse XSPF playlist"
 msgstr "XSPFプレイリストを解析できませんでした。"
 
-#: application/models/Webstream.php:297
+#: application/models/Webstream.php:298
 msgid "Could not parse PLS playlist"
 msgstr "PLSプレイリストを解析できませんでした。"
 
-#: application/models/Webstream.php:316
+#: application/models/Webstream.php:317
 msgid "Could not parse M3U playlist"
 msgstr "M3Uプレイリストを解析できませんでした。"
 
-#: application/models/Webstream.php:329
+#: application/models/Webstream.php:330
 msgid "Invalid webstream - This appears to be a file download."
 msgstr "無効なウェブ配信です。"
 
-#: application/models/Webstream.php:333
+#: application/models/Webstream.php:334
 #, php-format
 msgid "Unrecognized stream type: %s"
 msgstr "不明な配信種別です： %s"

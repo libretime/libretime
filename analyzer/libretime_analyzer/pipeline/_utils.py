@@ -5,6 +5,7 @@ logger = logging.getLogger(__name__)
 
 
 def run_(*args, **kwargs) -> CompletedProcess:
+    kwargs.setdefault("errors", "replace")  # don't crash on non-utf8 metadata
     try:
         return run(
             args,
