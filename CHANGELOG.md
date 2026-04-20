@@ -1,5 +1,27 @@
 # Changelog
 
+## [4.6.0](https://github.com/libretime/libretime/compare/4.5.0...4.6.0) (2026-04-20)
+
+
+### Features
+
+* **legacy:** now macro should use show start time when available ([#3175](https://github.com/libretime/libretime/issues/3175)) ([5d7df2f](https://github.com/libretime/libretime/commit/5d7df2feb7ba6149aab188aaf9ac36589bdc4cc2))
+* **legacy:** persist database connections ([#3186](https://github.com/libretime/libretime/issues/3186)) ([14bb3e8](https://github.com/libretime/libretime/commit/14bb3e8889f4a9e46ee0acf639e3b73c76d3af58))
+* **playout:** add Liquidsoap 2.1 script directory for Debian 12 ([#3244](https://github.com/libretime/libretime/issues/3244)) ([a04d700](https://github.com/libretime/libretime/commit/a04d700a01840ddabbee9cef366ccb657523b9f0))
+
+
+### Bug Fixes
+
+* **analyzer:** add default error handling for non-UTF8 metadata ([#3232](https://github.com/libretime/libretime/issues/3232)) ([401db72](https://github.com/libretime/libretime/commit/401db725aef9ab06d1abaf7ab062ef9335688b42))
+* **api:** add psql client to api container image ([#3223](https://github.com/libretime/libretime/issues/3223)) ([698ce72](https://github.com/libretime/libretime/commit/698ce72c5b38acd13c0ca46d7a791544ca0b79c4))
+* **api:** file upload with library ([#3213](https://github.com/libretime/libretime/issues/3213)) ([643504e](https://github.com/libretime/libretime/commit/643504edc974a5f39cc0b39b7ee6a4bd39431b70))
+* **legacy:** add PHP 8.2 vendor compatibility patch for ZF1 ([#3242](https://github.com/libretime/libretime/issues/3242)) ([5d6736f](https://github.com/libretime/libretime/commit/5d6736f888134644f242fb7329394ce972bcb028))
+* **legacy:** do not send content-type header twice ([#3187](https://github.com/libretime/libretime/issues/3187)) ([9d3a880](https://github.com/libretime/libretime/commit/9d3a88093ef60a1731a3e2be582f16c10ec40644))
+* **legacy:** fix PHP 8.2 dynamic properties and deprecations ([#3241](https://github.com/libretime/libretime/issues/3241)) ([3484472](https://github.com/libretime/libretime/commit/348447290f23cb392fa1d4f4969d150066473edd))
+* **legacy:** replace deprecated strftime() with date() in Propel Base models ([#3240](https://github.com/libretime/libretime/issues/3240)) ([e396d4c](https://github.com/libretime/libretime/commit/e396d4c9e97bc451f3e42fca0c82bf4feb8df132))
+* **playout:** add vine/five.py Python 3.11 compatibility patch ([#3243](https://github.com/libretime/libretime/issues/3243)) ([9e772cf](https://github.com/libretime/libretime/commit/9e772cfc401f2682ee190cfabdeb8273d498b788))
+* **worker:** include User-Agent in podcast download request ([#3229](https://github.com/libretime/libretime/issues/3229)) ([60bb0b7](https://github.com/libretime/libretime/commit/60bb0b7835547d10f8590f9c0bad7dba7896199f))
+
 ## [4.5.0](https://github.com/libretime/libretime/compare/4.4.0...4.5.0) (2025-07-16)
 
 
