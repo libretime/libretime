@@ -34,6 +34,11 @@ jobs:
           restore-keys: |
             ${{ inputs.release }}-pip-${{ inputs.context }}
 
+      - name: Apply vine Python 3.11 patch
+        if: inputs.release == 'bookworm'
+        run: |
+          _vine_site=$(python3 -c "import site; print(site.getsitepackages()[0])")
+          patch -p1 --forward --reject-file=- -d "$_vine_site" < playout/vine-python311.patch || true
       - name: Test
         run: make test-coverage
         working-directory: ${{ inputs.context }}
