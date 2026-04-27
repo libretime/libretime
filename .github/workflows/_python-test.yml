@@ -4,45 +4,40 @@ on:
       context:
         required: true
         type: string
-
       release:
         required: true
         type: string
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-test-${{ inputs.release }}
   cancel-in-progress: true
-
 jobs:
   test:
     runs-on: ubuntu-latest
-
     container:
       image: ghcr.io/libretime/libretime-dev:${{ inputs.release }}
       options: --user 1001:1001
     defaults:
       run:
         shell: bash
-
     steps:
       - uses: actions/checkout@v5
-
       - uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ inputs.release }}-pip-${{ inputs.context }}-${{ hashFiles(format('{0}/{1}', inputs.context, '**/setup.py')) }}
           restore-keys: |
             ${{ inputs.release }}-pip-${{ inputs.context }}
-
+      - name: Install
+        run: make install
+        working-directory: ${{ inputs.context }}
       - name: Apply vine Python 3.11 patch
         if: inputs.release == 'bookworm'
         run: |
-          _vine_site=$(python3 -c "import site; print(site.getsitepackages()[0])")
+          _vine_site=$(${{ inputs.context }}/.venv/bin/python3 -c "import site; print(site.getsitepackages()[0])")
           patch -p1 --forward --reject-file=- -d "$_vine_site" < playout/vine-python311.patch || true
       - name: Test
         run: make test-coverage
         working-directory: ${{ inputs.context }}
-
       - name: Report coverage
         uses: codecov/codecov-action@v5
         with:
