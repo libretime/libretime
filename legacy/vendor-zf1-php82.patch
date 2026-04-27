@@ -85,7 +85,7 @@ diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-controlle
 +#[\AllowDynamicProperties]
  class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
  {
- 
+
 diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-controller/library/Zend/Controller/Request/Apache404.php /usr/share/libretime/legacy/vendor/zf1s/zend-controller/library/Zend/Controller/Request/Apache404.php
 --- a/vendor/zf1s/zend-controller/library/Zend/Controller/Request/Apache404.php	2024-04-18 02:48:59.000000000 -0600
 +++ b/vendor/zf1s/zend-controller/library/Zend/Controller/Request/Apache404.php	2026-03-28 17:39:36.216279989 -0600
@@ -107,7 +107,7 @@ diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-crypt/lib
 +#[\AllowDynamicProperties]
  class Zend_Crypt_Rsa_Key_Private extends Zend_Crypt_Rsa_Key
  {
- 
+
 diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-crypt/library/Zend/Crypt/Rsa/Key/Public.php /usr/share/libretime/legacy/vendor/zf1s/zend-crypt/library/Zend/Crypt/Rsa/Key/Public.php
 --- a/vendor/zf1s/zend-crypt/library/Zend/Crypt/Rsa/Key/Public.php	2024-04-18 02:48:59.000000000 -0600
 +++ b/vendor/zf1s/zend-crypt/library/Zend/Crypt/Rsa/Key/Public.php	2026-03-28 17:39:36.804309045 -0600
@@ -118,7 +118,7 @@ diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-crypt/lib
 +#[\AllowDynamicProperties]
  class Zend_Crypt_Rsa_Key_Public extends Zend_Crypt_Rsa_Key
  {
- 
+
 diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-date/library/Zend/Date.php /usr/share/libretime/legacy/vendor/zf1s/zend-date/library/Zend/Date.php
 --- a/vendor/zf1s/zend-date/library/Zend/Date.php	2024-04-18 02:48:59.000000000 -0600
 +++ b/vendor/zf1s/zend-date/library/Zend/Date.php	2026-03-28 17:39:36.768307266 -0600
@@ -136,7 +136,7 @@ diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/librar
 @@ -43,6 +43,7 @@
   * @license    http://framework.zend.com/license/new-bsd     New BSD License
   */
- 
+
 +#[\AllowDynamicProperties]
  class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
  {
@@ -151,7 +151,7 @@ diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/librar
 +#[\AllowDynamicProperties]
  class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
  {
- 
+
 diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Oracle.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Oracle.php
 --- a/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Oracle.php	2024-04-18 02:48:59.000000000 -0600
 +++ b/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Oracle.php	2026-03-28 17:39:36.712304499 -0600
@@ -195,7 +195,7 @@ diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/librar
 +#[\AllowDynamicProperties]
  class Zend_Db_Statement_Db2 extends Zend_Db_Statement
  {
- 
+
 diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Mysqli.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Mysqli.php
 --- a/vendor/zf1s/zend-db/library/Zend/Db/Statement/Mysqli.php	2024-04-18 02:48:59.000000000 -0600
 +++ b/vendor/zf1s/zend-db/library/Zend/Db/Statement/Mysqli.php	2026-03-28 17:39:36.244281373 -0600
@@ -206,7 +206,7 @@ diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/librar
 +#[\AllowDynamicProperties]
  class Zend_Db_Statement_Mysqli extends Zend_Db_Statement
  {
- 
+
 diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Oracle.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Oracle.php
 --- a/vendor/zf1s/zend-db/library/Zend/Db/Statement/Oracle.php	2024-04-18 02:48:59.000000000 -0600
 +++ b/vendor/zf1s/zend-db/library/Zend/Db/Statement/Oracle.php	2026-03-28 17:39:36.244281373 -0600
@@ -217,7 +217,7 @@ diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/librar
 +#[\AllowDynamicProperties]
  class Zend_Db_Statement_Oracle extends Zend_Db_Statement
  {
- 
+
 diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Pdo.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Pdo.php
 --- a/vendor/zf1s/zend-db/library/Zend/Db/Statement/Pdo.php	2024-04-18 02:48:59.000000000 -0600
 +++ b/vendor/zf1s/zend-db/library/Zend/Db/Statement/Pdo.php	2026-03-28 17:39:36.244281373 -0600
@@ -228,7 +228,7 @@ diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/librar
 +#[\AllowDynamicProperties]
  class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggregate
  {
- 
+
 diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Sqlsrv.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Sqlsrv.php
 --- a/vendor/zf1s/zend-db/library/Zend/Db/Statement/Sqlsrv.php	2024-04-18 02:48:59.000000000 -0600
 +++ b/vendor/zf1s/zend-db/library/Zend/Db/Statement/Sqlsrv.php	2026-03-28 17:39:36.244281373 -0600
@@ -239,7 +239,7 @@ diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/librar
 +#[\AllowDynamicProperties]
  class Zend_Db_Statement_Sqlsrv extends Zend_Db_Statement
  {
- 
+
 diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Table/Select.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Table/Select.php
 --- a/vendor/zf1s/zend-db/library/Zend/Db/Table/Select.php	2024-04-18 02:48:59.000000000 -0600
 +++ b/vendor/zf1s/zend-db/library/Zend/Db/Table/Select.php	2026-03-28 17:39:36.244281373 -0600
@@ -305,7 +305,7 @@ diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-http/libr
 +#[\AllowDynamicProperties]
  class Zend_Http_UserAgent_Mobile extends Zend_Http_UserAgent_AbstractDevice
  {
- 
+
 diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-log/library/Zend/Log/Writer/Firebug.php /usr/share/libretime/legacy/vendor/zf1s/zend-log/library/Zend/Log/Writer/Firebug.php
 --- a/vendor/zf1s/zend-log/library/Zend/Log/Writer/Firebug.php	2024-04-18 02:48:59.000000000 -0600
 +++ b/vendor/zf1s/zend-log/library/Zend/Log/Writer/Firebug.php	2026-03-28 17:39:36.244281373 -0600
