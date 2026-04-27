@@ -1,0 +1,45 @@
+--- a/vine/five.py	2026-03-29 13:20:29.870633147 -0600
++++ b/vine/five.py	2026-03-28 19:17:29.250262641 -0600
+@@ -358,7 +358,41 @@
+ 
+ 
+ try:  # pragma: no cover
+-    from inspect import formatargspec, getfullargspec
++    from inspect import getfullargspec
++    try:
++        from inspect import formatargspec
++    except ImportError:  # Python 3.11+
++        def formatargspec(args, varargs=None, varkw=None, defaults=None,
++                          kwonlyargs=(), kwonlydefaults={}, annotations={},
++                          formatarg=str, formatvarargs=lambda name: '*' + name,
++                          formatvarkw=lambda name: '**' + name,
++                          formatvalue=lambda value: '=' + repr(value),
++                          formatreturns=lambda text: ' -> ' + text,
++                          formatannotation=None):
++            specs = []
++            if defaults:
++                firstdefault = len(args) - len(defaults)
++            else:
++                firstdefault = len(args)
++            for i, arg in enumerate(args):
++                spec = formatarg(arg)
++                if i >= firstdefault:
++                    spec = spec + formatvalue(defaults[i - firstdefault])
++                specs.append(spec)
++            if varargs is not None:
++                specs.append(formatvarargs(varargs))
++            if kwonlyargs:
++                if varargs is None:
++                    specs.append("*")
++                for kw in kwonlyargs:
++                    spec = formatarg(kw)
++                    if kwonlydefaults and kw in kwonlydefaults:
++                        spec += formatvalue(kwonlydefaults[kw])
++                    specs.append(spec)
++            if varkw is not None:
++                specs.append(formatvarkw(varkw))
++            result = "(" + ", ".join(specs) + ")"
++            return result
+ except ImportError:  # Py2
+     from collections import namedtuple
+     from inspect import formatargspec, getargspec as _getargspec  # noqa

@@ -1,0 +1,552 @@
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-config/library/Zend/Config/Ini.php /usr/share/libretime/legacy/vendor/zf1s/zend-config/library/Zend/Config/Ini.php
+--- a/vendor/zf1s/zend-config/library/Zend/Config/Ini.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-config/library/Zend/Config/Ini.php	2026-03-28 17:39:36.744306080 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Config_Ini extends Zend_Config
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-config/library/Zend/Config/Json.php /usr/share/libretime/legacy/vendor/zf1s/zend-config/library/Zend/Config/Json.php
+--- a/vendor/zf1s/zend-config/library/Zend/Config/Json.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-config/library/Zend/Config/Json.php	2026-03-28 17:39:36.736305685 -0600
+@@ -37,6 +37,7 @@
+  * @copyright Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Config_Json extends Zend_Config
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-config/library/Zend/Config/Writer/FileAbstract.php /usr/share/libretime/legacy/vendor/zf1s/zend-config/library/Zend/Config/Writer/FileAbstract.php
+--- a/vendor/zf1s/zend-config/library/Zend/Config/Writer/FileAbstract.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-config/library/Zend/Config/Writer/FileAbstract.php	2026-03-28 17:39:36.744306080 -0600
+@@ -30,6 +30,7 @@
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  * @version    $Id$
+  */
++#[\AllowDynamicProperties]
+ class Zend_Config_Writer_FileAbstract extends Zend_Config_Writer
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-config/library/Zend/Config/Xml.php /usr/share/libretime/legacy/vendor/zf1s/zend-config/library/Zend/Config/Xml.php
+--- a/vendor/zf1s/zend-config/library/Zend/Config/Xml.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-config/library/Zend/Config/Xml.php	2026-03-28 17:39:36.744306080 -0600
+@@ -38,6 +38,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Config_Xml extends Zend_Config
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-config/library/Zend/Config/Yaml.php /usr/share/libretime/legacy/vendor/zf1s/zend-config/library/Zend/Config/Yaml.php
+--- a/vendor/zf1s/zend-config/library/Zend/Config/Yaml.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-config/library/Zend/Config/Yaml.php	2026-03-28 17:39:36.748306278 -0600
+@@ -32,6 +32,7 @@
+  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Config_Yaml extends Zend_Config
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-controller/library/Zend/Controller/Action/Helper/AjaxContext.php /usr/share/libretime/legacy/vendor/zf1s/zend-controller/library/Zend/Controller/Action/Helper/AjaxContext.php
+--- a/vendor/zf1s/zend-controller/library/Zend/Controller/Action/Helper/AjaxContext.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-controller/library/Zend/Controller/Action/Helper/AjaxContext.php	2026-03-28 17:39:36.216279989 -0600
+@@ -35,6 +35,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Controller_Action_Helper_AjaxContext extends Zend_Controller_Action_Helper_ContextSwitch
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-controller/library/Zend/Controller/Dispatcher/Standard.php /usr/share/libretime/legacy/vendor/zf1s/zend-controller/library/Zend/Controller/Dispatcher/Standard.php
+--- a/vendor/zf1s/zend-controller/library/Zend/Controller/Dispatcher/Standard.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-controller/library/Zend/Controller/Dispatcher/Standard.php	2026-03-28 17:39:36.216279989 -0600
+@@ -33,6 +33,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Controller_Dispatcher_Standard extends Zend_Controller_Dispatcher_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-controller/library/Zend/Controller/Plugin/Broker.php /usr/share/libretime/legacy/vendor/zf1s/zend-controller/library/Zend/Controller/Plugin/Broker.php
+--- a/vendor/zf1s/zend-controller/library/Zend/Controller/Plugin/Broker.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-controller/library/Zend/Controller/Plugin/Broker.php	2026-03-28 17:39:36.216279989 -0600
+@@ -30,6 +30,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Controller_Plugin_Broker extends Zend_Controller_Plugin_Abstract
+ {
+ 
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-controller/library/Zend/Controller/Request/Apache404.php /usr/share/libretime/legacy/vendor/zf1s/zend-controller/library/Zend/Controller/Request/Apache404.php
+--- a/vendor/zf1s/zend-controller/library/Zend/Controller/Request/Apache404.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-controller/library/Zend/Controller/Request/Apache404.php	2026-03-28 17:39:36.216279989 -0600
+@@ -40,6 +40,7 @@
+  * @package    Zend_Controller
+  * @subpackage Request
+  */
++#[\AllowDynamicProperties]
+ class Zend_Controller_Request_Apache404 extends Zend_Controller_Request_Http
+ {
+     public function setRequestUri($requestUri = null)
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-crypt/library/Zend/Crypt/Rsa/Key/Private.php /usr/share/libretime/legacy/vendor/zf1s/zend-crypt/library/Zend/Crypt/Rsa/Key/Private.php
+--- a/vendor/zf1s/zend-crypt/library/Zend/Crypt/Rsa/Key/Private.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-crypt/library/Zend/Crypt/Rsa/Key/Private.php	2026-03-28 17:39:36.796308650 -0600
+@@ -31,6 +31,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Crypt_Rsa_Key_Private extends Zend_Crypt_Rsa_Key
+ {
+ 
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-crypt/library/Zend/Crypt/Rsa/Key/Public.php /usr/share/libretime/legacy/vendor/zf1s/zend-crypt/library/Zend/Crypt/Rsa/Key/Public.php
+--- a/vendor/zf1s/zend-crypt/library/Zend/Crypt/Rsa/Key/Public.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-crypt/library/Zend/Crypt/Rsa/Key/Public.php	2026-03-28 17:39:36.804309045 -0600
+@@ -31,6 +31,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Crypt_Rsa_Key_Public extends Zend_Crypt_Rsa_Key
+ {
+ 
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-date/library/Zend/Date.php /usr/share/libretime/legacy/vendor/zf1s/zend-date/library/Zend/Date.php
+--- a/vendor/zf1s/zend-date/library/Zend/Date.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-date/library/Zend/Date.php	2026-03-28 17:39:36.768307266 -0600
+@@ -33,6 +33,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Date extends Zend_Date_DateObject
+ {
+     private $_locale  = null;
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Db2.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Db2.php
+--- a/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Db2.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Db2.php	2026-03-28 17:39:36.700303907 -0600
+@@ -43,6 +43,7 @@
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
+ 
++#[\AllowDynamicProperties]
+ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Mysqli.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Mysqli.php
+--- a/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Mysqli.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Mysqli.php	2026-03-28 17:39:36.704304104 -0600
+@@ -49,6 +49,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
+ {
+ 
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Oracle.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Oracle.php
+--- a/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Oracle.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Oracle.php	2026-03-28 17:39:36.712304499 -0600
+@@ -37,6 +37,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Db_Adapter_Oracle extends Zend_Db_Adapter_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Pdo/Abstract.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Pdo/Abstract.php
+--- a/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Pdo/Abstract.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Pdo/Abstract.php	2026-03-28 17:49:00.056132990 -0600
+@@ -42,6 +42,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ abstract class Zend_Db_Adapter_Pdo_Abstract extends Zend_Db_Adapter_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Sqlsrv.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Sqlsrv.php
+--- a/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Sqlsrv.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-db/library/Zend/Db/Adapter/Sqlsrv.php	2026-03-28 17:39:36.680302918 -0600
+@@ -37,6 +37,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Db2.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Db2.php
+--- a/vendor/zf1s/zend-db/library/Zend/Db/Statement/Db2.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-db/library/Zend/Db/Statement/Db2.php	2026-03-28 17:39:36.244281373 -0600
+@@ -33,6 +33,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Db_Statement_Db2 extends Zend_Db_Statement
+ {
+ 
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Mysqli.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Mysqli.php
+--- a/vendor/zf1s/zend-db/library/Zend/Db/Statement/Mysqli.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-db/library/Zend/Db/Statement/Mysqli.php	2026-03-28 17:39:36.244281373 -0600
+@@ -36,6 +36,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Db_Statement_Mysqli extends Zend_Db_Statement
+ {
+ 
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Oracle.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Oracle.php
+--- a/vendor/zf1s/zend-db/library/Zend/Db/Statement/Oracle.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-db/library/Zend/Db/Statement/Oracle.php	2026-03-28 17:39:36.244281373 -0600
+@@ -34,6 +34,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Db_Statement_Oracle extends Zend_Db_Statement
+ {
+ 
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Pdo.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Pdo.php
+--- a/vendor/zf1s/zend-db/library/Zend/Db/Statement/Pdo.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-db/library/Zend/Db/Statement/Pdo.php	2026-03-28 17:39:36.244281373 -0600
+@@ -37,6 +37,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggregate
+ {
+ 
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Sqlsrv.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Statement/Sqlsrv.php
+--- a/vendor/zf1s/zend-db/library/Zend/Db/Statement/Sqlsrv.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-db/library/Zend/Db/Statement/Sqlsrv.php	2026-03-28 17:39:36.244281373 -0600
+@@ -34,6 +34,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Db_Statement_Sqlsrv extends Zend_Db_Statement
+ {
+ 
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-db/library/Zend/Db/Table/Select.php /usr/share/libretime/legacy/vendor/zf1s/zend-db/library/Zend/Db/Table/Select.php
+--- a/vendor/zf1s/zend-db/library/Zend/Db/Table/Select.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-db/library/Zend/Db/Table/Select.php	2026-03-28 17:39:36.244281373 -0600
+@@ -43,6 +43,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Db_Table_Select extends Zend_Db_Select
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-file-transfer/library/Zend/File/Transfer/Adapter/Http.php /usr/share/libretime/legacy/vendor/zf1s/zend-file-transfer/library/Zend/File/Transfer/Adapter/Http.php
+--- a/vendor/zf1s/zend-file-transfer/library/Zend/File/Transfer/Adapter/Http.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-file-transfer/library/Zend/File/Transfer/Adapter/Http.php	2026-03-28 17:39:36.756306674 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_File_Transfer_Adapter_Http extends Zend_File_Transfer_Adapter_Abstract
+ {
+     protected static $_callbackApc            = 'apc_fetch';
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-form/library/Zend/Form/Element/File.php /usr/share/libretime/legacy/vendor/zf1s/zend-form/library/Zend/Form/Element/File.php
+--- a/vendor/zf1s/zend-form/library/Zend/Form/Element/File.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-form/library/Zend/Form/Element/File.php	2026-03-28 17:39:36.792308453 -0600
+@@ -31,6 +31,7 @@
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  * @version    $Id$
+  */
++#[\AllowDynamicProperties]
+ class Zend_Form_Element_File extends Zend_Form_Element_Xhtml
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-http/library/Zend/Http/Client/Adapter/Proxy.php /usr/share/libretime/legacy/vendor/zf1s/zend-http/library/Zend/Http/Client/Adapter/Proxy.php
+--- a/vendor/zf1s/zend-http/library/Zend/Http/Client/Adapter/Proxy.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-http/library/Zend/Http/Client/Adapter/Proxy.php	2026-03-28 17:39:36.812309441 -0600
+@@ -49,6 +49,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Http_Client_Adapter_Proxy extends Zend_Http_Client_Adapter_Socket
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-http/library/Zend/Http/Response/Stream.php /usr/share/libretime/legacy/vendor/zf1s/zend-http/library/Zend/Http/Response/Stream.php
+--- a/vendor/zf1s/zend-http/library/Zend/Http/Response/Stream.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-http/library/Zend/Http/Response/Stream.php	2026-03-28 17:39:36.804309045 -0600
+@@ -31,6 +31,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Http_Response_Stream extends Zend_Http_Response
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-http/library/Zend/Http/UserAgent/Mobile.php /usr/share/libretime/legacy/vendor/zf1s/zend-http/library/Zend/Http/UserAgent/Mobile.php
+--- a/vendor/zf1s/zend-http/library/Zend/Http/UserAgent/Mobile.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-http/library/Zend/Http/UserAgent/Mobile.php	2026-03-28 17:39:36.804309045 -0600
+@@ -30,6 +30,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Http_UserAgent_Mobile extends Zend_Http_UserAgent_AbstractDevice
+ {
+ 
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-log/library/Zend/Log/Writer/Firebug.php /usr/share/libretime/legacy/vendor/zf1s/zend-log/library/Zend/Log/Writer/Firebug.php
+--- a/vendor/zf1s/zend-log/library/Zend/Log/Writer/Firebug.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-log/library/Zend/Log/Writer/Firebug.php	2026-03-28 17:39:36.244281373 -0600
+@@ -41,6 +41,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Log_Writer_Firebug extends Zend_Log_Writer_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-log/library/Zend/Log/Writer/Mail.php /usr/share/libretime/legacy/vendor/zf1s/zend-log/library/Zend/Log/Writer/Mail.php
+--- a/vendor/zf1s/zend-log/library/Zend/Log/Writer/Mail.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-log/library/Zend/Log/Writer/Mail.php	2026-03-28 17:39:36.244281373 -0600
+@@ -43,6 +43,7 @@
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  * @version    $Id$
+  */
++#[\AllowDynamicProperties]
+ class Zend_Log_Writer_Mail extends Zend_Log_Writer_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-log/library/Zend/Log/Writer/Stream.php /usr/share/libretime/legacy/vendor/zf1s/zend-log/library/Zend/Log/Writer/Stream.php
+--- a/vendor/zf1s/zend-log/library/Zend/Log/Writer/Stream.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-log/library/Zend/Log/Writer/Stream.php	2026-03-28 17:39:36.244281373 -0600
+@@ -34,6 +34,7 @@
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  * @version    $Id$
+  */
++#[\AllowDynamicProperties]
+ class Zend_Log_Writer_Stream extends Zend_Log_Writer_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-navigation/library/Zend/Navigation/Container.php /usr/share/libretime/legacy/vendor/zf1s/zend-navigation/library/Zend/Navigation/Container.php
+--- a/vendor/zf1s/zend-navigation/library/Zend/Navigation/Container.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-navigation/library/Zend/Navigation/Container.php	2026-03-28 17:39:36.820309836 -0600
+@@ -29,7 +29,8 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
+-abstract class Zend_Navigation_Container implements RecursiveIterator, Countable
++#[\AllowDynamicProperties]
++class Zend_Navigation_Container implements RecursiveIterator, Countable
+ {
+     /**
+      * Contains sub pages
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-rest/library/Zend/Rest/Route.php /usr/share/libretime/legacy/vendor/zf1s/zend-rest/library/Zend/Rest/Route.php
+--- a/vendor/zf1s/zend-rest/library/Zend/Rest/Route.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-rest/library/Zend/Rest/Route.php	2026-03-28 17:39:36.768307266 -0600
+@@ -49,6 +49,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Rest_Route extends Zend_Controller_Router_Route_Module
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-server/library/Zend/Server/Reflection/Method.php /usr/share/libretime/legacy/vendor/zf1s/zend-server/library/Zend/Server/Reflection/Method.php
+--- a/vendor/zf1s/zend-server/library/Zend/Server/Reflection/Method.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-server/library/Zend/Server/Reflection/Method.php	2026-03-28 17:39:36.756306674 -0600
+@@ -34,6 +34,7 @@
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  * @version $Id$
+  */
++#[\AllowDynamicProperties]
+ class Zend_Server_Reflection_Method extends Zend_Server_Reflection_Function_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-session/library/Zend/Session/SaveHandler/DbTable.php /usr/share/libretime/legacy/vendor/zf1s/zend-session/library/Zend/Session/SaveHandler/DbTable.php
+--- a/vendor/zf1s/zend-session/library/Zend/Session/SaveHandler/DbTable.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-session/library/Zend/Session/SaveHandler/DbTable.php	2026-03-28 17:39:36.784308058 -0600
+@@ -49,6 +49,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Session_SaveHandler_DbTable
+     extends Zend_Db_Table_Abstract
+     implements Zend_Session_SaveHandler_Interface
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-uri/library/Zend/Uri/Http.php /usr/share/libretime/legacy/vendor/zf1s/zend-uri/library/Zend/Uri/Http.php
+--- a/vendor/zf1s/zend-uri/library/Zend/Uri/Http.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-uri/library/Zend/Uri/Http.php	2026-03-28 17:39:36.756306674 -0600
+@@ -38,6 +38,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Uri_Http extends Zend_Uri
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/Count.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/Count.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/Count.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/Count.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_Count extends Zend_Validate_Abstract
+ {
+     /**#@+
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/ExcludeMimeType.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/ExcludeMimeType.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/ExcludeMimeType.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/ExcludeMimeType.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_ExcludeMimeType extends Zend_Validate_File_MimeType
+ {
+     const FALSE_TYPE   = 'fileExcludeMimeTypeFalse';
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/Exists.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/Exists.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/Exists.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/Exists.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_Exists extends Zend_Validate_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/Extension.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/Extension.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/Extension.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/Extension.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_Extension extends Zend_Validate_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/FilesSize.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/FilesSize.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/FilesSize.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/FilesSize.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_FilesSize extends Zend_Validate_File_Size
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/Hash.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/Hash.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/Hash.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/Hash.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_Hash extends Zend_Validate_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/ImageSize.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/ImageSize.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/ImageSize.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/ImageSize.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_ImageSize extends Zend_Validate_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/IsCompressed.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/IsCompressed.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/IsCompressed.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/IsCompressed.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_IsCompressed extends Zend_Validate_File_MimeType
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/IsImage.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/IsImage.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/IsImage.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/IsImage.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_IsImage extends Zend_Validate_File_MimeType
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/MimeType.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/MimeType.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/MimeType.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/MimeType.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_MimeType extends Zend_Validate_Abstract
+ {
+     /**
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/Size.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/Size.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/Size.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/Size.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_Size extends Zend_Validate_Abstract
+ {
+     /**#@+
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/Upload.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/Upload.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/Upload.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/Upload.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_Upload extends Zend_Validate_Abstract
+ {
+     /**@#+
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/WordCount.php /usr/share/libretime/legacy/vendor/zf1s/zend-validate/library/Zend/Validate/File/WordCount.php
+--- a/vendor/zf1s/zend-validate/library/Zend/Validate/File/WordCount.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-validate/library/Zend/Validate/File/WordCount.php	2026-03-28 17:39:36.216279989 -0600
+@@ -32,6 +32,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license   http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_Validate_File_WordCount extends Zend_Validate_File_Count
+ {
+     /**#@+
+diff -ruN '--exclude=installed.php' /tmp/fresh-legacy/vendor/zf1s/zend-view/library/Zend/View/Helper/Navigation/Menu.php /usr/share/libretime/legacy/vendor/zf1s/zend-view/library/Zend/View/Helper/Navigation/Menu.php
+--- a/vendor/zf1s/zend-view/library/Zend/View/Helper/Navigation/Menu.php	2024-04-18 02:48:59.000000000 -0600
++++ b/vendor/zf1s/zend-view/library/Zend/View/Helper/Navigation/Menu.php	2026-03-28 17:39:36.764307069 -0600
+@@ -34,6 +34,7 @@
+  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+  */
++#[\AllowDynamicProperties]
+ class Zend_View_Helper_Navigation_Menu
+     extends Zend_View_Helper_Navigation_HelperAbstract
+ {

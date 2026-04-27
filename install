@@ -648,6 +648,12 @@ link_python_app libretime-liquidsoap
 link_python_app libretime-playout
 link_python_app libretime-playout-notify
 
+if [[ -f "$SCRIPT_DIR/playout/vine-python311.patch" ]]; then
+  info "applying vine Python 3.11 compatibility patch"
+  _vine_site=$(find "$VENV_DIR/lib" -maxdepth 2 -name "site-packages" -type d | head -1)
+  patch -p1 --forward --reject-file=- -d "$_vine_site" < "$SCRIPT_DIR/playout/vine-python311.patch" || true
+fi
+
 info "creating libretime-playout working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/playout"
 
@@ -741,6 +747,11 @@ else
   mkdir_and_chown "$LIBRETIME_USER" "$LEGACY_WEB_ROOT"
   cp -R "$SCRIPT_DIR/legacy/." "$LEGACY_WEB_ROOT"
   chown -R "$LIBRETIME_USER:$LIBRETIME_USER" "$LEGACY_WEB_ROOT"
+fi
+
+if [[ -f "$LEGACY_WEB_ROOT/vendor-zf1-php82.patch" ]]; then
+  info "applying PHP 8.2 vendor compatibility patch"
+  patch -p1 -d "$LEGACY_WEB_ROOT" < "$LEGACY_WEB_ROOT/vendor-zf1-php82.patch"
 fi
 
 PHP_VERSION="$(php-config --version | awk -F . '{ print $1 "." $2 }')"

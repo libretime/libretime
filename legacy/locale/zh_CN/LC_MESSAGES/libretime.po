@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2025-08-11 03:03+0000\n"
+"POT-Creation-Date: 2026-04-13 04:19+0000\n"
 "PO-Revision-Date: 2025-02-11 19:01+0000\n"
 "Last-Translator: Monstorix <monstorix@outlook.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/projects/libretime/legacy/zh_Hans/>\n"
@@ -3933,47 +3933,47 @@ msgstr ""
 msgid "Rebroadcast of %s from %s"
 msgstr "%s 是 %s 的重播"
 
-#: application/models/Webstream.php:165
+#: application/models/Webstream.php:166
 msgid "Length needs to be greater than 0 minutes"
 msgstr "节目时长必须大于 0 分钟"
 
-#: application/models/Webstream.php:169
+#: application/models/Webstream.php:170
 msgid "Length should be of form \"00h 00m\""
 msgstr "时长的格式应该是 \"00h 00m\""
 
-#: application/models/Webstream.php:182
+#: application/models/Webstream.php:183
 msgid "URL should be of form \"https://example.org\""
 msgstr "网址的格式应该是 \"https://example.org\""
 
-#: application/models/Webstream.php:185
+#: application/models/Webstream.php:186
 msgid "URL should be 512 characters or less"
 msgstr "网址的最大长度不能超过512字节"
 
-#: application/models/Webstream.php:190
+#: application/models/Webstream.php:191
 msgid "No MIME type found for webstream."
 msgstr "该串流中未发现 MIME 类型。"
 
-#: application/models/Webstream.php:206
+#: application/models/Webstream.php:207
 msgid "Webstream name cannot be empty"
 msgstr "网络串流的名字不能为空"
 
-#: application/models/Webstream.php:276
+#: application/models/Webstream.php:277
 msgid "Could not parse XSPF playlist"
 msgstr "无法解析这个 XSPF 播放列表"
 
-#: application/models/Webstream.php:297
+#: application/models/Webstream.php:298
 msgid "Could not parse PLS playlist"
 msgstr "无法解析这个 PLS 播放列表"
 
-#: application/models/Webstream.php:316
+#: application/models/Webstream.php:317
 msgid "Could not parse M3U playlist"
 msgstr "无法解析这个 M3U 播放列表"
 
-#: application/models/Webstream.php:329
+#: application/models/Webstream.php:330
 msgid "Invalid webstream - This appears to be a file download."
 msgstr "串流无效 - 指定的链接是一个供下载的文件。"
 
-#: application/models/Webstream.php:333
+#: application/models/Webstream.php:334
 #, php-format
 msgid "Unrecognized stream type: %s"
 msgstr "未知的串流格式： %s"
