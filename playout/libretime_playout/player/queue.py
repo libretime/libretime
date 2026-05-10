@@ -3,6 +3,7 @@ from collections import deque
 from datetime import datetime
 from queue import Empty, Queue
 from threading import Thread
+from time import sleep
 from typing import Any, Dict
 
 from ..utils import seconds_between
@@ -73,7 +74,9 @@ class PypoLiqQueue(Thread):
                     time_until_next_play = None
 
     def run(self) -> None:
-        try:
-            self.main()
-        except Exception as exception:  # pylint: disable=broad-exception-caught
-            logger.exception(exception)
+        while True:
+            try:
+                self.main()
+            except Exception as exception:  # pylint: disable=broad-exception-caught
+                logger.exception(exception)
+                sleep(1)
