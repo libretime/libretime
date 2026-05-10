@@ -19,8 +19,7 @@ class LiquidsoapClientError(Exception):
 
 
 class _OwnedLock:
-    """A non-reentrant lock that records the thread currently holding it.
-    """
+    """A non-reentrant lock that records the thread currently holding it."""
 
     def __init__(self) -> None:
         self._lock = threading.Lock()
@@ -64,9 +63,7 @@ class LiquidsoapClient:
 
     def _set_var(self, name: str, value: Any) -> None:
         if not self._lock.held_by_current_thread():
-            raise RuntimeError(
-                "_set_var must be called with self._lock held"
-            )
+            raise RuntimeError("_set_var must be called with self._lock held")
         self.conn.write(f"var.set {name} = {value}")
         result = self.conn.read()
         if f"Variable {name} set" not in result:
