@@ -254,6 +254,7 @@ final class Application_Model_Scheduler
             $data['fadein'] = Application_Model_Preference::GetDefaultFadeIn();
             $data['fadeout'] = Application_Model_Preference::GetDefaultFadeOut();
 
+            $this->trackInPassPick((int) $id, $showStart, $files);
             $files[] = $data;
         } elseif ($type === 'playlist') {
             $pl = new Application_Model_Playlist($id);
@@ -269,6 +270,7 @@ final class Application_Model_Scheduler
                     $data['fadein'] = $plItem['fadein'];
                     $data['fadeout'] = $plItem['fadeout'];
                     $data['type'] = 0;
+                    $this->trackInPassPick((int) $plItem['item_id'], $showStart, $files);
                     $files[] = $data;
                 } elseif ($plItem['type'] == 1) {
                     $data['id'] = $plItem['item_id'];
@@ -291,6 +293,7 @@ final class Application_Model_Scheduler
                             $data['fadein'] = $track['fadein'];
                             $data['fadeout'] = $track['fadeout'];
                             $data['type'] = 0;
+                            $this->trackInPassPick((int) $track['item_id'], $showStart, $files);
                             $files[] = $data;
                         }
                     } else {
@@ -366,6 +369,7 @@ final class Application_Model_Scheduler
                     $data['fadein'] = $track['fadein'];
                     $data['fadeout'] = $track['fadeout'];
                     $data['type'] = 0;
+                    $this->trackInPassPick((int) $track['item_id'], $showStart, $files);
                     $files[] = $data;
                 }
             } else {
@@ -1387,6 +1391,23 @@ final class Application_Model_Scheduler
             fn ($acc, $file): float|int => $acc + Application_Common_DateHelper::playlistTimeToSeconds($file['cliplength']),
             0.0
         );
+    }
+
+    /**
+     * Record a non-dynamic-block pick so later smart blocks in the same
+     * pass see it via their lptime exclusion window. Skip non-file ids
+     * (streams) — the exclusion targets cc_files.
+     *
+     * Slot is anchored at $showStart + accumulated duration of $filesBefore.
+     */
+    private function trackInPassPick(int $fileId, DateTime $showStart, array $filesBefore): void
+    {
+        $slot = clone $showStart;
+        $slot->modify('+' . (int) round($this->timeLengthOfFiles($filesBefore)) . ' seconds');
+        $this->scheduledInPassPicks[] = [
+            'id' => $fileId,
+            'slot' => $slot,
+        ];
     }
 
     /*
