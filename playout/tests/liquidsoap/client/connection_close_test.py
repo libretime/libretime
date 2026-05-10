@@ -18,9 +18,7 @@ from libretime_playout.liquidsoap.client import LiquidsoapConnection
 
 
 @pytest.fixture(name="tcp_server")
-def tcp_server_fixture() -> Generator[
-    Tuple[str, int, List[socket.socket]], None, None
-]:
+def tcp_server_fixture() -> Generator[Tuple[str, int, List[socket.socket]], None, None]:
     """A minimal TCP server that accepts connections and stays silent.
 
     Yields ``(host, port, accepted)`` where ``accepted`` is the running list of

@@ -92,6 +92,6 @@ def test_liq_client_version_thread_safe(liq_client: LiquidsoapClient):
     assert errors == [], f"errors raised under concurrent use: {errors}"
     assert len(results) == threads_count * iterations
     distinct = set(results)
-    assert distinct == {expected}, (
-        f"inconsistent versions returned (stream corruption): {distinct}"
-    )
+    assert distinct == {
+        expected
+    }, f"inconsistent versions returned (stream corruption): {distinct}"
