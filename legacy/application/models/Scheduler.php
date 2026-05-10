@@ -867,9 +867,11 @@ final class Application_Model_Scheduler
                     if (is_null($filesToInsert)) {
                         $filesToInsert = [];
                         foreach ($mediaItems as $media) {
+                            $slotCursor = clone $nextStartDT;
+                            $slotCursor->modify('+' . (int) round($this->timeLengthOfFiles($filesToInsert)) . ' seconds');
                             $filesToInsert = array_merge(
                                 $filesToInsert,
-                                $this->retrieveMediaFiles($media['id'], $media['type'], $schedule['instance'], $nextStartDT)
+                                $this->retrieveMediaFiles($media['id'], $media['type'], $schedule['instance'], $slotCursor)
                             );
                         }
                     }
