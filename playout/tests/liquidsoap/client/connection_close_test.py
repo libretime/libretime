@@ -6,7 +6,13 @@ went stale and the next __exit__ bubbled OSError out of the `with` block,
 leaving the client unusable. close() now swallows OSError during the shutdown
 handshake; these tests pin that contract and verify a subsequent connect()
 succeeds.
+
+These tests deliberately reach into LiquidsoapConnection._sock to break the
+underlying FD — that is the only way to deterministically reproduce the
+stale-socket scenario in unit-test time.
 """
+
+# pylint: disable=protected-access
 
 import socket
 import threading

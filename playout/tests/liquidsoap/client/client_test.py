@@ -49,6 +49,7 @@ def test_set_var_rejects_calls_without_held_lock():
     """Internal helpers must refuse to run when the caller doesn't own the lock."""
     client = LiquidsoapClient(host="localhost", port=1234)
     with pytest.raises(RuntimeError, match="_set_var must be called"):
+        # pylint: disable=protected-access
         client._set_var("anything", "value")  # noqa: SLF001
 
 
@@ -75,7 +76,8 @@ def test_liq_client_version_thread_safe(liq_client: LiquidsoapClient):
         for _ in range(iterations):
             try:
                 version = liq_client.version()
-            except Exception as exc:  # noqa: BLE001
+            except (OSError, ValueError, IndexError) as exc:
+                # OSError: torn socket; ValueError/IndexError: corrupted parse.
                 with collect_lock:
                     errors.append(exc)
                 return
@@ -89,7 +91,7 @@ def test_liq_client_version_thread_safe(liq_client: LiquidsoapClient):
         thread.join(timeout=60)
         assert not thread.is_alive(), "worker did not finish — possible deadlock"
 
-    assert errors == [], f"errors raised under concurrent use: {errors}"
+    assert not errors, f"errors raised under concurrent use: {errors}"
     assert len(results) == threads_count * iterations
     distinct = set(results)
     assert distinct == {
