@@ -1704,16 +1704,6 @@ SQL;
         // [threshold, slot) window as the lptime SQL predicate.
         $hasLptimeCriterion = isset($storedCrit['crit']['lptime']);
         $lptimeScopedExcludes = [];
-        $lptimeInPassExcludes = [];
-
-        Logging::info(sprintf(
-            '[smartblock-lptime] block_id=%s hasLptimeCriterion=%s threshold=%s slotArg=%s inPassCount=%d',
-            (string) $this->id,
-            $hasLptimeCriterion ? 'yes' : 'no',
-            $lptimeEarliestThreshold instanceof DateTime ? $lptimeEarliestThreshold->format('c') : 'null',
-            $showStartTime instanceof DateTime ? $showStartTime->format('c') : 'null',
-            count($inPassPicks)
-        ));
 
         if ($hasLptimeCriterion && $lptimeEarliestThreshold !== null) {
             $slotBoundary = $showStartTime instanceof DateTime
@@ -1734,7 +1724,6 @@ SQL;
                 $pickSlotUtc = clone $pick['slot'];
                 $pickSlotUtc->setTimezone(new DateTimeZone('UTC'));
                 if ($pickSlotUtc >= $thresholdUtc && $pickSlotUtc < $slotBoundary) {
-                    $lptimeInPassExcludes[] = (int) $pick['id'];
                     $lptimeScopedExcludes[] = (int) $pick['id'];
                 }
             }
@@ -1754,32 +1743,13 @@ SQL;
                     ':slot' => $slotBoundary->format(DEFAULT_MICROTIME_FORMAT),
                 ]
             );
-            $scheduledIds = [];
             foreach ($scheduledRows as $scheduledRow) {
                 $lptimeScopedExcludes[] = (int) $scheduledRow['file_id'];
-                $scheduledIds[] = (int) $scheduledRow['file_id'];
             }
-
-            Logging::info(sprintf(
-                '[smartblock-lptime] block_id=%s window=[%s, %s) thresholdUtc=%s slotUtc=%s inPassExcludes=%s scheduleExcludes=%s',
-                (string) $this->id,
-                $thresholdUtc->format(DEFAULT_MICROTIME_FORMAT),
-                $slotBoundary->format(DEFAULT_MICROTIME_FORMAT),
-                $thresholdUtc->format('c'),
-                $slotBoundary->format('c'),
-                empty($lptimeInPassExcludes) ? '[]' : '[' . implode(',', $lptimeInPassExcludes) . ']',
-                empty($scheduledIds) ? '[]' : '[' . implode(',', $scheduledIds) . ']'
-            ));
         }
 
         if (!empty($lptimeScopedExcludes)) {
-            $finalExcludes = array_values(array_unique($lptimeScopedExcludes));
-            Logging::info(sprintf(
-                '[smartblock-lptime] block_id=%s applying NOT IN (%s)',
-                (string) $this->id,
-                implode(',', $finalExcludes)
-            ));
-            $qry->add('cc_files.id', $finalExcludes, Criteria::NOT_IN);
+            $qry->add('cc_files.id', array_values(array_unique($lptimeScopedExcludes)), Criteria::NOT_IN);
         }
 
         // check if file exists
