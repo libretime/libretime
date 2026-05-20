@@ -368,6 +368,7 @@ CREATE TABLE "cc_subjs"
     "login" VARCHAR(255) DEFAULT '' NOT NULL,
     "pass" VARCHAR(255) DEFAULT '' NOT NULL,
     "type" CHAR(1) DEFAULT 'U' NOT NULL,
+    "is_active" BOOLEAN DEFAULT 'f' NOT NULL,
     "first_name" VARCHAR(255) DEFAULT '' NOT NULL,
     "last_name" VARCHAR(255) DEFAULT '' NOT NULL,
     "lastlogin" TIMESTAMP,

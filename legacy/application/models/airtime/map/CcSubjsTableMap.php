@@ -43,6 +43,7 @@ class CcSubjsTableMap extends TableMap
         $this->addColumn('login', 'DbLogin', 'VARCHAR', true, 255, '');
         $this->addColumn('pass', 'DbPass', 'VARCHAR', true, 255, '');
         $this->addColumn('type', 'DbType', 'CHAR', true, 1, 'U');
+        $this->addColumn('is_active', 'DbIsActive', 'BOOLEAN', true, null, false);
         $this->addColumn('first_name', 'DbFirstName', 'VARCHAR', true, 255, '');
         $this->addColumn('last_name', 'DbLastName', 'VARCHAR', true, 255, '');
         $this->addColumn('lastlogin', 'DbLastlogin', 'TIMESTAMP', false, null, null);

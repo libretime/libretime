@@ -24,13 +24,13 @@ abstract class BaseCcSubjsPeer
     const TM_CLASS = 'CcSubjsTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 13;
+    const NUM_COLUMNS = 14;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 13;
+    const NUM_HYDRATE_COLUMNS = 14;
 
     /** the column name for the id field */
     const ID = 'cc_subjs.id';
@@ -43,6 +43,9 @@ abstract class BaseCcSubjsPeer
 
     /** the column name for the type field */
     const TYPE = 'cc_subjs.type';
+
+    /** the column name for the is_active field */
+    const IS_ACTIVE = 'cc_subjs.is_active';
 
     /** the column name for the first_name field */
     const FIRST_NAME = 'cc_subjs.first_name';
@@ -90,12 +93,12 @@ abstract class BaseCcSubjsPeer
      * e.g. CcSubjsPeer::$fieldNames[CcSubjsPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbLogin', 'DbPass', 'DbType', 'DbFirstName', 'DbLastName', 'DbLastlogin', 'DbLastfail', 'DbSkypeContact', 'DbJabberContact', 'DbEmail', 'DbCellPhone', 'DbLoginAttempts', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbLogin', 'dbPass', 'dbType', 'dbFirstName', 'dbLastName', 'dbLastlogin', 'dbLastfail', 'dbSkypeContact', 'dbJabberContact', 'dbEmail', 'dbCellPhone', 'dbLoginAttempts', ),
-        BasePeer::TYPE_COLNAME => array (CcSubjsPeer::ID, CcSubjsPeer::LOGIN, CcSubjsPeer::PASS, CcSubjsPeer::TYPE, CcSubjsPeer::FIRST_NAME, CcSubjsPeer::LAST_NAME, CcSubjsPeer::LASTLOGIN, CcSubjsPeer::LASTFAIL, CcSubjsPeer::SKYPE_CONTACT, CcSubjsPeer::JABBER_CONTACT, CcSubjsPeer::EMAIL, CcSubjsPeer::CELL_PHONE, CcSubjsPeer::LOGIN_ATTEMPTS, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOGIN', 'PASS', 'TYPE', 'FIRST_NAME', 'LAST_NAME', 'LASTLOGIN', 'LASTFAIL', 'SKYPE_CONTACT', 'JABBER_CONTACT', 'EMAIL', 'CELL_PHONE', 'LOGIN_ATTEMPTS', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'login', 'pass', 'type', 'first_name', 'last_name', 'lastlogin', 'lastfail', 'skype_contact', 'jabber_contact', 'email', 'cell_phone', 'login_attempts', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbLogin', 'DbPass', 'DbType', 'DbIsActive', 'DbFirstName', 'DbLastName', 'DbLastlogin', 'DbLastfail', 'DbSkypeContact', 'DbJabberContact', 'DbEmail', 'DbCellPhone', 'DbLoginAttempts', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbLogin', 'dbPass', 'dbType', 'dbIsActive', 'dbFirstName', 'dbLastName', 'dbLastlogin', 'dbLastfail', 'dbSkypeContact', 'dbJabberContact', 'dbEmail', 'dbCellPhone', 'dbLoginAttempts', ),
+        BasePeer::TYPE_COLNAME => array (CcSubjsPeer::ID, CcSubjsPeer::LOGIN, CcSubjsPeer::PASS, CcSubjsPeer::TYPE, CcSubjsPeer::IS_ACTIVE, CcSubjsPeer::FIRST_NAME, CcSubjsPeer::LAST_NAME, CcSubjsPeer::LASTLOGIN, CcSubjsPeer::LASTFAIL, CcSubjsPeer::SKYPE_CONTACT, CcSubjsPeer::JABBER_CONTACT, CcSubjsPeer::EMAIL, CcSubjsPeer::CELL_PHONE, CcSubjsPeer::LOGIN_ATTEMPTS, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOGIN', 'PASS', 'TYPE', 'IS_ACTIVE', 'FIRST_NAME', 'LAST_NAME', 'LASTLOGIN', 'LASTFAIL', 'SKYPE_CONTACT', 'JABBER_CONTACT', 'EMAIL', 'CELL_PHONE', 'LOGIN_ATTEMPTS', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'login', 'pass', 'type', 'is_active', 'first_name', 'last_name', 'lastlogin', 'lastfail', 'skype_contact', 'jabber_contact', 'email', 'cell_phone', 'login_attempts', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -105,12 +108,12 @@ abstract class BaseCcSubjsPeer
      * e.g. CcSubjsPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbLogin' => 1, 'DbPass' => 2, 'DbType' => 3, 'DbFirstName' => 4, 'DbLastName' => 5, 'DbLastlogin' => 6, 'DbLastfail' => 7, 'DbSkypeContact' => 8, 'DbJabberContact' => 9, 'DbEmail' => 10, 'DbCellPhone' => 11, 'DbLoginAttempts' => 12, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbLogin' => 1, 'dbPass' => 2, 'dbType' => 3, 'dbFirstName' => 4, 'dbLastName' => 5, 'dbLastlogin' => 6, 'dbLastfail' => 7, 'dbSkypeContact' => 8, 'dbJabberContact' => 9, 'dbEmail' => 10, 'dbCellPhone' => 11, 'dbLoginAttempts' => 12, ),
-        BasePeer::TYPE_COLNAME => array (CcSubjsPeer::ID => 0, CcSubjsPeer::LOGIN => 1, CcSubjsPeer::PASS => 2, CcSubjsPeer::TYPE => 3, CcSubjsPeer::FIRST_NAME => 4, CcSubjsPeer::LAST_NAME => 5, CcSubjsPeer::LASTLOGIN => 6, CcSubjsPeer::LASTFAIL => 7, CcSubjsPeer::SKYPE_CONTACT => 8, CcSubjsPeer::JABBER_CONTACT => 9, CcSubjsPeer::EMAIL => 10, CcSubjsPeer::CELL_PHONE => 11, CcSubjsPeer::LOGIN_ATTEMPTS => 12, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOGIN' => 1, 'PASS' => 2, 'TYPE' => 3, 'FIRST_NAME' => 4, 'LAST_NAME' => 5, 'LASTLOGIN' => 6, 'LASTFAIL' => 7, 'SKYPE_CONTACT' => 8, 'JABBER_CONTACT' => 9, 'EMAIL' => 10, 'CELL_PHONE' => 11, 'LOGIN_ATTEMPTS' => 12, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'login' => 1, 'pass' => 2, 'type' => 3, 'first_name' => 4, 'last_name' => 5, 'lastlogin' => 6, 'lastfail' => 7, 'skype_contact' => 8, 'jabber_contact' => 9, 'email' => 10, 'cell_phone' => 11, 'login_attempts' => 12, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbLogin' => 1, 'DbPass' => 2, 'DbType' => 3, 'DbIsActive' => 4, 'DbFirstName' => 5, 'DbLastName' => 6, 'DbLastlogin' => 7, 'DbLastfail' => 8, 'DbSkypeContact' => 9, 'DbJabberContact' => 10, 'DbEmail' => 11, 'DbCellPhone' => 12, 'DbLoginAttempts' => 13, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbLogin' => 1, 'dbPass' => 2, 'dbType' => 3, 'dbIsActive' => 4, 'dbFirstName' => 5, 'dbLastName' => 6, 'dbLastlogin' => 7, 'dbLastfail' => 8, 'dbSkypeContact' => 9, 'dbJabberContact' => 10, 'dbEmail' => 11, 'dbCellPhone' => 12, 'dbLoginAttempts' => 13, ),
+        BasePeer::TYPE_COLNAME => array (CcSubjsPeer::ID => 0, CcSubjsPeer::LOGIN => 1, CcSubjsPeer::PASS => 2, CcSubjsPeer::TYPE => 3, CcSubjsPeer::IS_ACTIVE => 4, CcSubjsPeer::FIRST_NAME => 5, CcSubjsPeer::LAST_NAME => 6, CcSubjsPeer::LASTLOGIN => 7, CcSubjsPeer::LASTFAIL => 8, CcSubjsPeer::SKYPE_CONTACT => 9, CcSubjsPeer::JABBER_CONTACT => 10, CcSubjsPeer::EMAIL => 11, CcSubjsPeer::CELL_PHONE => 12, CcSubjsPeer::LOGIN_ATTEMPTS => 13, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOGIN' => 1, 'PASS' => 2, 'TYPE' => 3, 'IS_ACTIVE' => 4, 'FIRST_NAME' => 5, 'LAST_NAME' => 6, 'LASTLOGIN' => 7, 'LASTFAIL' => 8, 'SKYPE_CONTACT' => 9, 'JABBER_CONTACT' => 10, 'EMAIL' => 11, 'CELL_PHONE' => 12, 'LOGIN_ATTEMPTS' => 13, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'login' => 1, 'pass' => 2, 'type' => 3, 'is_active' => 4, 'first_name' => 5, 'last_name' => 6, 'lastlogin' => 7, 'lastfail' => 8, 'skype_contact' => 9, 'jabber_contact' => 10, 'email' => 11, 'cell_phone' => 12, 'login_attempts' => 13, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -188,6 +191,7 @@ abstract class BaseCcSubjsPeer
             $criteria->addSelectColumn(CcSubjsPeer::LOGIN);
             $criteria->addSelectColumn(CcSubjsPeer::PASS);
             $criteria->addSelectColumn(CcSubjsPeer::TYPE);
+            $criteria->addSelectColumn(CcSubjsPeer::IS_ACTIVE);
             $criteria->addSelectColumn(CcSubjsPeer::FIRST_NAME);
             $criteria->addSelectColumn(CcSubjsPeer::LAST_NAME);
             $criteria->addSelectColumn(CcSubjsPeer::LASTLOGIN);
@@ -202,6 +206,7 @@ abstract class BaseCcSubjsPeer
             $criteria->addSelectColumn($alias . '.login');
             $criteria->addSelectColumn($alias . '.pass');
             $criteria->addSelectColumn($alias . '.type');
+            $criteria->addSelectColumn($alias . '.is_active');
             $criteria->addSelectColumn($alias . '.first_name');
             $criteria->addSelectColumn($alias . '.last_name');
             $criteria->addSelectColumn($alias . '.lastlogin');
