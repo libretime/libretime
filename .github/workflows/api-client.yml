@@ -46,3 +46,9 @@ jobs:
     with:
       context: api-client
       release: jammy
+
+  test-bookworm:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: api-client
+      release: bookworm

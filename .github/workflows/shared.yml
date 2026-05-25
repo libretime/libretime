@@ -44,3 +44,9 @@ jobs:
     with:
       context: shared
       release: jammy
+
+  test-bookworm:
+    uses: ./.github/workflows/_python-test.yml
+    with:
+      context: shared
+      release: bookworm
