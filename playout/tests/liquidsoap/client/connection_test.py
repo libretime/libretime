@@ -1,22 +1,16 @@
 import logging
 from textwrap import dedent
-
+import distro
 import pytest
 from libretime_shared.logging import setup_logger
 
 from libretime_playout.liquidsoap.client import LiquidsoapConnection
 
-from ..conftest import LIQ_VERSION, LIQ_VERSION_STR
+from ..conftest import LIQ_VERSION_STR
 
 logger = logging.getLogger(__name__)
 
 setup_logger("debug")
-
-
-pytestmark = pytest.mark.skipif(
-    LIQ_VERSION >= (2, 0, 0),
-    reason="unsupported liquidsoap >= 2.0.0",
-)
 
 
 def test_liq_conn_version(liq_conn: LiquidsoapConnection):
@@ -50,35 +44,126 @@ def test_liq_conn_vars(liq_conn: LiquidsoapConnection):
 
 
 def test_liq_conn_help(liq_conn: LiquidsoapConnection):
-    expected = dedent(
-        """
-        Available commands:
-        | dummy.autostart
-        | dummy.metadata
-        | dummy.remaining
-        | dummy.skip
-        | dummy.start
-        | dummy.status
-        | dummy.stop
-        | exit
-        | help [<command>]
-        | list
-        | quit
-        | request.alive
-        | request.all
-        | request.metadata <rid>
-        | request.on_air
-        | request.resolving
-        | request.trace <rid>
-        | uptime
-        | var.get <variable>
-        | var.list
-        | var.set <variable> = <value>
-        | version
+    liquidsoap_help_map = {
+        "focal": dedent(
+            """
+            Available commands:
+            | dummy.autostart
+            | dummy.metadata
+            | dummy.remaining
+            | dummy.skip
+            | dummy.start
+            | dummy.status
+            | dummy.stop
+            | exit
+            | help [<command>]
+            | list
+            | quit
+            | request.alive
+            | request.all
+            | request.metadata <rid>
+            | request.on_air
+            | request.resolving
+            | request.trace <rid>
+            | uptime
+            | var.get <variable>
+            | var.list
+            | var.set <variable> = <value>
+            | version
 
-        Type "help <command>" for more information.
-        """
-    ).strip()
+            Type "help <command>" for more information.
+            """
+        ).strip(),
+        "bullseye": dedent(
+            """
+            Available commands:
+            | dummy.autostart
+            | dummy.metadata
+            | dummy.remaining
+            | dummy.skip
+            | dummy.start
+            | dummy.status
+            | dummy.stop
+            | exit
+            | help [<command>]
+            | list
+            | quit
+            | request.alive
+            | request.all
+            | request.metadata <rid>
+            | request.on_air
+            | request.resolving
+            | request.trace <rid>
+            | uptime
+            | var.get <variable>
+            | var.list
+            | var.set <variable> = <value>
+            | version
+
+            Type "help <command>" for more information.
+            """
+        ).strip(),
+        "jammy": dedent(
+            """
+            Available commands:
+            | dummy.autostart
+            | dummy.metadata
+            | dummy.remaining
+            | dummy.skip
+            | dummy.start
+            | dummy.status
+            | dummy.stop
+            | exit
+            | help [<command>]
+            | list
+            | quit
+            | request.alive
+            | request.all
+            | request.metadata <rid>
+            | request.on_air
+            | request.resolving
+            | request.trace <rid>
+            | uptime
+            | var.get <variable>
+            | var.list
+            | var.set <variable> = <value>
+            | version
+
+            Type "help <command>" for more information.
+            """
+        ).strip(),
+        "bookworm": dedent(
+            """
+            Available commands:
+            | dummy.autostart
+            | dummy.metadata
+            | dummy.remaining
+            | dummy.skip
+            | dummy.start
+            | dummy.status
+            | dummy.stop
+            | exit
+            | help [<command>]
+            | list
+            | quit
+            | request.alive
+            | request.all
+            | request.metadata <rid>
+            | request.on_air
+            | request.resolving
+            | request.trace <rid>
+            | uptime
+            | var.get <variable>
+            | var.list
+            | var.set <variable> = <value>
+            | version
+
+            Type "help <command>" for more information.
+            """
+        ).strip(),
+    }
+
+    expected = liquidsoap_help_map[distro.codename()]
     liq_conn.write("help")
     result = liq_conn.read()
     assert result == expected
