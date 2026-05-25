@@ -4,16 +4,39 @@ define('DAYS_PER_WEEK', 7);
 
 class WidgetHelper
 {
-    public static function getWeekInfo($userDefinedTimezone)
+    public static function getWeekInfo($userDefinedTimezone, $useWeekStartDay = true)
     {
-        // weekStart is in station time.
-        $weekStartDateTime = Application_Common_DateHelper::getWeekStartDateTime();
+        $weekStartDay = 1; // Starts on monday by default (ignore preference)
+        if ($useWeekStartDay) {
+            // Week start day preference.
+            $weekStartDay = Application_Model_Preference::GetWeekStartDay();
+        }
+
+        // Today at 00h00 in station time.
+        $todayStartDateTime = Application_Common_DateHelper::getTodayStationStartDateTime();
+        $todayWeekDay = $todayStartDateTime->format('w');
+
+        // Get the beginning of this week (accounting for the week start day preference) from today date time.
+        $dayDiff = ($todayWeekDay - $weekStartDay + 7) % 7;
+        $weekStartDateTime = $todayStartDateTime->sub(new DateInterval("P{$dayDiff}D"));
 
         $dow = [
-            'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
-            'saturday', 'sunday', 'nextmonday', 'nexttuesday', 'nextwednesday',
-            'nextthursday', 'nextfriday', 'nextsaturday', 'nextsunday',
+            'sunday',
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thursday',
+            'friday',
+            'saturday',
         ];
+        // Rotate the day of week to match the week start preference
+        for ($i = 0; $i < $weekStartDay; $i++) {
+            array_push($dow, array_shift($dow));
+        }
+        // Add next week's days
+        for ($i = 0; $i < 7; $i++) {
+            array_push($dow, 'next' . $dow[$i]);
+        }
 
         $result = [];
 
