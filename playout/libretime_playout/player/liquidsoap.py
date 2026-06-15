@@ -112,6 +112,7 @@ class TelnetLiquidsoap:
         try:
             logger.debug("Disconnecting source: %s", sourcename)
             self.liq_client.source_switch_status(sourcename, False)
+            self.liq_client.harbor_kick(sourcename)
         except OSError as exception:
             logger.exception(exception)
 

@@ -145,6 +145,18 @@ class LiquidsoapClient:
             self.conn.write(f"sources.{action}_{name_map[name]}")
             self.conn.read()  # Flush
 
+    def harbor_kick(
+        self,
+        name: Literal["master_dj", "live_dj"],
+    ) -> None:
+        name_map = {
+            "master_dj": "input_main",
+            "live_dj": "input_show",
+        }
+        with self._lock, self.conn:
+            self.conn.write(f"harbor:{name_map[name]}.stop")
+            self.conn.read()  # Flush
+
     def settings_update(
         self,
         *,

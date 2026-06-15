@@ -73,6 +73,33 @@ def get_schedule(api_client: ApiClient) -> Events:
             webstream = api_client.get_webstream(item["stream"]).json()
             generate_webstream_events(events, item, webstream, show)
 
+    # Generate live events for currently active shows that have no cc_schedule
+    # items — those shows are never iterated above so their kick_out events are
+    # never created by the loop.
+    current_time_str = current_time.isoformat(timespec="seconds")
+    try:
+        active_instances = api_client.list_show_instances(
+            params={
+                "starts_before": f"{current_time_str}Z",
+                "ends_after": f"{current_time_str}Z",
+            }
+        ).json()
+        processed_ids = {item["instance"] for item in schedule if item.get("instance")}
+        for instance in active_instances:
+            if instance["id"] in processed_ids:
+                continue
+            show = api_client.get_show(instance["show"]).json()
+            if show["live_enabled"]:
+                instance["starts_at"] = event_isoparse(instance["starts_at"])
+                instance["ends_at"] = event_isoparse(instance["ends_at"])
+                generate_live_events(events, instance, stream_preferences)
+    except Exception as exc:  # pylint: disable=broad-exception-caught
+        import logging as _logging
+
+        _logging.getLogger(__name__).warning(
+            "Could not fetch active show instances: %s", exc
+        )
+
     return dict(sorted(events.items()))
 
 
