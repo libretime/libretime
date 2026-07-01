@@ -56,7 +56,7 @@
 			media: 'audio'
 		},
 		flac: { // FLAC
-			codec: 'audio/x-flac',
+			codec: 'audio/flac',
 			flashCanPlay: false,
 			media: 'audio'
 		},
