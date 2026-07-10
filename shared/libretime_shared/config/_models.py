@@ -105,6 +105,8 @@ class HarborInput(BaseInput):
     mount: StrNoLeadingSlash
     port: int
     secure: bool = False
+    silence_threshold: float = -40.0
+    silence_timeout: float = 10.0
 
 
 class MainHarborInput(HarborInput):

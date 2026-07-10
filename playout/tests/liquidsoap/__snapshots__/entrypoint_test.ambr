@@ -9,9 +9,13 @@
   input_main_mount = "main"
   input_main_port = 8001
   input_main_secure = false
+  input_main_silence_threshold = -40.0
+  input_main_silence_timeout = 10.0
   input_show_mount = "show"
   input_show_port = 8002
   input_show_secure = false
+  input_show_silence_threshold = -40.0
+  input_show_silence_timeout = 10.0
   
   # Settings
   set("log.file.path", "/var/log/radio.log")
@@ -46,9 +50,13 @@
   input_main_mount = "main"
   input_main_port = 8001
   input_main_secure = false
+  input_main_silence_threshold = -40.0
+  input_main_silence_timeout = 10.0
   input_show_mount = "show"
   input_show_port = 8002
   input_show_secure = false
+  input_show_silence_threshold = -40.0
+  input_show_silence_timeout = 10.0
   
   # Settings
   set("log.file.path", "/var/log/radio.log")
@@ -86,9 +94,13 @@
   input_main_mount = "main"
   input_main_port = 8001
   input_main_secure = false
+  input_main_silence_threshold = -40.0
+  input_main_silence_timeout = 10.0
   input_show_mount = "show"
   input_show_port = 8002
   input_show_secure = false
+  input_show_silence_threshold = -40.0
+  input_show_silence_timeout = 10.0
   
   # Settings
   set("log.file.path", "/var/log/radio.log")
@@ -148,9 +160,13 @@
   input_main_mount = "main"
   input_main_port = 8001
   input_main_secure = false
+  input_main_silence_threshold = -40.0
+  input_main_silence_timeout = 10.0
   input_show_mount = "show"
   input_show_port = 8002
   input_show_secure = false
+  input_show_silence_threshold = -40.0
+  input_show_silence_timeout = 10.0
   
   # Settings
   set("log.file.path", "/var/log/radio.log")
@@ -206,9 +222,13 @@
   input_main_mount = "main"
   input_main_port = 8001
   input_main_secure = false
+  input_main_silence_threshold = -40.0
+  input_main_silence_timeout = 10.0
   input_show_mount = "show"
   input_show_port = 8002
   input_show_secure = false
+  input_show_silence_threshold = -40.0
+  input_show_silence_timeout = 10.0
   
   # Settings
   set("log.file.path", "/var/log/radio.log")
@@ -289,9 +309,13 @@
   input_main_mount = "main"
   input_main_port = 8001
   input_main_secure = false
+  input_main_silence_threshold = -40.0
+  input_main_silence_timeout = 10.0
   input_show_mount = "show"
   input_show_port = 8002
   input_show_secure = false
+  input_show_silence_threshold = -40.0
+  input_show_silence_timeout = 10.0
   
   # Settings
   set("log.file.path", "/var/log/radio.log")
@@ -337,9 +361,13 @@
   input_main_mount = "main"
   input_main_port = 8001
   input_main_secure = false
+  input_main_silence_threshold = -40.0
+  input_main_silence_timeout = 10.0
   input_show_mount = "show"
   input_show_port = 8002
   input_show_secure = false
+  input_show_silence_threshold = -40.0
+  input_show_silence_timeout = 10.0
   
   # Settings
   set("log.file.path", "/var/log/radio.log")
@@ -386,9 +414,13 @@
   input_main_mount = "main"
   input_main_port = 8001
   input_main_secure = false
+  input_main_silence_threshold = -40.0
+  input_main_silence_timeout = 10.0
   input_show_mount = "show"
   input_show_port = 8002
   input_show_secure = false
+  input_show_silence_threshold = -40.0
+  input_show_silence_timeout = 10.0
   
   # Settings
   set("log.file.path", "/var/log/radio.log")

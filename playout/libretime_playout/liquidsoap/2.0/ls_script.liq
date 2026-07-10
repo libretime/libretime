@@ -114,9 +114,9 @@ def update_source_status(sourcename, status) =
     gateway("live '#{sourcename}' '#{status}'")
 end
 
-def input_main_on_connect(header) update_source_status("master_dj", true) end
+def input_main_on_connect(header) log("master_dj connected, waiting for sound") end
 def input_main_on_disconnect() update_source_status("master_dj", false) end
-def input_show_on_connect(header) update_source_status("live_dj", true) end
+def input_show_on_connect(header) log("live_dj connected, waiting for sound") end
 def input_show_on_disconnect() update_source_status("live_dj", false) end
 
 def make_input_auth_handler(input_name)
@@ -153,6 +153,21 @@ s = if input_show_port != 0 and input_show_mount != "" then
                 on_connect=input_show_on_connect,
                 on_disconnect=input_show_on_disconnect))
 
+    input_show_source = blank.detect(
+        threshold=input_show_silence_threshold,
+        max_blank=input_show_silence_timeout,
+        start_blank=true,
+        on_blank=fun () -> begin
+            log("live_dj silence detected, switching off")
+            update_source_status("live_dj", false)
+        end,
+        on_noise=fun () -> begin
+            log("live_dj sound detected, switching on")
+            update_source_status("live_dj", true)
+        end,
+        input_show_source
+    )
+
     ignore(output.dummy(input_show_source, fallible=true))
 
     switch(id="switch:blank+schedule+show",
@@ -174,6 +189,21 @@ s = if input_main_port != 0 and input_main_mount != "" then
                 max=40.,
                 on_connect=input_main_on_connect,
                 on_disconnect=input_main_on_disconnect))
+
+    input_main_source = blank.detect(
+        threshold=input_main_silence_threshold,
+        max_blank=input_main_silence_timeout,
+        start_blank=true,
+        on_blank=fun () -> begin
+            log("master_dj silence detected, switching off")
+            update_source_status("master_dj", false)
+        end,
+        on_noise=fun () -> begin
+            log("master_dj sound detected, switching on")
+            update_source_status("master_dj", true)
+        end,
+        input_main_source
+    )
 
     ignore(output.dummy(input_main_source, fallible=true))
 

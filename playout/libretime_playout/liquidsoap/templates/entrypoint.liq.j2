@@ -6,9 +6,13 @@
 input_main_mount = {{ config.stream.inputs.main.mount | quote }}
 input_main_port = {{ config.stream.inputs.main.port }}
 input_main_secure = {{ config.stream.inputs.main.secure | string | lower }}
+input_main_silence_threshold = {{ config.stream.inputs.main.silence_threshold }}
+input_main_silence_timeout = {{ config.stream.inputs.main.silence_timeout }}
 input_show_mount = {{ config.stream.inputs.show.mount | quote }}
 input_show_port = {{ config.stream.inputs.show.port }}
 input_show_secure = {{ config.stream.inputs.show.secure | string | lower }}
+input_show_silence_threshold = {{ config.stream.inputs.show.silence_threshold }}
+input_show_silence_timeout = {{ config.stream.inputs.show.silence_timeout }}
 
 # Settings
 {% if paths.log_filepath is defined -%}

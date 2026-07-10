@@ -12,6 +12,7 @@ VERSION
 /dev/playout/*
 
 /website/
+libretime-prod/
 
 !.gitkeep
 

@@ -140,6 +140,8 @@ class Schema implements ConfigurationInterface
             /*  */->end()
             /*  */->integerNode('port')->defaultValue(8001)->end()
             /*  */->booleanNode('secure')->defaultValue(False)->end()
+            /*  */->floatNode('silence_threshold')->defaultValue(-40.0)->end()
+            /*  */->floatNode('silence_timeout')->defaultValue(10.0)->end()
             /**/->end()->end()
             /**/->arrayNode('show')->addDefaultsIfNotSet()->children()
             /*  */->booleanNode('enabled')->defaultTrue()->end()
@@ -150,6 +152,8 @@ class Schema implements ConfigurationInterface
             /*  */->end()
             /*  */->integerNode('port')->defaultValue(8002)->end()
             /*  */->booleanNode('secure')->defaultValue(False)->end()
+            /*  */->floatNode('silence_threshold')->defaultValue(-40.0)->end()
+            /*  */->floatNode('silence_timeout')->defaultValue(10.0)->end()
             /**/->end()->end()
             ->end()->end()
 

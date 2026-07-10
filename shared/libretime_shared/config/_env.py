@@ -167,7 +167,7 @@ class EnvLoader:
             if schema["type"] == "null":
                 return None
 
-            if schema["type"] in ("string", "integer", "boolean"):
+            if schema["type"] in ("string", "integer", "boolean", "number"):
                 return self._env.get(env_name, None)
 
             if schema["type"] == "object":
