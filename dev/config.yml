@@ -28,7 +28,7 @@ stream:
       public_url: https://localhost:8001/main
       mount: main
       port: 8001
-      secure: true
+      secure: false
 
   outputs:
     .default_icecast_output: &default_icecast_output

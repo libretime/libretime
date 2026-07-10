@@ -1,0 +1,31 @@
+services:
+  playout:
+    image: ${REGISTRY:-docker.groundtruth.co.nz}/libretime-playout:${LIBRETIME_VERSION:-latest}
+    build:
+      context: .
+      target: libretime-playout
+  analyzer:
+    image: ${REGISTRY:-docker.groundtruth.co.nz}/libretime-analyzer:${LIBRETIME_VERSION:-latest}
+    build:
+      context: .
+      target: libretime-analyzer
+  worker:
+    image: ${REGISTRY:-docker.groundtruth.co.nz}/libretime-worker:${LIBRETIME_VERSION:-latest}
+    build:
+      context: .
+      target: libretime-worker
+  api:
+    image: ${REGISTRY:-docker.groundtruth.co.nz}/libretime-api:${LIBRETIME_VERSION:-latest}
+    build:
+      context: .
+      target: libretime-api
+  legacy:
+    image: ${REGISTRY:-docker.groundtruth.co.nz}/libretime-legacy:${LIBRETIME_VERSION:-latest}
+    build:
+      context: .
+      target: libretime-legacy
+  nginx:
+    image: ${REGISTRY:-docker.groundtruth.co.nz}/libretime-nginx:${LIBRETIME_VERSION:-latest}
+    build:
+      context: .
+      target: libretime-nginx
