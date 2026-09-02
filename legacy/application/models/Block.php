@@ -1295,9 +1295,9 @@ SQL;
         }
     }
 
-    public function getListOfFilesUnderLimit($show = null, $showStartTime = null)
+    public function getListOfFilesUnderLimit($show = null, $showStartTime = null, array $inPassPicks = [])
     {
-        $info = $this->getListofFilesMeetCriteria($show, $showStartTime);
+        $info = $this->getListofFilesMeetCriteria($show, $showStartTime, $inPassPicks);
         $files = $info['files'];
         $limit = $info['limit'];
         $repeat = $info['repeat_tracks'] == 1;
@@ -1480,6 +1480,31 @@ SQL;
         return $storedCrit;
     }
 
+    /**
+     * Resolve a criterion date value against $base (falls back to "now").
+     *
+     * @param mixed         $value Absolute date string, or relative like "5 hours ago"
+     * @param null|DateTime $base  Anchor used for relative expressions
+     */
+    private static function parseRelativeOrAbsoluteDate($value, ?DateTime $base): DateTime
+    {
+        $trimmed = is_string($value) ? trim($value) : $value;
+
+        $isRelative = is_string($trimmed) && (
+            preg_match('/\bago\b\s*$/i', $trimmed)
+            || preg_match('/^[+\-]/', $trimmed)
+        );
+
+        if ($isRelative && $base instanceof DateTime) {
+            $dt = clone $base;
+            $dt->modify($trimmed);
+
+            return $dt;
+        }
+
+        return new DateTime($trimmed);
+    }
+
     private function resolveDate($value, ?DateTime $resolveTo, string $timeZone)
     {
         if (!is_string($value)) {
@@ -1496,8 +1521,17 @@ SQL;
         );
     }
 
-    // this function return list of propel object
-    public function getListofFilesMeetCriteria($showLimit = null, $showStartTime = null)
+    /**
+     * Return the candidate file set for this smart block.
+     *
+     * @param null|int      $showLimit     seconds remaining in the show instance
+     * @param null|DateTime $showStartTime slot being populated; anchors relative dates
+     * @param array         $inPassPicks   tuples ['id' => int, 'slot' => DateTime]
+     *                                     of files already picked in this scheduling
+     *                                     pass (honored only when an lptime criterion
+     *                                     is active)
+     */
+    public function getListofFilesMeetCriteria($showLimit = null, $showStartTime = null, array $inPassPicks = [])
     {
         $storedCrit = $this->getCriteria();
 
@@ -1506,6 +1540,9 @@ SQL;
 
         $allCriteria = BlockCriteria::criteriaMap();
         $timeZone = Application_Model_Preference::GetDefaultTimezone();
+
+        // earliest lptime BEFORE threshold, used for the scheduled-item exclusion below
+        $lptimeEarliestThreshold = null;
 
         // Logging::info($storedCrit);
         if (isset($storedCrit['crit'])) {
@@ -1575,19 +1612,26 @@ SQL;
                     } elseif ($spCriteriaModifier == CriteriaModifier::IS_IN_THE_RANGE) {
                         $spCriteriaValue = "{$spCriteria} >= '{$spCriteriaValue}' AND {$spCriteria} <= '{$spCriteriaExtra}'";
                     } elseif ($spCriteriaModifier == CriteriaModifier::BEFORE) {
-                        // need to pull in the current time and subtract the value or figure out how to make it relative
-                        $relativedate = new DateTime($spCriteriaValue);
+                        // anchor relative values ("5 hours ago") to the slot, not wallclock now
+                        $relativedate = self::parseRelativeOrAbsoluteDate($spCriteriaValue, $showStartTime);
                         $dt = $relativedate->format(DateTime::ISO8601);
                         $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') <= '{$dt}'";
+
+                        if ($spCriteria === 'lptime') {
+                            if ($lptimeEarliestThreshold === null
+                                || $relativedate < $lptimeEarliestThreshold) {
+                                $lptimeEarliestThreshold = $relativedate;
+                            }
+                        }
                     } elseif ($spCriteriaModifier == CriteriaModifier::AFTER) {
-                        $relativedate = new DateTime($spCriteriaValue);
+                        $relativedate = self::parseRelativeOrAbsoluteDate($spCriteriaValue, $showStartTime);
                         $dt = $relativedate->format(DateTime::ISO8601);
                         $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') >= '{$dt}'";
                     } elseif ($spCriteriaModifier == CriteriaModifier::BETWEEN) {
-                        $fromrelativedate = new DateTime($spCriteriaValue);
+                        $fromrelativedate = self::parseRelativeOrAbsoluteDate($spCriteriaValue, $showStartTime);
                         $fdt = $fromrelativedate->format(DateTime::ISO8601);
 
-                        $torelativedate = new DateTime($spCriteriaExtra);
+                        $torelativedate = self::parseRelativeOrAbsoluteDate($spCriteriaExtra, $showStartTime);
                         $tdt = $torelativedate->format(DateTime::ISO8601);
                         $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') >= '{$fdt}' AND COALESCE({$spCriteria}, DATE '-infinity') <= '{$tdt}'";
                     }
@@ -1621,6 +1665,59 @@ SQL;
                     ++$i;
                 }
             }
+        }
+
+        // Duplicate-prevention is gated on an active lptime BEFORE criterion.
+        // In-pass picks and queued cc_schedule rows are filtered by the same
+        // [threshold, slot) window as the lptime SQL predicate.
+        $hasLptimeCriterion = isset($storedCrit['crit']['lptime']);
+        $lptimeScopedExcludes = [];
+
+        if ($hasLptimeCriterion && $lptimeEarliestThreshold !== null) {
+            $slotBoundary = $showStartTime instanceof DateTime
+                ? clone $showStartTime
+                : new DateTime('now', new DateTimeZone('UTC'));
+            $slotBoundary->setTimezone(new DateTimeZone('UTC'));
+
+            $thresholdUtc = clone $lptimeEarliestThreshold;
+            $thresholdUtc->setTimezone(new DateTimeZone('UTC'));
+
+            foreach ($inPassPicks as $pick) {
+                if (!is_array($pick) || !isset($pick['id'], $pick['slot'])) {
+                    continue;
+                }
+                if (!$pick['slot'] instanceof DateTime) {
+                    continue;
+                }
+                $pickSlotUtc = clone $pick['slot'];
+                $pickSlotUtc->setTimezone(new DateTimeZone('UTC'));
+                if ($pickSlotUtc >= $thresholdUtc && $pickSlotUtc < $slotBoundary) {
+                    $lptimeScopedExcludes[] = (int) $pick['id'];
+                }
+            }
+
+            $scheduledSql = <<<'SQL'
+SELECT DISTINCT file_id
+FROM cc_schedule
+WHERE file_id IS NOT NULL
+  AND playout_status != -1
+  AND starts >= :threshold
+  AND starts <  :slot
+SQL;
+            $scheduledRows = Application_Common_Database::prepareAndExecute(
+                $scheduledSql,
+                [
+                    ':threshold' => $thresholdUtc->format(DEFAULT_MICROTIME_FORMAT),
+                    ':slot' => $slotBoundary->format(DEFAULT_MICROTIME_FORMAT),
+                ]
+            );
+            foreach ($scheduledRows as $scheduledRow) {
+                $lptimeScopedExcludes[] = (int) $scheduledRow['file_id'];
+            }
+        }
+
+        if (!empty($lptimeScopedExcludes)) {
+            $qry->add('cc_files.id', array_values(array_unique($lptimeScopedExcludes)), Criteria::NOT_IN);
         }
 
         // check if file exists
