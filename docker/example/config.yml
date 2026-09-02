@@ -30,6 +30,10 @@ general:
   # > default is local
   auth: local
 
+  # How far in the future LibreTime should schedule autoloading playlists.
+  # > default is 1 hour
+  autoload_lead_time: 1 hour
+
 storage:
   # Path of the storage directory. Make sure to update the Nginx configuration after
   # updating the storage path.
