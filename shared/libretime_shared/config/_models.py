@@ -23,6 +23,8 @@ class GeneralConfig(BaseModel):
     api_key: str
     secret_key: str
 
+    cache_ahead_hours: int = -1
+
     timezone: str = "UTC"
 
     allowed_cors_origins: List[AnyHttpUrlStr] = []
