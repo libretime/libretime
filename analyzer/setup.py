@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-version = "4.5.0"  # x-release-please-version
+version = "4.6.0"  # x-release-please-version
 
 setup(
     name="libretime-analyzer",
