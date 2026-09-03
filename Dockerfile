@@ -2,7 +2,7 @@ ARG LIBRETIME_VERSION
 #======================================================================================#
 # Python Builder                                                                       #
 #======================================================================================#
-FROM python:3.10-slim-bullseye AS python-builder
+FROM python:3.13-slim-bullseye AS python-builder
 
 WORKDIR /build
 
@@ -18,7 +18,7 @@ RUN pip wheel --wheel-dir . --no-deps .
 #======================================================================================#
 # Python base                                                                          #
 #======================================================================================#
-FROM python:3.10-slim-bullseye AS python-base
+FROM python:3.13-slim-bullseye AS python-base
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
