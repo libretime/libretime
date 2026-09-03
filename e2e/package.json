@@ -1,0 +1,15 @@
+{
+  "name": "libretime-e2e",
+  "version": "1.0.0",
+  "license": "GPLv3",
+  "private": true,
+  "scripts": {
+    "start": "cypress open",
+    "test:chrome": "cypress run --browser chromium",
+    "test:firefox": "cypress run --browser firefox"
+  },
+  "dependencies": {
+    "cypress": "^12.10.0",
+    "dayjs": "^1.11.7"
+  }
+}

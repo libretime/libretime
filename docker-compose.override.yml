@@ -14,6 +14,7 @@ services:
       - 15672:15672
 
   playout:
+    user: ${UID:-1000}:${GID:-1000}
     build:
       context: .
       target: libretime-playout
@@ -22,6 +23,7 @@ services:
       - ./dev/playout:/app
 
   liquidsoap:
+    user: ${UID:-1000}:${GID:-1000}
     build:
       context: .
       target: libretime-playout
@@ -36,6 +38,7 @@ services:
       # - ./docker/pulse.client.conf:/etc/pulse/client.conf
 
   analyzer:
+    user: ${UID:-1000}:${GID:-1000}
     build:
       context: .
       target: libretime-analyzer
@@ -43,6 +46,7 @@ services:
       - ./analyzer:/src
 
   worker:
+    user: ${UID:-1000}:${GID:-1000}
     build:
       context: .
       target: libretime-worker
@@ -50,6 +54,7 @@ services:
       - ./worker:/src
 
   api:
+    user: ${UID:-1000}:${GID:-1000}
     build:
       context: .
       target: libretime-api
@@ -60,6 +65,7 @@ services:
       LIBRETIME_DEBUG: "true"
 
   legacy:
+    user: ${UID:-1000}:${GID:-1000}
     build:
       context: .
       target: libretime-legacy
