@@ -166,3 +166,10 @@ class LiquidsoapClient:
                 self._set_var("message_offline", self._quote(message_offline))
             if input_fade_transition is not None:
                 self._set_var("input_fade_transition", input_fade_transition)
+
+    def start_recording(self, args: dict) -> None:
+        import json
+        args_str = json.dumps(args)
+        with self._lock, self.conn:
+            self.conn.write(f"sources.start_recording {args_str}")
+            self.conn.read()  # Flush

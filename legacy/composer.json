@@ -1,6 +1,7 @@
 {
   "config": {
-    "sort-packages": true
+    "sort-packages": true,
+    "source-fallback": true
   },
   "autoload": {
     "classmap": [

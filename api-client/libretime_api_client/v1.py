@@ -127,6 +127,21 @@ class BaseApiClient(AbstractApiClient):
             **kwargs,
         )
 
+    def get_shows_to_record(self, **kwargs) -> Response:
+        return self._request(
+            "GET",
+            "/api/recorded-shows",
+            **kwargs,
+        )
+
+    def upload_recorded_file(self, show_instance_id: int, file_id: int, **kwargs) -> Response:
+        return self._request(
+            "POST",
+            "/api/upload-recorded",
+            params={"showinstanceid": show_instance_id, "fileid": file_id},
+            **kwargs,
+        )
+
 
 class ApiClient:
     def __init__(self, base_url: str, api_key: str):
@@ -214,6 +229,26 @@ class ApiClient:
 
     def update_metadata_on_tunein(self):
         self._base_client.update_metadata_on_tunein()
+
+    def get_shows_to_record(self):
+        try:
+            resp = self._base_client.get_shows_to_record()
+            payload = resp.json()
+            return payload
+        except Exception as exception:
+            logger.exception(exception)
+            return None
+
+    def upload_recorded_file(self, show_instance_id: int, file_id: int):
+        try:
+            resp = self._base_client.upload_recorded_file(
+                show_instance_id=show_instance_id,
+                file_id=file_id,
+            )
+            return resp.json() if resp else None
+        except Exception as exception:
+            logger.exception(exception)
+            return None
 
     def trigger_task_manager(self):
         self._base_client.version()

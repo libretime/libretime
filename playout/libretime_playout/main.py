@@ -151,7 +151,22 @@ def cli(
 
     PypoPush(push_queue, liquidsoap, config).start()
 
+    from .recorder import Recorder
+
+    recorder_queue: "Queue[Dict[str, Any]]" = Queue()
+
+    Recorder(
+        recorder_queue=recorder_queue,
+        config=config,
+        legacy_client=legacy_client,
+        api_client=api_client,
+        liq_client=LiquidsoapClient(
+            host=config.playout.liquidsoap_host,
+            port=config.playout.liquidsoap_port,
+        ),
+    ).start()
+
     StatsCollectorThread(config, legacy_client).start()
 
-    message_listener = MessageListener(config, fetch_queue)
+    message_listener = MessageListener(config, fetch_queue, recorder_queue)
     message_listener.run_forever()

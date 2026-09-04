@@ -22,7 +22,7 @@ CELERY_RESULT_EXCHANGE = "celeryresults"  # Default exchange - needed due to php
 CELERY_QUEUES = (
     Queue("celery", exchange=Exchange("celery"), routing_key="celery"),
     Queue("podcast", exchange=Exchange("podcast"), routing_key="podcast"),
-    Queue(exchange=Exchange("celeryresults"), auto_delete=True),
+    Queue(exchange=Exchange("celeryresults"), auto_delete=True, durable=True),
 )
 CELERY_EVENT_QUEUE_EXPIRES = 900  # RabbitMQ x-expire after 15 minutes
 

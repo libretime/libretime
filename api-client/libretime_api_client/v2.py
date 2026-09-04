@@ -43,3 +43,15 @@ class ApiClient(AbstractApiClient):
 
     def get_stream_state(self, **kwargs) -> Response:
         return self._request("GET", "/api/v2/stream/state", **kwargs)
+
+    def list_shows_to_record(self, starts_after: str, starts_before: str, **kwargs) -> Response:
+        return self._request(
+            "GET",
+            "/api/v2/show-instances",
+            params={
+                "record_enabled": 1,
+                "starts_at__gte": starts_after,
+                "starts_at__lte": starts_before,
+            },
+            **kwargs,
+        )

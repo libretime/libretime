@@ -231,6 +231,7 @@ RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     gettext \
+    git \
     libcurl4-openssl-dev \
     libfreetype6-dev \
     libjpeg62-turbo-dev \

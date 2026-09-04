@@ -166,6 +166,24 @@ class Rest_MediaController extends Zend_Rest_Controller
             $requestData = json_decode($this->getRequest()->getRawBody(), true);
             $sanitizedFile = CcFiles::updateFromArray($id, $requestData);
 
+            if (isset($requestData['artist_name']) && $requestData['artist_name'] === 'Airtime Show Recorder') {
+                $showInstanceId = intval($requestData['track_number']);
+                if ($showInstanceId > 0) {
+                    try {
+                        $show_inst = new Application_Model_ShowInstance($showInstanceId);
+                        $show_inst->setRecordedFile($id);
+
+                        $storedFile = Application_Model_StoredFile::RecallById($id);
+                        if ($storedFile) {
+                            $storedFile->setMetadataValue('MDATA_KEY_CREATOR', 'Airtime Show Recorder');
+                            $storedFile->setMetadataValue('MDATA_KEY_TRACKNUMBER', $showInstanceId);
+                        }
+                    } catch (Exception $e) {
+                        Logging::error("Error linking recorded file: " . $e->getMessage());
+                    }
+                }
+            }
+
             $this->getResponse()
                 ->setHttpResponseCode(201)
                 ->appendBody(json_encode($sanitizedFile));

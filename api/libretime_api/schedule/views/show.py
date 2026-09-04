@@ -1,3 +1,4 @@
+from django_filters import rest_framework as filters
 from rest_framework import viewsets
 
 from ..models import Show, ShowDays, ShowHost, ShowInstance, ShowRebroadcast
@@ -32,6 +33,12 @@ class ShowInstanceViewSet(viewsets.ModelViewSet):
     queryset = ShowInstance.objects.all()
     serializer_class = ShowInstanceSerializer
     model_permission_name = "showinstance"
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = {
+        "record_enabled": ["exact"],
+        "starts_at": ["gte", "lte", "gt", "lt"],
+        "ends_at": ["gte", "lte", "gt", "lt"],
+    }
 
 
 class ShowRebroadcastViewSet(viewsets.ModelViewSet):

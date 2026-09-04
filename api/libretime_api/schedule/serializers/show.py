@@ -41,6 +41,8 @@ class ShowHostSerializer(serializers.ModelSerializer):
 
 
 class ShowInstanceSerializer(serializers.ModelSerializer):
+    show_name = serializers.CharField(source="show.name", read_only=True)
+
     class Meta:
         model = ShowInstance
         fields = "__all__"
