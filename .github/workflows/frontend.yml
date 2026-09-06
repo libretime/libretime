@@ -1,0 +1,77 @@
+name: Frontend
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, stable]
+    paths:
+      - .github/workflows/frontend.yml
+      - frontend/**
+
+  pull_request:
+    branches: [main, stable]
+    paths:
+      - .github/workflows/frontend.yml
+      - frontend/**
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eslint-lint:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+          cache-dependency-path: "frontend/yarn.lock"
+      - name: Install packages
+        run: yarn install --frozen-lockfile
+        working-directory: frontend
+      - name: Lint
+        run: yarn lint
+        working-directory: frontend
+
+  cypress-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+          cache-dependency-path: "frontend/yarn.lock"
+      - name: Install packages
+        run: yarn install --frozen-lockfile
+        working-directory: frontend
+      - name: Run tests with Cypress
+        run: yarn cypress run
+        working-directory: frontend
+
+  test-build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+          cache-dependency-path: "frontend/yarn.lock"
+      - name: Install packages
+        run: yarn install --frozen-lockfile
+        working-directory: frontend
+      - name: Build
+        run: yarn build
+        working-directory: frontend
