@@ -50,7 +50,7 @@ setup(
             "requests-mock>=1.10.0,<2",
         ],
         "sentry": [
-            "sentry-sdk[django]>=1.15.0,<2",
+            "sentry-sdk[django]>=1.15.0,<3",
         ],
     },
 )
