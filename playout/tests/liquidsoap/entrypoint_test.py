@@ -9,7 +9,6 @@ from libretime_playout.liquidsoap.entrypoint import generate_entrypoint
 from libretime_playout.liquidsoap.models import Info, StreamPreferences
 from libretime_playout.liquidsoap.version import get_liquidsoap_version
 
-from .conftest import LIQ_VERSION
 from .fixtures import TEST_STREAM_CONFIGS, make_config_with_stream
 
 
@@ -44,10 +43,6 @@ def test_generate_entrypoint(
     assert found == snapshot
 
 
-@pytest.mark.skipif(
-    LIQ_VERSION >= (2, 0, 0),
-    reason="unsupported liquidsoap >= 2.0.0",
-)
 @pytest.mark.parametrize(
     "stream_config",
     TEST_STREAM_CONFIGS,
@@ -76,10 +71,6 @@ def test_liquidsoap_syntax(
     check_call(["liquidsoap", "--check", str(entrypoint_filepath)])
 
 
-@pytest.mark.skipif(
-    LIQ_VERSION >= (2, 0, 0),
-    reason="unsupported liquidsoap >= 2.0.0",
-)
 def test_liquidsoap_unsupported_output_aac(
     tmp_path: Path,
     stream_preferences: StreamPreferences,
