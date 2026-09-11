@@ -31,6 +31,7 @@ jobs:
       matrix:
         include:
           - php-version: "7.4" # Focal, Bullseye
+          - php-version: "8.2" # Bookworm
 
     steps:
       - uses: actions/checkout@v5
@@ -49,6 +50,7 @@ jobs:
       matrix:
         include:
           - php-version: "7.4" # Focal, Bullseye
+          - php-version: "8.2" # Bookworm
 
     env:
       ENVIRONMENT: testing
