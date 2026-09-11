@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_spectacular",
     "corsheaders",
+    "dj_rest_auth",
 ]
 
 MIDDLEWARE = [
@@ -197,3 +198,10 @@ if "SENTRY_DSN" in environ:
             DjangoIntegration(),
         ],
     )
+
+# Auth
+# https://github.com/imerica/dj-rest-auth
+REST_AUTH = {
+    "SESSION_LOGIN": True,
+    "TOKEN_MODEL": None,
+}
