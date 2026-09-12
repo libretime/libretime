@@ -1,3 +1,41 @@
+# By default, the root docker-compose.yml has the registry prefix (ghcr.io/libretime) hardcoded in the image: configuration for each service. When you ran the build, Docker tagged the images using that default registry namespace (ghcr.io/libretime/libretime-playout:record-rebroadcast).
+
+# Because of this, trying to push docker.groundtruth.co.nz/libretime-playout:record-rebroadcast failed since Docker couldn't find an image with that exact name locally.
+
+# Solution
+# I have updated 
+
+# docker-compose.build.yml
+#  to override the image configuration dynamically using the REGISTRY environment variable.
+
+# Now, when you run docker compose build, Docker Compose will respect your custom registry prefix and tag the local build correctly.
+
+# Please try running your build and push commands again:
+
+# By default, the root docker-compose.yml has the registry prefix (ghcr.io/libretime) hardcoded in the image: configuration for each service. When you ran the build, Docker tagged the images using that default registry namespace (ghcr.io/libretime/libretime-playout:record-rebroadcast).
+
+# Because of this, trying to push docker.groundtruth.co.nz/libretime-playout:record-rebroadcast failed since Docker couldn't find an image with that exact name locally.
+
+# Solution
+# I have updated 
+
+# docker-compose.build.yml
+#  to override the image configuration dynamically using the REGISTRY environment variable.
+
+# Now, when you run docker compose build, Docker Compose will respect your custom registry prefix and tag the local build correctly.
+
+# Please try running your build and push commands again:
+
+# # 1. Define variables
+# export REGISTRY="docker.groundtruth.co.nz"
+# export LIBRETIME_VERSION="record-rebroadcast"
+
+# # 2. Build the images (this will tag them with your registry prefix)
+# DOCKER_BUILDKIT=1 docker compose -f docker-compose.yml -f docker-compose.build.yml build
+
+# # 3. Push the images
+# docker push "$REGISTRY/libretime-playout:$LIBRETIME_VERSION"
+
 services:
   playout:
     image: ${REGISTRY:-docker.groundtruth.co.nz}/libretime-playout:${LIBRETIME_VERSION:-latest}
