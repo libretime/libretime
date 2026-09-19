@@ -22,13 +22,11 @@ def get_schema_version():
         return None
 
     with connection.cursor() as cursor:
-        cursor.execute(
-            """
+        cursor.execute("""
             SELECT valstr AS version
             FROM cc_pref
             WHERE (keystr = 'schema_version') OR (keystr = 'system_version' AND valstr = '2.5.1')
-            """
-        )
+        """)
         row = cursor.fetchone()
         if row and row[0]:
             return row[0]

@@ -10,15 +10,13 @@ DOWN = None
 
 
 def update_disk_usage(cursor):
-    cursor.execute(
-        """
+    cursor.execute("""
         UPDATE cc_pref SET valstr = (
             SELECT SUM(filesize)
             FROM cc_files
         )
         WHERE keystr = 'disk_usage';
-        """
-    )
+    """)
 
 
 class Migration(migrations.Migration):
