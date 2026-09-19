@@ -50,8 +50,7 @@ def test_liq_conn_vars(liq_conn: LiquidsoapConnection):
 
 
 def test_liq_conn_help(liq_conn: LiquidsoapConnection):
-    expected = dedent(
-        """
+    expected = dedent("""
         Available commands:
         | dummy.autostart
         | dummy.metadata
@@ -77,8 +76,7 @@ def test_liq_conn_help(liq_conn: LiquidsoapConnection):
         | version
 
         Type "help <command>" for more information.
-        """
-    ).strip()
+    """).strip()
     liq_conn.write("help")
     result = liq_conn.read()
     assert result == expected
