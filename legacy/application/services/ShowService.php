@@ -782,7 +782,10 @@ SQL;
                 ->delete();
         }
 
-        $uncheckedDays = pg_escape_string(implode(',', $daysRemovedUTC));
+        // Day-of-week values (0-6) come from DateTime::format('w'), so they are
+        // always safe to interpolate directly without needing pg_escape_string(),
+        // which requires an explicit PostgreSQL connection since PHP 8.1.
+        $uncheckedDays = implode(',', array_map('intval', $daysRemovedUTC));
 
         $sql = <<<SQL
 DELETE
