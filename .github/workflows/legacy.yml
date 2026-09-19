@@ -30,7 +30,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php-version: "7.4" # Focal, Bullseye
+          - php-version: "8.2" # Bookworm
+          - php-version: "8.4"
 
     steps:
       - uses: actions/checkout@v5
@@ -48,7 +49,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php-version: "7.4" # Focal, Bullseye
+          - php-version: "8.2" # Bookworm
+          - php-version: "8.4"
 
     env:
       ENVIRONMENT: testing
