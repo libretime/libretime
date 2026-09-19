@@ -8,8 +8,6 @@ on:
     paths:
       - ".github/workflows/dev-tools.yml"
       - "**/packages.ini"
-  pull_request:
-    branches: [main]
 
 jobs:
   docker-dev-image:
