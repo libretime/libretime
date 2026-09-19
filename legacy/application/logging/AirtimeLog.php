@@ -91,8 +91,13 @@ class Airtime_Zend_Log extends Zend_Log
             E_USER_ERROR => Zend_Log::ERR,
             E_CORE_ERROR => Zend_Log::ERR,
             E_RECOVERABLE_ERROR => Zend_Log::ERR,
-            E_STRICT => Zend_Log::DEBUG,
         ];
+        // E_STRICT was folded into E_ALL and deprecated as of PHP 8.4; referencing
+        // the constant itself now emits a deprecation notice, so only use it on
+        // older PHP versions where it's still a distinct error level.
+        if (PHP_VERSION_ID < 80400) {
+            $this->_errorHandlerMap[E_STRICT] = Zend_Log::DEBUG;
+        }
         // PHP 5.3.0+
         if (defined('E_DEPRECATED')) {
             $this->_errorHandlerMap['E_DEPRECATED'] = Zend_Log::DEBUG;
