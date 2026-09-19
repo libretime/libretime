@@ -44,7 +44,7 @@ setup(
             "django-stubs>=5.1.0,<6",
             "djangorestframework-stubs>=1.8.0,<4",
             "model_bakery>=1.10.1,<2",
-            "psycopg[binary]>=3.1.8,<3.3",
+            "psycopg[binary]>=3.1.8,<3.4",
             "pylint-django>=2.5.3,<3",
             "pytest-django>=4.5.2,<5",
             "requests-mock>=1.10.0,<2",
