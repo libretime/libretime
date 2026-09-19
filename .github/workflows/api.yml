@@ -61,9 +61,9 @@ jobs:
       LIBRETIME_DATABASE_HOST: postgres
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: ~/.cache/pip
           key: ${{ matrix.release }}-pip-api-${{ hashFiles('api/**/setup.py') }}
@@ -75,7 +75,7 @@ jobs:
         working-directory: api
 
       - name: Report coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           files: api/coverage.xml
           flags: api
