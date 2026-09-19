@@ -42,7 +42,7 @@ class AnyUrlStr(str):
     def __new__(cls, value: str) -> "AnyUrlStr":
         url_obj = cls._type_adapter.validate_strings(value)
         self = str.__new__(cls, str(url_obj).rstrip("/"))
-        self.obj = url_obj
+        self.obj = url_obj  # type: ignore
         return self
 
     def __repr__(self) -> str:

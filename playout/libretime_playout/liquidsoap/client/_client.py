@@ -1,4 +1,5 @@
 import logging
+import threading
 from pathlib import Path
 from time import sleep
 from typing import Any, Literal, Optional, Tuple, Union
@@ -17,12 +18,28 @@ class LiquidsoapClientError(Exception):
     """
 
 
-class LiquidsoapClient:
-    """
-    A client to communicate with a running Liquidsoap server.
+class _OwnedLock:
+    """A non-reentrant lock that records the thread currently holding it."""
 
-    The client is not thread safe.
-    """
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._owner: Optional[int] = None
+
+    def __enter__(self) -> "_OwnedLock":
+        self._lock.acquire()
+        self._owner = threading.get_ident()
+        return self
+
+    def __exit__(self, *_exc: Any) -> None:
+        self._owner = None
+        self._lock.release()
+
+    def held_by_current_thread(self) -> bool:
+        return self._owner == threading.get_ident()
+
+
+class LiquidsoapClient:
+    """A client to communicate with a running Liquidsoap server."""
 
     conn: LiquidsoapConnection
 
@@ -39,18 +56,21 @@ class LiquidsoapClient:
             path=path,
             timeout=timeout,
         )
+        self._lock = _OwnedLock()
 
     def _quote(self, value: Any) -> str:
         return quote(value, double=True)
 
     def _set_var(self, name: str, value: Any) -> None:
+        if not self._lock.held_by_current_thread():
+            raise RuntimeError("_set_var must be called with self._lock held")
         self.conn.write(f"var.set {name} = {value}")
         result = self.conn.read()
         if f"Variable {name} set" not in result:
             logger.error("unexpected response: %s", result)
 
     def version(self) -> Tuple[int, int, int]:
-        with self.conn:
+        with self._lock, self.conn:
             self.conn.write("version")
             return parse_liquidsoap_version(self.conn.read())
 
@@ -68,43 +88,43 @@ class LiquidsoapClient:
         raise LiquidsoapClientError("could not get liquidsoap version")
 
     def queues_remove(self, *queues: int) -> None:
-        with self.conn:
+        with self._lock, self.conn:
             for queue_id in queues:
                 self.conn.write(f"queues.s{queue_id}_skip")
                 self.conn.read()  # Flush
 
     def queue_push(self, queue_id: int, entry: str, show_name: str) -> None:
-        with self.conn:
+        with self._lock, self.conn:
             self.conn.write(f"s{queue_id}.push {entry}")
             self.conn.read()  # Flush
             self._set_var("show_name", self._quote(show_name))
 
     def web_stream_get_id(self) -> str:
-        with self.conn:
+        with self._lock, self.conn:
             self.conn.write("web_stream.get_id")
             return self.conn.read().splitlines()[0]
 
     def web_stream_start(self) -> None:
-        with self.conn:
+        with self._lock, self.conn:
             self.conn.write("sources.start_schedule")
             self.conn.read()  # Flush
             self.conn.write("sources.start_web_stream")
             self.conn.read()  # Flush
 
     def web_stream_start_buffer(self, schedule_id: int, uri: str) -> None:
-        with self.conn:
+        with self._lock, self.conn:
             self.conn.write(f"web_stream.set_id {schedule_id}")
             self.conn.read()  # Flush
             self.conn.write(f"http.restart {uri}")
             self.conn.read()  # Flush
 
     def web_stream_stop(self) -> None:
-        with self.conn:
+        with self._lock, self.conn:
             self.conn.write("sources.stop_web_stream")
             self.conn.read()  # Flush
 
     def web_stream_stop_buffer(self) -> None:
-        with self.conn:
+        with self._lock, self.conn:
             self.conn.write("http.stop")
             self.conn.read()  # Flush
             self.conn.write("web_stream.set_id -1")
@@ -121,7 +141,7 @@ class LiquidsoapClient:
             "scheduled_play": "schedule",
         }
         action = "start" if streaming else "stop"
-        with self.conn:
+        with self._lock, self.conn:
             self.conn.write(f"sources.{action}_{name_map[name]}")
             self.conn.read()  # Flush
 
@@ -133,7 +153,7 @@ class LiquidsoapClient:
         message_offline: Optional[str] = None,
         input_fade_transition: Optional[float] = None,
     ) -> None:
-        with self.conn:
+        with self._lock, self.conn:
             if station_name is not None:
                 self._set_var("station_name", self._quote(station_name))
             if message_format is not None:

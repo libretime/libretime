@@ -1,10 +1,10 @@
 $(document).ready(function () {
   showlistenerstat_content = $("#showlistenerstat_content");
-  (dateStartId = "#his_date_start"),
+  ((dateStartId = "#his_date_start"),
     (timeStartId = "#his_time_start"),
     (dateEndId = "#his_date_end"),
     (timeEndId = "#his_time_end"),
-    (show_id = "#his_show_filter");
+    (show_id = "#his_show_filter"));
 
   // set width dynamically
   var width = $("#showlistenerstat_content").width();

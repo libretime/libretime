@@ -52,7 +52,8 @@ function findViewportDimensions() {
   // the more standards compliant browsers (mozilla/netscape/opera/IE7) use
   // window.innerWidth and window.innerHeight
   if (typeof window.innerWidth != "undefined") {
-    (viewportwidth = window.innerWidth), (viewportheight = window.innerHeight);
+    ((viewportwidth = window.innerWidth),
+      (viewportheight = window.innerHeight));
   }
   // IE6 in standards compliant mode (i.e. with a valid doctype as the first
   // line in the document)

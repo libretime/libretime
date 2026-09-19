@@ -25,9 +25,9 @@ jobs:
         shell: bash
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: ~/.cache/pip
           key: ${{ inputs.release }}-pip-${{ inputs.context }}-${{ hashFiles(format('{0}/{1}', inputs.context, '**/setup.py')) }}
@@ -39,7 +39,7 @@ jobs:
         working-directory: ${{ inputs.context }}
 
       - name: Report coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           files: ${{ inputs.context }}/coverage.xml
           flags: ${{ inputs.context }}

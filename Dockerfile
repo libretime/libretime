@@ -2,7 +2,7 @@ ARG LIBRETIME_VERSION
 #======================================================================================#
 # Python Builder                                                                       #
 #======================================================================================#
-FROM python:3.10-slim-bullseye AS python-builder
+FROM python:3.10-slim-bookworm AS python-builder
 
 WORKDIR /build
 
@@ -18,7 +18,7 @@ RUN pip wheel --wheel-dir . --no-deps .
 #======================================================================================#
 # Python base                                                                          #
 #======================================================================================#
-FROM python:3.10-slim-bullseye AS python-base
+FROM python:3.10-slim-bookworm AS python-base
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -41,7 +41,7 @@ COPY shared/packages.ini /tmp/packages.ini
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
+    $(python3 /tmp/packages.py --format=line --exclude=python bookworm /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
 
@@ -67,7 +67,7 @@ COPY analyzer/packages.ini /tmp/packages.ini
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
+    $(python3 /tmp/packages.py --format=line --exclude=python bookworm /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
 
@@ -105,7 +105,7 @@ COPY playout/packages.ini /tmp/packages.ini
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
+    $(python3 /tmp/packages.py --format=line --exclude=python bookworm /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
 
@@ -123,6 +123,10 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 COPY playout .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --editable .[sentry]
+
+RUN set -eux \
+    && _vine_site=$(python3 -c "import site; print(site.getsitepackages()[0])") \
+    && patch -p1 --forward --reject-file=- -d "$_vine_site" < vine-python311.patch || true
 
 # Run
 USER ${UID}:${GID}
@@ -145,6 +149,7 @@ RUN set -eux \
     gcc \
     libc6-dev \
     libpq-dev \
+    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /src

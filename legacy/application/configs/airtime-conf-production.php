@@ -23,6 +23,9 @@ $conf = [
             'adapter' => 'pgsql',
             'connection' => [
                 'dsn' => "pgsql:host={$dbhost};port={$dbport};dbname={$dbname};user={$dbuser};password={$dbpass}",
+                'options' => [
+                    'ATTR_PERSISTENT' => true,
+                ],
             ],
         ],
         'default' => 'airtime',

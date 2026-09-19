@@ -65,8 +65,8 @@ class Application_Model_Preference
                 // this case should not happen.
                 $caller = debug_backtrace()[1]['function'];
 
-                throw new Exception('Invalid number of results returned. Should be ' .
-                    "0 or 1, but is '{$result}' instead, caller={$caller}");
+                throw new Exception('Invalid number of results returned. Should be '
+                    . "0 or 1, but is '{$result}' instead, caller={$caller}");
             }
             if ($result == 1) {
                 // result found
@@ -896,9 +896,9 @@ class Application_Model_Preference
 
     public static function SetLatestLink($link)
     {
-        $pattern = '#^(http|https|ftp)://' .
-            '([a-zA-Z0-9]+\.)*[a-zA-Z0-9]+' .
-            '(/[a-zA-Z0-9\-\.\_\~\:\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=]+)*/?$#';
+        $pattern = '#^(http|https|ftp)://'
+            . '([a-zA-Z0-9]+\.)*[a-zA-Z0-9]+'
+            . '(/[a-zA-Z0-9\-\.\_\~\:\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=]+)*/?$#';
         if (preg_match($pattern, $link)) {
             self::setValue('latest_link', $link);
         }

@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-version = "4.4.0"  # x-release-please-version
+version = "4.5.0"  # x-release-please-version
 
 setup(
     name="libretime-worker",
@@ -24,7 +24,7 @@ setup(
     install_requires=[
         "celery==4.4.7",
         "kombu==4.6.11",
-        "mutagen>=1.45.1,<1.48",
+        "mutagen>=1.45.1,<1.49",
         "requests>=2.32.2,<2.33",
     ],
     extras_require={

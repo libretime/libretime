@@ -85,7 +85,7 @@ class Importer:
 
         return File.objects.filter(md5=file_md5).exists()
 
-    def _upload_file(self, filepath: Path, library: Optional[str]) -> None:
+    def _upload_file(self, filepath: Path, library_id: Optional[int]) -> None:
         try:
             resp = requests.post(
                 f"{self.url}/rest/media",
@@ -94,7 +94,9 @@ class Importer:
                     ("file", (filepath.name, filepath.open("rb"))),
                 ],
                 timeout=30,
-                cookies={"tt_upload": library} if library is not None else {},
+                cookies=(
+                    {"tt_upload": str(library_id)} if library_id is not None else {}
+                ),
             )
             resp.raise_for_status()
 
@@ -105,7 +107,7 @@ class Importer:
         logger.info("deleting %s", filepath)
         filepath.unlink()
 
-    def _handle_file(self, filepath: Path, library: Optional[str]) -> None:
+    def _handle_file(self, filepath: Path, library_id: Optional[int]) -> None:
         logger.debug("handling file %s", filepath)
 
         if not filepath.is_file():
@@ -117,7 +119,7 @@ class Importer:
                 self._delete_file(filepath)
             return
 
-        self._upload_file(filepath, library)
+        self._upload_file(filepath, library_id)
 
         if self.delete_after_upload:
             self._delete_file(filepath)
@@ -125,7 +127,7 @@ class Importer:
     def _walk_dir(
         self,
         path: Path,
-        library: Optional[str],
+        library_id: Optional[int],
         allowed_extensions: List[str],
     ) -> None:
         if not path.is_dir():
@@ -133,16 +135,13 @@ class Importer:
 
         for sub_path in path.iterdir():
             if sub_path.is_dir():
-                self._walk_dir(sub_path, library, allowed_extensions)
+                self._walk_dir(sub_path, library_id, allowed_extensions)
                 continue
 
             if sub_path.suffix.lower() not in allowed_extensions:
                 continue
 
-            self._handle_file(sub_path.resolve(), library)
-
-    def _check_library(self, library: str) -> bool:
-        return Library.objects.filter(code=library).exists()
+            self._handle_file(sub_path.resolve(), library_id)
 
     def import_dir(
         self,
@@ -150,11 +149,16 @@ class Importer:
         library: Optional[str],
         allowed_extensions: List[str],
     ) -> None:
-        if library is not None and not self._check_library(library):
-            raise ValueError(f"provided library {library} does not exist")
+        if library is not None:
+            try:
+                library_id = Library.objects.get(code=library).id
+            except Library.DoesNotExist as exc:
+                raise ValueError(f"provided library {library} does not exist") from exc
+        else:
+            library_id = None
 
         allowed_extensions = [
             (x if x.startswith(".") else "." + x) for x in allowed_extensions
         ]
 
-        self._walk_dir(path, library, allowed_extensions)
+        self._walk_dir(path, library_id, allowed_extensions)

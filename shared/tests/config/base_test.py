@@ -37,14 +37,13 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
         "AudioAAC": {
             "properties": {
                 "channels": {
-                    "allOf": [{"$ref": "#/$defs/AudioChannels"}],
+                    "$ref": "#/$defs/AudioChannels",
                     "default": "stereo",
                 },
                 "bitrate": {"title": "Bitrate", "type": "integer"},
                 "format": {
                     "const": "aac",
                     "default": "aac",
-                    "enum": ["aac"],
                     "title": "Format",
                     "type": "string",
                 },
@@ -61,14 +60,13 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
         "AudioMP3": {
             "properties": {
                 "channels": {
-                    "allOf": [{"$ref": "#/$defs/AudioChannels"}],
+                    "$ref": "#/$defs/AudioChannels",
                     "default": "stereo",
                 },
                 "bitrate": {"title": "Bitrate", "type": "integer"},
                 "format": {
                     "const": "mp3",
                     "default": "mp3",
-                    "enum": ["mp3"],
                     "title": "Format",
                     "type": "string",
                 },
@@ -80,14 +78,13 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
         "AudioOGG": {
             "properties": {
                 "channels": {
-                    "allOf": [{"$ref": "#/$defs/AudioChannels"}],
+                    "$ref": "#/$defs/AudioChannels",
                     "default": "stereo",
                 },
                 "bitrate": {"title": "Bitrate", "type": "integer"},
                 "format": {
                     "const": "ogg",
                     "default": "ogg",
-                    "enum": ["ogg"],
                     "title": "Format",
                     "type": "string",
                 },
@@ -104,14 +101,13 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
         "AudioOpus": {
             "properties": {
                 "channels": {
-                    "allOf": [{"$ref": "#/$defs/AudioChannels"}],
+                    "$ref": "#/$defs/AudioChannels",
                     "default": "stereo",
                 },
                 "bitrate": {"title": "Bitrate", "type": "integer"},
                 "format": {
                     "const": "opus",
                     "default": "opus",
-                    "enum": ["opus"],
                     "title": "Format",
                     "type": "string",
                 },
@@ -152,7 +148,6 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
                 "kind": {
                     "const": "icecast",
                     "default": "icecast",
-                    "enum": ["icecast"],
                     "title": "Kind",
                     "type": "string",
                 },
@@ -275,7 +270,6 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
                 "kind": {
                     "const": "shoutcast",
                     "default": "shoutcast",
-                    "enum": ["shoutcast"],
                     "title": "Kind",
                     "type": "string",
                 },
@@ -368,7 +362,7 @@ FIXTURE_CONFIG_JSON_SCHEMA = {
         },
         "database": {"$ref": "#/$defs/DatabaseConfig"},
         "rabbitmq": {
-            "allOf": [{"$ref": "#/$defs/RabbitMQConfig"}],
+            "$ref": "#/$defs/RabbitMQConfig",
             "default": {
                 "host": "localhost",
                 "port": 5672,

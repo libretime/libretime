@@ -22,6 +22,8 @@ class Library(models.Model):
         db_column="analyze_cue_points",
     )
 
+    id = models.AutoField(primary_key=True)
+
     class Meta:
         managed = False
         db_table = "cc_track_types"

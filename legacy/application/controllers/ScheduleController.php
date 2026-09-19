@@ -48,14 +48,14 @@ class ScheduleController extends Zend_Controller_Action
         $events = json_encode($scheduleController->view->events);
 
         $this->view->headScript()->appendScript(
-            "var calendarPref = {};\n" .
-                'calendarPref.weekStart = ' . Application_Model_Preference::GetWeekStartDay() . ";\n" .
-                'calendarPref.timestamp = ' . time() . ";\n" .
-                'calendarPref.timezoneOffset = ' . Application_Common_DateHelper::getUserTimezoneOffset() . ";\n" .
-                "calendarPref.timeScale = '" . Application_Model_Preference::GetCalendarTimeScale() . "';\n" .
-                'calendarPref.timeInterval = ' . Application_Model_Preference::GetCalendarTimeInterval() . ";\n" .
-                'calendarPref.weekStartDay = ' . Application_Model_Preference::GetWeekStartDay() . ";\n" .
-                "var calendarEvents = {$events};"
+            "var calendarPref = {};\n"
+                . 'calendarPref.weekStart = ' . Application_Model_Preference::GetWeekStartDay() . ";\n"
+                . 'calendarPref.timestamp = ' . time() . ";\n"
+                . 'calendarPref.timezoneOffset = ' . Application_Common_DateHelper::getUserTimezoneOffset() . ";\n"
+                . "calendarPref.timeScale = '" . Application_Model_Preference::GetCalendarTimeScale() . "';\n"
+                . 'calendarPref.timeInterval = ' . Application_Model_Preference::GetCalendarTimeInterval() . ";\n"
+                . 'calendarPref.weekStartDay = ' . Application_Model_Preference::GetWeekStartDay() . ";\n"
+                . "var calendarEvents = {$events};"
         );
 
         $this->view->headScript()->appendFile(Assets::url('js/contextmenu/jquery.contextMenu.js'), 'text/javascript');
@@ -385,13 +385,12 @@ class ScheduleController extends Zend_Controller_Action
             $originalDateTime = new DateTime($originalShowStart, new DateTimeZone('UTC'));
             $originalDateTime->setTimezone($displayTimeZone);
 
-            $this->view->additionalShowInfo =
-                sprintf(
-                    _('Rebroadcast of show %s from %s at %s'),
-                    $originalShowName,
-                    $originalDateTime->format('l, F jS'),
-                    $originalDateTime->format('G:i')
-                );
+            $this->view->additionalShowInfo = sprintf(
+                _('Rebroadcast of show %s from %s at %s'),
+                $originalShowName,
+                $originalDateTime->format('l, F jS'),
+                $originalDateTime->format('G:i')
+            );
         }
         $this->view->showLength = $show->getShowLength();
         $this->view->timeFilled = $show->getTimeScheduled();
@@ -482,8 +481,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $forms = $this->createShowFormAction();
 
-        [$data, $validateStartDate, $validateStartTime, $originalShowStartDateTime] =
-            $service_showForm->preEditShowValidationCheck($data);
+        [$data, $validateStartDate, $validateStartTime, $originalShowStartDateTime] = $service_showForm->preEditShowValidationCheck($data);
 
         if ($service_showForm->validateShowForms(
             $forms,
@@ -543,8 +541,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $forms = $this->createShowFormAction();
 
-        [$data, $validateStartDate, $validateStartTime, $originalShowStartDateTime] =
-            $service_showForm->preEditShowValidationCheck($data);
+        [$data, $validateStartDate, $validateStartTime, $originalShowStartDateTime] = $service_showForm->preEditShowValidationCheck($data);
 
         if ($service_showForm->validateShowForms(
             $forms,

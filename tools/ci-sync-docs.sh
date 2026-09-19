@@ -49,7 +49,7 @@ for commit in $(git rev-list --reverse --no-merges "$commit_range" -- docs); do
     > commit-message
 
   rm -fR "website/$dest"
-  cp -r "docs" "website/$dest"
+  cp -R "docs" "website/$dest"
 
   pushd website
   git add "$dest"
