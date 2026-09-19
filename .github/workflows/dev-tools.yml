@@ -19,6 +19,12 @@ jobs:
             release: jammy
           - distribution: debian
             release: bookworm
+          - distribution: ubuntu
+            release: noble
+          - distribution: debian
+            release: trixie
+          - distribution: ubuntu
+            release: resolute
 
     env:
       REGISTRY: ghcr.io
@@ -49,13 +55,6 @@ jobs:
           FROM ${{ matrix.distribution }}:${{ matrix.release }}
 
           COPY packages.list packages.list
-          EOF
-
-          [[ "${{ matrix.release }}" == "focal" ]] && \
-          cat <<EOF >> Dockerfile
-          RUN DEBIAN_FRONTEND=noninteractive apt-get --quiet update && \
-              DEBIAN_FRONTEND=noninteractive apt-get --quiet install -y software-properties-common && \
-              add-apt-repository -y ppa:libretime/libretime
           EOF
 
           cat <<EOF >> Dockerfile
