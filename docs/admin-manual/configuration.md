@@ -248,7 +248,7 @@ playout:
   # Liquidsoap connection port.
   # > default is 1234
   liquidsoap_port: 1234
-  
+
   # How many hours ahead Playout should cache scheduled media files.
   # > default is 3
   cache_ahead_hours: 3

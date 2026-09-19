@@ -23,7 +23,7 @@ class GeneralConfig(BaseModel):
     api_key: str
     secret_key: str
 
-    cache_ahead_hours: int = -1
+    cache_ahead_hours: int | None = Field(default=None, deprecated=True)
 
     timezone: str = "UTC"
 
