@@ -30,7 +30,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php-version: "7.4" # Focal, Bullseye
           - php-version: "8.2" # Bookworm
 
     steps:
@@ -49,7 +48,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php-version: "7.4" # Focal, Bullseye
           - php-version: "8.2" # Bookworm
 
     env:
