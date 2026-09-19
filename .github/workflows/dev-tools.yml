@@ -16,10 +16,6 @@ jobs:
       matrix:
         include:
           - distribution: ubuntu
-            release: focal
-          - distribution: debian
-            release: bullseye
-          - distribution: ubuntu
             release: jammy
           - distribution: debian
             release: bookworm
