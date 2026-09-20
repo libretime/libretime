@@ -107,7 +107,7 @@ services:
       - libretime_storage:/srv/libretime:ro
 
   icecast:
-    image: ghcr.io/libretime/icecast:2.4.4
+    image: ghcr.io/libretime/icecast:2.5.0
     ports:
       - 8000:8000
     environment:
