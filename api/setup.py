@@ -34,7 +34,7 @@ setup(
         "djangorestframework>=3.14.0,<3.16",
         "drf-spectacular>=0.22.1,<0.29",
         # Worker
-        "celery>=5.5.0,<5.6",
+        "celery>=5.5.0,<5.7",
         "mutagen>=1.45.1,<1.49",
         "requests>=2.32.2,<2.33",
     ],
