@@ -34,6 +34,7 @@
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseSessionsQuery extends ModelCriteria
 {
     /**

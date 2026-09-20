@@ -94,6 +94,7 @@
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcScheduleQuery extends ModelCriteria
 {
     /**

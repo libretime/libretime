@@ -38,6 +38,7 @@
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcPrefQuery extends ModelCriteria
 {
     /**

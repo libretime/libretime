@@ -66,6 +66,7 @@
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcPlaylistQuery extends ModelCriteria
 {
     /**

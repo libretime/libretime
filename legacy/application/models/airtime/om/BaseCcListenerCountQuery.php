@@ -42,6 +42,7 @@
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcListenerCountQuery extends ModelCriteria
 {
     /**
