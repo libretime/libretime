@@ -15,7 +15,10 @@ from .fixtures import TEST_STREAM_CONFIGS, make_config_with_stream
 
 @pytest.mark.parametrize(
     "version",
-    [pytest.param((1, 4, 4), id="1.4")],
+    [
+        pytest.param((1, 4, 4), id="1.4"),
+        pytest.param((2, 1, 3), id="2.1"),
+    ],
 )
 @pytest.mark.parametrize(
     "stream_config",
@@ -45,8 +48,8 @@ def test_generate_entrypoint(
 
 
 @pytest.mark.skipif(
-    LIQ_VERSION >= (2, 0, 0),
-    reason="unsupported liquidsoap >= 2.0.0",
+    LIQ_VERSION == (0, 0, 0),
+    reason="liquidsoap is not installed",
 )
 @pytest.mark.parametrize(
     "stream_config",
@@ -77,8 +80,8 @@ def test_liquidsoap_syntax(
 
 
 @pytest.mark.skipif(
-    LIQ_VERSION >= (2, 0, 0),
-    reason="unsupported liquidsoap >= 2.0.0",
+    LIQ_VERSION == (0, 0, 0),
+    reason="liquidsoap is not installed",
 )
 def test_liquidsoap_unsupported_output_aac(
     tmp_path: Path,

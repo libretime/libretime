@@ -258,7 +258,7 @@ AnySystemOutput = Annotated[
         PortAudioSystemOutput,
         PulseAudioSystemOutput,
     ],
-    Field(discriminator="kind", default=SystemOutput.PULSEAUDIO),
+    Field(discriminator="kind"),
 ]
 
 
