@@ -53,7 +53,7 @@ repos:
         args: [--target-version, "4.2"]
 
   - repo: https://github.com/pycqa/isort
-    rev: 6.0.1
+    rev: 9.0.1
     hooks:
       - id: isort
         args: [--resolve-all-configs]
