@@ -17,6 +17,7 @@ app = Celery("worker")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks(
     [
+        "libretime_api.core.tasks",
         "libretime_api.podcasts.tasks",
     ]
 )
