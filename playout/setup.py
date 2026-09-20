@@ -31,7 +31,7 @@ setup(
         "lxml>=4.5.0,<7.0.0",
         "mutagen>=1.45.1,<1.49",
         "python-dateutil>=2.8.1,<2.10",
-        "requests>=2.32.2,<2.33",
+        "requests>=2.32.2,<2.35",
         "typing-extensions",
     ],
     extras_require={
