@@ -68,7 +68,6 @@
  */
 abstract class BaseCcBlockcontentsQuery extends ModelCriteria
 {
-    protected $ccBlocks;
     /**
      * Initializes internal state of BaseCcBlockcontentsQuery object.
      *

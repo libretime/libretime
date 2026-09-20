@@ -84,7 +84,6 @@
  */
 abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 {
-    protected $ccPlaylists;
     /**
      * Initializes internal state of BaseCcPlaylistcontentsQuery object.
      *
