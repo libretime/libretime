@@ -102,6 +102,7 @@
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcSubjsQuery extends ModelCriteria
 {
     /**

@@ -50,6 +50,7 @@
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcPlayoutHistoryTemplateFieldQuery extends ModelCriteria
 {
     /**

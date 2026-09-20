@@ -42,6 +42,30 @@ jobs:
         run: make lint
         working-directory: legacy
 
+  propel-gen:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php-version: "8.2" # Bookworm
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Run propel-gen
+        run: make propel-gen format
+        working-directory: legacy
+
+      - name: Check diff
+        run: git diff --exit-code
+
+      - if: failure()
+        run: echo "::error::Check failed, please run 'make -C legacy propel-gen format' and commit the changes."
+
   test:
     runs-on: ubuntu-latest
     strategy:
