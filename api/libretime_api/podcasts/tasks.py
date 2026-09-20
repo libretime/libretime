@@ -109,8 +109,9 @@ def import_episode(
 
                 filename = extract_filename(resp)
 
-                # The filename extension helps to determine the file type using mutagen
-                with NamedTemporaryFile(suffix=filename, delete=False) as tmp_file:
+                # The filename extension helps to determine the file type using mutagen.
+                suffix = Path(filename).suffix
+                with NamedTemporaryFile(suffix=suffix, delete=False) as tmp_file:
                     for chunk in resp.iter_content(chunk_size=2048):
                         tmp_file.write(chunk)
 
