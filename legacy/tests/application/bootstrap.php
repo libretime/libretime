@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL);
 
 require_once dirname(__DIR__, 2) . '/application/preload.php';
 
@@ -59,7 +59,11 @@ set_include_path(APPLICATION_PATH . '/../tests/application/testdata' . PATH_SEPA
 // helper functions
 set_include_path(APPLICATION_PATH . '/../tests/application/helpers' . PATH_SEPARATOR . get_include_path());
 
+// Started before Propel::init(), which triggers config validation that
+// autoloads League\Uri\Uri; PHP 8.4 emits a deprecation notice at compile
+// time for that class, and any output at all before Zend_Session::start()
+// makes it throw.
+Zend_Session::start();
+
 require_once 'libretime/propel1/runtime/lib/Propel.php';
 Propel::init('../application/configs/airtime-conf-production.php');
-
-Zend_Session::start();

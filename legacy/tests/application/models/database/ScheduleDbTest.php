@@ -8,6 +8,7 @@
 class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 {
     private $_connectionMock;
+    private $application;
 
     public function setUp()
     {

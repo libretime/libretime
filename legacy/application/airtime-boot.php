@@ -10,7 +10,7 @@ if (!empty($_SERVER['HTTPS'])) {
 }
 ini_set('session.cookie_httponly', '1');
 
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL);
 
 function exception_error_handler($errno, $errstr, $errfile, $errline)
 {
