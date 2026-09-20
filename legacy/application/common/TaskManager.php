@@ -188,32 +188,6 @@ interface AirtimeTask
 }
 
 /**
- * Class CeleryTask.
- *
- * Checks the Celery broker task queue and runs callbacks for completed tasks
- */
-class CeleryTask implements AirtimeTask
-{
-    /**
-     * Check the ThirdPartyTrackReferences table to see if there are any pending tasks.
-     *
-     * @return bool true if there are pending tasks in ThirdPartyTrackReferences
-     */
-    public function shouldBeRun()
-    {
-        return !CeleryManager::isBrokerTaskQueueEmpty();
-    }
-
-    /**
-     * Poll the task queue for any completed Celery tasks.
-     */
-    public function run()
-    {
-        CeleryManager::pollBrokerTaskQueue();
-    }
-}
-
-/**
  * Class AutoPlaylistTask.
  *
  * Checks for shows with an autoplaylist that needs to be filled in

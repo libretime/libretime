@@ -5,6 +5,14 @@ from ._internal import (
     API_VERSION,
     AUTH_PASSWORD_VALIDATORS,
     AUTH_USER_MODEL,
+    CELERY_EVENT_QUEUE_EXPIRES,
+    CELERY_RESULT_BACKEND,
+    CELERY_RESULT_EXPIRES,
+    CELERY_RESULT_EXTENDED,
+    CELERY_RESULT_PERSISTENT,
+    CELERY_TASK_TRACK_STARTED,
+    CELERY_WORKER_CONCURRENCY,
+    CELERY_WORKER_PREFETCH_MULTIPLIER,
     DEBUG,
     DEFAULT_AUTO_FIELD,
     INSTALLED_APPS,
@@ -61,6 +69,9 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
+# The legacy tables store naive timestamps in UTC, and Django interprets naive values
+# using TIME_ZONE. This must stay UTC, and not follow CONFIG.general.timezone, or
+# the datetimes returned by the API would be shifted by the station UTC offset.
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
@@ -81,3 +92,8 @@ EMAIL_SSL_KEYFILE = CONFIG.email.key_file
 EMAIL_SSL_CERTFILE = CONFIG.email.cert_file
 
 DEFAULT_FROM_EMAIL = CONFIG.email.from_email
+
+# Celery
+# https://docs.celeryq.dev/en/stable/userguide/configuration.html#configuration
+
+CELERY_BROKER_URL = CONFIG.rabbitmq.url

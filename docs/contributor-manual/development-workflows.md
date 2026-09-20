@@ -24,7 +24,7 @@ Here is a small description of the different components in the repository:
 ```bash
 .
 ├── analyzer      # The LibreTime Analyzer service
-├── api           # The LibreTime API service
+├── api           # The LibreTime API and Worker services
 ├── api-client    # The API clients used internally by other services
 ├── docker        # The docker related files
 ├── docs          # The documentation
@@ -34,8 +34,7 @@ Here is a small description of the different components in the repository:
 ├── playout       # The LibreTime Playout service
 ├── shared        # A shared library using by our python based services
 ├── tools         # Set of tools used to maintain the project
-├── website       # Website repository that is cloned when developing the documentation
-└── worker        # The LibreTime Worker service
+└── website       # Website repository that is cloned when developing the documentation
 ```
 
 For example, to lint and test the `analyzer` service, you can run the commands:

@@ -20,6 +20,19 @@ Please see the [changelog](https://github.com/libretime/libretime/blob/main/CHAN
 
 ## :fire: Deprecation and removal
 
+### The worker is now part of the API package
+
+The `libretime-worker` Python package, and the `worker` directory of the repository, are removed. The worker now lives in the `libretime-api` package, and uses the Django ORM and the `django-celery-results` result backend to store the results of its tasks. The `libretime-worker` executable, and the `libretime-worker` systemd service and container image are unchanged.
+
+As a consequence of this change:
+
+- Celery is upgraded to the version 5, and the deprecated `amqp` result backend is no longer used,
+- the tasks are now published to the default `celery` queue. The `podcast` queue and the `celeryresults` exchange of RabbitMQ are not used anymore, and can be deleted,
+- the podcast episodes that were still being imported when the upgrade happened are not imported anymore, and will be cleaned up automatically,
+- the `celery_tasks` and `third_party_track_references` database tables are dropped,
+- the `/api/v2/celery-tasks` and `/api/v2/third-party-track-references` API endpoints are removed,
+- the `/api/poll-celery` legacy API endpoint is removed.
+
 ## :arrow_up: Before upgrading
 
 :::warning
@@ -29,6 +42,8 @@ Please follow this **before the upgrade procedure**.
 :::
 
 ## :arrow_up: Upgrading
+
+Make sure to [apply the database migrations](../admin-manual/install/upgrade.md#apply-migrations) and to restart the `libretime-worker` service. The migrations create the tables used to store the results of the worker tasks, and add a `created_at` column to the podcast episodes.
 
 ## :warning: Known issues
 

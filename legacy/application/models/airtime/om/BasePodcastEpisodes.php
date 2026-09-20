@@ -78,6 +78,13 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
     protected $episode_description;
 
     /**
+     * The value for the created_at field.
+     * Note: this column has a database default value of: (expression) (now() AT TIME ZONE 'UTC')
+     * @var        string
+     */
+    protected $created_at;
+
+    /**
      * @var        CcFiles
      */
     protected $aCcFiles;
@@ -106,6 +113,26 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see        __construct()
+     */
+    public function applyDefaultValues()
+    {
+    }
+
+    /**
+     * Initializes internal state of BasePodcastEpisodes object.
+     * @see        applyDefaults()
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->applyDefaultValues();
+    }
 
     /**
      * Get the [id] column value.
@@ -224,6 +251,48 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
     {
 
         return $this->episode_description;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [created_at] column value.
+     *
+     *
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *				 If format is null, then the raw DateTime object will be returned.
+     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getDbCreatedAt($format = 'Y-m-d H:i:s')
+    {
+        if ($this->created_at === null) {
+            return null;
+        }
+
+
+        try {
+            $dt = new DateTime($this->created_at);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->created_at, true), $x);
+        }
+
+        if ($format === null) {
+            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            return $dt;
+        }
+
+        if (strpos($format, '%') !== false) {
+            return date(strtr($format, [
+                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                '%e' => 'j', '%H' => 'H', '%k' => 'G', '%I' => 'h', '%l' => 'g',
+                '%M' => 'i', '%S' => 's', '%A' => 'l', '%a' => 'D', '%B' => 'F',
+                '%b' => 'M', '%p' => 'A', '%P' => 'a', '%Z' => 'T', '%z' => 'O',
+                '%x' => 'Y-m-d', '%X' => 'H:i:s',
+                '%w' => 'w', '%u' => 'N', '%j' => 'z', '%%' => '%',
+            ]), (int) $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
     }
 
     /**
@@ -405,6 +474,29 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
     } // setDbEpisodeDescription()
 
     /**
+     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param mixed $v string, integer (timestamp), or DateTime value.
+     *               Empty strings are treated as null.
+     * @return PodcastEpisodes The current object (for fluent API support)
+     */
+    public function setDbCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->created_at !== null || $dt !== null) {
+            $currentDateAsString = ($this->created_at !== null && $tmpDt = new DateTime($this->created_at)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
+            if ($currentDateAsString !== $newDateAsString) {
+                $this->created_at = $newDateAsString;
+                $this->modifiedColumns[] = PodcastEpisodesPeer::CREATED_AT;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setDbCreatedAt()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -444,6 +536,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
             $this->episode_guid = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->episode_title = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
             $this->episode_description = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->created_at = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -453,7 +546,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 8; // 8 = PodcastEpisodesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = PodcastEpisodesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating PodcastEpisodes object", $e);
@@ -726,6 +819,9 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
         if ($this->isColumnModified(PodcastEpisodesPeer::EPISODE_DESCRIPTION)) {
             $modifiedColumns[':p' . $index++]  = '"episode_description"';
         }
+        if ($this->isColumnModified(PodcastEpisodesPeer::CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = '"created_at"';
+        }
 
         $sql = sprintf(
             'INSERT INTO "podcast_episodes" (%s) VALUES (%s)',
@@ -760,6 +856,9 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
                         break;
                     case '"episode_description"':
                         $stmt->bindValue($identifier, $this->episode_description, PDO::PARAM_STR);
+                        break;
+                    case '"created_at"':
+                        $stmt->bindValue($identifier, $this->created_at, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -930,6 +1029,9 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
             case 7:
                 return $this->getDbEpisodeDescription();
                 break;
+            case 8:
+                return $this->getDbCreatedAt();
+                break;
             default:
                 return null;
                 break;
@@ -967,6 +1069,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
             $keys[5] => $this->getDbEpisodeGuid(),
             $keys[6] => $this->getDbEpisodeTitle(),
             $keys[7] => $this->getDbEpisodeDescription(),
+            $keys[8] => $this->getDbCreatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1038,6 +1141,9 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
             case 7:
                 $this->setDbEpisodeDescription($value);
                 break;
+            case 8:
+                $this->setDbCreatedAt($value);
+                break;
         } // switch()
     }
 
@@ -1070,6 +1176,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
         if (array_key_exists($keys[5], $arr)) $this->setDbEpisodeGuid($arr[$keys[5]]);
         if (array_key_exists($keys[6], $arr)) $this->setDbEpisodeTitle($arr[$keys[6]]);
         if (array_key_exists($keys[7], $arr)) $this->setDbEpisodeDescription($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setDbCreatedAt($arr[$keys[8]]);
     }
 
     /**
@@ -1089,6 +1196,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
         if ($this->isColumnModified(PodcastEpisodesPeer::EPISODE_GUID)) $criteria->add(PodcastEpisodesPeer::EPISODE_GUID, $this->episode_guid);
         if ($this->isColumnModified(PodcastEpisodesPeer::EPISODE_TITLE)) $criteria->add(PodcastEpisodesPeer::EPISODE_TITLE, $this->episode_title);
         if ($this->isColumnModified(PodcastEpisodesPeer::EPISODE_DESCRIPTION)) $criteria->add(PodcastEpisodesPeer::EPISODE_DESCRIPTION, $this->episode_description);
+        if ($this->isColumnModified(PodcastEpisodesPeer::CREATED_AT)) $criteria->add(PodcastEpisodesPeer::CREATED_AT, $this->created_at);
 
         return $criteria;
     }
@@ -1159,6 +1267,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
         $copyObj->setDbEpisodeGuid($this->getDbEpisodeGuid());
         $copyObj->setDbEpisodeTitle($this->getDbEpisodeTitle());
         $copyObj->setDbEpisodeDescription($this->getDbEpisodeDescription());
+        $copyObj->setDbCreatedAt($this->getDbCreatedAt());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1334,10 +1443,12 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
         $this->episode_guid = null;
         $this->episode_title = null;
         $this->episode_description = null;
+        $this->created_at = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

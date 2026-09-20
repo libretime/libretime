@@ -6,6 +6,7 @@ os.environ.setdefault("LIBRETIME_DEBUG", "true")
 os.environ.setdefault("LIBRETIME_GENERAL_PUBLIC_URL", "http://localhost")
 os.environ.setdefault("LIBRETIME_GENERAL_API_KEY", "testing")
 os.environ.setdefault("LIBRETIME_GENERAL_SECRET_KEY", "testing")
+os.environ.setdefault("LIBRETIME_GENERAL_TIMEZONE", "Europe/Berlin")
 os.environ.setdefault("LIBRETIME_STORAGE_PATH", str(fixture_path))
 
 # pylint: disable=wrong-import-position,unused-import
@@ -14,6 +15,15 @@ from .prod import (
     API_VERSION,
     AUTH_PASSWORD_VALIDATORS,
     AUTH_USER_MODEL,
+    CELERY_BROKER_URL,
+    CELERY_EVENT_QUEUE_EXPIRES,
+    CELERY_RESULT_BACKEND,
+    CELERY_RESULT_EXPIRES,
+    CELERY_RESULT_EXTENDED,
+    CELERY_RESULT_PERSISTENT,
+    CELERY_TASK_TRACK_STARTED,
+    CELERY_WORKER_CONCURRENCY,
+    CELERY_WORKER_PREFETCH_MULTIPLIER,
     CONFIG,
     DATABASES,
     DEBUG,
