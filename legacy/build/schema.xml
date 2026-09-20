@@ -351,6 +351,9 @@
     <index name="cc_schedule_instance_id_idx">
       <index-column name="instance_id" />
     </index>
+    <index name="cc_schedule_starts_idx">
+      <index-column name="starts" />
+    </index>
   </table>
   <table name="cc_subjs" phpName="CcSubjs">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true" />

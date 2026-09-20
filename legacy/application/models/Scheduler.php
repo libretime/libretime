@@ -23,6 +23,14 @@ final class Application_Model_Scheduler
 
     private $checkUserPermissions = true;
 
+    /**
+     * Files picked this pass with their approximate airing slot, consumed by
+     * later smart blocks in the same pass that have an lptime criterion.
+     *
+     * @var array<int, array{id:int, slot:DateTime}>
+     */
+    private $scheduledInPassPicks = [];
+
     public function __construct($checkUserPermissions = true)
     {
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
@@ -214,12 +222,13 @@ final class Application_Model_Scheduler
      *
      * @return $files
      */
-    private function retrieveMediaFiles($id, $type, $show)
+    private function retrieveMediaFiles($id, $type, $show, ?DateTime $slotStart = null)
     {
         // if there is a show we need to set a show limit to pass to smart blocks in case they use time remaining
         $showInstance = new Application_Model_ShowInstance($show);
         $showLimit = $showInstance->getSecondsRemaining();
-        $showStart = $showInstance->getShowInstanceStart(null);
+        // prefer the actual slot so lptime criteria anchor to airtime, not wallclock now
+        $showStart = $slotStart ?: $showInstance->getShowInstanceStart(null);
         $originalShowLimit = $showLimit;
 
         $files = [];
@@ -245,6 +254,7 @@ final class Application_Model_Scheduler
             $data['fadein'] = Application_Model_Preference::GetDefaultFadeIn();
             $data['fadeout'] = Application_Model_Preference::GetDefaultFadeOut();
 
+            $this->trackInPassPick((int) $id, $showStart, $files);
             $files[] = $data;
         } elseif ($type === 'playlist') {
             $pl = new Application_Model_Playlist($id);
@@ -260,6 +270,7 @@ final class Application_Model_Scheduler
                     $data['fadein'] = $plItem['fadein'];
                     $data['fadeout'] = $plItem['fadeout'];
                     $data['type'] = 0;
+                    $this->trackInPassPick((int) $plItem['item_id'], $showStart, $files);
                     $files[] = $data;
                 } elseif ($plItem['type'] == 1) {
                     $data['id'] = $plItem['item_id'];
@@ -282,12 +293,19 @@ final class Application_Model_Scheduler
                             $data['fadein'] = $track['fadein'];
                             $data['fadeout'] = $track['fadeout'];
                             $data['type'] = 0;
+                            $this->trackInPassPick((int) $track['item_id'], $showStart, $files);
                             $files[] = $data;
                         }
                     } else {
                         $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
                         $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
-                        $dynamicFiles = $bl->getListOfFilesUnderLimit($showLimit, $showStart);
+
+                        // block start = overall slot + duration of items already staged
+                        $blockStart = clone $showStart;
+                        $blockStart->modify('+' . (int) round($this->timeLengthOfFiles($files)) . ' seconds');
+
+                        $dynamicFiles = $bl->getListOfFilesUnderLimit($showLimit, $blockStart, $this->scheduledInPassPicks);
+                        $withinBlockOffset = 0.0;
                         foreach ($dynamicFiles as $f) {
                             $fileId = $f['id'];
                             $file = CcFilesQuery::create()->findPk($fileId);
@@ -306,6 +324,14 @@ final class Application_Model_Scheduler
 
                                 $data['type'] = 0;
                                 $files[] = $data;
+
+                                $fileSlot = clone $blockStart;
+                                $fileSlot->modify('+' . (int) round($withinBlockOffset) . ' seconds');
+                                $this->scheduledInPassPicks[] = [
+                                    'id' => (int) $file->getDbId(),
+                                    'slot' => $fileSlot,
+                                ];
+                                $withinBlockOffset += isset($f['length']) ? (float) $f['length'] : 0.0;
                             }
                         }
                     }
@@ -343,12 +369,14 @@ final class Application_Model_Scheduler
                     $data['fadein'] = $track['fadein'];
                     $data['fadeout'] = $track['fadeout'];
                     $data['type'] = 0;
+                    $this->trackInPassPick((int) $track['item_id'], $showStart, $files);
                     $files[] = $data;
                 }
             } else {
                 $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
                 $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
-                $dynamicFiles = $bl->getListOfFilesUnderLimit($showLimit, $showStart);
+                $dynamicFiles = $bl->getListOfFilesUnderLimit($showLimit, $showStart, $this->scheduledInPassPicks);
+                $withinBlockOffset = 0.0;
                 foreach ($dynamicFiles as $f) {
                     $fileId = $f['id'];
                     $file = CcFilesQuery::create()->findPk($fileId);
@@ -367,6 +395,14 @@ final class Application_Model_Scheduler
 
                         $data['type'] = 0;
                         $files[] = $data;
+
+                        $fileSlot = clone $showStart;
+                        $fileSlot->modify('+' . (int) round($withinBlockOffset) . ' seconds');
+                        $this->scheduledInPassPicks[] = [
+                            'id' => (int) $file->getDbId(),
+                            'slot' => $fileSlot,
+                        ];
+                        $withinBlockOffset += isset($f['length']) ? (float) $f['length'] : 0.0;
                     }
                 }
             }
@@ -628,6 +664,9 @@ final class Application_Model_Scheduler
             // temporary fix for CC-5665
             set_time_limit(180);
 
+            // fresh in-pass tracker per insertAfter call
+            $this->scheduledInPassPicks = [];
+
             $affectedShowInstances = [];
 
             // dont want to recalculate times for moved items
@@ -828,9 +867,11 @@ final class Application_Model_Scheduler
                     if (is_null($filesToInsert)) {
                         $filesToInsert = [];
                         foreach ($mediaItems as $media) {
+                            $slotCursor = clone $nextStartDT;
+                            $slotCursor->modify('+' . (int) round($this->timeLengthOfFiles($filesToInsert)) . ' seconds');
                             $filesToInsert = array_merge(
                                 $filesToInsert,
-                                $this->retrieveMediaFiles($media['id'], $media['type'], $schedule['instance'])
+                                $this->retrieveMediaFiles($media['id'], $media['type'], $schedule['instance'], $slotCursor)
                             );
                         }
                     }
@@ -1352,6 +1393,23 @@ final class Application_Model_Scheduler
             fn ($acc, $file) => $acc + Application_Common_DateHelper::playlistTimeToSeconds($file['cliplength']),
             0.0
         );
+    }
+
+    /**
+     * Record a non-dynamic-block pick so later smart blocks in the same
+     * pass see it via their lptime exclusion window. Skip non-file ids
+     * (streams) — the exclusion targets cc_files.
+     *
+     * Slot is anchored at $showStart + accumulated duration of $filesBefore.
+     */
+    private function trackInPassPick(int $fileId, DateTime $showStart, array $filesBefore): void
+    {
+        $slot = clone $showStart;
+        $slot->modify('+' . (int) round($this->timeLengthOfFiles($filesBefore)) . ' seconds');
+        $this->scheduledInPassPicks[] = [
+            'id' => $fileId,
+            'slot' => $slot,
+        ];
     }
 
     /*
