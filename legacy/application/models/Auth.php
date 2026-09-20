@@ -26,13 +26,13 @@ class Application_Model_Auth
         $public_url = Config::getPublicUrl();
 
         $station_name = Application_Model_Preference::GetStationName();
-        if ($station_name === "") {
+        if ($station_name === '') {
             $station_name = SAAS_PRODUCT_BRANDING_NAME;
         }
 
         $token = $this->generateToken('password.restore', $user->getDbId());
         $link_path = $view->url(['user_id' => $user->getDbId(), 'token' => $token], 'password-change');
-        $login =  $user->getDbLogin();
+        $login = $user->getDbLogin();
 
         $message = sprintf(
             _("Hi %s,\n\nPlease click this link to reset your password: %s\n\nThank you,\n%s\n"),
@@ -41,7 +41,7 @@ class Application_Model_Auth
             $station_name
         );
 
-        $subject = sprintf(_('%s Password Reset'),  $station_name);
+        $subject = sprintf(_('%s Password Reset'), $station_name);
 
         return Application_Model_Email::send($subject, $message, $user->getDbEmail());
     }
