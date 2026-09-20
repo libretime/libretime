@@ -23,14 +23,19 @@ setup(
     entry_points={
         "console_scripts": [
             "libretime-api=libretime_api.manage:main",
+            "libretime-worker=libretime_worker.main:cli",
         ]
     },
     install_requires=[
+        "django-celery-results>=2.4.0,<2.5",
         "django-cors-headers>=3.14.0,<4.5",
         "django-filter>=2.4.0,<24.4",
         "django>=4.2.0,<4.3",
         "djangorestframework>=3.14.0,<3.16",
         "drf-spectacular>=0.22.1,<0.29",
+        # Worker
+        "celery>=5.5.0,<5.6",
+        "mutagen>=1.45.1,<1.49",
         "requests>=2.32.2,<2.33",
     ],
     extras_require={

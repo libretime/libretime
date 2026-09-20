@@ -22,6 +22,7 @@ class Podcast(models.Model):
         on_delete=models.DO_NOTHING,
         blank=True,
         null=True,
+        db_column="owner",
     )
 
     def get_owner(self):
@@ -45,6 +46,7 @@ class PodcastEpisode(models.Model):
         blank=True,
         null=True,
     )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     published_at = models.DateTimeField(db_column="publication_date")
     download_url = models.CharField(max_length=4096)

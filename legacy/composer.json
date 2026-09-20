@@ -17,10 +17,6 @@
     {
       "type": "vcs",
       "url": "https://github.com/libretime/propel1"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/libretime/celery-php"
     }
   ],
   "require": {
@@ -29,7 +25,6 @@
     "composer/semver": "^3.2",
     "james-heinrich/getid3": "^1.9",
     "league/uri": "^6.7",
-    "libretime/celery-php": "dev-main",
     "libretime/propel1": "dev-main",
     "php-amqplib/php-amqplib": "^3.0",
     "simplepie/simplepie": "^1.5",

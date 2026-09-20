@@ -130,14 +130,6 @@ define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 // TuneIn integration
 define('TUNEIN_API_URL', 'https://air.radiotime.com/Playing.ashx');
 
-// Celery
-define('CELERY_PENDING_STATUS', 'PENDING');
-define('CELERY_SUCCESS_STATUS', 'SUCCESS');
-define('CELERY_FAILED_STATUS', 'FAILED');
-
-// Celery Services
-define('PODCAST_SERVICE_NAME', 'podcast');
-
 // Publish Services
 define('STATION_PODCAST_SERVICE_NAME', 'station_podcast');
 

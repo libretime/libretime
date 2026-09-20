@@ -14,6 +14,7 @@
  * @method PodcastEpisodesQuery orderByDbEpisodeGuid($order = Criteria::ASC) Order by the episode_guid column
  * @method PodcastEpisodesQuery orderByDbEpisodeTitle($order = Criteria::ASC) Order by the episode_title column
  * @method PodcastEpisodesQuery orderByDbEpisodeDescription($order = Criteria::ASC) Order by the episode_description column
+ * @method PodcastEpisodesQuery orderByDbCreatedAt($order = Criteria::ASC) Order by the created_at column
  *
  * @method PodcastEpisodesQuery groupByDbId() Group by the id column
  * @method PodcastEpisodesQuery groupByDbFileId() Group by the file_id column
@@ -23,6 +24,7 @@
  * @method PodcastEpisodesQuery groupByDbEpisodeGuid() Group by the episode_guid column
  * @method PodcastEpisodesQuery groupByDbEpisodeTitle() Group by the episode_title column
  * @method PodcastEpisodesQuery groupByDbEpisodeDescription() Group by the episode_description column
+ * @method PodcastEpisodesQuery groupByDbCreatedAt() Group by the created_at column
  *
  * @method PodcastEpisodesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method PodcastEpisodesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -46,6 +48,7 @@
  * @method PodcastEpisodes findOneByDbEpisodeGuid(string $episode_guid) Return the first PodcastEpisodes filtered by the episode_guid column
  * @method PodcastEpisodes findOneByDbEpisodeTitle(string $episode_title) Return the first PodcastEpisodes filtered by the episode_title column
  * @method PodcastEpisodes findOneByDbEpisodeDescription(string $episode_description) Return the first PodcastEpisodes filtered by the episode_description column
+ * @method PodcastEpisodes findOneByDbCreatedAt(string $created_at) Return the first PodcastEpisodes filtered by the created_at column
  *
  * @method array findByDbId(int $id) Return PodcastEpisodes objects filtered by the id column
  * @method array findByDbFileId(int $file_id) Return PodcastEpisodes objects filtered by the file_id column
@@ -55,6 +58,7 @@
  * @method array findByDbEpisodeGuid(string $episode_guid) Return PodcastEpisodes objects filtered by the episode_guid column
  * @method array findByDbEpisodeTitle(string $episode_title) Return PodcastEpisodes objects filtered by the episode_title column
  * @method array findByDbEpisodeDescription(string $episode_description) Return PodcastEpisodes objects filtered by the episode_description column
+ * @method array findByDbCreatedAt(string $created_at) Return PodcastEpisodes objects filtered by the created_at column
  *
  * @package    propel.generator.airtime.om
  */
@@ -162,7 +166,7 @@ abstract class BasePodcastEpisodesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "file_id", "podcast_id", "publication_date", "download_url", "episode_guid", "episode_title", "episode_description" FROM "podcast_episodes" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "file_id", "podcast_id", "publication_date", "download_url", "episode_guid", "episode_title", "episode_description", "created_at" FROM "podcast_episodes" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -538,6 +542,49 @@ abstract class BasePodcastEpisodesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PodcastEpisodesPeer::EPISODE_DESCRIPTION, $dbEpisodeDescription, $comparison);
+    }
+
+    /**
+     * Filter the query on the created_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
+     * $query->filterByDbCreatedAt('now'); // WHERE created_at = '2011-03-14'
+     * $query->filterByDbCreatedAt(array('max' => 'yesterday')); // WHERE created_at < '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $dbCreatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastEpisodesQuery The current query, for fluid interface
+     */
+    public function filterByDbCreatedAt($dbCreatedAt = null, $comparison = null)
+    {
+        if (is_array($dbCreatedAt)) {
+            $useMinMax = false;
+            if (isset($dbCreatedAt['min'])) {
+                $this->addUsingAlias(PodcastEpisodesPeer::CREATED_AT, $dbCreatedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbCreatedAt['max'])) {
+                $this->addUsingAlias(PodcastEpisodesPeer::CREATED_AT, $dbCreatedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastEpisodesPeer::CREATED_AT, $dbCreatedAt, $comparison);
     }
 
     /**

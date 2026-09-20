@@ -138,9 +138,9 @@ ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 
 #======================================================================================#
-# API                                                                                  #
+# API Base                                                                             #
 #======================================================================================#
-FROM python-base AS libretime-api
+FROM python-base AS libretime-api-base
 
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
@@ -159,12 +159,18 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile -r requirements.txt
 
 COPY --from=python-builder /build/shared/*.whl .
+COPY --from=python-builder /build/api-client/*.whl .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile *.whl && rm -Rf *.whl
 
 COPY api .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --editable .[prod,sentry]
+
+#======================================================================================#
+# API                                                                                  #
+#======================================================================================#
+FROM libretime-api-base AS libretime-api
 
 # Run
 USER ${UID}:${GID}
@@ -185,22 +191,7 @@ HEALTHCHECK CMD ["curl", "--fail", "http://localhost:9001/api/v2/version"]
 #======================================================================================#
 # Worker                                                                               #
 #======================================================================================#
-FROM python-base AS libretime-worker
-
-WORKDIR /src
-
-COPY worker/requirements.txt .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-compile -r requirements.txt
-
-COPY --from=python-builder /build/shared/*.whl .
-COPY --from=python-builder /build/api-client/*.whl .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-compile *.whl && rm -Rf *.whl
-
-COPY worker .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --editable .[sentry]
+FROM libretime-api-base AS libretime-worker
 
 # Run
 USER ${UID}:${GID}

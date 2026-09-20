@@ -12,8 +12,7 @@
         "api/setup.py",
         "api-client/setup.py",
         "playout/setup.py",
-        "shared/setup.py",
-        "worker/setup.py"
+        "shared/setup.py"
       ]
     }
   }
