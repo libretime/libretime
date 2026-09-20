@@ -32,7 +32,7 @@ setup(
         "django-filter>=2.4.0,<24.4",
         "django>=4.2.0,<4.3",
         "djangorestframework>=3.14.0,<3.16",
-        "drf-spectacular>=0.22.1,<0.29",
+        "drf-spectacular>=0.22.1,<0.31",
         # Worker
         "celery>=5.5.0,<5.7",
         "mutagen>=1.45.1,<1.49",
