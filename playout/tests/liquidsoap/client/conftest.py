@@ -130,7 +130,7 @@ def run_liq_server(
     scope="session",
     params=["telnet", "socket"],
 )
-def liq_conn_fixture(request, tmp_path_factory):
+def liq_conn_fixture(request, tmp_path_factory, liq_version):
     tmp_path: Path = tmp_path_factory.mktemp(__name__)
 
     with run_liq_server(request.param, tmp_path) as manager:
@@ -144,7 +144,7 @@ def liq_conn_fixture(request, tmp_path_factory):
     scope="session",
     params=["telnet", "socket"],
 )
-def liq_client_fixture(request, tmp_path_factory):
+def liq_client_fixture(request, tmp_path_factory, liq_version):
     tmp_path: Path = tmp_path_factory.mktemp(__name__)
 
     with run_liq_server(request.param, tmp_path) as manager:

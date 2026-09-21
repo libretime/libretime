@@ -7,9 +7,7 @@ import pytest
 from libretime_playout.config import Config
 from libretime_playout.liquidsoap.entrypoint import generate_entrypoint
 from libretime_playout.liquidsoap.models import Info, StreamPreferences
-from libretime_playout.liquidsoap.version import get_liquidsoap_version
 
-from .conftest import LIQ_VERSION
 from .fixtures import TEST_STREAM_CONFIGS, make_config_with_stream
 
 
@@ -47,10 +45,6 @@ def test_generate_entrypoint(
     assert found == snapshot
 
 
-@pytest.mark.skipif(
-    LIQ_VERSION == (0, 0, 0),
-    reason="liquidsoap is not installed",
-)
 @pytest.mark.parametrize(
     "stream_config",
     TEST_STREAM_CONFIGS,
@@ -59,6 +53,7 @@ def test_liquidsoap_syntax(
     tmp_path: Path,
     stream_config: Config,
     stream_preferences: StreamPreferences,
+    liq_version,
 ):
     entrypoint_filepath = tmp_path / "radio.liq"
     log_filepath = tmp_path / "radio.log"
@@ -71,7 +66,7 @@ def test_liquidsoap_syntax(
             info=Info(
                 station_name="LibreTime",
             ),
-            version=get_liquidsoap_version(),
+            version=liq_version,
         ),
         encoding="utf-8",
     )
@@ -79,13 +74,10 @@ def test_liquidsoap_syntax(
     check_call(["liquidsoap", "--check", str(entrypoint_filepath)])
 
 
-@pytest.mark.skipif(
-    LIQ_VERSION == (0, 0, 0),
-    reason="liquidsoap is not installed",
-)
 def test_liquidsoap_unsupported_output_aac(
     tmp_path: Path,
     stream_preferences: StreamPreferences,
+    liq_version,
 ):
     entrypoint_filepath = tmp_path / "radio.liq"
     log_filepath = tmp_path / "radio.log"
@@ -109,11 +101,15 @@ def test_liquidsoap_unsupported_output_aac(
             info=Info(
                 station_name="LibreTime",
             ),
-            version=get_liquidsoap_version(),
+            version=liq_version,
         ),
         encoding="utf-8",
     )
 
     with pytest.raises(CalledProcessError) as exception:
         check_output(["liquidsoap", "--check", str(entrypoint_filepath)])
-    assert b"You must be missing an optional dependency." in exception.value.stdout
+
+    if liq_version < (2, 1, 0):
+        assert b"You must be missing an optional dependency." in exception.value.stdout
+    else:
+        assert b"Unsupported format: %fdkaac" in exception.value.stdout
