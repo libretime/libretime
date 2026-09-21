@@ -35,6 +35,14 @@ format: tools
 lint: tools
 	$(TOOLS)/bin/php-cs-fixer fix --verbose --dry-run --diff
 
+.PHONY: rector
+rector: tools vendor
+	$(TOOLS)/bin/rector process
+
+.PHONY: rector-check
+rector-check: tools vendor
+	$(TOOLS)/bin/rector process --dry-run
+
 .PHONY: build
 build: locale-build
 	$(COMPOSER_INSTALL) --no-dev --ignore-platform-reqs
