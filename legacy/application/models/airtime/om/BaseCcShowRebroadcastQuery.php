@@ -24,8 +24,8 @@
  * @method CcShowRebroadcastQuery rightJoinCcShow($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShow relation
  * @method CcShowRebroadcastQuery innerJoinCcShow($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShow relation
  *
- * @method CcShowRebroadcast findOne(PropelPDO $con = null) Return the first CcShowRebroadcast matching the query
- * @method CcShowRebroadcast findOneOrCreate(PropelPDO $con = null) Return the first CcShowRebroadcast matching the query, or a new CcShowRebroadcast object populated from the query conditions when no match is found
+ * @method CcShowRebroadcast findOne(?PropelPDO $con = null) Return the first CcShowRebroadcast matching the query
+ * @method CcShowRebroadcast findOneOrCreate(?PropelPDO $con = null) Return the first CcShowRebroadcast matching the query, or a new CcShowRebroadcast object populated from the query conditions when no match is found
  *
  * @method CcShowRebroadcast findOneByDbDayOffset(string $day_offset) Return the first CcShowRebroadcast filtered by the day_offset column
  * @method CcShowRebroadcast findOneByDbStartTime(string $start_time) Return the first CcShowRebroadcast filtered by the start_time column

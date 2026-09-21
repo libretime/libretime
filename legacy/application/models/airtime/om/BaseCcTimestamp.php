@@ -248,7 +248,7 @@ abstract class BaseCcTimestamp extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -290,7 +290,7 @@ abstract class BaseCcTimestamp extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -333,7 +333,7 @@ abstract class BaseCcTimestamp extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -944,7 +944,7 @@ abstract class BaseCcTimestamp extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcListenerCount[] List of CcListenerCount objects
      * @throws PropelException
      */
-    public function getCcListenerCounts($criteria = null, PropelPDO $con = null)
+    public function getCcListenerCounts($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcListenerCountsPartial && !$this->isNew();
         if (null === $this->collCcListenerCounts || null !== $criteria  || $partial) {
@@ -999,7 +999,7 @@ abstract class BaseCcTimestamp extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcTimestamp The current object (for fluent API support)
      */
-    public function setCcListenerCounts(PropelCollection $ccListenerCounts, PropelPDO $con = null)
+    public function setCcListenerCounts(PropelCollection $ccListenerCounts, ?PropelPDO $con = null)
     {
         $ccListenerCountsToDelete = $this->getCcListenerCounts(new Criteria(), $con)->diff($ccListenerCounts);
 
@@ -1030,7 +1030,7 @@ abstract class BaseCcTimestamp extends BaseObject implements Persistent
      * @return int             Count of related CcListenerCount objects.
      * @throws PropelException
      */
-    public function countCcListenerCounts(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcListenerCounts(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcListenerCountsPartial && !$this->isNew();
         if (null === $this->collCcListenerCounts || null !== $criteria || $partial) {

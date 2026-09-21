@@ -273,7 +273,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	 * @return     void
 	 * @throws     PropelException - if this object is deleted, unsaved or doesn't have pk match in db
 	 */
-	public function reload($deep = false, PropelPDO $con = null)
+	public function reload($deep = false, ?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("Cannot reload a deleted object.");
@@ -313,7 +313,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	 * @see        BaseObject::setDeleted()
 	 * @see        BaseObject::isDeleted()
 	 */
-	public function delete(PropelPDO $con = null)
+	public function delete(?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("This object has already been deleted.");
@@ -355,7 +355,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	 * @throws     PropelException
 	 * @see        doSave()
 	 */
-	public function save(PropelPDO $con = null)
+	public function save(?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("You cannot save an object that has been deleted.");
@@ -807,7 +807,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	 * @return     CcShowSchedule The current object (for fluent API support)
 	 * @throws     PropelException
 	 */
-	public function setCcShowInstances(CcShowInstances $v = null)
+	public function setCcShowInstances(?CcShowInstances $v = null)
 	{
 		if ($v === null) {
 			$this->setDbInstanceId(NULL);
@@ -834,7 +834,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	 * @return     CcShowInstances The associated CcShowInstances object.
 	 * @throws     PropelException
 	 */
-	public function getCcShowInstances(PropelPDO $con = null)
+	public function getCcShowInstances(?PropelPDO $con = null)
 	{
 		if ($this->aCcShowInstances === null && ($this->instance_id !== null)) {
 			$this->aCcShowInstances = CcShowInstancesQuery::create()->findPk($this->instance_id, $con);

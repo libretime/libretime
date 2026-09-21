@@ -305,7 +305,7 @@ abstract class BaseCcListenerCount extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -347,7 +347,7 @@ abstract class BaseCcListenerCount extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -390,7 +390,7 @@ abstract class BaseCcListenerCount extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -971,7 +971,7 @@ abstract class BaseCcListenerCount extends BaseObject implements Persistent
      * @return CcListenerCount The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcTimestamp(CcTimestamp $v = null)
+    public function setCcTimestamp(?CcTimestamp $v = null)
     {
         if ($v === null) {
             $this->setDbTimestampId(NULL);
@@ -1000,7 +1000,7 @@ abstract class BaseCcListenerCount extends BaseObject implements Persistent
      * @return CcTimestamp The associated CcTimestamp object.
      * @throws PropelException
      */
-    public function getCcTimestamp(PropelPDO $con = null, $doQuery = true)
+    public function getCcTimestamp(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcTimestamp === null && ($this->timestamp_id !== null) && $doQuery) {
             $this->aCcTimestamp = CcTimestampQuery::create()->findPk($this->timestamp_id, $con);
@@ -1023,7 +1023,7 @@ abstract class BaseCcListenerCount extends BaseObject implements Persistent
      * @return CcListenerCount The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcMountName(CcMountName $v = null)
+    public function setCcMountName(?CcMountName $v = null)
     {
         if ($v === null) {
             $this->setDbMountNameId(NULL);
@@ -1052,7 +1052,7 @@ abstract class BaseCcListenerCount extends BaseObject implements Persistent
      * @return CcMountName The associated CcMountName object.
      * @throws PropelException
      */
-    public function getCcMountName(PropelPDO $con = null, $doQuery = true)
+    public function getCcMountName(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcMountName === null && ($this->mount_name_id !== null) && $doQuery) {
             $this->aCcMountName = CcMountNameQuery::create()->findPk($this->mount_name_id, $con);

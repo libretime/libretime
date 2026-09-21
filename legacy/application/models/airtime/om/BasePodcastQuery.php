@@ -58,8 +58,8 @@
  * @method PodcastQuery rightJoinPodcastEpisodes($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PodcastEpisodes relation
  * @method PodcastQuery innerJoinPodcastEpisodes($relationAlias = null) Adds a INNER JOIN clause to the query using the PodcastEpisodes relation
  *
- * @method Podcast findOne(PropelPDO $con = null) Return the first Podcast matching the query
- * @method Podcast findOneOrCreate(PropelPDO $con = null) Return the first Podcast matching the query, or a new Podcast object populated from the query conditions when no match is found
+ * @method Podcast findOne(?PropelPDO $con = null) Return the first Podcast matching the query
+ * @method Podcast findOneOrCreate(?PropelPDO $con = null) Return the first Podcast matching the query, or a new Podcast object populated from the query conditions when no match is found
  *
  * @method Podcast findOneByDbUrl(string $url) Return the first Podcast filtered by the url column
  * @method Podcast findOneByDbTitle(string $title) Return the first Podcast filtered by the title column

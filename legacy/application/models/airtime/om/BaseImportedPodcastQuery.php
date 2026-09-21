@@ -26,8 +26,8 @@
  * @method ImportedPodcastQuery rightJoinPodcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Podcast relation
  * @method ImportedPodcastQuery innerJoinPodcast($relationAlias = null) Adds a INNER JOIN clause to the query using the Podcast relation
  *
- * @method ImportedPodcast findOne(PropelPDO $con = null) Return the first ImportedPodcast matching the query
- * @method ImportedPodcast findOneOrCreate(PropelPDO $con = null) Return the first ImportedPodcast matching the query, or a new ImportedPodcast object populated from the query conditions when no match is found
+ * @method ImportedPodcast findOne(?PropelPDO $con = null) Return the first ImportedPodcast matching the query
+ * @method ImportedPodcast findOneOrCreate(?PropelPDO $con = null) Return the first ImportedPodcast matching the query, or a new ImportedPodcast object populated from the query conditions when no match is found
  *
  * @method ImportedPodcast findOneByDbAutoIngest(boolean $auto_ingest) Return the first ImportedPodcast filtered by the auto_ingest column
  * @method ImportedPodcast findOneByDbAutoIngestTimestamp(string $auto_ingest_timestamp) Return the first ImportedPodcast filtered by the auto_ingest_timestamp column

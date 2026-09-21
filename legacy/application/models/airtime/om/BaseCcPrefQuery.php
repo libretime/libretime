@@ -24,8 +24,8 @@
  * @method CcPrefQuery rightJoinCcSubjs($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjs relation
  * @method CcPrefQuery innerJoinCcSubjs($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjs relation
  *
- * @method CcPref findOne(PropelPDO $con = null) Return the first CcPref matching the query
- * @method CcPref findOneOrCreate(PropelPDO $con = null) Return the first CcPref matching the query, or a new CcPref object populated from the query conditions when no match is found
+ * @method CcPref findOne(?PropelPDO $con = null) Return the first CcPref matching the query
+ * @method CcPref findOneOrCreate(?PropelPDO $con = null) Return the first CcPref matching the query, or a new CcPref object populated from the query conditions when no match is found
  *
  * @method CcPref findOneBySubjid(int $subjid) Return the first CcPref filtered by the subjid column
  * @method CcPref findOneByKeystr(string $keystr) Return the first CcPref filtered by the keystr column

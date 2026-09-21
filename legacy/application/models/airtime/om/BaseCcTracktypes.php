@@ -437,7 +437,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -479,7 +479,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -522,7 +522,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1198,7 +1198,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcFiles[] List of CcFiles objects
      * @throws PropelException
      */
-    public function getCcFiless($criteria = null, PropelPDO $con = null)
+    public function getCcFiless($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcFilessPartial && !$this->isNew();
         if (null === $this->collCcFiless || null !== $criteria  || $partial) {
@@ -1253,7 +1253,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcTracktypes The current object (for fluent API support)
      */
-    public function setCcFiless(PropelCollection $ccFiless, PropelPDO $con = null)
+    public function setCcFiless(PropelCollection $ccFiless, ?PropelPDO $con = null)
     {
         $ccFilessToDelete = $this->getCcFiless(new Criteria(), $con)->diff($ccFiless);
 
@@ -1284,7 +1284,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @return int             Count of related CcFiles objects.
      * @throws PropelException
      */
-    public function countCcFiless(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcFiless(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcFilessPartial && !$this->isNew();
         if (null === $this->collCcFiless || null !== $criteria || $partial) {

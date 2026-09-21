@@ -16,8 +16,8 @@
  * @method CcServiceRegisterQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method CcServiceRegisterQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method CcServiceRegister findOne(PropelPDO $con = null) Return the first CcServiceRegister matching the query
- * @method CcServiceRegister findOneOrCreate(PropelPDO $con = null) Return the first CcServiceRegister matching the query, or a new CcServiceRegister object populated from the query conditions when no match is found
+ * @method CcServiceRegister findOne(?PropelPDO $con = null) Return the first CcServiceRegister matching the query
+ * @method CcServiceRegister findOneOrCreate(?PropelPDO $con = null) Return the first CcServiceRegister matching the query, or a new CcServiceRegister object populated from the query conditions when no match is found
  *
  * @method CcServiceRegister findOneByDbIp(string $ip) Return the first CcServiceRegister filtered by the ip column
  *

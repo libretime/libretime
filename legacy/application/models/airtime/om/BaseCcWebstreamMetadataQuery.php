@@ -24,8 +24,8 @@
  * @method CcWebstreamMetadataQuery rightJoinCcSchedule($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSchedule relation
  * @method CcWebstreamMetadataQuery innerJoinCcSchedule($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSchedule relation
  *
- * @method CcWebstreamMetadata findOne(PropelPDO $con = null) Return the first CcWebstreamMetadata matching the query
- * @method CcWebstreamMetadata findOneOrCreate(PropelPDO $con = null) Return the first CcWebstreamMetadata matching the query, or a new CcWebstreamMetadata object populated from the query conditions when no match is found
+ * @method CcWebstreamMetadata findOne(?PropelPDO $con = null) Return the first CcWebstreamMetadata matching the query
+ * @method CcWebstreamMetadata findOneOrCreate(?PropelPDO $con = null) Return the first CcWebstreamMetadata matching the query, or a new CcWebstreamMetadata object populated from the query conditions when no match is found
  *
  * @method CcWebstreamMetadata findOneByDbInstanceId(int $instance_id) Return the first CcWebstreamMetadata filtered by the instance_id column
  * @method CcWebstreamMetadata findOneByDbStartTime(string $start_time) Return the first CcWebstreamMetadata filtered by the start_time column

@@ -28,8 +28,8 @@
  * @method CcTracktypesQuery rightJoinCcFiles($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcFiles relation
  * @method CcTracktypesQuery innerJoinCcFiles($relationAlias = null) Adds a INNER JOIN clause to the query using the CcFiles relation
  *
- * @method CcTracktypes findOne(PropelPDO $con = null) Return the first CcTracktypes matching the query
- * @method CcTracktypes findOneOrCreate(PropelPDO $con = null) Return the first CcTracktypes matching the query, or a new CcTracktypes object populated from the query conditions when no match is found
+ * @method CcTracktypes findOne(?PropelPDO $con = null) Return the first CcTracktypes matching the query
+ * @method CcTracktypes findOneOrCreate(?PropelPDO $con = null) Return the first CcTracktypes matching the query, or a new CcTracktypes object populated from the query conditions when no match is found
  *
  * @method CcTracktypes findOneByDbCode(string $code) Return the first CcTracktypes filtered by the code column
  * @method CcTracktypes findOneByDbVisibility(boolean $visibility) Return the first CcTracktypes filtered by the visibility column

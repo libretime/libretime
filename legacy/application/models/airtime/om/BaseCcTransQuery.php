@@ -60,8 +60,8 @@
  * @method     CcTransQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CcTransQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     CcTrans findOne(PropelPDO $con = null) Return the first CcTrans matching the query
- * @method     CcTrans findOneOrCreate(PropelPDO $con = null) Return the first CcTrans matching the query, or a new CcTrans object populated from the query conditions when no match is found
+ * @method     CcTrans findOne(?PropelPDO $con = null) Return the first CcTrans matching the query
+ * @method     CcTrans findOneOrCreate(?PropelPDO $con = null) Return the first CcTrans matching the query, or a new CcTrans object populated from the query conditions when no match is found
  *
  * @method     CcTrans findOneById(int $id) Return the first CcTrans filtered by the id column
  * @method     CcTrans findOneByTrtok(string $trtok) Return the first CcTrans filtered by the trtok column

@@ -18,8 +18,8 @@
  * @method CcLocaleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method CcLocaleQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method CcLocale findOne(PropelPDO $con = null) Return the first CcLocale matching the query
- * @method CcLocale findOneOrCreate(PropelPDO $con = null) Return the first CcLocale matching the query, or a new CcLocale object populated from the query conditions when no match is found
+ * @method CcLocale findOne(?PropelPDO $con = null) Return the first CcLocale matching the query
+ * @method CcLocale findOneOrCreate(?PropelPDO $con = null) Return the first CcLocale matching the query, or a new CcLocale object populated from the query conditions when no match is found
  *
  * @method CcLocale findOneByDbLocaleCode(string $locale_code) Return the first CcLocale filtered by the locale_code column
  * @method CcLocale findOneByDbLocaleLang(string $locale_lang) Return the first CcLocale filtered by the locale_lang column

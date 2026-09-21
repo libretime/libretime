@@ -24,8 +24,8 @@
  * @method CcPlayoutHistoryMetaDataQuery rightJoinCcPlayoutHistory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPlayoutHistory relation
  * @method CcPlayoutHistoryMetaDataQuery innerJoinCcPlayoutHistory($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPlayoutHistory relation
  *
- * @method CcPlayoutHistoryMetaData findOne(PropelPDO $con = null) Return the first CcPlayoutHistoryMetaData matching the query
- * @method CcPlayoutHistoryMetaData findOneOrCreate(PropelPDO $con = null) Return the first CcPlayoutHistoryMetaData matching the query, or a new CcPlayoutHistoryMetaData object populated from the query conditions when no match is found
+ * @method CcPlayoutHistoryMetaData findOne(?PropelPDO $con = null) Return the first CcPlayoutHistoryMetaData matching the query
+ * @method CcPlayoutHistoryMetaData findOneOrCreate(?PropelPDO $con = null) Return the first CcPlayoutHistoryMetaData matching the query, or a new CcPlayoutHistoryMetaData object populated from the query conditions when no match is found
  *
  * @method CcPlayoutHistoryMetaData findOneByDbHistoryId(int $history_id) Return the first CcPlayoutHistoryMetaData filtered by the history_id column
  * @method CcPlayoutHistoryMetaData findOneByDbKey(string $key) Return the first CcPlayoutHistoryMetaData filtered by the key column

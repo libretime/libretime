@@ -20,8 +20,8 @@
  * @method CcTimestampQuery rightJoinCcListenerCount($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcListenerCount relation
  * @method CcTimestampQuery innerJoinCcListenerCount($relationAlias = null) Adds a INNER JOIN clause to the query using the CcListenerCount relation
  *
- * @method CcTimestamp findOne(PropelPDO $con = null) Return the first CcTimestamp matching the query
- * @method CcTimestamp findOneOrCreate(PropelPDO $con = null) Return the first CcTimestamp matching the query, or a new CcTimestamp object populated from the query conditions when no match is found
+ * @method CcTimestamp findOne(?PropelPDO $con = null) Return the first CcTimestamp matching the query
+ * @method CcTimestamp findOneOrCreate(?PropelPDO $con = null) Return the first CcTimestamp matching the query, or a new CcTimestamp object populated from the query conditions when no match is found
  *
  * @method CcTimestamp findOneByDbTimestamp(string $timestamp) Return the first CcTimestamp filtered by the timestamp column
  *

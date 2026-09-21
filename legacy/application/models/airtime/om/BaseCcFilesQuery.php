@@ -184,8 +184,8 @@
  * @method CcFilesQuery rightJoinPodcastEpisodes($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PodcastEpisodes relation
  * @method CcFilesQuery innerJoinPodcastEpisodes($relationAlias = null) Adds a INNER JOIN clause to the query using the PodcastEpisodes relation
  *
- * @method CcFiles findOne(PropelPDO $con = null) Return the first CcFiles matching the query
- * @method CcFiles findOneOrCreate(PropelPDO $con = null) Return the first CcFiles matching the query, or a new CcFiles object populated from the query conditions when no match is found
+ * @method CcFiles findOne(?PropelPDO $con = null) Return the first CcFiles matching the query
+ * @method CcFiles findOneOrCreate(?PropelPDO $con = null) Return the first CcFiles matching the query, or a new CcFiles object populated from the query conditions when no match is found
  *
  * @method CcFiles findOneByDbName(string $name) Return the first CcFiles filtered by the name column
  * @method CcFiles findOneByDbMime(string $mime) Return the first CcFiles filtered by the mime column

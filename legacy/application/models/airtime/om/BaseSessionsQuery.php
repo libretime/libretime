@@ -20,8 +20,8 @@
  * @method SessionsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method SessionsQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method Sessions findOne(PropelPDO $con = null) Return the first Sessions matching the query
- * @method Sessions findOneOrCreate(PropelPDO $con = null) Return the first Sessions matching the query, or a new Sessions object populated from the query conditions when no match is found
+ * @method Sessions findOne(?PropelPDO $con = null) Return the first Sessions matching the query
+ * @method Sessions findOneOrCreate(?PropelPDO $con = null) Return the first Sessions matching the query, or a new Sessions object populated from the query conditions when no match is found
  *
  * @method Sessions findOneByDbModified(int $modified) Return the first Sessions filtered by the modified column
  * @method Sessions findOneByDbLifetime(int $lifetime) Return the first Sessions filtered by the lifetime column

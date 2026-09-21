@@ -20,8 +20,8 @@
  * @method CcLiveLogQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method CcLiveLogQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method CcLiveLog findOne(PropelPDO $con = null) Return the first CcLiveLog matching the query
- * @method CcLiveLog findOneOrCreate(PropelPDO $con = null) Return the first CcLiveLog matching the query, or a new CcLiveLog object populated from the query conditions when no match is found
+ * @method CcLiveLog findOne(?PropelPDO $con = null) Return the first CcLiveLog matching the query
+ * @method CcLiveLog findOneOrCreate(?PropelPDO $con = null) Return the first CcLiveLog matching the query, or a new CcLiveLog object populated from the query conditions when no match is found
  *
  * @method CcLiveLog findOneByDbState(string $state) Return the first CcLiveLog filtered by the state column
  * @method CcLiveLog findOneByDbStartTime(string $start_time) Return the first CcLiveLog filtered by the start_time column

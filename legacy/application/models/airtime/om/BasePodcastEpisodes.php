@@ -587,7 +587,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -629,7 +629,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -672,7 +672,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1333,7 +1333,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
      * @return PodcastEpisodes The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcFiles(CcFiles $v = null)
+    public function setCcFiles(?CcFiles $v = null)
     {
         if ($v === null) {
             $this->setDbFileId(NULL);
@@ -1362,7 +1362,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
      * @return CcFiles The associated CcFiles object.
      * @throws PropelException
      */
-    public function getCcFiles(PropelPDO $con = null, $doQuery = true)
+    public function getCcFiles(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcFiles === null && ($this->file_id !== null) && $doQuery) {
             $this->aCcFiles = CcFilesQuery::create()->findPk($this->file_id, $con);
@@ -1385,7 +1385,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
      * @return PodcastEpisodes The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setPodcast(Podcast $v = null)
+    public function setPodcast(?Podcast $v = null)
     {
         if ($v === null) {
             $this->setDbPodcastId(NULL);
@@ -1414,7 +1414,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
      * @return Podcast The associated Podcast object.
      * @throws PropelException
      */
-    public function getPodcast(PropelPDO $con = null, $doQuery = true)
+    public function getPodcast(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aPodcast === null && ($this->podcast_id !== null) && $doQuery) {
             $this->aPodcast = PodcastQuery::create()->findPk($this->podcast_id, $con);

@@ -38,8 +38,8 @@
  * @method CcShowDaysQuery rightJoinCcShow($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShow relation
  * @method CcShowDaysQuery innerJoinCcShow($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShow relation
  *
- * @method CcShowDays findOne(PropelPDO $con = null) Return the first CcShowDays matching the query
- * @method CcShowDays findOneOrCreate(PropelPDO $con = null) Return the first CcShowDays matching the query, or a new CcShowDays object populated from the query conditions when no match is found
+ * @method CcShowDays findOne(?PropelPDO $con = null) Return the first CcShowDays matching the query
+ * @method CcShowDays findOneOrCreate(?PropelPDO $con = null) Return the first CcShowDays matching the query, or a new CcShowDays object populated from the query conditions when no match is found
  *
  * @method CcShowDays findOneByDbFirstShow(string $first_show) Return the first CcShowDays filtered by the first_show column
  * @method CcShowDays findOneByDbLastShow(string $last_show) Return the first CcShowDays filtered by the last_show column

@@ -20,8 +20,8 @@
  * @method CcMountNameQuery rightJoinCcListenerCount($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcListenerCount relation
  * @method CcMountNameQuery innerJoinCcListenerCount($relationAlias = null) Adds a INNER JOIN clause to the query using the CcListenerCount relation
  *
- * @method CcMountName findOne(PropelPDO $con = null) Return the first CcMountName matching the query
- * @method CcMountName findOneOrCreate(PropelPDO $con = null) Return the first CcMountName matching the query, or a new CcMountName object populated from the query conditions when no match is found
+ * @method CcMountName findOne(?PropelPDO $con = null) Return the first CcMountName matching the query
+ * @method CcMountName findOneOrCreate(?PropelPDO $con = null) Return the first CcMountName matching the query, or a new CcMountName object populated from the query conditions when no match is found
  *
  * @method CcMountName findOneByDbMountName(string $mount_name) Return the first CcMountName filtered by the mount_name column
  *

@@ -384,7 +384,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 	 * @return     void
 	 * @throws     PropelException - if this object is deleted, unsaved or doesn't have pk match in db
 	 */
-	public function reload($deep = false, PropelPDO $con = null)
+	public function reload($deep = false, ?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("Cannot reload a deleted object.");
@@ -424,7 +424,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 	 * @see        BaseObject::setDeleted()
 	 * @see        BaseObject::isDeleted()
 	 */
-	public function delete(PropelPDO $con = null)
+	public function delete(?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("This object has already been deleted.");
@@ -466,7 +466,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 	 * @throws     PropelException
 	 * @see        doSave()
 	 */
-	public function save(PropelPDO $con = null)
+	public function save(?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("You cannot save an object that has been deleted.");
@@ -948,7 +948,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 	 * @return     CcPlaylistcriteria The current object (for fluent API support)
 	 * @throws     PropelException
 	 */
-	public function setCcPlaylist(CcPlaylist $v = null)
+	public function setCcPlaylist(?CcPlaylist $v = null)
 	{
 		if ($v === null) {
 			$this->setDbPlaylistId(NULL);
@@ -975,7 +975,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 	 * @return     CcPlaylist The associated CcPlaylist object.
 	 * @throws     PropelException
 	 */
-	public function getCcPlaylist(PropelPDO $con = null)
+	public function getCcPlaylist(?PropelPDO $con = null)
 	{
 		if ($this->aCcPlaylist === null && ($this->playlist_id !== null)) {
 			$this->aCcPlaylist = CcPlaylistQuery::create()->findPk($this->playlist_id, $con);

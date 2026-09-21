@@ -16,8 +16,8 @@
  * @method CcLoginAttemptsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method CcLoginAttemptsQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method CcLoginAttempts findOne(PropelPDO $con = null) Return the first CcLoginAttempts matching the query
- * @method CcLoginAttempts findOneOrCreate(PropelPDO $con = null) Return the first CcLoginAttempts matching the query, or a new CcLoginAttempts object populated from the query conditions when no match is found
+ * @method CcLoginAttempts findOne(?PropelPDO $con = null) Return the first CcLoginAttempts matching the query
+ * @method CcLoginAttempts findOneOrCreate(?PropelPDO $con = null) Return the first CcLoginAttempts matching the query, or a new CcLoginAttempts object populated from the query conditions when no match is found
  *
  * @method CcLoginAttempts findOneByDbAttempts(int $attempts) Return the first CcLoginAttempts filtered by the attempts column
  *

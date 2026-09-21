@@ -26,8 +26,8 @@
  * @method     CcFileTagQuery rightJoinCcTag($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcTag relation
  * @method     CcFileTagQuery innerJoinCcTag($relationAlias = '') Adds a INNER JOIN clause to the query using the CcTag relation
  *
- * @method     CcFileTag findOne(PropelPDO $con = null) Return the first CcFileTag matching the query
- * @method     CcFileTag findOneOrCreate(PropelPDO $con = null) Return the first CcFileTag matching the query, or a new CcFileTag object populated from the query conditions when no match is found
+ * @method     CcFileTag findOne(?PropelPDO $con = null) Return the first CcFileTag matching the query
+ * @method     CcFileTag findOneOrCreate(?PropelPDO $con = null) Return the first CcFileTag matching the query, or a new CcFileTag object populated from the query conditions when no match is found
  *
  * @method     CcFileTag findOneByDbId(int $id) Return the first CcFileTag filtered by the id column
  * @method     CcFileTag findOneByDbFileId(int $file_id) Return the first CcFileTag filtered by the file_id column

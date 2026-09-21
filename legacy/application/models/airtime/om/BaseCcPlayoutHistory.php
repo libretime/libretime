@@ -422,7 +422,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -466,7 +466,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -509,7 +509,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1140,7 +1140,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
      * @return CcPlayoutHistory The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcFiles(CcFiles $v = null)
+    public function setCcFiles(?CcFiles $v = null)
     {
         if ($v === null) {
             $this->setDbFileId(NULL);
@@ -1169,7 +1169,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
      * @return CcFiles The associated CcFiles object.
      * @throws PropelException
      */
-    public function getCcFiles(PropelPDO $con = null, $doQuery = true)
+    public function getCcFiles(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcFiles === null && ($this->file_id !== null) && $doQuery) {
             $this->aCcFiles = CcFilesQuery::create()->findPk($this->file_id, $con);
@@ -1192,7 +1192,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
      * @return CcPlayoutHistory The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcShowInstances(CcShowInstances $v = null)
+    public function setCcShowInstances(?CcShowInstances $v = null)
     {
         if ($v === null) {
             $this->setDbInstanceId(NULL);
@@ -1221,7 +1221,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
      * @return CcShowInstances The associated CcShowInstances object.
      * @throws PropelException
      */
-    public function getCcShowInstances(PropelPDO $con = null, $doQuery = true)
+    public function getCcShowInstances(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcShowInstances === null && ($this->instance_id !== null) && $doQuery) {
             $this->aCcShowInstances = CcShowInstancesQuery::create()->findPk($this->instance_id, $con);
@@ -1315,7 +1315,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcPlayoutHistoryMetaData[] List of CcPlayoutHistoryMetaData objects
      * @throws PropelException
      */
-    public function getCcPlayoutHistoryMetaDatas($criteria = null, PropelPDO $con = null)
+    public function getCcPlayoutHistoryMetaDatas($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcPlayoutHistoryMetaDatasPartial && !$this->isNew();
         if (null === $this->collCcPlayoutHistoryMetaDatas || null !== $criteria  || $partial) {
@@ -1370,7 +1370,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcPlayoutHistory The current object (for fluent API support)
      */
-    public function setCcPlayoutHistoryMetaDatas(PropelCollection $ccPlayoutHistoryMetaDatas, PropelPDO $con = null)
+    public function setCcPlayoutHistoryMetaDatas(PropelCollection $ccPlayoutHistoryMetaDatas, ?PropelPDO $con = null)
     {
         $ccPlayoutHistoryMetaDatasToDelete = $this->getCcPlayoutHistoryMetaDatas(new Criteria(), $con)->diff($ccPlayoutHistoryMetaDatas);
 
@@ -1401,7 +1401,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
      * @return int             Count of related CcPlayoutHistoryMetaData objects.
      * @throws PropelException
      */
-    public function countCcPlayoutHistoryMetaDatas(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcPlayoutHistoryMetaDatas(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcPlayoutHistoryMetaDatasPartial && !$this->isNew();
         if (null === $this->collCcPlayoutHistoryMetaDatas || null !== $criteria || $partial) {

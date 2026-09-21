@@ -248,7 +248,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 	 * @return     void
 	 * @throws     PropelException - if this object is deleted, unsaved or doesn't have pk match in db
 	 */
-	public function reload($deep = false, PropelPDO $con = null)
+	public function reload($deep = false, ?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("Cannot reload a deleted object.");
@@ -289,7 +289,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 	 * @see        BaseObject::setDeleted()
 	 * @see        BaseObject::isDeleted()
 	 */
-	public function delete(PropelPDO $con = null)
+	public function delete(?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("This object has already been deleted.");
@@ -331,7 +331,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 	 * @throws     PropelException
 	 * @see        doSave()
 	 */
-	public function save(PropelPDO $con = null)
+	public function save(?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("You cannot save an object that has been deleted.");
@@ -789,7 +789,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 	 * @return     CcFileTag The current object (for fluent API support)
 	 * @throws     PropelException
 	 */
-	public function setCcFiles(CcFiles $v = null)
+	public function setCcFiles(?CcFiles $v = null)
 	{
 		if ($v === null) {
 			$this->setDbFileId(NULL);
@@ -816,7 +816,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 	 * @return     CcFiles The associated CcFiles object.
 	 * @throws     PropelException
 	 */
-	public function getCcFiles(PropelPDO $con = null)
+	public function getCcFiles(?PropelPDO $con = null)
 	{
 		if ($this->aCcFiles === null && ($this->file_id !== null)) {
 			$this->aCcFiles = CcFilesQuery::create()->findPk($this->file_id, $con);
@@ -838,7 +838,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 	 * @return     CcFileTag The current object (for fluent API support)
 	 * @throws     PropelException
 	 */
-	public function setCcTag(CcTag $v = null)
+	public function setCcTag(?CcTag $v = null)
 	{
 		if ($v === null) {
 			$this->setDbTagId(NULL);
@@ -865,7 +865,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 	 * @return     CcTag The associated CcTag object.
 	 * @throws     PropelException
 	 */
-	public function getCcTag(PropelPDO $con = null)
+	public function getCcTag(?PropelPDO $con = null)
 	{
 		if ($this->aCcTag === null && ($this->tag_id !== null)) {
 			$this->aCcTag = CcTagQuery::create()->findPk($this->tag_id, $con);

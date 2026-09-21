@@ -20,8 +20,8 @@
  * @method StationPodcastQuery rightJoinPodcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Podcast relation
  * @method StationPodcastQuery innerJoinPodcast($relationAlias = null) Adds a INNER JOIN clause to the query using the Podcast relation
  *
- * @method StationPodcast findOne(PropelPDO $con = null) Return the first StationPodcast matching the query
- * @method StationPodcast findOneOrCreate(PropelPDO $con = null) Return the first StationPodcast matching the query, or a new StationPodcast object populated from the query conditions when no match is found
+ * @method StationPodcast findOne(?PropelPDO $con = null) Return the first StationPodcast matching the query
+ * @method StationPodcast findOneOrCreate(?PropelPDO $con = null) Return the first StationPodcast matching the query, or a new StationPodcast object populated from the query conditions when no match is found
  *
  * @method StationPodcast findOneByDbPodcastId(int $podcast_id) Return the first StationPodcast filtered by the podcast_id column
  *
