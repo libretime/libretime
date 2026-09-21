@@ -56,6 +56,7 @@ class LiquidsoapClient:
             path=path,
             timeout=timeout,
         )
+        self._version = None
         self._lock = _OwnedLock()
 
     def _quote(self, value: Any) -> str:
@@ -65,8 +66,15 @@ class LiquidsoapClient:
         if not self._lock.held_by_current_thread():
             raise RuntimeError("_set_var must be called with self._lock held")
 
-        # liquidsoap 2.1 requires no space around the = sign.
-        self.conn.write(f"var.set {name}={value}")
+        if self._version is None:
+            self.version()
+
+        if self._version < (2, 0, 0):
+            # liquidsoap <2.0 requires spaces around the = sign.
+            self.conn.write(f"var.set {name} = {value}")
+        else:
+            self.conn.write(f"var.set {name}={value}")
+
         result = self.conn.read()
         if f"Variable {name} set" not in result:
             logger.error("unexpected response: %s", result)
@@ -74,7 +82,8 @@ class LiquidsoapClient:
     def version(self) -> Tuple[int, int, int]:
         with self._lock, self.conn:
             self.conn.write("version")
-            return parse_liquidsoap_version(self.conn.read())
+            self._version = parse_liquidsoap_version(self.conn.read())
+            return self._version
 
     def wait_for_version(self, timeout: int = 30) -> Tuple[int, int, int]:
         while timeout > 0:
