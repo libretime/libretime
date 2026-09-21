@@ -17,10 +17,10 @@ end
 
 def notify_stream(m)
   if !web_stream_id != "-1" then
-    json_str = string.replace(pattern="\n",(fun (s) -> ""), json_of(m))
+    json_str = string.replace(pattern="\n",(fun (_) -> ""), json_of(m))
     #if a string has a single apostrophe in it, let's comment it out by ending the string before right before it
     #escaping the apostrophe, and then starting a new string right after it. This is why we use 3 apostrophes.
-    json_str = string.replace(pattern="'",(fun (s) -> "'\''"), json_str)
+    json_str = string.replace(pattern="'",(fun (_) -> "'\''"), json_str)
 
     gateway("webstream '#{!web_stream_id}' '#{json_str}'")
   end
@@ -181,14 +181,14 @@ def cross_http(~debug=true,~http_input_id,source)
   # but it's also asking too much: the metadata may not pass through
   # before the crosser is instantiated.
   # Using only status in crosser misses some info, eg. on first URL.
-  source = map_metadata(on_m,source)
+  source = metadata.map(on_m,source)
 
   cross_d = 3.
 
   def crosser(ending, starting)
     url = list.hd(server.execute("#{id}.url"), default="")
     status = list.hd(server.execute("#{id}.status"))
-    on_m([("source_url",url)])
+    ignore(on_m([("source_url",url)]))
     if debug then
       log("New track inside HTTP stream")
       log("  status: #{status}")

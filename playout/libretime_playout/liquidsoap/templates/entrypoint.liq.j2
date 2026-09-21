@@ -15,10 +15,14 @@ set("{{ key }}", {{ value }})
 # Inputs
 input_main_mount = {{ config.stream.inputs.main.mount | quote }}
 input_main_port = {{ config.stream.inputs.main.port }}
+{%- if version < (2, 0, 0) %}
 input_main_secure = {{ config.stream.inputs.main.secure | string | lower }}
+{%- endif %}
 input_show_mount = {{ config.stream.inputs.show.mount | quote }}
 input_show_port = {{ config.stream.inputs.show.port }}
+{%- if version < (2, 0, 0) %}
 input_show_secure = {{ config.stream.inputs.show.secure | string | lower }}
+{%- endif %}
 
 # Settings
 {% if paths.log_filepath is defined -%}
