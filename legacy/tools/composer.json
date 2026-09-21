@@ -1,6 +1,7 @@
 {
   "require-dev": {
     "php": ">=8.2",
-    "friendsofphp/php-cs-fixer": "^3.85.2"
+    "friendsofphp/php-cs-fixer": "^3.85.2",
+    "rector/rector": "^2.6"
   }
 }
