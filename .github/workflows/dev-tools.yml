@@ -67,6 +67,8 @@ jobs:
               sudo \
               $(cat packages.list)
 
+          RUN adduser --disabled-password --gecos '' --uid 1000 user
+          RUN adduser user sudo
           RUN adduser --disabled-password --gecos '' --uid 1001 runner
           RUN adduser runner sudo
           RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
