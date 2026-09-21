@@ -936,7 +936,7 @@ SQL;
         );
         // if the uploaded file is not UTF-8 encoded, let's encode it. Assuming source
         // encoding is ISO-8859-1
-        $audio_stor = mb_detect_encoding($audio_stor, 'UTF-8') == 'UTF-8' ? $audio_stor : utf8_encode($audio_stor);
+        $audio_stor = mb_detect_encoding($audio_stor, 'UTF-8') == 'UTF-8' ? $audio_stor : mb_convert_encoding($audio_stor, 'UTF-8', 'ISO-8859-1');
         if ($copyFile) {
             Logging::info("Copying file {$audio_file} to {$audio_stor}");
             if (@copy($audio_file, $audio_stor) === false) {

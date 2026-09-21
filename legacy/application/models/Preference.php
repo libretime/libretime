@@ -349,7 +349,12 @@ class Application_Model_Preference
 
     public static function GetStreamLabelFormat()
     {
-        return self::getValue('stream_label_format');
+        $value = self::getValue('stream_label_format');
+        if ($value == '') {
+            return 0;
+        }
+
+        return $value;
     }
 
     public static function getOffAirMeta()
