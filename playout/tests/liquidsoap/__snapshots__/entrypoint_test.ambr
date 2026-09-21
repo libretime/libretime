@@ -49,10 +49,8 @@
   # Inputs
   input_main_mount = "main"
   input_main_port = 8001
-  input_main_secure = false
   input_show_mount = "show"
   input_show_port = 8002
-  input_show_secure = false
   
   # Settings
   settings.log.file.path.set("/var/log/radio.log")
@@ -130,10 +128,8 @@
   # Inputs
   input_main_mount = "main"
   input_main_port = 8001
-  input_main_secure = false
   input_show_mount = "show"
   input_show_port = 8002
-  input_show_secure = false
   
   # Settings
   settings.log.file.path.set("/var/log/radio.log")
@@ -236,10 +232,8 @@
   # Inputs
   input_main_mount = "main"
   input_main_port = 8001
-  input_main_secure = false
   input_show_mount = "show"
   input_show_port = 8002
-  input_show_secure = false
   
   # Settings
   settings.log.file.path.set("/var/log/radio.log")
@@ -360,10 +354,8 @@
   # Inputs
   input_main_mount = "main"
   input_main_port = 8001
-  input_main_secure = false
   input_show_mount = "show"
   input_show_port = 8002
-  input_show_secure = false
   
   # Settings
   settings.log.file.path.set("/var/log/radio.log")
@@ -505,10 +497,8 @@
   # Inputs
   input_main_mount = "main"
   input_main_port = 8001
-  input_main_secure = false
   input_show_mount = "show"
   input_show_port = 8002
-  input_show_secure = false
   
   # Settings
   settings.log.file.path.set("/var/log/radio.log")
@@ -640,10 +630,8 @@
   # Inputs
   input_main_mount = "main"
   input_main_port = 8001
-  input_main_secure = false
   input_show_mount = "show"
   input_show_port = 8002
-  input_show_secure = false
   
   # Settings
   settings.log.file.path.set("/var/log/radio.log")
@@ -741,10 +729,8 @@
   # Inputs
   input_main_mount = "main"
   input_main_port = 8001
-  input_main_secure = false
   input_show_mount = "show"
   input_show_port = 8002
-  input_show_secure = false
   
   # Settings
   settings.log.file.path.set("/var/log/radio.log")
@@ -831,10 +817,8 @@
   # Inputs
   input_main_mount = "main"
   input_main_port = 8001
-  input_main_secure = false
   input_show_mount = "show"
   input_show_port = 8002
-  input_show_secure = false
   
   # Settings
   settings.log.file.path.set("/var/log/radio.log")
