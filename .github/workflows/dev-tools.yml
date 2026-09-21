@@ -67,6 +67,7 @@ jobs:
               sudo \
               $(cat packages.list)
 
+          RUN if id -u ubuntu ; then deluser --remove-home ubuntu; fi
           RUN adduser --disabled-password --gecos '' --uid 1000 user
           RUN adduser user sudo
           RUN adduser --disabled-password --gecos '' --uid 1001 runner
