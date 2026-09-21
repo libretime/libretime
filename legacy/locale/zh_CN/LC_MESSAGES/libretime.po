@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2026-04-13 04:19+0000\n"
+"POT-Creation-Date: 2026-09-21 05:57+0000\n"
 "PO-Revision-Date: 2025-02-11 19:01+0000\n"
 "Last-Translator: Monstorix <monstorix@outlook.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/projects/libretime/legacy/zh_Hans/>\n"
@@ -782,33 +782,33 @@ msgstr "为 LibreTime 贡献"
 msgid "What's New?"
 msgstr "新增了哪些内容？"
 
-#: application/controllers/ApiController.php:113
-#: application/controllers/ApiController.php:750
+#: application/controllers/ApiController.php:112
+#: application/controllers/ApiController.php:740
 msgid "You are not allowed to access this resource."
 msgstr "您没有访问该资源的权限。"
 
-#: application/controllers/ApiController.php:383
-#: application/controllers/ApiController.php:459
-#: application/controllers/ApiController.php:528
-#: application/controllers/ApiController.php:583
-#: application/controllers/ApiController.php:668
-#: application/controllers/ApiController.php:685
-#: application/controllers/ApiController.php:716
+#: application/controllers/ApiController.php:373
+#: application/controllers/ApiController.php:449
+#: application/controllers/ApiController.php:518
+#: application/controllers/ApiController.php:573
+#: application/controllers/ApiController.php:658
+#: application/controllers/ApiController.php:675
+#: application/controllers/ApiController.php:706
 msgid "You are not allowed to access this resource. "
 msgstr "您没有访问该资源的权限。 "
 
-#: application/controllers/ApiController.php:919
-#: application/controllers/ApiController.php:940
-#: application/controllers/ApiController.php:952
+#: application/controllers/ApiController.php:909
+#: application/controllers/ApiController.php:930
+#: application/controllers/ApiController.php:942
 #, php-format
 msgid "File does not exist in %s"
 msgstr "位于 %s 的文件不存在"
 
-#: application/controllers/ApiController.php:1006
+#: application/controllers/ApiController.php:996
 msgid "Bad request. no 'mode' parameter passed."
 msgstr "请求错误。没有提供“模式” (mode) 参数。"
 
-#: application/controllers/ApiController.php:1019
+#: application/controllers/ApiController.php:1009
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "请求错误。提供的“模式” (mode) 参数无效"
 

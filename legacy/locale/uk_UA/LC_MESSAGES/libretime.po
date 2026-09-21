@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2026-04-13 04:19+0000\n"
+"POT-Creation-Date: 2026-09-21 05:57+0000\n"
 "PO-Revision-Date: 2024-10-25 19:16+0000\n"
 "Last-Translator: Ihor Hordiichuk <igor_ck@outlook.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/legacy/uk/>\n"
@@ -779,33 +779,33 @@ msgstr "Зробіть внесок у LibreTime"
 msgid "What's New?"
 msgstr "Що нового?"
 
-#: application/controllers/ApiController.php:113
-#: application/controllers/ApiController.php:750
+#: application/controllers/ApiController.php:112
+#: application/controllers/ApiController.php:740
 msgid "You are not allowed to access this resource."
 msgstr "Ви не маєте доступу до цього ресурсу."
 
-#: application/controllers/ApiController.php:383
-#: application/controllers/ApiController.php:459
-#: application/controllers/ApiController.php:528
-#: application/controllers/ApiController.php:583
-#: application/controllers/ApiController.php:668
-#: application/controllers/ApiController.php:685
-#: application/controllers/ApiController.php:716
+#: application/controllers/ApiController.php:373
+#: application/controllers/ApiController.php:449
+#: application/controllers/ApiController.php:518
+#: application/controllers/ApiController.php:573
+#: application/controllers/ApiController.php:658
+#: application/controllers/ApiController.php:675
+#: application/controllers/ApiController.php:706
 msgid "You are not allowed to access this resource. "
 msgstr "Ви не маєте доступу до цього ресурсу. "
 
-#: application/controllers/ApiController.php:919
-#: application/controllers/ApiController.php:940
-#: application/controllers/ApiController.php:952
+#: application/controllers/ApiController.php:909
+#: application/controllers/ApiController.php:930
+#: application/controllers/ApiController.php:942
 #, php-format
 msgid "File does not exist in %s"
 msgstr "Файл не існує в %s"
 
-#: application/controllers/ApiController.php:1006
+#: application/controllers/ApiController.php:996
 msgid "Bad request. no 'mode' parameter passed."
 msgstr "Неправильний запит. параметр 'mode' не передано."
 
-#: application/controllers/ApiController.php:1019
+#: application/controllers/ApiController.php:1009
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "Неправильний запит. Параметр 'mode' недійсний"
 

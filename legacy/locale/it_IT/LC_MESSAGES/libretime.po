@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2026-04-13 04:19+0000\n"
+"POT-Creation-Date: 2026-09-21 05:57+0000\n"
 "PO-Revision-Date: 2024-10-16 22:15+0000\n"
 "Last-Translator: Maurizio Castelvetro <castelvetro@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/libretime/legacy/it/>\n"
@@ -784,33 +784,33 @@ msgstr ""
 msgid "What's New?"
 msgstr ""
 
-#: application/controllers/ApiController.php:113
-#: application/controllers/ApiController.php:750
+#: application/controllers/ApiController.php:112
+#: application/controllers/ApiController.php:740
 msgid "You are not allowed to access this resource."
 msgstr "Non hai il permesso di accesso alla risorsa."
 
-#: application/controllers/ApiController.php:383
-#: application/controllers/ApiController.php:459
-#: application/controllers/ApiController.php:528
-#: application/controllers/ApiController.php:583
-#: application/controllers/ApiController.php:668
-#: application/controllers/ApiController.php:685
-#: application/controllers/ApiController.php:716
+#: application/controllers/ApiController.php:373
+#: application/controllers/ApiController.php:449
+#: application/controllers/ApiController.php:518
+#: application/controllers/ApiController.php:573
+#: application/controllers/ApiController.php:658
+#: application/controllers/ApiController.php:675
+#: application/controllers/ApiController.php:706
 msgid "You are not allowed to access this resource. "
 msgstr "Non è permesso l'accesso alla risorsa. "
 
-#: application/controllers/ApiController.php:919
-#: application/controllers/ApiController.php:940
-#: application/controllers/ApiController.php:952
+#: application/controllers/ApiController.php:909
+#: application/controllers/ApiController.php:930
+#: application/controllers/ApiController.php:942
 #, php-format
 msgid "File does not exist in %s"
 msgstr "Il file non esiste in %s"
 
-#: application/controllers/ApiController.php:1006
+#: application/controllers/ApiController.php:996
 msgid "Bad request. no 'mode' parameter passed."
 msgstr "Richiesta errata. «modalità» parametro non riuscito."
 
-#: application/controllers/ApiController.php:1019
+#: application/controllers/ApiController.php:1009
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "Richiesta errata. «modalità» è un parametro non valido"
 
