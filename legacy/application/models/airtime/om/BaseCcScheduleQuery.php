@@ -58,8 +58,8 @@
  * @method CcScheduleQuery rightJoinCcWebstreamMetadata($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcWebstreamMetadata relation
  * @method CcScheduleQuery innerJoinCcWebstreamMetadata($relationAlias = null) Adds a INNER JOIN clause to the query using the CcWebstreamMetadata relation
  *
- * @method CcSchedule findOne(PropelPDO $con = null) Return the first CcSchedule matching the query
- * @method CcSchedule findOneOrCreate(PropelPDO $con = null) Return the first CcSchedule matching the query, or a new CcSchedule object populated from the query conditions when no match is found
+ * @method CcSchedule findOne(?PropelPDO $con = null) Return the first CcSchedule matching the query
+ * @method CcSchedule findOneOrCreate(?PropelPDO $con = null) Return the first CcSchedule matching the query, or a new CcSchedule object populated from the query conditions when no match is found
  *
  * @method CcSchedule findOneByDbStarts(string $starts) Return the first CcSchedule filtered by the starts column
  * @method CcSchedule findOneByDbEnds(string $ends) Return the first CcSchedule filtered by the ends column

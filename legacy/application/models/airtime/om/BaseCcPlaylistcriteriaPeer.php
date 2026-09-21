@@ -186,7 +186,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	 * @param      PropelPDO $con
 	 * @return     int Number of matching rows.
 	 */
-	public static function doCount(Criteria $criteria, $distinct = false, PropelPDO $con = null)
+	public static function doCount(Criteria $criteria, $distinct = false, ?PropelPDO $con = null)
 	{
 		// we may modify criteria, so copy it first
 		$criteria = clone $criteria;
@@ -230,7 +230,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectOne(Criteria $criteria, PropelPDO $con = null)
+	public static function doSelectOne(Criteria $criteria, ?PropelPDO $con = null)
 	{
 		$critcopy = clone $criteria;
 		$critcopy->setLimit(1);
@@ -249,7 +249,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelect(Criteria $criteria, PropelPDO $con = null)
+	public static function doSelect(Criteria $criteria, ?PropelPDO $con = null)
 	{
 		return CcPlaylistcriteriaPeer::populateObjects(CcPlaylistcriteriaPeer::doSelectStmt($criteria, $con));
 	}
@@ -266,7 +266,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	 * @return     PDOStatement The executed PDOStatement object.
 	 * @see        BasePeer::doSelect()
 	 */
-	public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
+	public static function doSelectStmt(Criteria $criteria, ?PropelPDO $con = null)
 	{
 		if ($con === null) {
 			$con = Propel::getConnection(CcPlaylistcriteriaPeer::DATABASE_NAME, Propel::CONNECTION_READ);
@@ -469,7 +469,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
 	 * @return     int Number of matching rows.
 	 */
-	public static function doCountJoinCcPlaylist(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doCountJoinCcPlaylist(Criteria $criteria, $distinct = false, ?PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
@@ -585,7 +585,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
 	 * @return     int Number of matching rows.
 	 */
-	public static function doCountJoinAll(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doCountJoinAll(Criteria $criteria, $distinct = false, ?PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
@@ -742,7 +742,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doInsert($values, PropelPDO $con = null)
+	public static function doInsert($values, ?PropelPDO $con = null)
 	{
 		if ($con === null) {
 			$con = Propel::getConnection(CcPlaylistcriteriaPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -785,7 +785,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doUpdate($values, PropelPDO $con = null)
+	public static function doUpdate($values, ?PropelPDO $con = null)
 	{
 		if ($con === null) {
 			$con = Propel::getConnection(CcPlaylistcriteriaPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -855,7 +855,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	 public static function doDelete($values, PropelPDO $con = null)
+	 public static function doDelete($values, ?PropelPDO $con = null)
 	 {
 		if ($con === null) {
 			$con = Propel::getConnection(CcPlaylistcriteriaPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -946,7 +946,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	 * @param      PropelPDO $con the connection to use
 	 * @return     CcPlaylistcriteria
 	 */
-	public static function retrieveByPK($pk, PropelPDO $con = null)
+	public static function retrieveByPK($pk, ?PropelPDO $con = null)
 	{
 
 		if (null !== ($obj = CcPlaylistcriteriaPeer::getInstanceFromPool((string) $pk))) {
@@ -973,7 +973,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function retrieveByPKs($pks, PropelPDO $con = null)
+	public static function retrieveByPKs($pks, ?PropelPDO $con = null)
 	{
 		if ($con === null) {
 			$con = Propel::getConnection(CcPlaylistcriteriaPeer::DATABASE_NAME, Propel::CONNECTION_READ);

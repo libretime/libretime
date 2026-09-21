@@ -34,8 +34,8 @@
  * @method     CcAccessQuery rightJoinCcSubjs($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSubjs relation
  * @method     CcAccessQuery innerJoinCcSubjs($relationAlias = '') Adds a INNER JOIN clause to the query using the CcSubjs relation
  *
- * @method     CcAccess findOne(PropelPDO $con = null) Return the first CcAccess matching the query
- * @method     CcAccess findOneOrCreate(PropelPDO $con = null) Return the first CcAccess matching the query, or a new CcAccess object populated from the query conditions when no match is found
+ * @method     CcAccess findOne(?PropelPDO $con = null) Return the first CcAccess matching the query
+ * @method     CcAccess findOneOrCreate(?PropelPDO $con = null) Return the first CcAccess matching the query, or a new CcAccess object populated from the query conditions when no match is found
  *
  * @method     CcAccess findOneById(int $id) Return the first CcAccess filtered by the id column
  * @method     CcAccess findOneByGunid(string $gunid) Return the first CcAccess filtered by the gunid column

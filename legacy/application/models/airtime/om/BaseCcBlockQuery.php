@@ -44,8 +44,8 @@
  * @method CcBlockQuery rightJoinCcBlockcriteria($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcBlockcriteria relation
  * @method CcBlockQuery innerJoinCcBlockcriteria($relationAlias = null) Adds a INNER JOIN clause to the query using the CcBlockcriteria relation
  *
- * @method CcBlock findOne(PropelPDO $con = null) Return the first CcBlock matching the query
- * @method CcBlock findOneOrCreate(PropelPDO $con = null) Return the first CcBlock matching the query, or a new CcBlock object populated from the query conditions when no match is found
+ * @method CcBlock findOne(?PropelPDO $con = null) Return the first CcBlock matching the query
+ * @method CcBlock findOneOrCreate(?PropelPDO $con = null) Return the first CcBlock matching the query, or a new CcBlock object populated from the query conditions when no match is found
  *
  * @method CcBlock findOneByDbName(string $name) Return the first CcBlock filtered by the name column
  * @method CcBlock findOneByDbMtime(string $mtime) Return the first CcBlock filtered by the mtime column

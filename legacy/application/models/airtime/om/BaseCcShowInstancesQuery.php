@@ -64,8 +64,8 @@
  * @method CcShowInstancesQuery rightJoinCcPlayoutHistory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPlayoutHistory relation
  * @method CcShowInstancesQuery innerJoinCcPlayoutHistory($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPlayoutHistory relation
  *
- * @method CcShowInstances findOne(PropelPDO $con = null) Return the first CcShowInstances matching the query
- * @method CcShowInstances findOneOrCreate(PropelPDO $con = null) Return the first CcShowInstances matching the query, or a new CcShowInstances object populated from the query conditions when no match is found
+ * @method CcShowInstances findOne(?PropelPDO $con = null) Return the first CcShowInstances matching the query
+ * @method CcShowInstances findOneOrCreate(?PropelPDO $con = null) Return the first CcShowInstances matching the query, or a new CcShowInstances object populated from the query conditions when no match is found
  *
  * @method CcShowInstances findOneByDbDescription(string $description) Return the first CcShowInstances filtered by the description column
  * @method CcShowInstances findOneByDbStarts(string $starts) Return the first CcShowInstances filtered by the starts column

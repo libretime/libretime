@@ -373,7 +373,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 	 * @return     void
 	 * @throws     PropelException - if this object is deleted, unsaved or doesn't have pk match in db
 	 */
-	public function reload($deep = false, PropelPDO $con = null)
+	public function reload($deep = false, ?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("Cannot reload a deleted object.");
@@ -413,7 +413,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 	 * @see        BaseObject::setDeleted()
 	 * @see        BaseObject::isDeleted()
 	 */
-	public function delete(PropelPDO $con = null)
+	public function delete(?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("This object has already been deleted.");
@@ -455,7 +455,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 	 * @throws     PropelException
 	 * @see        doSave()
 	 */
-	public function save(PropelPDO $con = null)
+	public function save(?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("You cannot save an object that has been deleted.");
@@ -927,7 +927,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 	 * @return     CcPlayoutHistoryTemplateTag The current object (for fluent API support)
 	 * @throws     PropelException
 	 */
-	public function setCcPlayoutHistoryTemplate(CcPlayoutHistoryTemplate $v = null)
+	public function setCcPlayoutHistoryTemplate(?CcPlayoutHistoryTemplate $v = null)
 	{
 		if ($v === null) {
 			$this->setDbTemplateId(NULL);
@@ -954,7 +954,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 	 * @return     CcPlayoutHistoryTemplate The associated CcPlayoutHistoryTemplate object.
 	 * @throws     PropelException
 	 */
-	public function getCcPlayoutHistoryTemplate(PropelPDO $con = null)
+	public function getCcPlayoutHistoryTemplate(?PropelPDO $con = null)
 	{
 		if ($this->aCcPlayoutHistoryTemplate === null && ($this->template_id !== null)) {
 			$this->aCcPlayoutHistoryTemplate = CcPlayoutHistoryTemplateQuery::create()->findPk($this->template_id, $con);

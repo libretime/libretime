@@ -30,8 +30,8 @@
  * @method     CcTagQuery rightJoinCcPlayoutHistoryTemplateTag($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlayoutHistoryTemplateTag relation
  * @method     CcTagQuery innerJoinCcPlayoutHistoryTemplateTag($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlayoutHistoryTemplateTag relation
  *
- * @method     CcTag findOne(PropelPDO $con = null) Return the first CcTag matching the query
- * @method     CcTag findOneOrCreate(PropelPDO $con = null) Return the first CcTag matching the query, or a new CcTag object populated from the query conditions when no match is found
+ * @method     CcTag findOne(?PropelPDO $con = null) Return the first CcTag matching the query
+ * @method     CcTag findOneOrCreate(?PropelPDO $con = null) Return the first CcTag matching the query, or a new CcTag object populated from the query conditions when no match is found
  *
  * @method     CcTag findOneByDbId(int $id) Return the first CcTag filtered by the id column
  * @method     CcTag findOneByDbTagName(string $tag_name) Return the first CcTag filtered by the tag_name column

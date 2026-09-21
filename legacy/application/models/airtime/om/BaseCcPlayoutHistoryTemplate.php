@@ -254,7 +254,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -296,7 +296,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -339,7 +339,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -966,7 +966,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      * @return PropelObjectCollection|CcPlayoutHistoryTemplateField[] List of CcPlayoutHistoryTemplateField objects
      * @throws PropelException
      */
-    public function getCcPlayoutHistoryTemplateFields($criteria = null, PropelPDO $con = null)
+    public function getCcPlayoutHistoryTemplateFields($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcPlayoutHistoryTemplateFieldsPartial && !$this->isNew();
         if (null === $this->collCcPlayoutHistoryTemplateFields || null !== $criteria  || $partial) {
@@ -1021,7 +1021,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      * @param PropelPDO $con Optional connection object
      * @return CcPlayoutHistoryTemplate The current object (for fluent API support)
      */
-    public function setCcPlayoutHistoryTemplateFields(PropelCollection $ccPlayoutHistoryTemplateFields, PropelPDO $con = null)
+    public function setCcPlayoutHistoryTemplateFields(PropelCollection $ccPlayoutHistoryTemplateFields, ?PropelPDO $con = null)
     {
         $ccPlayoutHistoryTemplateFieldsToDelete = $this->getCcPlayoutHistoryTemplateFields(new Criteria(), $con)->diff($ccPlayoutHistoryTemplateFields);
 
@@ -1052,7 +1052,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      * @return int             Count of related CcPlayoutHistoryTemplateField objects.
      * @throws PropelException
      */
-    public function countCcPlayoutHistoryTemplateFields(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcPlayoutHistoryTemplateFields(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcPlayoutHistoryTemplateFieldsPartial && !$this->isNew();
         if (null === $this->collCcPlayoutHistoryTemplateFields || null !== $criteria || $partial) {

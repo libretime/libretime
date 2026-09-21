@@ -40,8 +40,8 @@
  * @method CcBlockcontentsQuery rightJoinCcBlock($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcBlock relation
  * @method CcBlockcontentsQuery innerJoinCcBlock($relationAlias = null) Adds a INNER JOIN clause to the query using the CcBlock relation
  *
- * @method CcBlockcontents findOne(PropelPDO $con = null) Return the first CcBlockcontents matching the query
- * @method CcBlockcontents findOneOrCreate(PropelPDO $con = null) Return the first CcBlockcontents matching the query, or a new CcBlockcontents object populated from the query conditions when no match is found
+ * @method CcBlockcontents findOne(?PropelPDO $con = null) Return the first CcBlockcontents matching the query
+ * @method CcBlockcontents findOneOrCreate(?PropelPDO $con = null) Return the first CcBlockcontents matching the query, or a new CcBlockcontents object populated from the query conditions when no match is found
  *
  * @method CcBlockcontents findOneByDbBlockId(int $block_id) Return the first CcBlockcontents filtered by the block_id column
  * @method CcBlockcontents findOneByDbFileId(int $file_id) Return the first CcBlockcontents filtered by the file_id column

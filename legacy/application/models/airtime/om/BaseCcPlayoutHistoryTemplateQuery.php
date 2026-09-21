@@ -22,8 +22,8 @@
  * @method CcPlayoutHistoryTemplateQuery rightJoinCcPlayoutHistoryTemplateField($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPlayoutHistoryTemplateField relation
  * @method CcPlayoutHistoryTemplateQuery innerJoinCcPlayoutHistoryTemplateField($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPlayoutHistoryTemplateField relation
  *
- * @method CcPlayoutHistoryTemplate findOne(PropelPDO $con = null) Return the first CcPlayoutHistoryTemplate matching the query
- * @method CcPlayoutHistoryTemplate findOneOrCreate(PropelPDO $con = null) Return the first CcPlayoutHistoryTemplate matching the query, or a new CcPlayoutHistoryTemplate object populated from the query conditions when no match is found
+ * @method CcPlayoutHistoryTemplate findOne(?PropelPDO $con = null) Return the first CcPlayoutHistoryTemplate matching the query
+ * @method CcPlayoutHistoryTemplate findOneOrCreate(?PropelPDO $con = null) Return the first CcPlayoutHistoryTemplate matching the query, or a new CcPlayoutHistoryTemplate object populated from the query conditions when no match is found
  *
  * @method CcPlayoutHistoryTemplate findOneByDbName(string $name) Return the first CcPlayoutHistoryTemplate filtered by the name column
  * @method CcPlayoutHistoryTemplate findOneByDbType(string $type) Return the first CcPlayoutHistoryTemplate filtered by the type column

@@ -26,8 +26,8 @@
  * @method CcSubjsTokenQuery rightJoinCcSubjs($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjs relation
  * @method CcSubjsTokenQuery innerJoinCcSubjs($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjs relation
  *
- * @method CcSubjsToken findOne(PropelPDO $con = null) Return the first CcSubjsToken matching the query
- * @method CcSubjsToken findOneOrCreate(PropelPDO $con = null) Return the first CcSubjsToken matching the query, or a new CcSubjsToken object populated from the query conditions when no match is found
+ * @method CcSubjsToken findOne(?PropelPDO $con = null) Return the first CcSubjsToken matching the query
+ * @method CcSubjsToken findOneOrCreate(?PropelPDO $con = null) Return the first CcSubjsToken matching the query, or a new CcSubjsToken object populated from the query conditions when no match is found
  *
  * @method CcSubjsToken findOneByDbUserId(int $user_id) Return the first CcSubjsToken filtered by the user_id column
  * @method CcSubjsToken findOneByDbAction(string $action) Return the first CcSubjsToken filtered by the action column

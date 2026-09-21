@@ -265,7 +265,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	 * @return     void
 	 * @throws     PropelException - if this object is deleted, unsaved or doesn't have pk match in db
 	 */
-	public function reload($deep = false, PropelPDO $con = null)
+	public function reload($deep = false, ?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("Cannot reload a deleted object.");
@@ -310,7 +310,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	 * @see        BaseObject::setDeleted()
 	 * @see        BaseObject::isDeleted()
 	 */
-	public function delete(PropelPDO $con = null)
+	public function delete(?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("This object has already been deleted.");
@@ -352,7 +352,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	 * @throws     PropelException
 	 * @see        doSave()
 	 */
-	public function save(PropelPDO $con = null)
+	public function save(?PropelPDO $con = null)
 	{
 		if ($this->isDeleted()) {
 			throw new PropelException("You cannot save an object that has been deleted.");
@@ -874,7 +874,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	 * @return     PropelCollection|array CcFileTag[] List of CcFileTag objects
 	 * @throws     PropelException
 	 */
-	public function getCcFileTags($criteria = null, PropelPDO $con = null)
+	public function getCcFileTags($criteria = null, ?PropelPDO $con = null)
 	{
 		if(null === $this->collCcFileTags || null !== $criteria) {
 			if ($this->isNew() && null === $this->collCcFileTags) {
@@ -902,7 +902,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	 * @return     int Count of related CcFileTag objects.
 	 * @throws     PropelException
 	 */
-	public function countCcFileTags(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	public function countCcFileTags(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
 	{
 		if(null === $this->collCcFileTags || null !== $criteria) {
 			if ($this->isNew() && null === $this->collCcFileTags) {
@@ -1008,7 +1008,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	 * @return     PropelCollection|array CcPlayoutHistoryMetaData[] List of CcPlayoutHistoryMetaData objects
 	 * @throws     PropelException
 	 */
-	public function getCcPlayoutHistoryMetaDatas($criteria = null, PropelPDO $con = null)
+	public function getCcPlayoutHistoryMetaDatas($criteria = null, ?PropelPDO $con = null)
 	{
 		if(null === $this->collCcPlayoutHistoryMetaDatas || null !== $criteria) {
 			if ($this->isNew() && null === $this->collCcPlayoutHistoryMetaDatas) {
@@ -1036,7 +1036,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	 * @return     int Count of related CcPlayoutHistoryMetaData objects.
 	 * @throws     PropelException
 	 */
-	public function countCcPlayoutHistoryMetaDatas(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	public function countCcPlayoutHistoryMetaDatas(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
 	{
 		if(null === $this->collCcPlayoutHistoryMetaDatas || null !== $criteria) {
 			if ($this->isNew() && null === $this->collCcPlayoutHistoryMetaDatas) {
@@ -1142,7 +1142,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	 * @return     PropelCollection|array CcPlayoutHistoryTemplateTag[] List of CcPlayoutHistoryTemplateTag objects
 	 * @throws     PropelException
 	 */
-	public function getCcPlayoutHistoryTemplateTags($criteria = null, PropelPDO $con = null)
+	public function getCcPlayoutHistoryTemplateTags($criteria = null, ?PropelPDO $con = null)
 	{
 		if(null === $this->collCcPlayoutHistoryTemplateTags || null !== $criteria) {
 			if ($this->isNew() && null === $this->collCcPlayoutHistoryTemplateTags) {
@@ -1170,7 +1170,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	 * @return     int Count of related CcPlayoutHistoryTemplateTag objects.
 	 * @throws     PropelException
 	 */
-	public function countCcPlayoutHistoryTemplateTags(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	public function countCcPlayoutHistoryTemplateTags(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
 	{
 		if(null === $this->collCcPlayoutHistoryTemplateTags || null !== $criteria) {
 			if ($this->isNew() && null === $this->collCcPlayoutHistoryTemplateTags) {

@@ -22,8 +22,8 @@
  * @method     CcBackupQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CcBackupQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     CcBackup findOne(PropelPDO $con = null) Return the first CcBackup matching the query
- * @method     CcBackup findOneOrCreate(PropelPDO $con = null) Return the first CcBackup matching the query, or a new CcBackup object populated from the query conditions when no match is found
+ * @method     CcBackup findOne(?PropelPDO $con = null) Return the first CcBackup matching the query
+ * @method     CcBackup findOneOrCreate(?PropelPDO $con = null) Return the first CcBackup matching the query, or a new CcBackup object populated from the query conditions when no match is found
  *
  * @method     CcBackup findOneByToken(string $token) Return the first CcBackup filtered by the token column
  * @method     CcBackup findOneBySessionid(string $sessionid) Return the first CcBackup filtered by the sessionid column

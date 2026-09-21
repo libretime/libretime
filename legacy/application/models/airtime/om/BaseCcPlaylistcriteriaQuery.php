@@ -30,8 +30,8 @@
  * @method     CcPlaylistcriteriaQuery rightJoinCcPlaylist($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlaylist relation
  * @method     CcPlaylistcriteriaQuery innerJoinCcPlaylist($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlaylist relation
  *
- * @method     CcPlaylistcriteria findOne(PropelPDO $con = null) Return the first CcPlaylistcriteria matching the query
- * @method     CcPlaylistcriteria findOneOrCreate(PropelPDO $con = null) Return the first CcPlaylistcriteria matching the query, or a new CcPlaylistcriteria object populated from the query conditions when no match is found
+ * @method     CcPlaylistcriteria findOne(?PropelPDO $con = null) Return the first CcPlaylistcriteria matching the query
+ * @method     CcPlaylistcriteria findOneOrCreate(?PropelPDO $con = null) Return the first CcPlaylistcriteria matching the query, or a new CcPlaylistcriteria object populated from the query conditions when no match is found
  *
  * @method     CcPlaylistcriteria findOneByDbId(int $id) Return the first CcPlaylistcriteria filtered by the id column
  * @method     CcPlaylistcriteria findOneByDbCriteria(string $criteria) Return the first CcPlaylistcriteria filtered by the criteria column

@@ -758,7 +758,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -805,7 +805,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -848,7 +848,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1691,7 +1691,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @return Podcast The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcSubjs(CcSubjs $v = null)
+    public function setCcSubjs(?CcSubjs $v = null)
     {
         if ($v === null) {
             $this->setDbOwner(NULL);
@@ -1720,7 +1720,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @return CcSubjs The associated CcSubjs object.
      * @throws PropelException
      */
-    public function getCcSubjs(PropelPDO $con = null, $doQuery = true)
+    public function getCcSubjs(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcSubjs === null && ($this->owner !== null) && $doQuery) {
             $this->aCcSubjs = CcSubjsQuery::create()->findPk($this->owner, $con);
@@ -1820,7 +1820,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @return PropelObjectCollection|StationPodcast[] List of StationPodcast objects
      * @throws PropelException
      */
-    public function getStationPodcasts($criteria = null, PropelPDO $con = null)
+    public function getStationPodcasts($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collStationPodcastsPartial && !$this->isNew();
         if (null === $this->collStationPodcasts || null !== $criteria  || $partial) {
@@ -1875,7 +1875,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return Podcast The current object (for fluent API support)
      */
-    public function setStationPodcasts(PropelCollection $stationPodcasts, PropelPDO $con = null)
+    public function setStationPodcasts(PropelCollection $stationPodcasts, ?PropelPDO $con = null)
     {
         $stationPodcastsToDelete = $this->getStationPodcasts(new Criteria(), $con)->diff($stationPodcasts);
 
@@ -1906,7 +1906,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @return int             Count of related StationPodcast objects.
      * @throws PropelException
      */
-    public function countStationPodcasts(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countStationPodcasts(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collStationPodcastsPartial && !$this->isNew();
         if (null === $this->collStationPodcasts || null !== $criteria || $partial) {
@@ -2045,7 +2045,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @return PropelObjectCollection|ImportedPodcast[] List of ImportedPodcast objects
      * @throws PropelException
      */
-    public function getImportedPodcasts($criteria = null, PropelPDO $con = null)
+    public function getImportedPodcasts($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collImportedPodcastsPartial && !$this->isNew();
         if (null === $this->collImportedPodcasts || null !== $criteria  || $partial) {
@@ -2100,7 +2100,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return Podcast The current object (for fluent API support)
      */
-    public function setImportedPodcasts(PropelCollection $importedPodcasts, PropelPDO $con = null)
+    public function setImportedPodcasts(PropelCollection $importedPodcasts, ?PropelPDO $con = null)
     {
         $importedPodcastsToDelete = $this->getImportedPodcasts(new Criteria(), $con)->diff($importedPodcasts);
 
@@ -2131,7 +2131,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @return int             Count of related ImportedPodcast objects.
      * @throws PropelException
      */
-    public function countImportedPodcasts(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countImportedPodcasts(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collImportedPodcastsPartial && !$this->isNew();
         if (null === $this->collImportedPodcasts || null !== $criteria || $partial) {
@@ -2270,7 +2270,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @return PropelObjectCollection|PodcastEpisodes[] List of PodcastEpisodes objects
      * @throws PropelException
      */
-    public function getPodcastEpisodess($criteria = null, PropelPDO $con = null)
+    public function getPodcastEpisodess($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collPodcastEpisodessPartial && !$this->isNew();
         if (null === $this->collPodcastEpisodess || null !== $criteria  || $partial) {
@@ -2325,7 +2325,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return Podcast The current object (for fluent API support)
      */
-    public function setPodcastEpisodess(PropelCollection $podcastEpisodess, PropelPDO $con = null)
+    public function setPodcastEpisodess(PropelCollection $podcastEpisodess, ?PropelPDO $con = null)
     {
         $podcastEpisodessToDelete = $this->getPodcastEpisodess(new Criteria(), $con)->diff($podcastEpisodess);
 
@@ -2356,7 +2356,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @return int             Count of related PodcastEpisodes objects.
      * @throws PropelException
      */
-    public function countPodcastEpisodess(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countPodcastEpisodess(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collPodcastEpisodessPartial && !$this->isNew();
         if (null === $this->collPodcastEpisodess || null !== $criteria || $partial) {

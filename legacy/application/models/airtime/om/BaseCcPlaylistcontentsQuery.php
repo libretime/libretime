@@ -50,8 +50,8 @@
  * @method CcPlaylistcontentsQuery rightJoinCcPlaylist($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPlaylist relation
  * @method CcPlaylistcontentsQuery innerJoinCcPlaylist($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPlaylist relation
  *
- * @method CcPlaylistcontents findOne(PropelPDO $con = null) Return the first CcPlaylistcontents matching the query
- * @method CcPlaylistcontents findOneOrCreate(PropelPDO $con = null) Return the first CcPlaylistcontents matching the query, or a new CcPlaylistcontents object populated from the query conditions when no match is found
+ * @method CcPlaylistcontents findOne(?PropelPDO $con = null) Return the first CcPlaylistcontents matching the query
+ * @method CcPlaylistcontents findOneOrCreate(?PropelPDO $con = null) Return the first CcPlaylistcontents matching the query, or a new CcPlaylistcontents object populated from the query conditions when no match is found
  *
  * @method CcPlaylistcontents findOneByDbPlaylistId(int $playlist_id) Return the first CcPlaylistcontents filtered by the playlist_id column
  * @method CcPlaylistcontents findOneByDbFileId(int $file_id) Return the first CcPlaylistcontents filtered by the file_id column

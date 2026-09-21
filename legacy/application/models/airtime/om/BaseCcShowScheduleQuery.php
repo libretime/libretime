@@ -24,8 +24,8 @@
  * @method     CcShowScheduleQuery rightJoinCcShowInstances($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
  * @method     CcShowScheduleQuery innerJoinCcShowInstances($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowInstances relation
  *
- * @method     CcShowSchedule findOne(PropelPDO $con = null) Return the first CcShowSchedule matching the query
- * @method     CcShowSchedule findOneOrCreate(PropelPDO $con = null) Return the first CcShowSchedule matching the query, or a new CcShowSchedule object populated from the query conditions when no match is found
+ * @method     CcShowSchedule findOne(?PropelPDO $con = null) Return the first CcShowSchedule matching the query
+ * @method     CcShowSchedule findOneOrCreate(?PropelPDO $con = null) Return the first CcShowSchedule matching the query, or a new CcShowSchedule object populated from the query conditions when no match is found
  *
  * @method     CcShowSchedule findOneByDbId(int $id) Return the first CcShowSchedule filtered by the id column
  * @method     CcShowSchedule findOneByDbInstanceId(int $instance_id) Return the first CcShowSchedule filtered by the instance_id column

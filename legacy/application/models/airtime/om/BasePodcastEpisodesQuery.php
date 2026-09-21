@@ -38,8 +38,8 @@
  * @method PodcastEpisodesQuery rightJoinPodcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Podcast relation
  * @method PodcastEpisodesQuery innerJoinPodcast($relationAlias = null) Adds a INNER JOIN clause to the query using the Podcast relation
  *
- * @method PodcastEpisodes findOne(PropelPDO $con = null) Return the first PodcastEpisodes matching the query
- * @method PodcastEpisodes findOneOrCreate(PropelPDO $con = null) Return the first PodcastEpisodes matching the query, or a new PodcastEpisodes object populated from the query conditions when no match is found
+ * @method PodcastEpisodes findOne(?PropelPDO $con = null) Return the first PodcastEpisodes matching the query
+ * @method PodcastEpisodes findOneOrCreate(?PropelPDO $con = null) Return the first PodcastEpisodes matching the query, or a new PodcastEpisodes object populated from the query conditions when no match is found
  *
  * @method PodcastEpisodes findOneByDbFileId(int $file_id) Return the first PodcastEpisodes filtered by the file_id column
  * @method PodcastEpisodes findOneByDbPodcastId(int $podcast_id) Return the first PodcastEpisodes filtered by the podcast_id column

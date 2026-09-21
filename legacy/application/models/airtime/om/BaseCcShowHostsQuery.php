@@ -26,8 +26,8 @@
  * @method CcShowHostsQuery rightJoinCcSubjs($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjs relation
  * @method CcShowHostsQuery innerJoinCcSubjs($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjs relation
  *
- * @method CcShowHosts findOne(PropelPDO $con = null) Return the first CcShowHosts matching the query
- * @method CcShowHosts findOneOrCreate(PropelPDO $con = null) Return the first CcShowHosts matching the query, or a new CcShowHosts object populated from the query conditions when no match is found
+ * @method CcShowHosts findOne(?PropelPDO $con = null) Return the first CcShowHosts matching the query
+ * @method CcShowHosts findOneOrCreate(?PropelPDO $con = null) Return the first CcShowHosts matching the query, or a new CcShowHosts object populated from the query conditions when no match is found
  *
  * @method CcShowHosts findOneByDbShow(int $show_id) Return the first CcShowHosts filtered by the show_id column
  * @method CcShowHosts findOneByDbHost(int $subjs_id) Return the first CcShowHosts filtered by the subjs_id column

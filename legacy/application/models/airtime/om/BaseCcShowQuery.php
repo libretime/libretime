@@ -82,8 +82,8 @@
  * @method CcShowQuery rightJoinCcShowHosts($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowHosts relation
  * @method CcShowQuery innerJoinCcShowHosts($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShowHosts relation
  *
- * @method CcShow findOne(PropelPDO $con = null) Return the first CcShow matching the query
- * @method CcShow findOneOrCreate(PropelPDO $con = null) Return the first CcShow matching the query, or a new CcShow object populated from the query conditions when no match is found
+ * @method CcShow findOne(?PropelPDO $con = null) Return the first CcShow matching the query
+ * @method CcShow findOneOrCreate(?PropelPDO $con = null) Return the first CcShow matching the query, or a new CcShow object populated from the query conditions when no match is found
  *
  * @method CcShow findOneByDbName(string $name) Return the first CcShow filtered by the name column
  * @method CcShow findOneByDbUrl(string $url) Return the first CcShow filtered by the url column
