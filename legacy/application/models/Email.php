@@ -9,12 +9,14 @@ class Application_Model_Email
      * @param string $message
      * @param mixed  $to
      *
-     * @return bool
+     * @return string
      */
     public static function send($subject, $message, $to)
     {
-        $headers = sprintf('From: %s <%s>', SAAS_PRODUCT_BRANDING_NAME, LIBRETIME_EMAIL_FROM);
-
-        return mail($to, $subject, $message, $headers);
+        return Celery::sendTask('libretime_api.core.tasks.send_mail', [], [
+            'subject' => $subject,
+            'message' => $message,
+            'recipients' => [$to],
+        ]);
     }
 }
