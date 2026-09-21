@@ -1,4 +1,4 @@
-.PHONY: setup
+.PHONY: setup dev-shell
 
 SHELL = bash
 
@@ -74,3 +74,11 @@ website/node_modules: website
 
 docs-dev: website website/node_modules
 	DOCS_PATH="../docs" yarn --cwd website start
+
+RELEASE ?= bookworm
+dev-shell:
+	docker run --rm -it \
+		--user $(shell id -u):$(shell id -g) \
+		--volume $(shell pwd):/work \
+		--workdir /work \
+		ghcr.io/libretime/libretime-dev:$(RELEASE) bash
