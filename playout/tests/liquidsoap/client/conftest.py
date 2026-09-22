@@ -134,6 +134,7 @@ def run_liq_server(
             process.terminate()
 
 
+# pylint: disable=unused-argument
 @pytest.fixture(
     name="liq_conn",
     scope="session",
@@ -148,6 +149,7 @@ def liq_conn_fixture(request, tmp_path_factory, liq_version):
             yield conn
 
 
+# pylint: disable=unused-argument
 @pytest.fixture(
     name="liq_client",
     scope="session",

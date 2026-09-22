@@ -44,6 +44,7 @@ def test_liq_conn_vars(liq_conn: LiquidsoapConnection, snapshot, liq_version_par
     assert result == snapshot
 
 
+# pylint: disable=unused-argument
 def test_liq_conn_help(liq_conn: LiquidsoapConnection, snapshot, liq_version_param):
     liq_conn.write("help")
     result = liq_conn.read()

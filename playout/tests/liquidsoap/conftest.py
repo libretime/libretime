@@ -9,9 +9,11 @@ from libretime_playout.liquidsoap.version import get_liquidsoap_version
 )
 def liq_version_fixture():
     try:
-        return get_liquidsoap_version()
+        version = get_liquidsoap_version()
     except FileNotFoundError:
         pytest.skip("liquidsoap is not installed")
+
+    return version
 
 
 @pytest.fixture(
