@@ -32,6 +32,7 @@ jobs:
         include:
           - php-version: "8.2" # Bookworm
           - php-version: "8.3" # Noble
+          - php-version: "8.4" # Trixie
 
     steps:
       - uses: actions/checkout@v7
@@ -79,6 +80,7 @@ jobs:
         include:
           - php-version: "8.2" # Bookworm
           - php-version: "8.3" # Noble
+          - php-version: "8.4" # Trixie
 
     env:
       ENVIRONMENT: testing
