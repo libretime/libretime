@@ -47,4 +47,40 @@ class BlockModelData
             ['name' => 'sp_criteria_value_2_0', 'value' => '00:01:00'],
         ];
     }
+
+    /**
+     * Description contains alpha AND (Description contains beta OR Description contains gamma).
+     *
+     * @param bool $orGroupFirst place the OR group before the single criteria
+     */
+    public static function getCriteriaDescriptionAndOrGroup($orGroupFirst = false)
+    {
+        $andGroup = static fn ($i) => [
+            ['name' => "sp_criteria_field_{$i}_0", 'value' => 'description'],
+            ['name' => "sp_criteria_modifier_{$i}_0", 'value' => 'contains'],
+            ['name' => "sp_criteria_value_{$i}_0", 'value' => 'alpha'],
+        ];
+        $orGroup = static fn ($i) => [
+            ['name' => "sp_criteria_field_{$i}_0", 'value' => 'description'],
+            ['name' => "sp_criteria_modifier_{$i}_0", 'value' => 'contains'],
+            ['name' => "sp_criteria_value_{$i}_0", 'value' => 'beta'],
+            ['name' => "sp_criteria_field_{$i}_1", 'value' => 'description'],
+            ['name' => "sp_criteria_modifier_{$i}_1", 'value' => 'contains'],
+            ['name' => "sp_criteria_value_{$i}_1", 'value' => 'gamma'],
+        ];
+
+        return array_merge(
+            [
+                ['name' => 'sp_type', 'value' => 0],
+                ['name' => 'sp_repeat_tracks', 'value' => 0],
+                ['name' => 'sp_sort_options', 'value' => 'oldest'],
+                ['name' => 'sp_limit_value', 'value' => 10],
+                ['name' => 'sp_limit_options', 'value' => 'items'],
+                ['name' => 'sp_overflow_tracks', 'value' => 0],
+            ],
+            $orGroupFirst
+                ? array_merge($orGroup(0), $andGroup(1))
+                : array_merge($andGroup(0), $orGroup(1))
+        );
+    }
 }

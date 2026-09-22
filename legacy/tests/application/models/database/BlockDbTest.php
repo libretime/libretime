@@ -88,4 +88,41 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase // PHPUnit_Framewor
         // add assertion that the length is less than 1 hour...
         // need to load a example criteria into the database
     }
+
+    /**
+     * Test that an OR group following an AND group on the same field stays grouped.
+     *
+     * alpha AND (beta OR gamma) must not be evaluated as (alpha AND beta) OR gamma.
+     */
+    public function testGetListofFilesMeetCriteriaOrGroupAfterAndGroup()
+    {
+        TestHelper::loginUser();
+        $bltest = new Application_Model_Block();
+        $bltest->saveSmartBlockCriteria(BlockModelData::getCriteriaDescriptionAndOrGroup());
+
+        $this->assertEquals([8], $this->getMatchingFileIds($bltest));
+    }
+
+    /**
+     * Test that an OR group preceding an AND group on the same field stays grouped.
+     */
+    public function testGetListofFilesMeetCriteriaOrGroupBeforeAndGroup()
+    {
+        TestHelper::loginUser();
+        $bltest = new Application_Model_Block();
+        $bltest->saveSmartBlockCriteria(BlockModelData::getCriteriaDescriptionAndOrGroup(true));
+
+        $this->assertEquals([8], $this->getMatchingFileIds($bltest));
+    }
+
+    private function getMatchingFileIds(Application_Model_Block $block)
+    {
+        $ids = [];
+        foreach ($block->getListofFilesMeetCriteria()['files'] as $file) {
+            $ids[] = $file->getDbId();
+        }
+        sort($ids);
+
+        return $ids;
+    }
 }
