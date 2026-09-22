@@ -1,9 +1,10 @@
 import logging
+import socket
 from contextlib import contextmanager
 from pathlib import Path
 from random import randint
 from subprocess import PIPE, STDOUT, Popen
-from time import sleep
+from time import monotonic, sleep
 from typing import Generator, Protocol
 
 import pytest
@@ -59,9 +60,17 @@ class LiquidsoapManagerTelnet:
         liq_script = LIQ_SCRIPT.format(settings=liq_settings.strip())
         return liq_script
 
-    # pylint: disable=unused-argument
-    def wait_start(self, process: Popen) -> None:
-        sleep(2)
+    def wait_start(self, process: Popen, timeout: float = 15) -> None:
+        deadline = monotonic() + timeout
+        while process.poll() is None and monotonic() < deadline:
+            try:
+                with socket.create_connection(
+                    ("localhost", self.telnet_port),
+                    timeout=0.1,
+                ):
+                    return
+            except OSError:
+                sleep(0.1)
 
     def make_connection(self) -> LiquidsoapConnection:
         return LiquidsoapConnection(host="localhost", port=self.telnet_port)
