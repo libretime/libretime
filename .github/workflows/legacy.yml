@@ -33,6 +33,7 @@ jobs:
           - php-version: "8.2" # Bookworm
           - php-version: "8.3" # Noble
           - php-version: "8.4" # Trixie
+          - php-version: "8.5" # Resolute
 
     steps:
       - uses: actions/checkout@v7
@@ -81,6 +82,7 @@ jobs:
           - php-version: "8.2" # Bookworm
           - php-version: "8.3" # Noble
           - php-version: "8.4" # Trixie
+          - php-version: "8.5" # Resolute
 
     env:
       ENVIRONMENT: testing
