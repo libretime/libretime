@@ -38,6 +38,7 @@ jobs:
           - focal
           - bullseye
           - jammy
+          - bookworm
 
     services:
       postgres:

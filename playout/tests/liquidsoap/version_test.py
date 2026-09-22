@@ -1,5 +1,3 @@
-from os import getenv
-
 import distro
 import pytest
 
@@ -25,11 +23,17 @@ def test_parse_liquidsoap_version(version, expected):
     assert parse_liquidsoap_version(version) == expected
 
 
-@pytest.mark.skipif(getenv("CI") != "true", reason="requires liquidsoap")
 def test_get_liquidsoap_version():
     liquidsoap_version_map = {
         "focal": (1, 4, 2),
         "bullseye": (1, 4, 3),
         "jammy": (2, 0, 2),
+        "bookworm": (2, 1, 3),
     }
-    assert get_liquidsoap_version() == liquidsoap_version_map[distro.codename()]
+
+    try:
+        version = get_liquidsoap_version()
+    except FileNotFoundError:
+        pytest.skip("liquidsoap is not installed")
+
+    assert version == liquidsoap_version_map[distro.codename()]
