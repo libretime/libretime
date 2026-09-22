@@ -1,6 +1,7 @@
 <?php
 
-error_reporting(E_ALL);
+// Exclude deprecation notices.
+error_reporting(E_ALL & ~E_DEPRECATED);
 
 require_once dirname(__DIR__, 2) . '/application/preload.php';
 
