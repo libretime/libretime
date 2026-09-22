@@ -20,6 +20,11 @@ function exception_error_handler($errno, $errstr, $errfile, $errline)
         return;
     }
 
+    // Do not abort on deprecation notices.
+    if (in_array($errno, [E_DEPRECATED, E_USER_DEPRECATED], true)) {
+        return false;
+    }
+
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
 
     return false;
