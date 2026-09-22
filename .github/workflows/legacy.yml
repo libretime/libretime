@@ -26,20 +26,11 @@ concurrency:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - php-version: "8.2" # Bookworm
-          - php-version: "8.3" # Noble
-          - php-version: "8.4" # Trixie
-          - php-version: "8.5" # Resolute
-
     steps:
       - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
+          php-version: "8.2"
 
       - name: Lint
         run: make lint
@@ -51,17 +42,11 @@ jobs:
 
   propel-gen:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - php-version: "8.2" # Bookworm
-
     steps:
       - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
+          php-version: "8.2"
 
       - name: Run propel-gen
         run: make propel-gen format
