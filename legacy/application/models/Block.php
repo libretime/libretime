@@ -1513,6 +1513,8 @@ SQL;
                 $i = 0;
                 $prevgroup = null;
                 $group = null;
+                $fieldCriterion = null;
+                $groupCriterion = null;
                 // now we need to sort based upon extra which contains the and grouping from the form
                 usort($crit, function ($a, $b) {
                     return $a['criteria_group'] - $b['criteria_group'];
@@ -1603,15 +1605,24 @@ SQL;
                             $spCriteria = "reverse(split_part(reverse(filepath), '/', 1))";
                         }
 
-                        if ($i > 0 && $prevgroup == $group) {
-                            $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                        // build each group as its own criterion so the groups are
+                        // AND-ed together as (a OR b) AND (c OR d), instead of
+                        // letting propel chain them left to right as ((a OR b) AND c) OR d
+                        $criterion = $qry->getNewCriterion($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                        if ($i > 0 && $prevgroup == $group && $groupCriterion !== null) {
+                            $groupCriterion->addOr($criterion);
                         } else {
-                            $qry->addAnd($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                            $groupCriterion = $criterion;
+                            if ($fieldCriterion === null) {
+                                $fieldCriterion = $groupCriterion;
+                            } else {
+                                $fieldCriterion->addAnd($groupCriterion);
+                            }
                         }
                         // only add this NOT LIKE null if you aren't also matching on another criteria
                         if ($i == 0) {
                             if ($spCriteriaModifier == Criteria::NOT_ILIKE || $spCriteriaModifier == Criteria::NOT_EQUAL) {
-                                $qry->addOr($spCriteria, null, Criteria::ISNULL);
+                                $groupCriterion->addOr($qry->getNewCriterion($spCriteria, null, Criteria::ISNULL));
                             }
                         }
                     } catch (Exception $e) {
@@ -1619,6 +1630,10 @@ SQL;
                     }
                     $prevgroup = $group;
                     ++$i;
+                }
+
+                if ($fieldCriterion !== null) {
+                    $qry->addAnd($fieldCriterion);
                 }
             }
         }
