@@ -38,7 +38,7 @@ setup(
         "dev": [
             "distro>=1.8.0,<2",
             "requests-mock>=1.10.0,<2",
-            "syrupy>=4.0.0,<5",
+            "syrupy>=4.0.0,<7",
             "types-lxml==2025.03.30",
             "types-backports>=0.1.3,<1",
             "types-python-dateutil>=2.8.1,<3",
