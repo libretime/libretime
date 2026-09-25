@@ -381,12 +381,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/libretime/propel1.git",
-                "reference": "a8afbac4ee9bb439cc0eaa62d51cd3ada6a38c0c"
+                "reference": "6d2a80436fc37cad21054a09a1dcf38a61d0e245"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/libretime/propel1/zipball/a8afbac4ee9bb439cc0eaa62d51cd3ada6a38c0c",
-                "reference": "a8afbac4ee9bb439cc0eaa62d51cd3ada6a38c0c",
+                "url": "https://api.github.com/repos/libretime/propel1/zipball/6d2a80436fc37cad21054a09a1dcf38a61d0e245",
+                "reference": "6d2a80436fc37cad21054a09a1dcf38a61d0e245",
                 "shasum": ""
             },
             "require": {
@@ -449,7 +449,7 @@
             "support": {
                 "source": "https://github.com/libretime/propel1/tree/main"
             },
-            "time": "2026-09-21T18:35:10+00:00"
+            "time": "2026-09-25T18:30:54+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
