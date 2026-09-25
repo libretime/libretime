@@ -34,6 +34,8 @@
   
   
   
+  
+  
   gateway("started")
   
   '''
@@ -113,6 +115,8 @@
   
   
   
+  
+  
   gateway("started")
   
   '''
@@ -189,6 +193,8 @@
   input_fade_transition = interactive.float("input_fade_transition", 0.0)
   
   %include "/fake/1.4/ls_script.liq"
+  
+  
   
   # icecast:1
   output_icecast_1_source = s
@@ -316,6 +322,8 @@
   
   %include "/fake/1.4/ls_script.liq"
   
+  
+  
   # shoutcast:1
   output_shoutcast_1_source = s
   output.shoutcast(
@@ -433,6 +441,8 @@
   input_fade_transition = interactive.float("input_fade_transition", 0.0)
   
   %include "/fake/1.4/ls_script.liq"
+  
+  
   
   # icecast:1
   output_icecast_1_source = s
@@ -602,6 +612,8 @@
   
   %include "/fake/1.4/ls_script.liq"
   
+  
+  
   # pulseaudio:1
   %ifndef output.pulseaudio
   log("output.pulseaudio is not defined!")
@@ -699,6 +711,8 @@
   input_fade_transition = interactive.float("input_fade_transition", 0.0)
   
   %include "/fake/1.4/ls_script.liq"
+  
+  
   
   # pulseaudio:1
   %ifndef output.pulseaudio
@@ -799,6 +813,8 @@
   input_fade_transition = interactive.float("input_fade_transition", 0.0)
   
   %include "/fake/1.4/ls_script.liq"
+  
+  
   
   
   
