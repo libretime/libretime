@@ -30,7 +30,7 @@ setup(
         "django-celery-results>=2.4.0,<2.7",
         "django-cors-headers>=3.14.0,<4.10",
         "django-filter>=2.4.0,<26.2",
-        "django>=5.2.0,<6",
+        "django>=5.2.0,<7",
         "djangorestframework>=3.17.2,<3.18",
         "drf-spectacular>=0.22.1,<0.31",
         # Worker
