@@ -10,17 +10,24 @@ if (!empty($_SERVER['HTTPS'])) {
 }
 ini_set('session.cookie_httponly', '1');
 
-error_reporting(E_ALL);
+// Report deprecation notices only in development or testing, to keep production logs quiet
+// and to avoid unexpected output in tests.
+error_reporting(
+    'production' === APPLICATION_ENV ?
+        E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED :
+        E_ALL
+);
 
 function exception_error_handler($errno, $errstr, $errfile, $errline)
 {
-    // Check if the statement that threw this error wanted its errors to be
-    // suppressed. If so then return without with throwing exception.
-    if (0 === error_reporting()) {
-        return;
+    // Ignore errors that are not part of the current error_reporting level,
+    // this covers errors suppressed using the @ operator, and deprecation
+    // notices in production.
+    if (!(error_reporting() & $errno)) {
+        return false;
     }
 
-    // Do not abort on deprecation notices.
+    // Do not throw on deprecation notices.
     if (in_array($errno, [E_DEPRECATED, E_USER_DEPRECATED], true)) {
         return false;
     }
