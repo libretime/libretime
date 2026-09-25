@@ -36,7 +36,6 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
     public function testCalculateEndDate()
     {
         $method = $this->_reflectionOfShowService->getMethod('calculateEndDate');
-        $method->setAccessible(true);
 
         $end = $method->invokeArgs($this->_showService, [ShowServiceData::getNoRepeatNoRRData()]);
         $this->assertEquals(null, $end);
@@ -51,7 +50,6 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
     public function testGetMonthlyWeeklyRepeatInterval()
     {
         $method = $this->_reflectionOfShowService->getMethod('getMonthlyWeeklyRepeatInterval');
-        $method->setAccessible(true);
 
         $repeatInterval = $method->invokeArgs($this->_showService, [new DateTime('2044-01-01'), new DateTimeZone('UTC')]);
         $this->assertEquals(['first', 'Friday'], $repeatInterval);
@@ -72,7 +70,6 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
     public function testGetNextMonthlyMonthlyRepeatDate()
     {
         $method = $this->_reflectionOfShowService->getMethod('getNextMonthlyMonthlyRepeatDate');
-        $method->setAccessible(true);
 
         $next = $method->invokeArgs($this->_showService, [new DateTime('2044-01-01'), 'UTC', '00:00']);
         $this->assertEquals(new DateTime('2044-02-01', new DateTimeZone('UTC')), $next);
@@ -84,7 +81,6 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
     public function testGetNextMonthlyWeeklyRepeatDate()
     {
         $method = $this->_reflectionOfShowService->getMethod('getNextMonthlyWeeklyRepeatDate');
-        $method->setAccessible(true);
 
         $next = $method->invokeArgs($this->_showService, [
             new DateTime('2044-02-01'), 'UTC', '00:00', 'first', 'Friday',
@@ -105,7 +101,6 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
     public function testCreateUTCStartEndDateTime()
     {
         $method = $this->_reflectionOfShowService->getMethod('createUTCStartEndDateTime');
-        $method->setAccessible(true);
 
         $utcTimezone = new DateTimeZone('UTC');
 
