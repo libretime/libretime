@@ -1,6 +1,6 @@
 import logging
 from subprocess import CalledProcessError
-from typing import Any, Dict
+from typing import Any
 
 from ._liquidsoap import _liquidsoap
 
@@ -11,7 +11,7 @@ class UnplayableFileError(Exception):
     pass
 
 
-def analyze_playability(filename: str, metadata: Dict[str, Any]):
+def analyze_playability(filename: str, metadata: dict[str, Any]):
     """
     Checks if a file can be played by Liquidsoap.
     """

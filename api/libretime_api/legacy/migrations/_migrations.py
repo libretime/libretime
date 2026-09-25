@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from django.db import DataError, connection
 
@@ -54,9 +54,9 @@ def set_schema_version(cursor, version: str):
 
 def legacy_migration_factory(
     target: str,
-    before: Optional[Callable] = None,
-    sql: Optional[str] = None,
-    after: Optional[Callable] = None,
+    before: Callable | None = None,
+    sql: str | None = None,
+    after: Callable | None = None,
     reverse: bool = False,
 ):
     target_version = parse_version(target)

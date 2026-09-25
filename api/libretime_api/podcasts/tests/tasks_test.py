@@ -1,5 +1,4 @@
 from datetime import timedelta
-from typing import Optional
 
 import pytest
 from celery.exceptions import SoftTimeLimitExceeded
@@ -23,7 +22,7 @@ def make_episode(
     podcast: Podcast,
     guid: str,
     age: timedelta = timedelta(0),
-    file: Optional[File] = None,
+    file: File | None = None,
 ) -> PodcastEpisode:
     episode = PodcastEpisode.objects.create(
         podcast=podcast,

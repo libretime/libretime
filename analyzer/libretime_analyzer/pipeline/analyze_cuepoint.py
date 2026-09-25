@@ -9,7 +9,7 @@ from ._ffmpeg import compute_silences, probe_duration
 logger = logging.getLogger(__name__)
 
 
-def analyze_duration(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
+def analyze_duration(filepath: str, metadata: dict[str, Any]) -> dict[str, Any]:
     """
     Extracts the file duration using ffmpeg.
     """
@@ -36,7 +36,7 @@ def analyze_duration(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
     return metadata
 
 
-def analyze_cuepoint(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
+def analyze_cuepoint(filepath: str, metadata: dict[str, Any]) -> dict[str, Any]:
     """
     Extracts the cuein and cueout times using ffmpeg.
 

@@ -1,6 +1,5 @@
 from datetime import datetime, time, timedelta
 from operator import itemgetter
-from typing import Dict
 
 from libretime_api_client.v2 import ApiClient
 from libretime_shared.datetime import time_in_milliseconds, time_in_seconds
@@ -52,7 +51,7 @@ def get_schedule(api_client: ApiClient) -> Events:
         }
     ).json()
 
-    events: Dict[str, AnyEvent] = {}
+    events: dict[str, AnyEvent] = {}
     for item in sorted(schedule, key=itemgetter("starts_at")):
         item["starts_at"] = event_isoparse(item["starts_at"])
         item["ends_at"] = event_isoparse(item["ends_at"])

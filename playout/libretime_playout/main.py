@@ -9,7 +9,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 from queue import Queue
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import click
 import requests
@@ -68,8 +68,8 @@ def wait_for_liquidsoap(liq_client: LiquidsoapClient) -> None:
 @cli_config_options()
 def cli(
     log_level: str,
-    log_filepath: Optional[Path],
-    config_filepath: Optional[Path],
+    log_filepath: Path | None,
+    config_filepath: Path | None,
 ) -> None:
     """
     Run playout.

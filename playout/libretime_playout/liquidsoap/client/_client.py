@@ -2,7 +2,7 @@ import logging
 import threading
 from pathlib import Path
 from time import sleep
-from typing import Any, Literal, Optional, Tuple, Union
+from typing import Any, Literal
 
 from ..models import MessageFormatKind
 from ..utils import quote
@@ -23,7 +23,7 @@ class _OwnedLock:
 
     def __init__(self) -> None:
         self._lock = threading.Lock()
-        self._owner: Optional[int] = None
+        self._owner: int | None = None
 
     def __enter__(self) -> "_OwnedLock":
         self._lock.acquire()
@@ -47,7 +47,7 @@ class LiquidsoapClient:
         self,
         host: str = "localhost",
         port: int = 0,
-        path: Optional[Path] = None,
+        path: Path | None = None,
         timeout: int = 15,
     ):
         self.conn = LiquidsoapConnection(
@@ -79,13 +79,13 @@ class LiquidsoapClient:
         if f"Variable {name} set" not in result:
             logger.error("unexpected response: %s", result)
 
-    def version(self) -> Tuple[int, int, int]:
+    def version(self) -> tuple[int, int, int]:
         with self._lock, self.conn:
             self.conn.write("version")
             self._version = parse_liquidsoap_version(self.conn.read())
             return self._version
 
-    def wait_for_version(self, timeout: int = 30) -> Tuple[int, int, int]:
+    def wait_for_version(self, timeout: int = 30) -> tuple[int, int, int]:
         while timeout > 0:
             try:
                 version = self.version()
@@ -159,10 +159,10 @@ class LiquidsoapClient:
     def settings_update(
         self,
         *,
-        station_name: Optional[str] = None,
-        message_format: Optional[Union[MessageFormatKind, int]] = None,
-        message_offline: Optional[str] = None,
-        input_fade_transition: Optional[float] = None,
+        station_name: str | None = None,
+        message_format: MessageFormatKind | int | None = None,
+        message_offline: str | None = None,
+        input_fade_transition: float | None = None,
     ) -> None:
         with self._lock, self.conn:
             if station_name is not None:

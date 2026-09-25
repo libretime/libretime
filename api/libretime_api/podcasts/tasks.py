@@ -2,7 +2,7 @@ from datetime import timedelta
 from email.message import EmailMessage
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any, Dict, Optional
+from typing import Any
 from urllib.parse import urlsplit
 
 import mutagen
@@ -56,7 +56,7 @@ IMPORT_EPISODE_MAX_AGE = (
 def import_episode(
     episode_id: int,
     episode_url: str,
-    episode_title: Optional[str],
+    episode_title: str | None,
     podcast_name: str,
     override_album: bool,
 ):
@@ -75,7 +75,7 @@ def import_episode(
     Returns:
         Status of the podcast download.
     """
-    result: Dict[str, Any] = {"episode_id": episode_id}
+    result: dict[str, Any] = {"episode_id": episode_id}
 
     try:
         episode = PodcastEpisode.objects.get(pk=episode_id)

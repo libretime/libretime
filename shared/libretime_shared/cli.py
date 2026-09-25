@@ -1,5 +1,6 @@
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any
 
 import click
 
@@ -36,7 +37,7 @@ def cli_logging_options() -> Callable:
 
 def cli_config_options(
     required: bool = False,
-    default: Optional[Any] = None,
+    default: Any | None = None,
 ) -> Callable:
     def decorator(func: Callable) -> Callable:
         """

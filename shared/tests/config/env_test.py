@@ -1,6 +1,5 @@
 # pylint: disable=protected-access
 from os import environ
-from typing import List, Union
 from unittest import mock
 
 import pytest
@@ -79,14 +78,14 @@ class SecondChildConfig(BaseModel):
 # pylint: disable=too-few-public-methods
 class FixtureConfig(BaseConfig):
     a_str: str
-    a_list_of_str: List[str]
+    a_list_of_str: list[str]
     a_obj: FirstChildConfig
     a_obj_with_default: FirstChildConfig = FirstChildConfig(a_child_str="default")
-    a_list_of_obj: List[FirstChildConfig]
-    a_union_str_or_int: Union[str, int]
-    a_union_obj: Union[FirstChildConfig, SecondChildConfig]
-    a_list_of_union_str_or_int: List[Union[str, int]]
-    a_list_of_union_obj: List[Union[FirstChildConfig, SecondChildConfig]]
+    a_list_of_obj: list[FirstChildConfig]
+    a_union_str_or_int: str | int
+    a_union_obj: FirstChildConfig | SecondChildConfig
+    a_list_of_union_str_or_int: list[str | int]
+    a_list_of_union_obj: list[FirstChildConfig | SecondChildConfig]
 
 
 ENV_SCHEMA = FixtureConfig.model_json_schema()

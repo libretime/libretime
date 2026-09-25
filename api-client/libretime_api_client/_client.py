@@ -1,5 +1,4 @@
 import logging
-from typing import Optional
 
 from requests import Response, Session as BaseSession
 from requests.adapters import HTTPAdapter
@@ -35,12 +34,12 @@ def default_retry(max_retries: int = 5):
 
 
 class Session(BaseSession):
-    base_url: Optional[str]
+    base_url: str | None
 
     def __init__(
         self,
-        base_url: Optional[str] = None,
-        retry: Optional[Retry] = None,
+        base_url: str | None = None,
+        retry: Retry | None = None,
     ):
         super().__init__()
         self.base_url = base_url
@@ -70,7 +69,7 @@ class AbstractApiClient:
     def __init__(
         self,
         base_url: str,
-        retry: Optional[Retry] = None,
+        retry: Retry | None = None,
     ):
         self.base_url = base_url
         self.session = Session(

@@ -1,11 +1,10 @@
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Dict, Literal, Optional, Union
+from typing import Annotated, Literal, Union
 
 from dateutil.parser import isoparse
 from pydantic import BaseModel, BeforeValidator, Field, parse_obj_as
-from typing_extensions import Annotated
 
 from ..config import CACHE_DIR
 from ..utils import mime_guess_extension
@@ -13,13 +12,13 @@ from ..utils import mime_guess_extension
 EVENT_KEY_FORMAT = "%Y-%m-%d-%H-%M-%S"
 
 
-def event_key_to_datetime(value: Union[str, datetime]) -> datetime:
+def event_key_to_datetime(value: str | datetime) -> datetime:
     if isinstance(value, str):
         value = datetime.strptime(value, EVENT_KEY_FORMAT)
     return value
 
 
-def datetime_to_event_key(value: Union[str, datetime]) -> str:
+def datetime_to_event_key(value: str | datetime) -> str:
     if isinstance(value, datetime):
         value = value.strftime(EVENT_KEY_FORMAT)
     return value
@@ -62,7 +61,7 @@ class FileEvent(BaseEvent):
 
     # Schedule
     row_id: int
-    uri: Optional[str] = None
+    uri: str | None = None
     id: int
 
     # Show data
@@ -74,11 +73,11 @@ class FileEvent(BaseEvent):
     cue_in: float
     cue_out: float
 
-    track_title: Optional[str] = None
-    artist_name: Optional[str] = None
+    track_title: str | None = None
+    artist_name: str | None = None
 
     mime: str
-    replay_gain: Optional[float] = None
+    replay_gain: float | None = None
     filesize: int
 
     file_ready: bool = False
@@ -130,5 +129,5 @@ def parse_any_event(value: dict) -> AnyEvent:
     return parse_obj_as(AnyEvent, value)  # type: ignore
 
 
-FileEvents = Dict[str, FileEvent]
-Events = Dict[str, AnyEvent]
+FileEvents = dict[str, FileEvent]
+Events = dict[str, AnyEvent]

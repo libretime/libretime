@@ -1,5 +1,3 @@
-from typing import List
-
 from libretime_playout.config import Config
 
 
@@ -20,7 +18,7 @@ def make_config_with_stream(**kwargs) -> Config:
     return make_config(stream=kwargs)
 
 
-TEST_STREAM_CONFIGS: List[Config] = [
+TEST_STREAM_CONFIGS: list[Config] = [
     make_config(),
     make_config(
         liquidsoap={
