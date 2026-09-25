@@ -13,9 +13,9 @@ ini_set('session.cookie_httponly', '1');
 // Report deprecation notices only in development or testing, to keep production logs quiet
 // and to avoid unexpected output in tests.
 error_reporting(
-    'production' === APPLICATION_ENV ?
-        E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED :
-        E_ALL
+    'production' === APPLICATION_ENV
+        ? E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED
+        : E_ALL
 );
 
 function exception_error_handler($errno, $errstr, $errfile, $errline)
