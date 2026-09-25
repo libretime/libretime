@@ -28,15 +28,10 @@ repos:
       - id: name-tests-test
         exclude: ^api
 
-  - repo: local
+  - repo: https://github.com/jooola/pre-commit-prettier
+    rev: 3.9.8
     hooks:
       - id: prettier
-        name: prettier
-        entry: prettier --write --ignore-unknown
-        language: node
-        types: [text]
-        additional_dependencies: [prettier@3.6.2]
-
         files: \.(md|mdx|yml|yaml|js|jsx|ts|tsx|json|css)$
         exclude: ^(legacy/public(?!/js/airtime)|CHANGELOG.md$|.github/release-please-manifest.json)
 
