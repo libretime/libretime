@@ -20,6 +20,15 @@ Please see the [changelog](https://github.com/libretime/libretime/blob/main/CHAN
 
 ## :fire: Deprecation and removal
 
+### Support for Ubuntu 20.04 (Focal), Ubuntu 22.04 (Jammy) and Debian 11 (Bullseye) is dropped
+
+These distributions are end of life or no longer supported by the project.
+
+If you are running LibreTime on one of the dropped distributions either:
+
+- backup your current installation and restore your backup on a fresh install of LibreTime (recommended).
+- upgrade your operating system to a supported distribution **before** upgrading LibreTime.
+
 ### The worker is now part of the API package
 
 The `libretime-worker` Python package, and the `worker` directory of the repository, are removed. The worker now lives in the `libretime-api` package, and uses the Django ORM and the `django-celery-results` result backend to store the results of its tasks. The `libretime-worker` executable, and the `libretime-worker` systemd service and container image are unchanged.

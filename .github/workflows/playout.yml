@@ -31,24 +31,6 @@ jobs:
     with:
       context: playout
 
-  test-focal:
-    uses: ./.github/workflows/_python-test.yml
-    with:
-      context: playout
-      release: focal
-
-  test-bullseye:
-    uses: ./.github/workflows/_python-test.yml
-    with:
-      context: playout
-      release: bullseye
-
-  test-jammy:
-    uses: ./.github/workflows/_python-test.yml
-    with:
-      context: playout
-      release: jammy
-
   test-bookworm:
     uses: ./.github/workflows/_python-test.yml
     with:

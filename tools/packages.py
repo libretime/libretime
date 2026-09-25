@@ -9,9 +9,6 @@ from typing import Iterator, List, Optional, Set
 DEFAULT_PACKAGES_FILENAME = "packages.ini"
 FORMATS = ("list", "line")
 DISTRIBUTIONS = (
-    "focal",
-    "bullseye",
-    "jammy",
     "bookworm",
     "noble",
     "trixie",

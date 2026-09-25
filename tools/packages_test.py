@@ -4,34 +4,34 @@ from tools.packages import list_packages, load_packages
 
 PACKAGE_INI = """
 [common]
-postgresql = focal, jammy
+postgresql = noble, resolute
 # Some comment
-curl = bullseye, jammy
+curl = trixie, resolute
 
 [legacy]
-some-package = focal, bullseye
+some-package = noble, trixie
 
 [=development]
-ffmpeg = focal, bullseye, jammy
+ffmpeg = noble, trixie, resolute
 """
 
-result_jammy = {"curl", "postgresql"}
-result_bullseye = {"some-package", "curl", "ffmpeg"}
-result_focal = {"postgresql", "some-package", "ffmpeg"}
+result_resolute = {"curl", "postgresql"}
+result_trixie = {"some-package", "curl", "ffmpeg"}
+result_noble = {"postgresql", "some-package", "ffmpeg"}
 result_exclude = {"postgresql", "ffmpeg"}
 
 
 def test_load_packages():
-    assert load_packages(PACKAGE_INI, "jammy", False) == result_jammy
-    assert load_packages(PACKAGE_INI, "bullseye", True) == result_bullseye
-    assert load_packages(PACKAGE_INI, "focal", True) == result_focal
-    assert load_packages(PACKAGE_INI, "focal", True, ["legacy"]) == result_exclude
+    assert load_packages(PACKAGE_INI, "resolute", False) == result_resolute
+    assert load_packages(PACKAGE_INI, "trixie", True) == result_trixie
+    assert load_packages(PACKAGE_INI, "noble", True) == result_noble
+    assert load_packages(PACKAGE_INI, "noble", True, ["legacy"]) == result_exclude
 
 
 def test_list_packages(tmp_path: Path) -> None:
     package_file = tmp_path / "packages.ini"
     package_file.write_text(PACKAGE_INI)
 
-    assert list_packages([tmp_path, package_file], "jammy", False) == result_jammy
-    assert list_packages([tmp_path, package_file], "bullseye", True) == result_bullseye
-    assert list_packages([tmp_path, package_file], "focal", True) == result_focal
+    assert list_packages([tmp_path, package_file], "resolute", False) == result_resolute
+    assert list_packages([tmp_path, package_file], "trixie", True) == result_trixie
+    assert list_packages([tmp_path, package_file], "noble", True) == result_noble

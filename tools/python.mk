@@ -58,7 +58,7 @@ $(VENV):
 .clean:
 	rm -Rf $(VENV)
 
-DISTRO ?= bullseye
+DISTRO ?= bookworm
 DOCKER_RUN = docker run -it --rm \
 			--user $$(id -u):$$(id -g) \
 			--env HOME=/src/.docker/$(DISTRO) \
