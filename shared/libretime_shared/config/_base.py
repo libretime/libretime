@@ -2,7 +2,7 @@ import logging
 import sys
 from itertools import zip_longest
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from pydantic import BaseModel, ValidationError
 from yaml import YAMLError, safe_load
@@ -29,7 +29,7 @@ class BaseConfig(BaseModel):
     # pylint: disable=no-self-argument
     def __init__(
         _self,
-        _filepath: Optional[Union[Path, str]] = None,
+        _filepath: Path | str | None = None,
         *,
         _env_prefix: str = DEFAULT_ENV_PREFIX,
         _env_delimiter: str = "_",
@@ -54,8 +54,8 @@ class BaseConfig(BaseModel):
 
     def _load_file_values(
         self,
-        filepath: Optional[Path] = None,
-    ) -> Dict[str, Any]:
+        filepath: Path | None = None,
+    ) -> dict[str, Any]:
         if filepath is None:
             logger.debug("no config filepath is provided")
             return {}
@@ -74,7 +74,7 @@ class BaseConfig(BaseModel):
         return {}
 
 
-def deep_merge_dict(base: Dict[str, Any], *elements: Dict[str, Any]) -> Dict[str, Any]:
+def deep_merge_dict(base: dict[str, Any], *elements: dict[str, Any]) -> dict[str, Any]:
     result = base.copy()
 
     for element in elements:
@@ -94,8 +94,8 @@ def deep_merge_dict(base: Dict[str, Any], *elements: Dict[str, Any]) -> Dict[str
     return result
 
 
-def deep_merge_list(base: List[Any], *elements: List[Any]) -> List[Any]:
-    result: List[Any] = []
+def deep_merge_list(base: list[Any], *elements: list[Any]) -> list[Any]:
+    result: list[Any] = []
     for element in elements:
         for base_item, next_item in zip_longest(base, element):
             if isinstance(base_item, list) and isinstance(next_item, list):

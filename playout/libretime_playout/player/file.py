@@ -4,7 +4,6 @@ import os
 import time
 from queue import Empty, Queue
 from threading import Thread
-from typing import Optional
 
 import requests
 from libretime_api_client.v2 import ApiClient
@@ -118,7 +117,7 @@ class PypoFile(Thread):
     def get_highest_priority_file_event(
         self,
         file_events: FileEvents,
-    ) -> Optional[FileEvent]:
+    ) -> FileEvent | None:
         """
         Get highest priority file event in the queue. Currently the highest
         priority is decided by how close the start time is to "now".

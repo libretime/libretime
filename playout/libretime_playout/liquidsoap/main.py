@@ -1,7 +1,6 @@
 import logging
 import os
 from pathlib import Path
-from typing import Optional
 
 import click
 from libretime_api_client.v2 import ApiClient
@@ -22,7 +21,7 @@ here = Path(__file__).parent
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
 @cli_logging_options()
 @cli_config_options()
-def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[Path]):
+def cli(log_level: str, log_filepath: Path | None, config_filepath: Path | None):
     """
     Run liquidsoap.
     """

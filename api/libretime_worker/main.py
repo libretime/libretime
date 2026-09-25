@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Optional
 
 import click
 from libretime_shared.cli import cli_logging_options
@@ -10,7 +9,7 @@ from libretime_api.worker import app
 
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
 @cli_logging_options()
-def cli(log_level: str, log_filepath: Optional[Path]):
+def cli(log_level: str, log_filepath: Path | None):
     """
     Run celery.
     """

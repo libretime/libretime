@@ -16,7 +16,7 @@ stale-socket scenario in unit-test time.
 
 import socket
 import threading
-from typing import Generator, List, Tuple
+from collections.abc import Generator
 
 import pytest
 
@@ -24,7 +24,7 @@ from libretime_playout.liquidsoap.client import LiquidsoapConnection
 
 
 @pytest.fixture(name="tcp_server")
-def tcp_server_fixture() -> Generator[Tuple[str, int, List[socket.socket]], None, None]:
+def tcp_server_fixture() -> Generator[tuple[str, int, list[socket.socket]], None, None]:
     """A minimal TCP server that accepts connections and stays silent.
 
     Yields ``(host, port, accepted)`` where ``accepted`` is the running list of
@@ -37,7 +37,7 @@ def tcp_server_fixture() -> Generator[Tuple[str, int, List[socket.socket]], None
     server.listen(5)
     host, port = server.getsockname()
 
-    accepted: List[socket.socket] = []
+    accepted: list[socket.socket] = []
     stop = threading.Event()
 
     def accept_loop() -> None:
@@ -45,7 +45,7 @@ def tcp_server_fixture() -> Generator[Tuple[str, int, List[socket.socket]], None
         while not stop.is_set():
             try:
                 conn, _ = server.accept()
-            except (socket.timeout, OSError):
+            except (TimeoutError, OSError):
                 continue
             accepted.append(conn)
 
@@ -65,7 +65,7 @@ def tcp_server_fixture() -> Generator[Tuple[str, int, List[socket.socket]], None
                 pass
 
 
-def _wait_for_accept(accepted: List[socket.socket], expected: int) -> None:
+def _wait_for_accept(accepted: list[socket.socket], expected: int) -> None:
     for _ in range(50):
         if len(accepted) >= expected:
             return

@@ -1,11 +1,12 @@
 import logging
 import socket
+from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
 from random import randint
 from subprocess import PIPE, STDOUT, Popen
 from time import monotonic, sleep
-from typing import Generator, Protocol
+from typing import Protocol
 
 import pytest
 from libretime_shared.logging import setup_logger
