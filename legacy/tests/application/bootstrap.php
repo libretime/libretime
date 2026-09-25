@@ -2,9 +2,6 @@
 
 require_once dirname(__DIR__, 2) . '/application/preload.php';
 
-// Deprecation notices must not fail the tests, nor produce any output (any
-// output before Zend_Session::start() makes it throw). Instead, let PHP's
-// default error handler append them to a dedicated log file.
 error_reporting(E_ALL);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
