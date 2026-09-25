@@ -8,7 +8,7 @@ services:
       - 5432:5432
 
   rabbitmq:
-    image: rabbitmq:3.13-management-alpine
+    image: rabbitmq:4.2-management-alpine
     ports:
       - 5672:5672
       - 15672:15672
