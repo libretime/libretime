@@ -42,7 +42,7 @@ setup(
         "prod": [
             "gunicorn>=22.0.0,<26.3",
             "psycopg[c]>=3.1.8,<3.4",
-            "uvicorn[standard]>=0.17.6,<0.54.0",
+            "uvicorn[standard]>=0.17.6,<0.55.0",
         ],
         "dev": [
             "django-coverage-plugin>=3.0.0,<4",
