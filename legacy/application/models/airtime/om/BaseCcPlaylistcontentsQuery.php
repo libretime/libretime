@@ -59,7 +59,7 @@
  * @method CcPlaylistcontents findOneByDbStreamId(int $stream_id) Return the first CcPlaylistcontents filtered by the stream_id column
  * @method CcPlaylistcontents findOneByDbType(int $type) Return the first CcPlaylistcontents filtered by the type column
  * @method CcPlaylistcontents findOneByDbPosition(int $position) Return the first CcPlaylistcontents filtered by the position column
- * @method CcPlaylistcontents findOneByDbTrackOffset(double $trackoffset) Return the first CcPlaylistcontents filtered by the trackoffset column
+ * @method CcPlaylistcontents findOneByDbTrackOffset(float $trackoffset) Return the first CcPlaylistcontents filtered by the trackoffset column
  * @method CcPlaylistcontents findOneByDbCliplength(string $cliplength) Return the first CcPlaylistcontents filtered by the cliplength column
  * @method CcPlaylistcontents findOneByDbCuein(string $cuein) Return the first CcPlaylistcontents filtered by the cuein column
  * @method CcPlaylistcontents findOneByDbCueout(string $cueout) Return the first CcPlaylistcontents filtered by the cueout column
@@ -73,7 +73,7 @@
  * @method array findByDbStreamId(int $stream_id) Return CcPlaylistcontents objects filtered by the stream_id column
  * @method array findByDbType(int $type) Return CcPlaylistcontents objects filtered by the type column
  * @method array findByDbPosition(int $position) Return CcPlaylistcontents objects filtered by the position column
- * @method array findByDbTrackOffset(double $trackoffset) Return CcPlaylistcontents objects filtered by the trackoffset column
+ * @method array findByDbTrackOffset(float $trackoffset) Return CcPlaylistcontents objects filtered by the trackoffset column
  * @method array findByDbCliplength(string $cliplength) Return CcPlaylistcontents objects filtered by the cliplength column
  * @method array findByDbCuein(string $cuein) Return CcPlaylistcontents objects filtered by the cuein column
  * @method array findByDbCueout(string $cueout) Return CcPlaylistcontents objects filtered by the cueout column

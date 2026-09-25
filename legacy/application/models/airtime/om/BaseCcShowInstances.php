@@ -108,14 +108,14 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
     /**
      * The value for the modified_instance field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $modified_instance;
 
     /**
      * The value for the autoplaylist_built field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $autoplaylist_built;
 
@@ -475,7 +475,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
     /**
      * Get the [modified_instance] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbModifiedInstance()
     {
@@ -486,7 +486,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
     /**
      * Get the [autoplaylist_built] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbAutoPlaylistBuilt()
     {
@@ -782,7 +782,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -811,7 +811,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -892,8 +892,8 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             $this->time_filled = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
             $this->created = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
             $this->last_scheduled = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
-            $this->modified_instance = ($row[$startcol + 12] !== null) ? (boolean) $row[$startcol + 12] : null;
-            $this->autoplaylist_built = ($row[$startcol + 13] !== null) ? (boolean) $row[$startcol + 13] : null;
+            $this->modified_instance = ($row[$startcol + 12] !== null) ? (bool) $row[$startcol + 12] : null;
+            $this->autoplaylist_built = ($row[$startcol + 13] !== null) ? (bool) $row[$startcol + 13] : null;
             $this->resetModified();
 
             $this->setNew(false);

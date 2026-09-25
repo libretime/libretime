@@ -91,19 +91,19 @@
  * @method CcShow findOneByDbDescription(string $description) Return the first CcShow filtered by the description column
  * @method CcShow findOneByDbColor(string $color) Return the first CcShow filtered by the color column
  * @method CcShow findOneByDbBackgroundColor(string $background_color) Return the first CcShow filtered by the background_color column
- * @method CcShow findOneByDbLiveStreamUsingAirtimeAuth(boolean $live_stream_using_airtime_auth) Return the first CcShow filtered by the live_stream_using_airtime_auth column
- * @method CcShow findOneByDbLiveStreamUsingCustomAuth(boolean $live_stream_using_custom_auth) Return the first CcShow filtered by the live_stream_using_custom_auth column
+ * @method CcShow findOneByDbLiveStreamUsingAirtimeAuth(bool $live_stream_using_airtime_auth) Return the first CcShow filtered by the live_stream_using_airtime_auth column
+ * @method CcShow findOneByDbLiveStreamUsingCustomAuth(bool $live_stream_using_custom_auth) Return the first CcShow filtered by the live_stream_using_custom_auth column
  * @method CcShow findOneByDbLiveStreamUser(string $live_stream_user) Return the first CcShow filtered by the live_stream_user column
  * @method CcShow findOneByDbLiveStreamPass(string $live_stream_pass) Return the first CcShow filtered by the live_stream_pass column
- * @method CcShow findOneByDbLinked(boolean $linked) Return the first CcShow filtered by the linked column
- * @method CcShow findOneByDbIsLinkable(boolean $is_linkable) Return the first CcShow filtered by the is_linkable column
+ * @method CcShow findOneByDbLinked(bool $linked) Return the first CcShow filtered by the linked column
+ * @method CcShow findOneByDbIsLinkable(bool $is_linkable) Return the first CcShow filtered by the is_linkable column
  * @method CcShow findOneByDbImagePath(string $image_path) Return the first CcShow filtered by the image_path column
- * @method CcShow findOneByDbHasAutoPlaylist(boolean $has_autoplaylist) Return the first CcShow filtered by the has_autoplaylist column
+ * @method CcShow findOneByDbHasAutoPlaylist(bool $has_autoplaylist) Return the first CcShow filtered by the has_autoplaylist column
  * @method CcShow findOneByDbAutoPlaylistId(int $autoplaylist_id) Return the first CcShow filtered by the autoplaylist_id column
- * @method CcShow findOneByDbAutoPlaylistRepeat(boolean $autoplaylist_repeat) Return the first CcShow filtered by the autoplaylist_repeat column
- * @method CcShow findOneByDbOverrideIntroPlaylist(boolean $override_intro_playlist) Return the first CcShow filtered by the override_intro_playlist column
+ * @method CcShow findOneByDbAutoPlaylistRepeat(bool $autoplaylist_repeat) Return the first CcShow filtered by the autoplaylist_repeat column
+ * @method CcShow findOneByDbOverrideIntroPlaylist(bool $override_intro_playlist) Return the first CcShow filtered by the override_intro_playlist column
  * @method CcShow findOneByDbIntroPlaylistId(int $intro_playlist_id) Return the first CcShow filtered by the intro_playlist_id column
- * @method CcShow findOneByDbOverrideOutroPlaylist(boolean $override_outro_playlist) Return the first CcShow filtered by the override_outro_playlist column
+ * @method CcShow findOneByDbOverrideOutroPlaylist(bool $override_outro_playlist) Return the first CcShow filtered by the override_outro_playlist column
  * @method CcShow findOneByDbOutroPlaylistId(int $outro_playlist_id) Return the first CcShow filtered by the outro_playlist_id column
  *
  * @method array findByDbId(int $id) Return CcShow objects filtered by the id column
@@ -113,19 +113,19 @@
  * @method array findByDbDescription(string $description) Return CcShow objects filtered by the description column
  * @method array findByDbColor(string $color) Return CcShow objects filtered by the color column
  * @method array findByDbBackgroundColor(string $background_color) Return CcShow objects filtered by the background_color column
- * @method array findByDbLiveStreamUsingAirtimeAuth(boolean $live_stream_using_airtime_auth) Return CcShow objects filtered by the live_stream_using_airtime_auth column
- * @method array findByDbLiveStreamUsingCustomAuth(boolean $live_stream_using_custom_auth) Return CcShow objects filtered by the live_stream_using_custom_auth column
+ * @method array findByDbLiveStreamUsingAirtimeAuth(bool $live_stream_using_airtime_auth) Return CcShow objects filtered by the live_stream_using_airtime_auth column
+ * @method array findByDbLiveStreamUsingCustomAuth(bool $live_stream_using_custom_auth) Return CcShow objects filtered by the live_stream_using_custom_auth column
  * @method array findByDbLiveStreamUser(string $live_stream_user) Return CcShow objects filtered by the live_stream_user column
  * @method array findByDbLiveStreamPass(string $live_stream_pass) Return CcShow objects filtered by the live_stream_pass column
- * @method array findByDbLinked(boolean $linked) Return CcShow objects filtered by the linked column
- * @method array findByDbIsLinkable(boolean $is_linkable) Return CcShow objects filtered by the is_linkable column
+ * @method array findByDbLinked(bool $linked) Return CcShow objects filtered by the linked column
+ * @method array findByDbIsLinkable(bool $is_linkable) Return CcShow objects filtered by the is_linkable column
  * @method array findByDbImagePath(string $image_path) Return CcShow objects filtered by the image_path column
- * @method array findByDbHasAutoPlaylist(boolean $has_autoplaylist) Return CcShow objects filtered by the has_autoplaylist column
+ * @method array findByDbHasAutoPlaylist(bool $has_autoplaylist) Return CcShow objects filtered by the has_autoplaylist column
  * @method array findByDbAutoPlaylistId(int $autoplaylist_id) Return CcShow objects filtered by the autoplaylist_id column
- * @method array findByDbAutoPlaylistRepeat(boolean $autoplaylist_repeat) Return CcShow objects filtered by the autoplaylist_repeat column
- * @method array findByDbOverrideIntroPlaylist(boolean $override_intro_playlist) Return CcShow objects filtered by the override_intro_playlist column
+ * @method array findByDbAutoPlaylistRepeat(bool $autoplaylist_repeat) Return CcShow objects filtered by the autoplaylist_repeat column
+ * @method array findByDbOverrideIntroPlaylist(bool $override_intro_playlist) Return CcShow objects filtered by the override_intro_playlist column
  * @method array findByDbIntroPlaylistId(int $intro_playlist_id) Return CcShow objects filtered by the intro_playlist_id column
- * @method array findByDbOverrideOutroPlaylist(boolean $override_outro_playlist) Return CcShow objects filtered by the override_outro_playlist column
+ * @method array findByDbOverrideOutroPlaylist(bool $override_outro_playlist) Return CcShow objects filtered by the override_outro_playlist column
  * @method array findByDbOutroPlaylistId(int $outro_playlist_id) Return CcShow objects filtered by the outro_playlist_id column
  *
  * @package    propel.generator.airtime.om

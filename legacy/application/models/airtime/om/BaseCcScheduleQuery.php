@@ -70,7 +70,7 @@
  * @method CcSchedule findOneByDbFadeOut(string $fade_out) Return the first CcSchedule filtered by the fade_out column
  * @method CcSchedule findOneByDbCueIn(string $cue_in) Return the first CcSchedule filtered by the cue_in column
  * @method CcSchedule findOneByDbCueOut(string $cue_out) Return the first CcSchedule filtered by the cue_out column
- * @method CcSchedule findOneByDbMediaItemPlayed(boolean $media_item_played) Return the first CcSchedule filtered by the media_item_played column
+ * @method CcSchedule findOneByDbMediaItemPlayed(bool $media_item_played) Return the first CcSchedule filtered by the media_item_played column
  * @method CcSchedule findOneByDbInstanceId(int $instance_id) Return the first CcSchedule filtered by the instance_id column
  * @method CcSchedule findOneByDbPlayoutStatus(int $playout_status) Return the first CcSchedule filtered by the playout_status column
  * @method CcSchedule findOneByDbBroadcasted(int $broadcasted) Return the first CcSchedule filtered by the broadcasted column
@@ -86,7 +86,7 @@
  * @method array findByDbFadeOut(string $fade_out) Return CcSchedule objects filtered by the fade_out column
  * @method array findByDbCueIn(string $cue_in) Return CcSchedule objects filtered by the cue_in column
  * @method array findByDbCueOut(string $cue_out) Return CcSchedule objects filtered by the cue_out column
- * @method array findByDbMediaItemPlayed(boolean $media_item_played) Return CcSchedule objects filtered by the media_item_played column
+ * @method array findByDbMediaItemPlayed(bool $media_item_played) Return CcSchedule objects filtered by the media_item_played column
  * @method array findByDbInstanceId(int $instance_id) Return CcSchedule objects filtered by the instance_id column
  * @method array findByDbPlayoutStatus(int $playout_status) Return CcSchedule objects filtered by the playout_status column
  * @method array findByDbBroadcasted(int $broadcasted) Return CcSchedule objects filtered by the broadcasted column

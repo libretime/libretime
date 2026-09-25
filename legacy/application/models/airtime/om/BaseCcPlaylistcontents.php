@@ -75,7 +75,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
     /**
      * The value for the trackoffset field.
      * Note: this column has a database default value of: 0.0
-     * @var        double
+     * @var        float
      */
     protected $trackoffset;
 
@@ -259,7 +259,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
     /**
      * Get the [trackoffset] column value.
      *
-     * @return double
+     * @return float
      */
     public function getDbTrackOffset()
     {
@@ -546,13 +546,13 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
     /**
      * Set the value of [trackoffset] column.
      *
-     * @param  double $v new value
+     * @param  float $v new value
      * @return CcPlaylistcontents The current object (for fluent API support)
      */
     public function setDbTrackOffset($v)
     {
         if ($v !== null && is_numeric($v)) {
-            $v = (double) $v;
+            $v = (float) $v;
         }
 
         if ($this->trackoffset !== $v) {
@@ -744,7 +744,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
             $this->stream_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
             $this->type = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
             $this->position = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
-            $this->trackoffset = ($row[$startcol + 7] !== null) ? (double) $row[$startcol + 7] : null;
+            $this->trackoffset = ($row[$startcol + 7] !== null) ? (float) $row[$startcol + 7] : null;
             $this->cliplength = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
             $this->cuein = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
             $this->cueout = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
