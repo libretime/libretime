@@ -62,7 +62,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
     /**
      * The value for the is_file_md field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $is_file_md;
 
@@ -176,7 +176,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
     /**
      * Get the [is_file_md] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbIsFileMD()
     {
@@ -320,7 +320,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -395,7 +395,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
             $this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->label = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->type = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->is_file_md = ($row[$startcol + 5] !== null) ? (boolean) $row[$startcol + 5] : null;
+            $this->is_file_md = ($row[$startcol + 5] !== null) ? (bool) $row[$startcol + 5] : null;
             $this->position = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
             $this->resetModified();
 

@@ -369,7 +369,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * The value for the file_exists field.
      * Note: this column has a database default value of: true
-     * @var        boolean
+     * @var        bool
      */
     protected $file_exists;
 
@@ -402,28 +402,28 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * The value for the silan_check field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $silan_check;
 
     /**
      * The value for the hidden field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $hidden;
 
     /**
      * The value for the is_scheduled field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $is_scheduled;
 
     /**
      * The value for the is_playlist field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $is_playlist;
 
@@ -1295,7 +1295,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * Get the [file_exists] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbFileExists()
     {
@@ -1350,7 +1350,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * Get the [silan_check] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbSilanCheck()
     {
@@ -1361,7 +1361,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * Get the [hidden] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbHidden()
     {
@@ -1372,7 +1372,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * Get the [is_scheduled] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbIsScheduled()
     {
@@ -1383,7 +1383,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     /**
      * Get the [is_playlist] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbIsPlaylist()
     {
@@ -2616,7 +2616,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -2733,7 +2733,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -2762,7 +2762,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -2791,7 +2791,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -2820,7 +2820,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -3068,15 +3068,15 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->subject = ($row[$startcol + 52] !== null) ? (string) $row[$startcol + 52] : null;
             $this->contributor = ($row[$startcol + 53] !== null) ? (string) $row[$startcol + 53] : null;
             $this->language = ($row[$startcol + 54] !== null) ? (string) $row[$startcol + 54] : null;
-            $this->file_exists = ($row[$startcol + 55] !== null) ? (boolean) $row[$startcol + 55] : null;
+            $this->file_exists = ($row[$startcol + 55] !== null) ? (bool) $row[$startcol + 55] : null;
             $this->replay_gain = ($row[$startcol + 56] !== null) ? (string) $row[$startcol + 56] : null;
             $this->owner_id = ($row[$startcol + 57] !== null) ? (int) $row[$startcol + 57] : null;
             $this->cuein = ($row[$startcol + 58] !== null) ? (string) $row[$startcol + 58] : null;
             $this->cueout = ($row[$startcol + 59] !== null) ? (string) $row[$startcol + 59] : null;
-            $this->silan_check = ($row[$startcol + 60] !== null) ? (boolean) $row[$startcol + 60] : null;
-            $this->hidden = ($row[$startcol + 61] !== null) ? (boolean) $row[$startcol + 61] : null;
-            $this->is_scheduled = ($row[$startcol + 62] !== null) ? (boolean) $row[$startcol + 62] : null;
-            $this->is_playlist = ($row[$startcol + 63] !== null) ? (boolean) $row[$startcol + 63] : null;
+            $this->silan_check = ($row[$startcol + 60] !== null) ? (bool) $row[$startcol + 60] : null;
+            $this->hidden = ($row[$startcol + 61] !== null) ? (bool) $row[$startcol + 61] : null;
+            $this->is_scheduled = ($row[$startcol + 62] !== null) ? (bool) $row[$startcol + 62] : null;
+            $this->is_playlist = ($row[$startcol + 63] !== null) ? (bool) $row[$startcol + 63] : null;
             $this->filesize = ($row[$startcol + 64] !== null) ? (int) $row[$startcol + 64] : null;
             $this->description = ($row[$startcol + 65] !== null) ? (string) $row[$startcol + 65] : null;
             $this->artwork = ($row[$startcol + 66] !== null) ? (string) $row[$startcol + 66] : null;

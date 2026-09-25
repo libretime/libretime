@@ -45,7 +45,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     /**
      * The value for the visibility field.
      * Note: this column has a database default value of: true
-     * @var        boolean
+     * @var        bool
      */
     protected $visibility;
 
@@ -66,7 +66,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     /**
      * The value for the analyze_cue_points field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $analyze_cue_points;
 
@@ -152,7 +152,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     /**
      * Get the [visibility] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbVisibility()
     {
@@ -185,7 +185,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     /**
      * Get the [analyze_cue_points] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbAnalyzeCuePoints()
     {
@@ -251,7 +251,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -322,7 +322,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -389,10 +389,10 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->code = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->visibility = ($row[$startcol + 2] !== null) ? (boolean) $row[$startcol + 2] : null;
+            $this->visibility = ($row[$startcol + 2] !== null) ? (bool) $row[$startcol + 2] : null;
             $this->type_name = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->analyze_cue_points = ($row[$startcol + 5] !== null) ? (boolean) $row[$startcol + 5] : null;
+            $this->analyze_cue_points = ($row[$startcol + 5] !== null) ? (bool) $row[$startcol + 5] : null;
             $this->resetModified();
 
             $this->setNew(false);

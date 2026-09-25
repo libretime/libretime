@@ -78,8 +78,8 @@
  * @method CcShowInstances findOneByDbTimeFilled(string $time_filled) Return the first CcShowInstances filtered by the time_filled column
  * @method CcShowInstances findOneByDbCreated(string $created) Return the first CcShowInstances filtered by the created column
  * @method CcShowInstances findOneByDbLastScheduled(string $last_scheduled) Return the first CcShowInstances filtered by the last_scheduled column
- * @method CcShowInstances findOneByDbModifiedInstance(boolean $modified_instance) Return the first CcShowInstances filtered by the modified_instance column
- * @method CcShowInstances findOneByDbAutoPlaylistBuilt(boolean $autoplaylist_built) Return the first CcShowInstances filtered by the autoplaylist_built column
+ * @method CcShowInstances findOneByDbModifiedInstance(bool $modified_instance) Return the first CcShowInstances filtered by the modified_instance column
+ * @method CcShowInstances findOneByDbAutoPlaylistBuilt(bool $autoplaylist_built) Return the first CcShowInstances filtered by the autoplaylist_built column
  *
  * @method array findByDbId(int $id) Return CcShowInstances objects filtered by the id column
  * @method array findByDbDescription(string $description) Return CcShowInstances objects filtered by the description column
@@ -93,8 +93,8 @@
  * @method array findByDbTimeFilled(string $time_filled) Return CcShowInstances objects filtered by the time_filled column
  * @method array findByDbCreated(string $created) Return CcShowInstances objects filtered by the created column
  * @method array findByDbLastScheduled(string $last_scheduled) Return CcShowInstances objects filtered by the last_scheduled column
- * @method array findByDbModifiedInstance(boolean $modified_instance) Return CcShowInstances objects filtered by the modified_instance column
- * @method array findByDbAutoPlaylistBuilt(boolean $autoplaylist_built) Return CcShowInstances objects filtered by the autoplaylist_built column
+ * @method array findByDbModifiedInstance(bool $modified_instance) Return CcShowInstances objects filtered by the modified_instance column
+ * @method array findByDbAutoPlaylistBuilt(bool $autoplaylist_built) Return CcShowInstances objects filtered by the autoplaylist_built column
  *
  * @package    propel.generator.airtime.om
  */

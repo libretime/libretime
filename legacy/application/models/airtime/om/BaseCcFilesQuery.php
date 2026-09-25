@@ -241,15 +241,15 @@
  * @method CcFiles findOneByDbSubject(string $subject) Return the first CcFiles filtered by the subject column
  * @method CcFiles findOneByDbContributor(string $contributor) Return the first CcFiles filtered by the contributor column
  * @method CcFiles findOneByDbLanguage(string $language) Return the first CcFiles filtered by the language column
- * @method CcFiles findOneByDbFileExists(boolean $file_exists) Return the first CcFiles filtered by the file_exists column
+ * @method CcFiles findOneByDbFileExists(bool $file_exists) Return the first CcFiles filtered by the file_exists column
  * @method CcFiles findOneByDbReplayGain(string $replay_gain) Return the first CcFiles filtered by the replay_gain column
  * @method CcFiles findOneByDbOwnerId(int $owner_id) Return the first CcFiles filtered by the owner_id column
  * @method CcFiles findOneByDbCuein(string $cuein) Return the first CcFiles filtered by the cuein column
  * @method CcFiles findOneByDbCueout(string $cueout) Return the first CcFiles filtered by the cueout column
- * @method CcFiles findOneByDbSilanCheck(boolean $silan_check) Return the first CcFiles filtered by the silan_check column
- * @method CcFiles findOneByDbHidden(boolean $hidden) Return the first CcFiles filtered by the hidden column
- * @method CcFiles findOneByDbIsScheduled(boolean $is_scheduled) Return the first CcFiles filtered by the is_scheduled column
- * @method CcFiles findOneByDbIsPlaylist(boolean $is_playlist) Return the first CcFiles filtered by the is_playlist column
+ * @method CcFiles findOneByDbSilanCheck(bool $silan_check) Return the first CcFiles filtered by the silan_check column
+ * @method CcFiles findOneByDbHidden(bool $hidden) Return the first CcFiles filtered by the hidden column
+ * @method CcFiles findOneByDbIsScheduled(bool $is_scheduled) Return the first CcFiles filtered by the is_scheduled column
+ * @method CcFiles findOneByDbIsPlaylist(bool $is_playlist) Return the first CcFiles filtered by the is_playlist column
  * @method CcFiles findOneByDbFilesize(int $filesize) Return the first CcFiles filtered by the filesize column
  * @method CcFiles findOneByDbDescription(string $description) Return the first CcFiles filtered by the description column
  * @method CcFiles findOneByDbArtwork(string $artwork) Return the first CcFiles filtered by the artwork column
@@ -310,15 +310,15 @@
  * @method array findByDbSubject(string $subject) Return CcFiles objects filtered by the subject column
  * @method array findByDbContributor(string $contributor) Return CcFiles objects filtered by the contributor column
  * @method array findByDbLanguage(string $language) Return CcFiles objects filtered by the language column
- * @method array findByDbFileExists(boolean $file_exists) Return CcFiles objects filtered by the file_exists column
+ * @method array findByDbFileExists(bool $file_exists) Return CcFiles objects filtered by the file_exists column
  * @method array findByDbReplayGain(string $replay_gain) Return CcFiles objects filtered by the replay_gain column
  * @method array findByDbOwnerId(int $owner_id) Return CcFiles objects filtered by the owner_id column
  * @method array findByDbCuein(string $cuein) Return CcFiles objects filtered by the cuein column
  * @method array findByDbCueout(string $cueout) Return CcFiles objects filtered by the cueout column
- * @method array findByDbSilanCheck(boolean $silan_check) Return CcFiles objects filtered by the silan_check column
- * @method array findByDbHidden(boolean $hidden) Return CcFiles objects filtered by the hidden column
- * @method array findByDbIsScheduled(boolean $is_scheduled) Return CcFiles objects filtered by the is_scheduled column
- * @method array findByDbIsPlaylist(boolean $is_playlist) Return CcFiles objects filtered by the is_playlist column
+ * @method array findByDbSilanCheck(bool $silan_check) Return CcFiles objects filtered by the silan_check column
+ * @method array findByDbHidden(bool $hidden) Return CcFiles objects filtered by the hidden column
+ * @method array findByDbIsScheduled(bool $is_scheduled) Return CcFiles objects filtered by the is_scheduled column
+ * @method array findByDbIsPlaylist(bool $is_playlist) Return CcFiles objects filtered by the is_playlist column
  * @method array findByDbFilesize(int $filesize) Return CcFiles objects filtered by the filesize column
  * @method array findByDbDescription(string $description) Return CcFiles objects filtered by the description column
  * @method array findByDbArtwork(string $artwork) Return CcFiles objects filtered by the artwork column

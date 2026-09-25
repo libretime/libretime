@@ -56,7 +56,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
     /**
      * The value for the trackoffset field.
      * Note: this column has a database default value of: 0.0
-     * @var        double
+     * @var        float
      */
     protected $trackoffset;
 
@@ -201,7 +201,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
     /**
      * Get the [trackoffset] column value.
      *
-     * @return double
+     * @return float
      */
     public function getDbTrackOffset()
     {
@@ -421,13 +421,13 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
     /**
      * Set the value of [trackoffset] column.
      *
-     * @param  double $v new value
+     * @param  float $v new value
      * @return CcBlockcontents The current object (for fluent API support)
      */
     public function setDbTrackOffset($v)
     {
         if ($v !== null && is_numeric($v)) {
-            $v = (double) $v;
+            $v = (float) $v;
         }
 
         if ($this->trackoffset !== $v) {
@@ -612,7 +612,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
             $this->block_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
             $this->file_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
             $this->position = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
-            $this->trackoffset = ($row[$startcol + 4] !== null) ? (double) $row[$startcol + 4] : null;
+            $this->trackoffset = ($row[$startcol + 4] !== null) ? (float) $row[$startcol + 4] : null;
             $this->cliplength = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->cuein = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
             $this->cueout = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;

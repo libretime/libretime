@@ -95,7 +95,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
     /**
      * The value for the media_item_played field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $media_item_played;
 
@@ -437,7 +437,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
     /**
      * Get the [media_item_played] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbMediaItemPlayed()
     {
@@ -735,7 +735,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -906,7 +906,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
             $this->fade_out = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
             $this->cue_in = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
             $this->cue_out = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->media_item_played = ($row[$startcol + 10] !== null) ? (boolean) $row[$startcol + 10] : null;
+            $this->media_item_played = ($row[$startcol + 10] !== null) ? (bool) $row[$startcol + 10] : null;
             $this->instance_id = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
             $this->playout_status = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
             $this->broadcasted = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;

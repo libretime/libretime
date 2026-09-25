@@ -29,15 +29,15 @@
  * @method ImportedPodcast findOne(?PropelPDO $con = null) Return the first ImportedPodcast matching the query
  * @method ImportedPodcast findOneOrCreate(?PropelPDO $con = null) Return the first ImportedPodcast matching the query, or a new ImportedPodcast object populated from the query conditions when no match is found
  *
- * @method ImportedPodcast findOneByDbAutoIngest(boolean $auto_ingest) Return the first ImportedPodcast filtered by the auto_ingest column
+ * @method ImportedPodcast findOneByDbAutoIngest(bool $auto_ingest) Return the first ImportedPodcast filtered by the auto_ingest column
  * @method ImportedPodcast findOneByDbAutoIngestTimestamp(string $auto_ingest_timestamp) Return the first ImportedPodcast filtered by the auto_ingest_timestamp column
- * @method ImportedPodcast findOneByDbAlbumOverride(boolean $album_override) Return the first ImportedPodcast filtered by the album_override column
+ * @method ImportedPodcast findOneByDbAlbumOverride(bool $album_override) Return the first ImportedPodcast filtered by the album_override column
  * @method ImportedPodcast findOneByDbPodcastId(int $podcast_id) Return the first ImportedPodcast filtered by the podcast_id column
  *
  * @method array findByDbId(int $id) Return ImportedPodcast objects filtered by the id column
- * @method array findByDbAutoIngest(boolean $auto_ingest) Return ImportedPodcast objects filtered by the auto_ingest column
+ * @method array findByDbAutoIngest(bool $auto_ingest) Return ImportedPodcast objects filtered by the auto_ingest column
  * @method array findByDbAutoIngestTimestamp(string $auto_ingest_timestamp) Return ImportedPodcast objects filtered by the auto_ingest_timestamp column
- * @method array findByDbAlbumOverride(boolean $album_override) Return ImportedPodcast objects filtered by the album_override column
+ * @method array findByDbAlbumOverride(bool $album_override) Return ImportedPodcast objects filtered by the album_override column
  * @method array findByDbPodcastId(int $podcast_id) Return ImportedPodcast objects filtered by the podcast_id column
  *
  * @package    propel.generator.airtime.om

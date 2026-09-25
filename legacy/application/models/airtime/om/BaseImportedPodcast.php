@@ -38,7 +38,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     /**
      * The value for the auto_ingest field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $auto_ingest;
 
@@ -51,7 +51,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     /**
      * The value for the album_override field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $album_override;
 
@@ -122,7 +122,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     /**
      * Get the [auto_ingest] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbAutoIngest()
     {
@@ -175,7 +175,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     /**
      * Get the [album_override] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbAlbumOverride()
     {
@@ -231,7 +231,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -283,7 +283,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -362,9 +362,9 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->auto_ingest = ($row[$startcol + 1] !== null) ? (boolean) $row[$startcol + 1] : null;
+            $this->auto_ingest = ($row[$startcol + 1] !== null) ? (bool) $row[$startcol + 1] : null;
             $this->auto_ingest_timestamp = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->album_override = ($row[$startcol + 3] !== null) ? (boolean) $row[$startcol + 3] : null;
+            $this->album_override = ($row[$startcol + 3] !== null) ? (bool) $row[$startcol + 3] : null;
             $this->podcast_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
             $this->resetModified();
 
