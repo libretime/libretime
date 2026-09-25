@@ -105,6 +105,14 @@ jobs:
         run: make test
         working-directory: legacy
 
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: legacy-test-logs-php${{ matrix.php-version }}
+          path: legacy/tests/log/*.log
+          if-no-files-found: ignore
+
   locale:
     runs-on: ubuntu-latest
 
