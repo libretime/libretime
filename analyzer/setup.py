@@ -20,7 +20,7 @@ setup(
             "libretime-analyzer=libretime_analyzer.main:cli",
         ]
     },
-    python_requires=">=3.8",
+    python_requires=">=3.11",
     install_requires=[
         "mutagen>=1.45.1,<1.49",
         "pika>=1.0.0,<1.5",
