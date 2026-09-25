@@ -1,9 +1,16 @@
 <?php
 
-// Exclude deprecation notices.
-error_reporting(E_ALL & ~E_DEPRECATED);
-
 require_once dirname(__DIR__, 2) . '/application/preload.php';
+
+error_reporting(E_ALL);
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+ini_set('error_log', LIBRETIME_LOG_FILEPATH);
+
+// Make PHPUnit hand deprecations back to PHP instead of converting them to exceptions.
+if (class_exists('PHPUnit_Framework_Error_Deprecated')) {
+    PHPUnit_Framework_Error_Deprecated::$enabled = false;
+}
 
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, [
