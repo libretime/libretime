@@ -1,7 +1,7 @@
 bandit>=1.7.4,<2
 black>=23.1.0,<27
 flake8>=6.0.0,<8
-isort>=5.12.0,<7
+isort>=5.12.0,<10
 mypy>=1.6.0,<2
 pylint>=2.16.1,<4
 pytest-cov>=4.0.0,<8
