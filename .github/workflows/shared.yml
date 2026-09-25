@@ -27,24 +27,6 @@ jobs:
     with:
       context: shared
 
-  test-focal:
-    uses: ./.github/workflows/_python-test.yml
-    with:
-      context: shared
-      release: focal
-
-  test-bullseye:
-    uses: ./.github/workflows/_python-test.yml
-    with:
-      context: shared
-      release: bullseye
-
-  test-jammy:
-    uses: ./.github/workflows/_python-test.yml
-    with:
-      context: shared
-      release: jammy
-
   test-bookworm:
     uses: ./.github/workflows/_python-test.yml
     with:

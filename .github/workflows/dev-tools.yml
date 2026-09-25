@@ -15,8 +15,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - distribution: ubuntu
-            release: jammy
           - distribution: debian
             release: bookworm
           - distribution: ubuntu

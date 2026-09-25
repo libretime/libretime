@@ -25,9 +25,6 @@ def test_parse_liquidsoap_version(version, expected):
 
 def test_get_liquidsoap_version():
     liquidsoap_version_map = {
-        "focal": (1, 4, 2),
-        "bullseye": (1, 4, 3),
-        "jammy": (2, 0, 2),
         "bookworm": (2, 1, 3),
     }
 

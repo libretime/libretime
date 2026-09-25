@@ -32,15 +32,6 @@ def test_analyze_playability_invalid_filepath():
         test_analyze_playability("non-existent-file")
 
 
-def test_analyze_playability_invalid_wma():
-    # Liquisoap does not fail with wma files on focal, bullseye, jammy, bookworm
-    if distro.codename() in ("focal", "bullseye", "jammy", "bookworm"):
-        return
-
-    with pytest.raises(UnplayableFileError):
-        test_analyze_playability(FILE_INVALID_DRM)
-
-
 def test_analyze_playability_unknown():
     with pytest.raises(UnplayableFileError):
         test_analyze_playability("https://www.google.com")
