@@ -2296,7 +2296,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: "#/components/schemas/Preference"
-        required: true
       security:
         - cookieAuth: []
         - basicAuth: []
@@ -2351,7 +2350,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: "#/components/schemas/Preference"
-        required: true
       security:
         - cookieAuth: []
         - basicAuth: []
@@ -2740,6 +2738,7 @@ paths:
               - tr
               - tt
               - udm
+              - ug
               - uk
               - ur
               - uz
@@ -6779,8 +6778,6 @@ components:
           nullable: true
       required:
         - id
-        - key
-        - user
     ReadSchedule:
       type: object
       properties:
