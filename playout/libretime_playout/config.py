@@ -1,5 +1,6 @@
+import warnings
 from pathlib import Path
-from typing import List, Literal, Optional
+from typing import Any, List, Literal, Optional
 
 from libretime_shared.config import (
     BaseConfig,
@@ -19,6 +20,8 @@ POLL_INTERVAL: float = 400.0
 class PlayoutConfig(BaseModel):
     liquidsoap_host: str = "localhost"
     liquidsoap_port: int = 1234
+
+    cache_ahead_hours: int = 3
 
     record_file_format: Literal["mp3", "ogg"] = "ogg"  # record_file_type
     record_bitrate: int = 256
@@ -60,3 +63,12 @@ class Config(BaseConfig):
     playout: PlayoutConfig = PlayoutConfig()
     liquidsoap: LiquidsoapConfig = LiquidsoapConfig()
     stream: StreamConfig = StreamConfig()
+
+    def model_post_init(self, _: Any) -> None:
+        if self.general.cache_ahead_hours is not None:
+            warnings.warn(
+                "The [general.cache_ahead_hours] config is deprecated, use [playout.cache_ahead_hours] instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            self.playout.cache_ahead_hours = self.general.cache_ahead_hours
