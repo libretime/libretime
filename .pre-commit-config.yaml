@@ -29,7 +29,7 @@ repos:
         exclude: ^api
 
   - repo: https://github.com/jooola/pre-commit-prettier
-    rev: 3.9.8
+    rev: 3.9.9
     hooks:
       - id: prettier
         files: \.(md|mdx|yml|yaml|js|jsx|ts|tsx|json|css)$
