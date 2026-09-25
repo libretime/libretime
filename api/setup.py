@@ -19,7 +19,7 @@ setup(
         "libretime_api": ["legacy/migrations/sql/*.sql"],
     },
     include_package_data=True,
-    python_requires=">=3.8",
+    python_requires=">=3.11",
     entry_points={
         "console_scripts": [
             "libretime-api=libretime_api.manage:main",

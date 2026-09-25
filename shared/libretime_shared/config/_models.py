@@ -1,17 +1,11 @@
-import sys
 from enum import Enum
 from typing import List, Literal, Optional, Union
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from pydantic import BaseModel, Field, field_validator
 from typing_extensions import Annotated
 
 from ._fields import AnyHttpUrlStr, AnyUrlStr, StrNoLeadingSlash, StrNoTrailingSlash
-
-if sys.version_info < (3, 9):
-    from backports.zoneinfo import ZoneInfo, ZoneInfoNotFoundError
-else:
-    from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
-
 
 # GeneralConfig
 ########################################################################################
