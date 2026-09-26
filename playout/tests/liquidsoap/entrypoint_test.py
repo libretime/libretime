@@ -14,7 +14,6 @@ from .fixtures import TEST_STREAM_CONFIGS, make_config_with_stream
 @pytest.mark.parametrize(
     "version",
     [
-        pytest.param((1, 4, 4), id="1.4"),
         pytest.param((2, 1, 3), id="2.1"),
     ],
 )
@@ -109,7 +108,4 @@ def test_liquidsoap_unsupported_output_aac(
     with pytest.raises(CalledProcessError) as exception:
         check_output(["liquidsoap", "--check", str(entrypoint_filepath)])
 
-    if liq_version < (2, 1, 0):
-        assert b"You must be missing an optional dependency." in exception.value.stdout
-    else:
-        assert b"Unsupported format: %fdkaac" in exception.value.stdout
+    assert b"Unsupported format: %fdkaac" in exception.value.stdout

@@ -20,8 +20,6 @@ def liq_version_fixture():
     name="liq_version_param",
     scope="session",
     params=[
-        pytest.param((1, 4), id="1.4"),
-        pytest.param((2, 0), id="2.0"),
         pytest.param((2, 1), id="2.1"),
     ],
 )

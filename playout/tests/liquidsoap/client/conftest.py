@@ -19,7 +19,7 @@ setup_logger("debug")
 
 
 LIQ_SCRIPT = """
-set("log.file", false)
+settings.log.file.set(false)
 {settings}
 
 var1 = interactive.string("var1", "default")
@@ -28,13 +28,13 @@ output.dummy(blank(id="safe_blank"))
 """
 
 LIQ_TELNET_SETTINGS = """
-set("server.telnet", true)
-set("server.telnet.port", {telnet_port})
+settings.server.telnet.set(true)
+settings.server.telnet.port.set({telnet_port})
 """
 
 LIQ_SOCKET_SETTINGS = """
-set("server.socket", true)
-set("server.socket.path", "{socket_path}")
+settings.server.socket.set(true)
+settings.server.socket.path.set("{socket_path}")
 """
 
 
