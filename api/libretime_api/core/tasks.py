@@ -3,6 +3,10 @@ from datetime import timedelta
 from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.core import mail
+from django.db.models import F
+from django.utils import timezone
+
+from .models import Session
 
 logger = get_task_logger(__name__)
 
@@ -35,3 +39,23 @@ def send_mail(
         None,  # From
         recipients,
     )
+
+
+@shared_task()
+def clean_expired_sessions() -> int:
+    """
+    Delete expired php sessions.
+
+    Returns:
+        Number of deleted sessions.
+    """
+    now = timezone.now().timestamp()
+
+    count, _ = (
+        Session.objects.alias(expired_at=F("updated_at") + F("lifetime"))
+        .filter(expired_at__lt=now)
+        .delete()
+    )
+
+    logger.info("deleted %d expired sessions", count)
+    return count

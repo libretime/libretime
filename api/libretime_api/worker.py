@@ -23,6 +23,10 @@ app.autodiscover_tasks(
 )
 
 app.conf.beat_schedule = {
+    "core-clean-expired-sessions": {
+        "task": "libretime_api.core.tasks.clean_expired_sessions",
+        "schedule": schedule(run_every=timedelta(hours=6)),
+    },
     "podcasts-clean-failed-imports": {
         "task": "libretime_api.podcasts.tasks.clean_failed_imports",
         "schedule": schedule(run_every=timedelta(hours=1)),
