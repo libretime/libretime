@@ -1,58 +1,4 @@
 # serializer version: 1
-# name: test_liq_conn_help[socket-1.4]
-  '''
-  Available commands:
-  | dummy.autostart
-  | dummy.metadata
-  | dummy.remaining
-  | dummy.skip
-  | dummy.start
-  | dummy.status
-  | dummy.stop
-  | exit
-  | help [<command>]
-  | list
-  | quit
-  | request.alive
-  | request.all
-  | request.metadata <rid>
-  | request.on_air
-  | request.resolving
-  | request.trace <rid>
-  | uptime
-  | var.get <variable>
-  | var.list
-  | var.set <variable> = <value>
-  | version
-  
-  Type "help <command>" for more information.
-  '''
-# ---
-# name: test_liq_conn_help[socket-2.0]
-  '''
-  Available commands:
-  | dummy.metadata
-  | dummy.remaining
-  | dummy.skip
-  | exit
-  | help [<command>]
-  | list
-  | quit
-  | request.alive
-  | request.all
-  | request.metadata <rid>
-  | request.on_air
-  | request.resolving
-  | request.trace <rid>
-  | uptime
-  | var.get
-  | var.list
-  | var.set <name> = <value>
-  | version
-  
-  Type "help <command>" for more information.
-  '''
-# ---
 # name: test_liq_conn_help[socket-2.1]
   '''
   Available commands:
@@ -61,60 +7,6 @@
   | dummy.skip
   | exit
   | help [<command>]
-  | quit
-  | request.alive
-  | request.all
-  | request.metadata <rid>
-  | request.on_air
-  | request.resolving
-  | request.trace <rid>
-  | uptime
-  | var.get
-  | var.list
-  | var.set <name> = <value>
-  | version
-  
-  Type "help <command>" for more information.
-  '''
-# ---
-# name: test_liq_conn_help[telnet-1.4]
-  '''
-  Available commands:
-  | dummy.autostart
-  | dummy.metadata
-  | dummy.remaining
-  | dummy.skip
-  | dummy.start
-  | dummy.status
-  | dummy.stop
-  | exit
-  | help [<command>]
-  | list
-  | quit
-  | request.alive
-  | request.all
-  | request.metadata <rid>
-  | request.on_air
-  | request.resolving
-  | request.trace <rid>
-  | uptime
-  | var.get <variable>
-  | var.list
-  | var.set <variable> = <value>
-  | version
-  
-  Type "help <command>" for more information.
-  '''
-# ---
-# name: test_liq_conn_help[telnet-2.0]
-  '''
-  Available commands:
-  | dummy.metadata
-  | dummy.remaining
-  | dummy.skip
-  | exit
-  | help [<command>]
-  | list
   | quit
   | request.alive
   | request.all
@@ -155,24 +47,6 @@
   Type "help <command>" for more information.
   '''
 # ---
-# name: test_liq_conn_vars[socket-1.4]
-  '"default"'
-# ---
-# name: test_liq_conn_vars[socket-1.4].1
-  'Variable var1 set (was "default").'
-# ---
-# name: test_liq_conn_vars[socket-1.4].2
-  '"changed"'
-# ---
-# name: test_liq_conn_vars[socket-2.0]
-  'default'
-# ---
-# name: test_liq_conn_vars[socket-2.0].1
-  'Variable var1 set.'
-# ---
-# name: test_liq_conn_vars[socket-2.0].2
-  '"changed"'
-# ---
 # name: test_liq_conn_vars[socket-2.1]
   'default'
 # ---
@@ -180,24 +54,6 @@
   'Variable var1 set.'
 # ---
 # name: test_liq_conn_vars[socket-2.1].2
-  '"changed"'
-# ---
-# name: test_liq_conn_vars[telnet-1.4]
-  '"default"'
-# ---
-# name: test_liq_conn_vars[telnet-1.4].1
-  'Variable var1 set (was "default").'
-# ---
-# name: test_liq_conn_vars[telnet-1.4].2
-  '"changed"'
-# ---
-# name: test_liq_conn_vars[telnet-2.0]
-  'default'
-# ---
-# name: test_liq_conn_vars[telnet-2.0].1
-  'Variable var1 set.'
-# ---
-# name: test_liq_conn_vars[telnet-2.0].2
   '"changed"'
 # ---
 # name: test_liq_conn_vars[telnet-2.1]

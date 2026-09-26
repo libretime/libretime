@@ -66,14 +66,7 @@ class LiquidsoapClient:
         if not self._lock.held_by_current_thread():
             raise RuntimeError("_set_var must be called with self._lock held")
 
-        if self._version is None:
-            self._get_version()
-
-        if self._version < (2, 0, 0):
-            # liquidsoap <2.0 requires spaces around the = sign.
-            self.conn.write(f"var.set {name} = {value}")
-        else:
-            self.conn.write(f"var.set {name}={value}")
+        self.conn.write(f"var.set {name}={value}")
 
         result = self.conn.read()
         if f"Variable {name} set" not in result:

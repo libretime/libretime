@@ -1,11 +1,3 @@
-{%- macro compat_settings_set(key, value) -%}
-{%- if version >= (2, 0, 0) -%}
-settings.{{ key }}.set({{ value }})
-{%- else -%}
-set("{{ key }}", {{ value }})
-{%- endif -%}
-{%- endmacro -%}
-
 # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
 ###########################################################
 # The ignore() lines are to squash unused variable warnings
@@ -15,33 +7,27 @@ set("{{ key }}", {{ value }})
 # Inputs
 input_main_mount = {{ config.stream.inputs.main.mount | quote }}
 input_main_port = {{ config.stream.inputs.main.port }}
-{%- if version < (2, 0, 0) %}
-input_main_secure = {{ config.stream.inputs.main.secure | string | lower }}
-{%- endif %}
 input_show_mount = {{ config.stream.inputs.show.mount | quote }}
 input_show_port = {{ config.stream.inputs.show.port }}
-{%- if version < (2, 0, 0) %}
-input_show_secure = {{ config.stream.inputs.show.secure | string | lower }}
-{%- endif %}
 
 # Settings
 {% if paths.log_filepath is defined -%}
-{{ compat_settings_set("log.file.path", paths.log_filepath | quote) }}
+settings.log.file.path.set({{ paths.log_filepath | quote }})
 {%- else -%}
-{{ compat_settings_set("log.file", "false") }}
+settings.log.file.set(false)
 {%- endif %}
 
-{{ compat_settings_set("server.telnet", "true") }}
-{{ compat_settings_set("server.telnet.bind_addr", config.liquidsoap.server_listen_address | quote) }}
-{{ compat_settings_set("server.telnet.port", config.liquidsoap.server_listen_port) }}
+settings.server.telnet.set(true)
+settings.server.telnet.bind_addr.set({{ config.liquidsoap.server_listen_address | quote }})
+settings.server.telnet.port.set({{ config.liquidsoap.server_listen_port }})
 
-{{ compat_settings_set("harbor.bind_addrs", config.liquidsoap.harbor_listen_address | tojson) }}
+settings.harbor.bind_addrs.set({{ config.liquidsoap.harbor_listen_address | tojson }})
 
 {% if config.liquidsoap.harbor_ssl_certificate -%}
-{{ compat_settings_set("harbor.ssl.certificate", config.liquidsoap.harbor_ssl_certificate | quote) }}
-{{ compat_settings_set("harbor.ssl.private_key", config.liquidsoap.harbor_ssl_private_key | quote) }}
+settings.harbor.ssl.certificate.set({{ config.liquidsoap.harbor_ssl_certificate | quote }})
+settings.harbor.ssl.private_key.set({{ config.liquidsoap.harbor_ssl_private_key | quote }})
 {% if config.liquidsoap.harbor_ssl_password -%}
-{{ compat_settings_set("harbor.ssl.password", config.liquidsoap.harbor_ssl_password | quote) }}
+settings.harbor.ssl.password.set({{ config.liquidsoap.harbor_ssl_password | quote }})
 {%- endif %}
 {% endif -%}
 
