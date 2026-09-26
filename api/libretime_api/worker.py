@@ -19,6 +19,7 @@ app.autodiscover_tasks(
     [
         "libretime_api.core.tasks",
         "libretime_api.podcasts.tasks",
+        "libretime_api.schedule.tasks",
     ]
 )
 
@@ -30,6 +31,10 @@ app.conf.beat_schedule = {
     "podcasts-clean-failed-imports": {
         "task": "libretime_api.podcasts.tasks.clean_failed_imports",
         "schedule": schedule(run_every=timedelta(hours=1)),
+    },
+    "schedule-clean-overbooked-schedule": {
+        "task": "libretime_api.schedule.tasks.clean_overbooked_schedule",
+        "schedule": schedule(run_every=timedelta(hours=6)),
     },
     "legacy-trigger-task-manager": {
         "task": "libretime_api.worker.legacy_trigger_task_manager",
