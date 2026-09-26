@@ -1,5 +1,61 @@
 # Changelog
 
+## [5.0.0](https://github.com/libretime/libretime/compare/4.5.0...5.0.0) (2026-09-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop support for liquisoap <2.1 ([#3347](https://github.com/libretime/libretime/issues/3347))
+* **docker:** update postgres image to v17 ([#3335](https://github.com/libretime/libretime/issues/3335))
+* drop support for python <3.11 ([#3322](https://github.com/libretime/libretime/issues/3322))
+* drop support for focal, bullseye and jammy ([#3323](https://github.com/libretime/libretime/issues/3323))
+* drop support for php <8.2 ([#3272](https://github.com/libretime/libretime/issues/3272))
+* merge worker inside api ([#3204](https://github.com/libretime/libretime/issues/3204))
+
+### Features
+
+* cache legacy live-info, week-info and artwork urls in docker setup ([#3344](https://github.com/libretime/libretime/issues/3344)) ([7655e97](https://github.com/libretime/libretime/commit/7655e97499199542068f33a991c17d2d038ed71d))
+* **docker:** update postgres image to v17 ([#3335](https://github.com/libretime/libretime/issues/3335)) ([b2bc7c2](https://github.com/libretime/libretime/commit/b2bc7c2acfd6bddad994d37275b43c500a804bbb))
+* drop support for focal, bullseye and jammy ([#3323](https://github.com/libretime/libretime/issues/3323)) ([0898496](https://github.com/libretime/libretime/commit/08984961304f6ee9518ae6b8d7f199a1534bfd81))
+* drop support for liquisoap &lt;2.1 ([#3347](https://github.com/libretime/libretime/issues/3347)) ([714f776](https://github.com/libretime/libretime/commit/714f77620d5c3f4e28b4793c602028eb7384aa39))
+* drop support for php &lt;8.2 ([#3272](https://github.com/libretime/libretime/issues/3272)) ([479fd8f](https://github.com/libretime/libretime/commit/479fd8f52526f903d44e8c59a30c16bdba63ef84))
+* drop support for python &lt;3.11 ([#3322](https://github.com/libretime/libretime/issues/3322)) ([f0f69d3](https://github.com/libretime/libretime/commit/f0f69d3f6793428d7dc70a5eadfeaff6b883d373))
+* **installer:** support debian 12 (bookworm) ([#3239](https://github.com/libretime/libretime/issues/3239)) ([8803b19](https://github.com/libretime/libretime/commit/8803b196843c295e66e30a4cd4e6908afc63ecee))
+* **legacy:** now macro should use show start time when available ([#3175](https://github.com/libretime/libretime/issues/3175)) ([5d7df2f](https://github.com/libretime/libretime/commit/5d7df2feb7ba6149aab188aaf9ac36589bdc4cc2))
+* **legacy:** persist database connections ([#3186](https://github.com/libretime/libretime/issues/3186)) ([14bb3e8](https://github.com/libretime/libretime/commit/14bb3e8889f4a9e46ee0acf639e3b73c76d3af58))
+* merge worker inside api ([#3204](https://github.com/libretime/libretime/issues/3204)) ([0716a16](https://github.com/libretime/libretime/commit/0716a16f5c6ba29b61a075ddb255855758b11e98))
+* **playout:** add Liquidsoap 2.1 script directory for Debian 12 ([#3244](https://github.com/libretime/libretime/issues/3244)) ([a04d700](https://github.com/libretime/libretime/commit/a04d700a01840ddabbee9cef366ccb657523b9f0))
+* send password reset mail using the worker ([#3292](https://github.com/libretime/libretime/issues/3292)) ([7bba125](https://github.com/libretime/libretime/commit/7bba12540ea886f4256835b58715d94b3817e0e5))
+* upgrade docker base image to bookworm ([#3275](https://github.com/libretime/libretime/issues/3275)) ([6b78d37](https://github.com/libretime/libretime/commit/6b78d37280117ac724f3fc48a072ba8db6dbd20c))
+* use python 3.11 in docker image ([#3325](https://github.com/libretime/libretime/issues/3325)) ([fb87b3b](https://github.com/libretime/libretime/commit/fb87b3b089ae9d76ba13b72406a55a307ba3b76b))
+
+
+### Bug Fixes
+
+* **analyzer:** add default error handling for non-UTF8 metadata ([#3232](https://github.com/libretime/libretime/issues/3232)) ([401db72](https://github.com/libretime/libretime/commit/401db725aef9ab06d1abaf7ab062ef9335688b42))
+* **api:** add psql client to api container image ([#3223](https://github.com/libretime/libretime/issues/3223)) ([698ce72](https://github.com/libretime/libretime/commit/698ce72c5b38acd13c0ca46d7a791544ca0b79c4))
+* **api:** disable import-untyped mypy error code ([#3249](https://github.com/libretime/libretime/issues/3249)) ([f371bcf](https://github.com/libretime/libretime/commit/f371bcfcbfd207a0069a51f20ed1c2a49edf0109))
+* **api:** file upload with library ([#3213](https://github.com/libretime/libretime/issues/3213)) ([643504e](https://github.com/libretime/libretime/commit/643504edc974a5f39cc0b39b7ee6a4bd39431b70))
+* **deps:** update dependency league/uri to v7 ([#3308](https://github.com/libretime/libretime/issues/3308)) ([300cdd4](https://github.com/libretime/libretime/commit/300cdd4e2c8ac7469c1993eb79e8e271e0e17016))
+* **legacy:** add PHP 8.2 vendor compatibility patch for ZF1 ([#3242](https://github.com/libretime/libretime/issues/3242)) ([5d6736f](https://github.com/libretime/libretime/commit/5d6736f888134644f242fb7329394ce972bcb028))
+* **legacy:** do not expose the running php version ([#3345](https://github.com/libretime/libretime/issues/3345)) ([fb0c613](https://github.com/libretime/libretime/commit/fb0c613b067252a952301e54d9649b3e5ffdf5ba))
+* **legacy:** do not send content-type header twice ([#3187](https://github.com/libretime/libretime/issues/3187)) ([9d3a880](https://github.com/libretime/libretime/commit/9d3a88093ef60a1731a3e2be582f16c10ec40644))
+* **legacy:** do not throw an error on deprecation notices ([#3315](https://github.com/libretime/libretime/issues/3315)) ([026a71b](https://github.com/libretime/libretime/commit/026a71b62c7aaa739600685ef555eda51a37a997))
+* **legacy:** fix PHP 8.2 dynamic properties and deprecations ([#3241](https://github.com/libretime/libretime/issues/3241)) ([3484472](https://github.com/libretime/libretime/commit/348447290f23cb392fa1d4f4969d150066473edd))
+* **legacy:** keep smart block criteria groups together ([#3318](https://github.com/libretime/libretime/issues/3318)) ([6b19c56](https://github.com/libretime/libretime/commit/6b19c56e9825ed000a605793ba16c1b0dd93b921)), closes [#3317](https://github.com/libretime/libretime/issues/3317)
+* **legacy:** replace deprecated strftime() with date() in Propel Base models ([#3240](https://github.com/libretime/libretime/issues/3240)) ([e396d4c](https://github.com/libretime/libretime/commit/e396d4c9e97bc451f3e42fca0c82bf4feb8df132))
+* liquidsoap 2.1 deprecation warnings ([#3286](https://github.com/libretime/libretime/issues/3286)) ([6d93f88](https://github.com/libretime/libretime/commit/6d93f88a275b3f040909d5a9579afce1ba0ff6d0))
+* php8.*-apcu-bc package no longer exists ([#3324](https://github.com/libretime/libretime/issues/3324)) ([0ddfa7e](https://github.com/libretime/libretime/commit/0ddfa7ec541962495b54748fc59b5296bbf6bbdf))
+* **playout:** add vine/five.py Python 3.11 compatibility patch ([#3243](https://github.com/libretime/libretime/issues/3243)) ([9e772cf](https://github.com/libretime/libretime/commit/9e772cfc401f2682ee190cfabdeb8273d498b788))
+* **playout:** cache show instances and shows when fetching schedule ([#3339](https://github.com/libretime/libretime/issues/3339)) ([d65e648](https://github.com/libretime/libretime/commit/d65e648a9962f0859865bfdaacc18a83de77f6d7))
+* **playout:** deadlock when setting liquidsoap var ([#3341](https://github.com/libretime/libretime/issues/3341)) ([376eae6](https://github.com/libretime/libretime/commit/376eae6f9f6aec77a89a3a3215e5c219d08ddc2c))
+* **playout:** preserve liquidsoap 1.4 syntax for settings vars ([#3307](https://github.com/libretime/libretime/issues/3307)) ([5e80345](https://github.com/libretime/libretime/commit/5e80345d7284ee51951beb12eaa2883c565b77ce))
+* **playout:** remove trailing whitespace in vendor-zf1-php82.patch and vine-python311.patch files ([#3250](https://github.com/libretime/libretime/issues/3250)) ([957de8c](https://github.com/libretime/libretime/commit/957de8cc5d44f843979ae08f86782f17fdbf9e10))
+* **playout:** restarting liquidsoap lets the connection go stale. also enforces thread safety ([#3251](https://github.com/libretime/libretime/issues/3251)) ([d5050be](https://github.com/libretime/libretime/commit/d5050be16be68131876218420285bc0c67a6b960))
+* **playout:** update kombu to &gt;=5.5.0 and remove vine patch ([#3291](https://github.com/libretime/libretime/issues/3291)) ([a9c44a6](https://github.com/libretime/libretime/commit/a9c44a6bf76a88bec87ecc8aca78c7c6e183a902))
+* unpin pip version ([#3290](https://github.com/libretime/libretime/issues/3290)) ([d9477f0](https://github.com/libretime/libretime/commit/d9477f0488c96252356c00f1f487b1c11c8a0a9e))
+* **worker:** include User-Agent in podcast download request ([#3229](https://github.com/libretime/libretime/issues/3229)) ([60bb0b7](https://github.com/libretime/libretime/commit/60bb0b7835547d10f8590f9c0bad7dba7896199f))
+
 ## [4.5.0](https://github.com/libretime/libretime/compare/4.4.0...4.5.0) (2025-07-16)
 
 
