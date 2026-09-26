@@ -34,6 +34,7 @@ def insert_event(events: Events, event_key: str, event: AnyEvent) -> None:
     events[key] = event
 
 
+# pylint: disable=too-many-locals
 def get_schedule(api_client: ApiClient) -> Events:
     stream_preferences = StreamPreferences(**api_client.get_stream_preferences().json())
 
