@@ -30,7 +30,7 @@ end
 def append_title(m) =
   log("Using message format #{message_format()}")
 
-  if list.mem_assoc("mapped", m) then
+  if list.assoc.mem("mapped", m) then
     # protection against applying this function twice. It shouldn't be happening and bug
     # file with Liquidsoap.
     m
