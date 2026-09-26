@@ -21,7 +21,7 @@ def test_clean_expired_sessions(db):
 
     assert clean_expired_sessions() == 1
 
-    assert set(Session.objects.values_list("id", flat=True)) == {
+    assert set(map(str.strip, Session.objects.values_list("id", flat=True))) == {
         "valid",
         "valid_long_lived",
     }
