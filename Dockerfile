@@ -280,7 +280,7 @@ COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=libretime-legacy /var/www/html /var/www/html
 
-VOLUME [ /var/lib/nginx/cache ]
+VOLUME /var/lib/nginx/cache
 
 ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
