@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import datetime, time, timedelta
 from operator import itemgetter
 
@@ -33,6 +34,7 @@ def insert_event(events: Events, event_key: str, event: AnyEvent) -> None:
     events[key] = event
 
 
+# pylint: disable=too-many-locals
 def get_schedule(api_client: ApiClient) -> Events:
     stream_preferences = StreamPreferences(**api_client.get_stream_preferences().json())
 
@@ -51,13 +53,26 @@ def get_schedule(api_client: ApiClient) -> Events:
         }
     ).json()
 
+    show_instance_cache: dict[int, dict] = {}
+    show_cache: dict[int, dict] = {}
+
+    def get_show_instance(pk: int) -> dict:
+        if pk not in show_instance_cache:
+            show_instance_cache[pk] = api_client.get_show_instance(pk).json()
+        return deepcopy(show_instance_cache[pk])
+
+    def get_show(pk: int) -> dict:
+        if pk not in show_cache:
+            show_cache[pk] = api_client.get_show(pk).json()
+        return deepcopy(show_cache[pk])
+
     events: dict[str, AnyEvent] = {}
     for item in sorted(schedule, key=itemgetter("starts_at")):
         item["starts_at"] = event_isoparse(item["starts_at"])
         item["ends_at"] = event_isoparse(item["ends_at"])
 
-        show_instance = api_client.get_show_instance(item["instance"]).json()
-        show = api_client.get_show(show_instance["show"]).json()
+        show_instance = get_show_instance(item["instance"])
+        show = get_show(show_instance["show"])
 
         if show["live_enabled"]:
             show_instance["starts_at"] = event_isoparse(show_instance["starts_at"])
