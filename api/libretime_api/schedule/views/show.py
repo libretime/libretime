@@ -1,3 +1,4 @@
+from django_filters import rest_framework as filters
 from rest_framework import viewsets
 
 from ..models import Show, ShowDays, ShowHost, ShowInstance, ShowRebroadcast
@@ -8,6 +9,15 @@ from ..serializers import (
     ShowRebroadcastSerializer,
     ShowSerializer,
 )
+
+
+class ShowInstanceFilter(filters.FilterSet):
+    starts_before = filters.IsoDateTimeFilter(field_name="starts_at", lookup_expr="lte")
+    ends_after = filters.IsoDateTimeFilter(field_name="ends_at", lookup_expr="gte")
+
+    class Meta:
+        model = ShowInstance
+        fields = ["starts_before", "ends_after"]
 
 
 class ShowViewSet(viewsets.ModelViewSet):
@@ -32,6 +42,8 @@ class ShowInstanceViewSet(viewsets.ModelViewSet):
     queryset = ShowInstance.objects.all()
     serializer_class = ShowInstanceSerializer
     model_permission_name = "showinstance"
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = ShowInstanceFilter
 
 
 class ShowRebroadcastViewSet(viewsets.ModelViewSet):

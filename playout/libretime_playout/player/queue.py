@@ -57,19 +57,45 @@ class PypoLiqQueue(Thread):
             else:
                 logger.info("New schedule received")
 
-                # new schedule received. Replace old one with this.
-                schedule_deque.clear()
+                # Preserve pending future ActionEvents (e.g. kick_out) that are
+                # not represented in the incoming schedule. A pure-live show has
+                # no cc_schedule rows so its kick_out is never rebuilt on refresh.
+                now = datetime.utcnow()
+                from .events import ActionEvent
 
+                new_action_starts = {
+                    item.start
+                    for item in media_schedule.values()
+                    if isinstance(item, ActionEvent)
+                }
+                preserved = [
+                    item
+                    for item in schedule_deque
+                    if isinstance(item, ActionEvent)
+                    and item.start > now
+                    and item.start not in new_action_starts
+                ]
+
+                schedule_deque.clear()
                 keys = sorted(media_schedule.keys())
                 for i in keys:
                     schedule_deque.append(media_schedule[i])
 
-                if len(keys):
+                if preserved:
+                    logger.info(
+                        "Preserving %d pending action event(s) across schedule refresh",
+                        len(preserved),
+                    )
+                    schedule_deque.extend(preserved)
+                    sorted_items = sorted(schedule_deque, key=lambda x: x.start)
+                    schedule_deque.clear()
+                    schedule_deque.extend(sorted_items)
+
+                if len(schedule_deque):
                     time_until_next_play = seconds_between(
                         datetime.utcnow(),
-                        media_schedule[keys[0]].start,
+                        schedule_deque[0].start,
                     )
-
                 else:
                     time_until_next_play = None
 
