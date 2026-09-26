@@ -20,6 +20,8 @@ services:
     volumes:
       - ./playout:/src
       - ./dev/playout:/app
+    environment:
+      LIBRETIME_LOG_LEVEL: debug
 
   liquidsoap:
     build:
@@ -31,6 +33,8 @@ services:
       - ./playout:/src
       - ./dev/playout:/app
       - ./dev/certs:/certs
+    environment:
+      LIBRETIME_LOG_LEVEL: debug
       ## See https://libretime.org/docs/admin-manual/tutorials/setup-a-pulseaudio-output-inside-containers/
       # - ./dev/pulse.socket:/tmp/pulse.socket
       # - ./docker/pulse.client.conf:/etc/pulse/client.conf
@@ -41,6 +45,8 @@ services:
       target: libretime-analyzer
     volumes:
       - ./analyzer:/src
+    environment:
+      LIBRETIME_LOG_LEVEL: debug
 
   api:
     build:
@@ -50,6 +56,7 @@ services:
       - ./api:/src
     command: /usr/local/bin/libretime-api runserver 0.0.0.0:9001
     environment:
+      LIBRETIME_LOG_LEVEL: debug
       LIBRETIME_DEBUG: "true"
 
   worker:
@@ -58,6 +65,8 @@ services:
       target: libretime-worker
     volumes:
       - ./api:/src
+    environment:
+      LIBRETIME_LOG_LEVEL: debug
 
   legacy:
     build:
@@ -65,6 +74,8 @@ services:
       target: libretime-legacy
     volumes:
       - ./legacy:/var/www/html
+    environment:
+      LIBRETIME_LOG_LEVEL: debug
 
   nginx:
     build:
