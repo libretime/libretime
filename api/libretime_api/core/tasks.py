@@ -3,13 +3,13 @@ from datetime import timedelta
 from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.core import mail
+from django.db.models import F
 from django.utils import timezone
 
 from .models import Session
 
 logger = get_task_logger(__name__)
 
-from django.db.models import F
 
 SEND_EMAIL_SOFT_TIME_LIMIT = timedelta(minutes=1).seconds
 SEND_EMAIL_TIME_LIMIT = timedelta(minutes=2).seconds
