@@ -16,7 +16,7 @@ class PreferenceUnitTest extends PHPUnit_Framework_TestCase
         parent::setUp();
     }
 
-    public function testSetShowsPopulatedUntil()
+    public function testSetShowsPopulatedUntil(): void
     {
         $date = new DateTime('2040-01-01T12:00:00.000000Z');
         Application_Model_Preference::SetShowsPopulatedUntil($date);
