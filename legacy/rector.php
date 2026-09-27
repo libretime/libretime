@@ -14,6 +14,8 @@ return RectorConfig::configure()
         __DIR__ . '/tests',
     ])
     ->withSkip([
+        __DIR__ . '/application/configs/airtime-conf-production.php',
+        __DIR__ . '/application/configs/airtime-conf.php',
         __DIR__ . '/application/configs/conf.php',
         __DIR__ . '/application/models/airtime/map',
         __DIR__ . '/application/models/airtime/om',
@@ -23,6 +25,11 @@ return RectorConfig::configure()
     ->withBootstrapFiles([__DIR__ . '/vendor/autoload.php'])
     ->withFileExtensions(['php', 'phtml'])
     ->withPhpVersion(PhpVersion::PHP_82)
+    ->withPhpLevel(7)
+    ->withCodeQualityLevel(7)
+    ->withDeadCodeLevel(0)
+    ->withTypeCoverageLevel(7)
+    ->withTypeCoverageDocblockLevel(7)
     ->withRules([
         VariableInStringInterpolationFixerRector::class,
         Utf8DecodeEncodeToMbConvertEncodingRector::class,

@@ -57,7 +57,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testCcShowInsertedIntoDatabase()
+    public function testCcShowInsertedIntoDatabase(): void
     {
         $showService = new Application_Service_ShowService();
 
@@ -99,7 +99,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     /* Tests that a non-repeating, non-record, and non-rebroadcast show
      * gets created properly
      */
-    public function testCreateNoRepeatNoRRShow()
+    public function testCreateNoRepeatNoRRShow(): void
     {
         TestHelper::loginUser();
 
@@ -126,7 +126,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     /* Tests that a weekly repeating, non-record, non-rebroadcast show
      *  with no end date gets created correctly
      */
-    public function testCreateWeeklyRepeatNoEndNoRRShow()
+    public function testCreateWeeklyRepeatNoEndNoRRShow(): void
     {
         TestHelper::loginUser();
 
@@ -150,7 +150,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testCreateBiWeeklyRepeatNoEndNoRRShow()
+    public function testCreateBiWeeklyRepeatNoEndNoRRShow(): void
     {
         TestHelper::loginUser();
 
@@ -175,7 +175,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testCreateTriWeeklyRepeatNoEndNoRRShow()
+    public function testCreateTriWeeklyRepeatNoEndNoRRShow(): void
     {
         TestHelper::loginUser();
 
@@ -200,7 +200,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testCreateQuadWeeklyRepeatNoEndNoRRShow()
+    public function testCreateQuadWeeklyRepeatNoEndNoRRShow(): void
     {
         TestHelper::loginUser();
 
@@ -225,7 +225,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testCreateMonthlyMonthlyRepeatNoEndNoRRShow()
+    public function testCreateMonthlyMonthlyRepeatNoEndNoRRShow(): void
     {
         TestHelper::loginUser();
 
@@ -250,7 +250,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testCreateMonthlyWeeklyRepeatNoEndNoRRShow()
+    public function testCreateMonthlyWeeklyRepeatNoEndNoRRShow(): void
     {
         TestHelper::loginUser();
 
@@ -276,7 +276,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     }
 
     // Tests that a show instance gets deleted from it's repeating sequence properly
-    public function testDeleteShowInstance()
+    public function testDeleteShowInstance(): void
     {
         TestHelper::loginUser();
 
@@ -304,7 +304,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     /* Tests that when a user selects 'Delete this instance and all following
      * on the calendar the database gets updated correctly
      */
-    public function testDeleteShowInstanceAndAllFollowing()
+    public function testDeleteShowInstanceAndAllFollowing(): void
     {
         TestHelper::loginUser();
 
@@ -335,7 +335,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testEditRepeatingShowInstance()
+    public function testEditRepeatingShowInstance(): void
     {
         TestHelper::loginUser();
 
@@ -368,7 +368,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     /* Tests the entire show gets deleted when the user selects 'Delete this
      * instance and all following' from the context menu on the calendar
      */
-    public function testDeleteRepeatingShow()
+    public function testDeleteRepeatingShow(): void
     {
         TestHelper::loginUser();
 
@@ -393,7 +393,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testRepeatShowCreationWhenUserMovesForwardInCalendar()
+    public function testRepeatShowCreationWhenUserMovesForwardInCalendar(): void
     {
         TestHelper::loginUser();
 
@@ -422,7 +422,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testLinkedShow()
+    public function testLinkedShow(): void
     {
         TestHelper::loginUser();
 
@@ -449,7 +449,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     }
 
     /** Test the creation of a single record and rebroadcast(RR) show */
-    public function testCreateNoRepeatRRShow()
+    public function testCreateNoRepeatRRShow(): void
     {
         TestHelper::loginUser();
 
@@ -473,7 +473,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     }
 
     /** Test the creation of a weekly repeating, record and rebroadcast(RR) show */
-    public function testEditRepeatingShowChangeNoEndOption()
+    public function testEditRepeatingShowChangeNoEndOption(): void
     {
         TestHelper::loginUser();
 
@@ -509,7 +509,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      * the show's first instance start date, updates the scheduled content
      * correctly.
      */
-    public function testRemoveFirstRepeatShowDayUpdatesScheduleCorrectly()
+    public function testRemoveFirstRepeatShowDayUpdatesScheduleCorrectly(): void
     {
         TestHelper::loginUser();
 
@@ -566,7 +566,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testChangeRepeatDayUpdatesScheduleCorrectly()
+    public function testChangeRepeatDayUpdatesScheduleCorrectly(): void
     {
         TestHelper::loginUser();
 
@@ -623,7 +623,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testChangeRepeatTypeFromWeeklyToNoRepeat()
+    public function testChangeRepeatTypeFromWeeklyToNoRepeat(): void
     {
         TestHelper::loginUser();
 
@@ -653,7 +653,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testChangeRepeatTypeFromWeeklyToBiWeekly()
+    public function testChangeRepeatTypeFromWeeklyToBiWeekly(): void
     {
         TestHelper::loginUser();
 

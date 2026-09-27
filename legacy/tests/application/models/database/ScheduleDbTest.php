@@ -52,7 +52,7 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testCheckOverlappingShows()
+    public function testCheckOverlappingShows(): void
     {
         TestHelper::loginUser();
 

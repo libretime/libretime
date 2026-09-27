@@ -92,6 +92,8 @@ SQL;
      *
      * @param null|mixed $utcTimeEnd
      * @param mixed      $showsToRetrieve
+     *
+     * @return array<string, array<string, mixed>>
      */
     public static function GetPlayOrderRange($utcTimeEnd = null, $showsToRetrieve = 5)
     {
@@ -140,6 +142,8 @@ SQL;
      * Old version of the function for backwards compatibility.
      *
      * @deprecated
+     *
+     * @return array<string, mixed>
      */
     public static function GetPlayOrderRangeOld()
     {
@@ -681,10 +685,8 @@ SQL;
      * Return true if the input string is in the format YYYY-MM-DD-HH-mm.
      *
      * @param string $p_time
-     *
-     * @return bool
      */
-    public static function ValidPypoTimeFormat($p_time)
+    public static function ValidPypoTimeFormat($p_time): bool
     {
         $t = explode('-', $p_time);
         if (count($t) != 5) {
@@ -967,6 +969,12 @@ SQL;
         self::appendScheduleItem($data, $stream_end, $schedule_item);
     }
 
+    /**
+     * @param mixed $p_fromDateTime
+     * @param mixed $p_toDateTime
+     *
+     * @return array<int, string>
+     */
     private static function getRangeStartAndEnd($p_fromDateTime, $p_toDateTime)
     {
         $CC_CONFIG = Config::getConfig();

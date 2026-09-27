@@ -219,7 +219,7 @@ class Application_Model_Systemstatus
         return array_values($partitions);
     }
 
-    public static function isDiskOverQuota()
+    public static function isDiskOverQuota(): bool
     {
         $diskInfo = self::GetDiskInfo();
         $diskInfo = $diskInfo[0];

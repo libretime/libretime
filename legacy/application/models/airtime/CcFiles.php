@@ -263,7 +263,7 @@ class CcFiles extends BaseCcFiles
         }
     }
 
-    private static function validateFileArray(&$fileArray)
+    private static function validateFileArray(&$fileArray): bool
     {
         // Sanitize any wildly incorrect metadata before it goes to be validated
         FileDataHelper::sanitizeData($fileArray);
@@ -375,6 +375,8 @@ class CcFiles extends BaseCcFiles
 
     /**
      * Returns the file's absolute file path stored on disk.
+     *
+     * @return array<int, string>
      */
     public function getURLsForTrackPreviewOrDownload()
     {

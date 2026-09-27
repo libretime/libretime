@@ -39,7 +39,7 @@ class TracktypeController extends Zend_Controller_Action
             $params = $request->getPost();
             $postData = explode('&', $params['data']);
             $formData = [];
-            foreach ($postData as $k => $v) {
+            foreach ($postData as $v) {
                 $v = explode('=', $v);
                 $formData[$v[0]] = urldecode($v[1]);
             }

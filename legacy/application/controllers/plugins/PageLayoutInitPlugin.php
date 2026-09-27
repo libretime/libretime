@@ -143,7 +143,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             return $element['type_name'];
         }, $track_types), SORT_ASC, $track_types);
 
-        foreach ($track_types as $key => $tt) {
+        foreach ($track_types as $tt) {
             $track_type_options[$tt['id']] = ['name' => $tt['type_name'], 'code' => $tt['code']];
         }
         $ttarr = json_encode($track_type_options, JSON_FORCE_OBJECT);

@@ -7,7 +7,7 @@ class LibreTime_Model_FreeIpa
      *
      * @param mixed $username
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public static function GetUserInfo($username)
     {

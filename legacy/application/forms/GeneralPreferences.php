@@ -251,6 +251,9 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $this->addElement($feature_preview_mode);
     }
 
+    /**
+     * @return array<int, string>
+     */
     private function getWeekStartDays()
     {
         return [

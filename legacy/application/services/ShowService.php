@@ -964,7 +964,7 @@ SQL;
         }
     }
 
-    private function checkToDeleteCcShow($showId)
+    private function checkToDeleteCcShow($showId): bool
     {
         // check if there are any non deleted show instances remaining.
         $ccShowInstances = CcShowInstancesQuery::create()
@@ -1427,6 +1427,8 @@ SQL;
      * i.e. second monday of each month.
      *
      * @param string $showStart
+     *
+     * @return array<int, mixed>
      */
     public static function getMonthlyWeeklyRepeatInterval($showStart)
     {
@@ -1913,7 +1915,7 @@ SQL;
      * @param string   $duration  time interval (h)h:(m)m(:ss)
      * @param array    $offset    (days, hours, mins) used for rebroadcast shows
      *
-     * @return array of 2 DateTime objects, start/end time of the show in UTC
+     * @return DateTime[] of 2 DateTime objects, start/end time of the show in UTC
      */
     private function createUTCStartEndDateTime($showStart, $duration, $offset = null)
     {

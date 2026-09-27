@@ -30,7 +30,7 @@ class Application_Model_Subjects
         return intval($res) > 0;
     }
 
-    public static function resetLoginAttempts($login)
+    public static function resetLoginAttempts($login): bool
     {
         $sql = "UPDATE cc_subjs SET login_attempts = '0'"
             . ' WHERE login=:login';

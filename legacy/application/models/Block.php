@@ -622,6 +622,11 @@ SQL;
         }
     }
 
+    /**
+     * @param mixed $pos
+     *
+     * @return array<int, string>
+     */
     public function getFadeInfo($pos)
     {
         // Logging::info("Getting fade info for pos {$pos}");
@@ -1086,6 +1091,9 @@ SQL;
     }
 
     // smart block functions start
+    /**
+     * @return array<string, int>
+     */
     public function shuffleSmartBlock()
     {
         // if it here that means it's static pl
@@ -1183,7 +1191,7 @@ SQL;
                         $extradatetimeunit = $d['sp_criteria_extra_datetime_select'];
                     }
 
-                    if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
+                    if (in_array($field, ['utime', 'mtime', 'lptime'])) {
                         // if the date isn't relative we  want to convert the value to a specific UTC date
                         if (!in_array($modifier, ['before', 'after', 'between'])) {
                             $value = Application_Common_DateHelper::UserTimezoneStringToUTCString($value);
@@ -1200,7 +1208,7 @@ SQL;
                         ->setDbBlockId($this->id);
 
                     if (isset($d['sp_criteria_extra'])) {
-                        if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
+                        if (in_array($field, ['utime', 'mtime', 'lptime'])) {
                             // if the date isn't relative we  want to convert the value to a specific UTC date
                             if (!in_array($modifier, ['before', 'after', 'between'])) {
                                 $extra = Application_Common_DateHelper::UserTimezoneStringToUTCString($extra);
@@ -1260,6 +1268,8 @@ SQL;
      *
      * @param array $p_criteria
      * @param mixed $returnList
+     *
+     * @return array<string, int>
      */
     public function generateSmartBlock($p_criteria, $returnList = false)
     {
@@ -1335,7 +1345,7 @@ SQL;
         $insertList = [];
         $totalTime = 0;
         if ($isRandomSort && !$overflow && $blockItems === null) {
-            $minTrackLength = min(array_map(fn (Track $item) => $item->length, $tracks));
+            $minTrackLength = min(array_map(fn (Track $item): float => $item->length, $tracks));
             do {
                 $solution = SSPSolution::solve($tracks, $blockTime - $totalTime);
                 $insertList = array_merge($insertList, $solution->tracks);
@@ -1347,7 +1357,7 @@ SQL;
                 return $blockItems !== null && count($insertList) >= $blockItems || $totalTime > $blockTime;
             };
 
-            $addTrack = function (Track $track) use ($overflow, $blockTime, &$insertList, &$totalTime) {
+            $addTrack = function (Track $track) use ($overflow, $blockTime, &$insertList, &$totalTime): void {
                 if ($overflow) {
                     $insertList[] = $track;
                     $totalTime += $track->length;
@@ -1380,7 +1390,7 @@ SQL;
             }
         }
 
-        return array_map(fn (Track $track) => ['id' => $track->id, 'length' => $track->length], $insertList);
+        return array_map(fn (Track $track): array => ['id' => $track->id, 'length' => $track->length], $insertList);
     }
 
     /**
@@ -1491,7 +1501,7 @@ SQL;
 
         return preg_replace_callback(
             '/now{(.*?)}/',
-            fn ($matches) => $dt->format($matches[1]),
+            fn ($matches): string => $dt->format($matches[1]),
             $value
         );
     }
@@ -1819,7 +1829,7 @@ class SSPSolution
 
     public function replace(Track $old, Track $new): SSPSolution
     {
-        return new SSPSolution(array_map(fn (Track $it) => $it === $old ? $new : $it, $this->tracks));
+        return new SSPSolution(array_map(fn (Track $it): Track => $it === $old ? $new : $it, $this->tracks));
     }
 
     public static function isCloseEnough(float $delta): bool
@@ -1875,9 +1885,9 @@ class SSPSolution
                 $replacement = self::maxByOrNull(
                     array_filter(
                         array_diff($tracks, $solution->tracks),
-                        fn (Track $it) => $it->length > $track->length && $it->length - $track->length <= $delta,
+                        fn (Track $it): bool => $it->length > $track->length && $it->length - $track->length <= $delta,
                     ),
-                    fn (Track $it) => $it->length,
+                    fn (Track $it): float => $it->length,
                 );
 
                 if ($replacement === null) {

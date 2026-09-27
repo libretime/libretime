@@ -47,7 +47,7 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase // PHPUnit_Framewor
     /**
      * Test if the single newest file is added to the Database.
      */
-    public function testGetListofFilesMeetCriteriaSingleMatch()
+    public function testGetListofFilesMeetCriteriaSingleMatch(): void
     {
         TestHelper::loginUser();
         $CC_CONFIG = Config::getConfig();
@@ -69,7 +69,7 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase // PHPUnit_Framewor
     /**
      * Test if the single newest file is added to the Database.
      */
-    public function testMultiTrackandAlbumsGetLoaded()
+    public function testMultiTrackandAlbumsGetLoaded(): void
     {
         TestHelper::loginUser();
         $CC_CONFIG = Config::getConfig();
@@ -94,7 +94,7 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase // PHPUnit_Framewor
      *
      * alpha AND (beta OR gamma) must not be evaluated as (alpha AND beta) OR gamma.
      */
-    public function testGetListofFilesMeetCriteriaOrGroupAfterAndGroup()
+    public function testGetListofFilesMeetCriteriaOrGroupAfterAndGroup(): void
     {
         TestHelper::loginUser();
         $bltest = new Application_Model_Block();
@@ -106,7 +106,7 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase // PHPUnit_Framewor
     /**
      * Test that an OR group preceding an AND group on the same field stays grouped.
      */
-    public function testGetListofFilesMeetCriteriaOrGroupBeforeAndGroup()
+    public function testGetListofFilesMeetCriteriaOrGroupBeforeAndGroup(): void
     {
         TestHelper::loginUser();
         $bltest = new Application_Model_Block();

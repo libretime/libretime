@@ -2,6 +2,9 @@
 
 class BlockModelData
 {
+    /**
+     * @return array<int, array<string, int|string>|array<string, string>>
+     */
     public static function getCriteriaSingleNewestLabelNada()
     {
         return [
@@ -18,6 +21,9 @@ class BlockModelData
         ];
     }
 
+    /**
+     * @return array<int, array<string, int|string>|array<string, string>>
+     */
     public static function getCriteriaMultiTrackAndAlbum1Hour()
     {
         return [
@@ -55,12 +61,12 @@ class BlockModelData
      */
     public static function getCriteriaDescriptionAndOrGroup($orGroupFirst = false)
     {
-        $andGroup = static fn ($i) => [
+        $andGroup = static fn ($i): array => [
             ['name' => "sp_criteria_field_{$i}_0", 'value' => 'description'],
             ['name' => "sp_criteria_modifier_{$i}_0", 'value' => 'contains'],
             ['name' => "sp_criteria_value_{$i}_0", 'value' => 'alpha'],
         ];
-        $orGroup = static fn ($i) => [
+        $orGroup = static fn ($i): array => [
             ['name' => "sp_criteria_field_{$i}_0", 'value' => 'description'],
             ['name' => "sp_criteria_modifier_{$i}_0", 'value' => 'contains'],
             ['name' => "sp_criteria_value_{$i}_0", 'value' => 'beta'],

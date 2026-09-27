@@ -316,7 +316,7 @@ SQL;
     }
 
     // returns true/false and ids of dynamic blocks
-    public function hasDynamicBlock()
+    public function hasDynamicBlock(): bool
     {
         $ids = $this->getIdsOfDynamicBlocks();
         if (count($ids) > 0) {
@@ -1055,6 +1055,9 @@ SQL;
         $this->con->commit();
     }
 
+    /**
+     * @return array<string, int>
+     */
     public function shuffle()
     {
         $sql = <<<'SQL'
@@ -1116,7 +1119,7 @@ SQL;
      *
      * @return bool true if there are missing files in this playlist, false otherwise
      */
-    public function containsMissingFiles()
+    public function containsMissingFiles(): bool
     {
         $playlistContents = $this->pl->getCcPlaylistcontentss('type = 0'); // type=0 is only files, not other types of media
 

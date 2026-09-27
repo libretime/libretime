@@ -91,7 +91,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
         return false;
     }
 
-    public function checkReliantFields($formData)
+    public function checkReliantFields($formData): bool
     {
         if (!$formData['add_show_no_end']) {
             $start_timestamp = $formData['add_show_start_date'];

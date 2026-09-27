@@ -99,7 +99,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         }, $track_types), SORT_ASC, $track_types);
 
         $track_type_options[''] = _('Select a Type');
-        foreach ($track_types as $key => $tt) {
+        foreach ($track_types as $tt) {
             $track_type_options[$tt['id']] = $tt['type_name'];
         }
 

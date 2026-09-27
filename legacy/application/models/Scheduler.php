@@ -192,7 +192,7 @@ final class Application_Model_Scheduler
         }
     }
 
-    private function validateMediaItems($mediaItems)
+    private function validateMediaItems($mediaItems): bool
     {
         foreach ($mediaItems as $mediaItem) {
             $id = $mediaItem['id'];
@@ -1349,7 +1349,7 @@ final class Application_Model_Scheduler
     {
         return array_reduce(
             $files,
-            fn ($acc, $file) => $acc + Application_Common_DateHelper::playlistTimeToSeconds($file['cliplength']),
+            fn ($acc, $file): float|int => $acc + Application_Common_DateHelper::playlistTimeToSeconds($file['cliplength']),
             0.0
         );
     }

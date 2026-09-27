@@ -20,7 +20,7 @@ class Application_Common_Timezone
 
         $tzlist = [null => _('Use station default')];
 
-        foreach ($regions as $name => $mask) {
+        foreach ($regions as $mask) {
             $ids = DateTimeZone::listIdentifiers($mask);
             foreach ($ids as $id) {
                 $tzlist[$id] = str_replace('_', ' ', $id);

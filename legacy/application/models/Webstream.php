@@ -72,6 +72,9 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return $this->webstream->getDbUrl();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getMetadata()
     {
         $subjs = CcSubjsQuery::create()->findPK($this->webstream->getDbCreatorId());
@@ -120,6 +123,11 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return array_diff($p_ids, $ownedStreams);
     }
 
+    /**
+     * @param mixed $parameters
+     *
+     * @return array<int, mixed>
+     */
     public static function analyzeFormData($parameters)
     {
         $valid = [
@@ -212,9 +220,9 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return [$valid, $mime, $mediaUrl, $di];
     }
 
-    public static function isValid($analysis)
+    public static function isValid($analysis): bool
     {
-        foreach ($analysis as $k => $v) {
+        foreach ($analysis as $v) {
             if ($v[0] === false) {
                 return false;
             }
@@ -375,6 +383,11 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return array_slice($headers, $position);
     }
 
+    /**
+     * @param mixed $url
+     *
+     * @return array<int, null|bool|string>
+     */
     private static function discoverStreamMime($url)
     {
         try {

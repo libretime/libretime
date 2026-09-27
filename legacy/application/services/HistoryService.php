@@ -14,12 +14,23 @@ class Application_Service_HistoryService
         $this->timezone = Application_Model_Preference::GetTimezone();
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function getSupportedTemplateTypes()
     {
         return [self::TEMPLATE_TYPE_ITEM, self::TEMPLATE_TYPE_FILE];
     }
 
     // opts is from datatables.
+    /**
+     * @param mixed      $startDT
+     * @param mixed      $endDT
+     * @param mixed      $opts
+     * @param null|mixed $instanceId
+     *
+     * @return array<string, null|int|mixed[]>
+     */
     public function getPlayedItemData($startDT, $endDT, $opts, $instanceId = null)
     {
         $mainSqlQuery = '';
@@ -38,7 +49,7 @@ class Application_Service_HistoryService
         $fields_general = [];
         $general_keys = [];
 
-        foreach ($fields as $index => $field) {
+        foreach ($fields as $field) {
             if (in_array($field['name'], $required)) {
                 continue;
             }
@@ -253,13 +264,13 @@ class Application_Service_HistoryService
         $timezoneLocal = new DateTimeZone($this->timezone);
 
         $boolCast = [];
-        foreach ($fields as $index => $field) {
+        foreach ($fields as $field) {
             if ($field['type'] == TEMPLATE_BOOLEAN) {
                 $boolCast[] = $field;
             }
         }
 
-        foreach ($rows as $index => &$result) {
+        foreach ($rows as &$result) {
             foreach ($boolCast as $field) {
                 $result[$field['label']] = (bool) $result[$field['name']];
             }
@@ -298,6 +309,13 @@ class Application_Service_HistoryService
         ];
     }
 
+    /**
+     * @param mixed $startDT
+     * @param mixed $endDT
+     * @param mixed $opts
+     *
+     * @return array<string, int|mixed[]>
+     */
     public function getFileSummaryData($startDT, $endDT, $opts)
     {
         $select = [
@@ -319,7 +337,7 @@ class Application_Service_HistoryService
         $fields = $template['fields'];
         $required = $this->mandatoryFileFields();
 
-        foreach ($fields as $index => $field) {
+        foreach ($fields as $field) {
             $key = $field['name'];
 
             if (in_array($field['name'], $required)) {
@@ -626,7 +644,7 @@ class Application_Service_HistoryService
                 $prefix = Application_Form_EditHistoryItem::ID_PREFIX;
                 $formValues["{$prefix}id"] = $id;
 
-                foreach ($template['fields'] as $index => $field) {
+                foreach ($template['fields'] as $field) {
                     $key = $field['name'];
                     $value = '';
 
@@ -679,7 +697,7 @@ class Application_Service_HistoryService
             $formValues = [];
             $formValues["{$prefix}id"] = $id;
 
-            foreach ($template['fields'] as $index => $field) {
+            foreach ($template['fields'] as $field) {
                 $key = $field['name'];
 
                 if (in_array($key, $required)) {
@@ -1004,7 +1022,9 @@ class Application_Service_HistoryService
     }
 
     // ---------------- Following code is for History Templates --------------------------//
-
+    /**
+     * @return array<int, string>
+     */
     public function getFieldTypes()
     {
         return [
@@ -1018,6 +1038,9 @@ class Application_Service_HistoryService
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getPhpCasts()
     {
         return [
@@ -1031,6 +1054,9 @@ class Application_Service_HistoryService
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getSqlTypes()
     {
         return [
@@ -1044,6 +1070,9 @@ class Application_Service_HistoryService
         ];
     }
 
+    /**
+     * @return array<int, array<string, string>>
+     */
     public function getFileMetadataTypes()
     {
         return [
@@ -1065,11 +1094,17 @@ class Application_Service_HistoryService
         ];
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function mandatoryItemFields()
     {
         return ['starts', 'ends'];
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function mandatoryFileFields()
     {
         return ['played'];
@@ -1316,6 +1351,9 @@ class Application_Service_HistoryService
         }
     }
 
+    /**
+     * @return float[]|int[]|numeric-string[]
+     */
     public function getConfiguredTemplateIds()
     {
         try {

@@ -243,7 +243,7 @@ class CcSchedule extends BaseCcSchedule
         return $this;
     } // setDbEnds()
 
-    public function isCurrentItem($epochNow = null)
+    public function isCurrentItem($epochNow = null): bool
     {
         if (is_null($epochNow)) {
             $epochNow = microtime(true);

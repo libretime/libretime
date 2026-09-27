@@ -22,7 +22,7 @@ class Application_Model_LoginAttempts
         $sql = 'select attempts from cc_login_attempts WHERE ip= :ip';
         $res = Application_Common_Database::prepareAndExecute($sql, [':ip' => $ip], Application_Common_Database::ALL);
 
-        return $res ? $res : 0;
+        return $res ?: 0;
     }
 
     public static function resetAttempts($ip)

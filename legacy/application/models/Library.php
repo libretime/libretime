@@ -61,7 +61,7 @@ class Application_Model_Library
             return $element['type_name'];
         }, $track_types), SORT_ASC, $track_types);
 
-        foreach ($track_types as $key => $tt) {
+        foreach ($track_types as $tt) {
             $track_type_options[$tt['id']] = $tt['type_name'];
         }
 

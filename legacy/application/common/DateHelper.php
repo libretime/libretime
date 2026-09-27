@@ -468,7 +468,7 @@ class Application_Common_DateHelper
      * @param mixed $endTimestamp
      * @param mixed $timezone
      *
-     * @return array (start DateTime, end DateTime) in UTC timezone
+     * @return DateTime[] (start DateTime, end DateTime) in UTC timezone
      */
     public static function getStartEnd($startTimestamp, $endTimestamp, $timezone)
     {

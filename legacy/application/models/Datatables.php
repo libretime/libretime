@@ -11,7 +11,7 @@ class Application_Model_Datatables
             $isRange = false;
             if (strstr($term, '~')) {
                 $info = explode('~', $term);
-                if ($dbname == 'utime' || $dbname == 'mtime' || $dbname == 'lptime') {
+                if (in_array($dbname, ['utime', 'mtime', 'lptime'])) {
                     try {
                         $input1 = ($info[0] != '') ? Application_Common_DateHelper::UserTimezoneStringToUTCString($info[0]) : null;
                         $input2 = ($info[1] != '') ? Application_Common_DateHelper::UserTimezoneStringToUTCString($info[1]) : null;

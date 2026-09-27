@@ -26,7 +26,7 @@ function checkConfiguration()
  * Check for Airtime's PHP dependencies and return an associative
  * array with the results.
  *
- * @return array associative array of dependency check results
+ * @return array<string, bool> associative array of dependency check results
  */
 function checkPhpDependencies()
 {
@@ -83,7 +83,7 @@ function checkExternalServices()
  *
  * @return bool true if a connection is made to the database
  */
-function checkDatabaseConfiguration()
+function checkDatabaseConfiguration(): bool
 {
     configureDatabase();
 
@@ -104,7 +104,7 @@ function checkDatabaseConfiguration()
 /**
  * Initialize Propel to configure the Airtime database.
  */
-function configureDatabase()
+function configureDatabase(): void
 {
     Propel::init(PROPEL_CONFIG_FILEPATH);
 }

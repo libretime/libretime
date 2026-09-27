@@ -183,7 +183,7 @@ class Application_Form_EditHistory extends Zend_Form
             if (isset($formElType['validators'])) {
                 $validators = $formElType['validators'];
 
-                foreach ($validators as $index => $arr) {
+                foreach ($validators as $arr) {
                     $options = isset($arr[self::ITEM_OPTIONS]) ? $arr[self::ITEM_OPTIONS] : null;
                     $validator = new $arr[self::ITEM_CLASS]($options);
 

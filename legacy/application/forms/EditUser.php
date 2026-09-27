@@ -132,7 +132,7 @@ class Application_Form_EditUser extends Zend_Form
         $this->addElement($timezone);
     }
 
-    public function validateLogin($p_login, $p_userId)
+    public function validateLogin($p_login, $p_userId): bool
     {
         $count = CcSubjsQuery::create()
             ->filterByDbLogin($p_login)

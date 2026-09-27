@@ -109,6 +109,10 @@ class Application_Model_Tracktype
         return Application_Model_Tracktype::getTracktypesData([true], $search);
     }
 
+    /**
+     * @param array<int, mixed> $visible
+     * @param null|mixed        $search
+     */
     public static function getTracktypesData(array $visible, $search = null)
     {
         $con = Propel::getConnection();
@@ -158,7 +162,7 @@ class Application_Model_Tracktype
 
         $res = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
 
-        foreach ($res['aaData'] as $key => &$record) {
+        foreach ($res['aaData'] as &$record) {
             if ($record['code'] == $tracktypename) {
                 $record['delete'] = 'self';
             } else {

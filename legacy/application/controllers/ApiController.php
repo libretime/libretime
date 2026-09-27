@@ -79,7 +79,7 @@ class ApiController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function checkAuth()
+    public function checkAuth(): bool
     {
         $CC_CONFIG = Config::getConfig();
         $apiKey = $this->_getParam('api_key');

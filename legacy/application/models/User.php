@@ -73,7 +73,7 @@ class Application_Model_User
         return $result;
     }
 
-    public function isSourcefabricAdmin()
+    public function isSourcefabricAdmin(): bool
     {
         $username = $this->getLogin();
         if ($username == 'sourcefabric_admin') {
@@ -290,6 +290,10 @@ class Application_Model_User
         return null;
     }
 
+    /**
+     * @param array<int, mixed> $type
+     * @param null|mixed        $search
+     */
     public static function getUsers(array $type, $search = null)
     {
         $con = Propel::getConnection();

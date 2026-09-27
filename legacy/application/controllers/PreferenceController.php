@@ -183,7 +183,7 @@ class PreferenceController extends Zend_Controller_Action
             $postData = explode('&', $params['data']);
             $values = [];
 
-            foreach ($postData as $k => $v) {
+            foreach ($postData as $v) {
                 $v = explode('=', urldecode($v));
                 $values[$v[0]] = $v[1];
             }
