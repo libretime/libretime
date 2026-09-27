@@ -179,7 +179,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['params']['instance id'] = $this->_getParam('showInstanceId');
         $log_vars['params']['delta day'] = $deltaDay;
         $log_vars['params']['delta minute'] = $deltaMin;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         try {
             $service_calendar = new Application_Service_CalendarService(
@@ -211,7 +211,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['params']['instance id'] = $instanceId;
         $log_vars['params']['delta day'] = $deltaDay;
         $log_vars['params']['delta minute'] = $deltaMin;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -241,7 +241,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/delete-show-instance';
         $log_vars['params'] = [];
         $log_vars['params']['instance id'] = $instanceId;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $service_show = new Application_Service_ShowService();
         $showId = $service_show->deleteShow($instanceId, true);
@@ -270,7 +270,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/clear-show';
         $log_vars['params'] = [];
         $log_vars['params']['instance id'] = $instanceId;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $service_scheduler = new Application_Service_SchedulerService();
 
@@ -471,7 +471,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/edit-repeating-show-instance';
         $log_vars['params'] = [];
         $log_vars['params']['form_data'] = $data;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $service_showForm = new Application_Service_ShowFormService(
             $data['add_show_id'],
@@ -537,7 +537,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/edit-show';
         $log_vars['params'] = [];
         $log_vars['params']['form_data'] = $data;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $forms = $this->createShowFormAction();
 
@@ -598,7 +598,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/add-show';
         $log_vars['params'] = [];
         $log_vars['params']['form_data'] = $data;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $forms = $this->createShowFormAction();
 
@@ -668,7 +668,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/delete-show';
         $log_vars['params'] = [];
         $log_vars['params']['instance id'] = $instanceId;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $service_show = new Application_Service_ShowService();
         $showId = $service_show->deleteShow($instanceId);
@@ -686,7 +686,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/cancel-current-show';
         $log_vars['params'] = [];
         $log_vars['params']['instance id'] = $this->_getParam('id');
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $user = Application_Model_User::getCurrentUser();
 
@@ -702,7 +702,7 @@ class ScheduleController extends Zend_Controller_Action
                 Application_Model_RabbitMq::SendMessageToPypo('disconnect_source', $data);
             } catch (Exception $e) {
                 $this->view->error = $e->getMessage();
-                Logging::info($e->getMessage());
+                Logging::error($e->getMessage());
             }
         }
     }
