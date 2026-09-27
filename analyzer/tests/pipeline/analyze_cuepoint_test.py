@@ -10,12 +10,10 @@ from ..fixtures import FILES
 
 @pytest.mark.parametrize(
     "filepath,length,cuein,cueout",
-    map(
-        lambda i: pytest.param(
-            str(i.path), i.length, i.cuein, i.cueout, id=i.path.name
-        ),
-        FILES,
-    ),
+    [
+        pytest.param(str(i.path), i.length, i.cuein, i.cueout, id=i.path.name)
+        for i in FILES
+    ],
 )
 def test_analyze_cuepoint(filepath, length, cuein, cueout):
     metadata = analyze_duration(filepath, {})
