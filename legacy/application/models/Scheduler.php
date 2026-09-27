@@ -212,9 +212,9 @@ final class Application_Model_Scheduler
      * @param $type
      * @param $show
      *
-     * @return $files
+     * @return mixed[]
      */
-    private function retrieveMediaFiles($id, $type, $show)
+    private function retrieveMediaFiles($id, $type, $show): array
     {
         // if there is a show we need to set a show limit to pass to smart blocks in case they use time remaining
         $showInstance = new Application_Model_ShowInstance($show);

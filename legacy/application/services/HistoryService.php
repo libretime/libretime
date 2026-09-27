@@ -1110,7 +1110,7 @@ class Application_Service_HistoryService
         return ['played'];
     }
 
-    private function defaultItemTemplate()
+    private function defaultItemTemplate(): array
     {
         $template = [];
         $fields = [];
@@ -1127,7 +1127,7 @@ class Application_Service_HistoryService
     }
 
     // Default File Summary Template. Taken from The Czech radio requirements (customer requested this in the past).
-    private function defaultFileTemplate()
+    private function defaultFileTemplate(): array
     {
         $template = [];
         $fields = [];
@@ -1232,7 +1232,7 @@ class Application_Service_HistoryService
         return $this->getTemplates(self::TEMPLATE_TYPE_FILE);
     }
 
-    private function datatablesColumns($fields)
+    private function datatablesColumns($fields): array
     {
         $columns = [];
 

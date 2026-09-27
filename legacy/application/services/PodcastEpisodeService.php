@@ -272,10 +272,8 @@ class Application_Service_PodcastEpisodeService implements Publish
      * convert the episode data into array form.
      *
      * @param array $episodes array of PodcastEpisodes to convert
-     *
-     * @return array
      */
-    private function _getStationPodcastEpisodeArray($episodes)
+    private function _getStationPodcastEpisodeArray($episodes): array
     {
         $episodesArray = [];
         foreach ($episodes as $episode) {

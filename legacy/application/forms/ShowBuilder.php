@@ -86,7 +86,10 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
         }
     }
 
-    private function getShowNames()
+    /**
+     * @return mixed[]
+     */
+    private function getShowNames(): array
     {
         $user = Application_Model_User::getCurrentUser();
         $showNames = ['0' => _('Filter by Show')];

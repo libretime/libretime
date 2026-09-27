@@ -60,7 +60,10 @@ class Application_Model_ShowBuilder
         $this->currentShow = false;
     }
 
-    private function getUsersShows()
+    /**
+     * @return mixed[]
+     */
+    private function getUsersShows(): array
     {
         $shows = [];
 

@@ -115,7 +115,10 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase // PHPUnit_Framewor
         $this->assertEquals([8], $this->getMatchingFileIds($bltest));
     }
 
-    private function getMatchingFileIds(Application_Model_Block $block)
+    /**
+     * @return mixed[]
+     */
+    private function getMatchingFileIds(Application_Model_Block $block): array
     {
         $ids = [];
         foreach ($block->getListofFilesMeetCriteria()['files'] as $file) {

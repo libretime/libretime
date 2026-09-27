@@ -531,8 +531,10 @@ SQL;
      * - Update start and end time
      *
      * @param $showData edit show form values in raw form
+     *
+     * @return mixed[]
      */
-    private function delegateInstanceCleanup($showData)
+    private function delegateInstanceCleanup($showData): array
     {
         $showId = $this->ccShow->getDbId();
 
