@@ -14,12 +14,18 @@ class Application_Service_HistoryService
         $this->timezone = Application_Model_Preference::GetTimezone();
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function getSupportedTemplateTypes()
     {
         return [self::TEMPLATE_TYPE_ITEM, self::TEMPLATE_TYPE_FILE];
     }
 
     // opts is from datatables.
+    /**
+     * @return array<string, int|mixed[]|null>
+     */
     public function getPlayedItemData($startDT, $endDT, $opts, $instanceId = null)
     {
         $mainSqlQuery = '';
@@ -298,6 +304,9 @@ class Application_Service_HistoryService
         ];
     }
 
+    /**
+     * @return array<string, int|mixed[]>
+     */
     public function getFileSummaryData($startDT, $endDT, $opts)
     {
         $select = [
@@ -1004,7 +1013,9 @@ class Application_Service_HistoryService
     }
 
     // ---------------- Following code is for History Templates --------------------------//
-
+    /**
+     * @return array<int, string>
+     */
     public function getFieldTypes()
     {
         return [
@@ -1018,6 +1029,9 @@ class Application_Service_HistoryService
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getPhpCasts()
     {
         return [
@@ -1031,6 +1045,9 @@ class Application_Service_HistoryService
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getSqlTypes()
     {
         return [
@@ -1044,6 +1061,9 @@ class Application_Service_HistoryService
         ];
     }
 
+    /**
+     * @return array<int, array<string, string>>
+     */
     public function getFileMetadataTypes()
     {
         return [
@@ -1065,11 +1085,17 @@ class Application_Service_HistoryService
         ];
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function mandatoryItemFields()
     {
         return ['starts', 'ends'];
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function mandatoryFileFields()
     {
         return ['played'];

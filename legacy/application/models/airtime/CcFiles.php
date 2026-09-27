@@ -375,6 +375,7 @@ class CcFiles extends BaseCcFiles
 
     /**
      * Returns the file's absolute file path stored on disk.
+     * @return array<int, string>
      */
     public function getURLsForTrackPreviewOrDownload()
     {

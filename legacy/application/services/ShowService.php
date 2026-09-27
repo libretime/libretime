@@ -1427,6 +1427,7 @@ SQL;
      * i.e. second monday of each month.
      *
      * @param string $showStart
+     * @return array<int, mixed>
      */
     public static function getMonthlyWeeklyRepeatInterval($showStart)
     {

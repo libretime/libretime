@@ -2,6 +2,9 @@
 
 class FileDataHelper
 {
+    /**
+     * @return array<string, string>
+     */
     public static function getAudioMimeTypeArray()
     {
         return [

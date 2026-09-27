@@ -321,7 +321,7 @@ class Application_Service_PodcastService
      * @param int                 $podcastId ID of the podcast to build a response for
      * @param Zend_View_Interface $view      Zend view object to render the response HTML
      *
-     * @return array the response array containing the podcast data and editor HTML
+     * @return array<string, string|bool> the response array containing the podcast data and editor HTML
      *
      * @throws PodcastNotFoundException
      */

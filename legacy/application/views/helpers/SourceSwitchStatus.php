@@ -2,6 +2,9 @@
 
 class Airtime_View_Helper_SourceSwitchStatus extends Zend_View_Helper_Abstract
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function SourceSwitchStatus()
     {
         return [

@@ -1055,6 +1055,9 @@ SQL;
         $this->con->commit();
     }
 
+    /**
+     * @return array<string, int>
+     */
     public function shuffle()
     {
         $sql = <<<'SQL'

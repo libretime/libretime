@@ -26,7 +26,7 @@ function checkConfiguration()
  * Check for Airtime's PHP dependencies and return an associative
  * array with the results.
  *
- * @return array associative array of dependency check results
+ * @return array<string, bool> associative array of dependency check results
  */
 function checkPhpDependencies()
 {

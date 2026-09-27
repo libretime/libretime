@@ -652,6 +652,9 @@ SQL;
         return $res;
     }
 
+    /**
+     * @return array<int, string>
+     */
     public static function getLibraryColumns()
     {
         return [

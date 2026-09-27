@@ -8,6 +8,9 @@
  */
 class AirtimeTableView
 {
+    /**
+     * @return array<int, string>
+     */
     private static function _getTableJavaScriptDependencies()
     {
         return [

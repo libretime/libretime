@@ -29,7 +29,7 @@ return RectorConfig::configure()
     ->withCodeQualityLevel(7)
     ->withDeadCodeLevel(0)
     ->withTypeCoverageLevel(7)
-    ->withTypeCoverageDocblockLevel(6)
+    ->withTypeCoverageDocblockLevel(7)
     ->withRules([
         VariableInStringInterpolationFixerRector::class,
         Utf8DecodeEncodeToMbConvertEncodingRector::class,

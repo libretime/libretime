@@ -2,6 +2,9 @@
 
 class BlockModelData
 {
+    /**
+     * @return array<int, array<string, string>|array<string, string|int>>
+     */
     public static function getCriteriaSingleNewestLabelNada()
     {
         return [
@@ -18,6 +21,9 @@ class BlockModelData
         ];
     }
 
+    /**
+     * @return array<int, array<string, string>|array<string, string|int>>
+     */
     public static function getCriteriaMultiTrackAndAlbum1Hour()
     {
         return [

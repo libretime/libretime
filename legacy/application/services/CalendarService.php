@@ -258,6 +258,9 @@ class Application_Service_CalendarService
         return $newDateTime;
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     private function validateShowMove($deltaDay, $deltaMin)
     {
         if (!$this->currentUser->isAdminOrPM()) {

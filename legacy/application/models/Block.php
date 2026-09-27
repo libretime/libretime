@@ -622,6 +622,9 @@ SQL;
         }
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function getFadeInfo($pos)
     {
         // Logging::info("Getting fade info for pos {$pos}");
@@ -1086,6 +1089,9 @@ SQL;
     }
 
     // smart block functions start
+    /**
+     * @return array<string, int>
+     */
     public function shuffleSmartBlock()
     {
         // if it here that means it's static pl
@@ -1260,6 +1266,7 @@ SQL;
      *
      * @param array $p_criteria
      * @param mixed $returnList
+     * @return array<string, int>
      */
     public function generateSmartBlock($p_criteria, $returnList = false)
     {

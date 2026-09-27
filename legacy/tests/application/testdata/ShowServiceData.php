@@ -3,6 +3,9 @@
 class ShowServiceData
 {
     // Just a regular show - Non repeating, and not a recording & rebroadcast show.
+    /**
+     * @return array<string, int|string|null|bool>
+     */
     public static function getNoRepeatNoRRData()
     {
         return [
@@ -85,6 +88,9 @@ class ShowServiceData
         ];
     }
 
+    /**
+     * @return array<string, int[]|int|string|null|bool>
+     */
     public static function getWeeklyRepeatNoEndNoRRData()
     {
         return [
@@ -167,6 +173,9 @@ class ShowServiceData
         ];
     }
 
+    /**
+     * @return array<string, int[]|int|string|null|bool>
+     */
     public static function getWeeklyRepeatWithEndNoRRData()
     {
         return [
@@ -249,16 +258,25 @@ class ShowServiceData
         ];
     }
 
+    /**
+     * @return array<int, int>
+     */
     public static function getWeeklyRepeatDays()
     {
         return [1, 2, 3, 4, 5];
     }
 
+    /**
+     * @return array<int, int>
+     */
     public static function getDailyRepeatDays()
     {
         return [0, 1, 2, 3, 4, 5, 6];
     }
 
+    /**
+     * @return array<string, int|string|null|bool>
+     */
     public static function getEditRepeatInstanceData()
     {
         return [
@@ -293,6 +311,9 @@ class ShowServiceData
         ];
     }
 
+    /**
+     * @return array<string, int[]|int|string|null|bool>
+     */
     public static function getOverlappingShowCheckTestData()
     {
         return [
@@ -375,7 +396,9 @@ class ShowServiceData
         ];
     }
 
-    /** Returns form data for a non-repeating, record and rebroadcast(RR) show */
+    /** Returns form data for a non-repeating, record and rebroadcast(RR) show
+     * @return array<string, int|string|null|bool>
+     **/
     public static function getNoRepeatRRData()
     {
         return [
@@ -458,6 +481,9 @@ class ShowServiceData
         ];
     }
 
+    /**
+     * @return array<string, int[]|int|string|null|bool>
+     */
     public static function getWeeklyRepeatRRData()
     {
         return [

@@ -92,6 +92,7 @@ SQL;
      *
      * @param null|mixed $utcTimeEnd
      * @param mixed      $showsToRetrieve
+     * @return array<string, array<string, mixed>>
      */
     public static function GetPlayOrderRange($utcTimeEnd = null, $showsToRetrieve = 5)
     {
@@ -140,6 +141,7 @@ SQL;
      * Old version of the function for backwards compatibility.
      *
      * @deprecated
+     * @return array<string, mixed>
      */
     public static function GetPlayOrderRangeOld()
     {
@@ -967,6 +969,9 @@ SQL;
         self::appendScheduleItem($data, $stream_end, $schedule_item);
     }
 
+    /**
+     * @return array<int, string>
+     */
     private static function getRangeStartAndEnd($p_fromDateTime, $p_toDateTime)
     {
         $CC_CONFIG = Config::getConfig();
