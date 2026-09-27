@@ -27,6 +27,7 @@ return RectorConfig::configure()
     ->withPhpVersion(PhpVersion::PHP_82)
     ->withPhpLevel(4)
     ->withTypeCoverageLevel(4)
+    ->withTypeCoverageDocblockLevel(4)
     ->withRules([
         VariableInStringInterpolationFixerRector::class,
         Utf8DecodeEncodeToMbConvertEncodingRector::class,

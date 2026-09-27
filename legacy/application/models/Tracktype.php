@@ -109,6 +109,9 @@ class Application_Model_Tracktype
         return Application_Model_Tracktype::getTracktypesData([true], $search);
     }
 
+    /**
+     * @param array<int, mixed> $visible
+     */
     public static function getTracktypesData(array $visible, $search = null)
     {
         $con = Propel::getConnection();

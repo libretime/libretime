@@ -290,6 +290,9 @@ class Application_Model_User
         return null;
     }
 
+    /**
+     * @param array<int, mixed> $type
+     */
     public static function getUsers(array $type, $search = null)
     {
         $con = Propel::getConnection();
