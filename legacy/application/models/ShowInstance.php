@@ -756,7 +756,7 @@ SQL;
         return ($query !== false) ? $query : null;
     }
 
-    public static function GetLastShowInstance($p_timeNow)
+    public static function GetLastShowInstance($p_timeNow): ?Application_Model_ShowInstance
     {
         $sql = <<<'SQL'
 SELECT si.id
@@ -772,7 +772,7 @@ SQL;
         return $id ? new Application_Model_ShowInstance($id) : null;
     }
 
-    public static function GetCurrentShowInstance($p_timeNow)
+    public static function GetCurrentShowInstance($p_timeNow): ?Application_Model_ShowInstance
     {
         /* Orderby si.starts descending, because in some cases
          * we can have multiple shows overlapping each other. In
@@ -797,7 +797,7 @@ SQL;
         return $id ? new Application_Model_ShowInstance($id) : null;
     }
 
-    public static function GetNextShowInstance($p_timeNow)
+    public static function GetNextShowInstance($p_timeNow): ?Application_Model_ShowInstance
     {
         $sql = <<<'SQL'
 SELECT si.id

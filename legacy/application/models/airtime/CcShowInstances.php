@@ -200,12 +200,12 @@ class CcShowInstances extends BaseCcShowInstances
         return true;
     }
 
-    public function isRecorded()
+    public function isRecorded(): bool
     {
         return $this->getDbRecord() == 1 ? true : false;
     }
 
-    public function isRebroadcast()
+    public function isRebroadcast(): bool
     {
         return $this->getDbRebroadcast() == 1 ? true : false;
     }

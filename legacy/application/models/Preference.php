@@ -399,7 +399,7 @@ class Application_Model_Preference
         self::setValue('podcast_album_override', $bool);
     }
 
-    public static function GetPodcastAlbumOverride()
+    public static function GetPodcastAlbumOverride(): bool
     {
         $val = self::getValue('podcast_album_override');
 
@@ -411,7 +411,7 @@ class Application_Model_Preference
         self::setValue('podcast_auto_smartblock', $bool);
     }
 
-    public static function GetPodcastAutoSmartblock()
+    public static function GetPodcastAutoSmartblock(): bool
     {
         $val = self::getValue('podcast_auto_smartblock');
 

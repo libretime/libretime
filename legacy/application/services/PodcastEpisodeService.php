@@ -232,8 +232,6 @@ class Application_Service_PodcastEpisodeService implements Publish
      * @param string $sortDir    "ASC" || "DESC"
      * @param mixed  $podcastId
      *
-     * @return array
-     *
      * @throws PodcastNotFoundException
      */
     public function getPodcastEpisodes(
@@ -242,7 +240,7 @@ class Application_Service_PodcastEpisodeService implements Publish
         $limit = 10,
         $sortColumn = PodcastEpisodesPeer::PUBLICATION_DATE,
         $sortDir = 'ASC'
-    ) {
+    ): array {
         $podcast = PodcastQuery::create()->findPk($podcastId);
         if (!$podcast) {
             throw new PodcastNotFoundException();

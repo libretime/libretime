@@ -334,7 +334,7 @@ class TaskFactory
      *
      * @return null|AirtimeTask return a task of the given type or null if no corresponding task exists
      */
-    public static function getTask($task)
+    public static function getTask($task): ?AirtimeTask
     {
         // Try to get a valid class name from the given string
         if (!class_exists($task)) {
