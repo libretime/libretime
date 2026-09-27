@@ -11,10 +11,13 @@ services:
 
   rabbitmq:
     image: rabbitmq:4.2-alpine
+    hostname: rabbitmq
     environment:
       RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST:-/libretime}
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-libretime}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-libretime} # Change me !
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
     healthcheck:
       test: nc -z 127.0.0.1 5672
 
@@ -118,5 +121,6 @@ services:
 
 volumes:
   postgres_data: {}
+  rabbitmq_data: {}
   libretime_storage: {}
   libretime_playout: {}
