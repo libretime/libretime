@@ -24,9 +24,22 @@ class ErrorController extends Zend_Controller_Action
         $errors = $this->_getParam('error_handler');
 
         if ($errors) {
+            // Requests for unknown routes, controllers, or actions are usually just bots and
+            // scanners probing for pages, not application bugs, so we log them as warnings
+            // instead of errors to keep them out of error-level alerting and reporting.
+            $isClientError = in_array($errors->type, [
+                Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ROUTE,
+                Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER,
+                Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION,
+            ]);
+
             // log error message and stack trace
-            Logging::error($errors->exception->getMessage());
-            Logging::error($errors->exception->getTraceAsString());
+            if ($isClientError) {
+                Logging::warn($errors->exception->getMessage());
+            } else {
+                Logging::error($errors->exception->getMessage());
+                Logging::error($errors->exception->getTraceAsString());
+            }
 
             switch ($errors->type) {
                 case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ROUTE:
@@ -59,7 +72,11 @@ class ErrorController extends Zend_Controller_Action
             $log->crit($this->view->message, $errors->exception);
         }*/
         // Logging that actually works: -- Albert
-        Logging::error($this->view->message . ': ' . $errors->exception);
+        if ($isClientError) {
+            Logging::warn($this->view->message . ': ' . $errors->exception);
+        } else {
+            Logging::error($this->view->message . ': ' . $errors->exception);
+        }
 
         // conditionally display exceptions
         if ($this->getInvokeArg('displayExceptions') == true) {
