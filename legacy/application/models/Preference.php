@@ -791,7 +791,7 @@ class Application_Model_Preference
         }
     }
 
-    public static function GetImportTimestamp()
+    public static function GetImportTimestamp(): int
     {
         return (int) self::getValue('import_timestamp');
     }
@@ -806,7 +806,7 @@ class Application_Model_Preference
         return self::getValue('privacy_policy');
     }
 
-    public static function GetNumOfStreams()
+    public static function GetNumOfStreams(): int
     {
         return count(Config::get('stream.outputs.merged'));
     }

@@ -1345,7 +1345,7 @@ final class Application_Model_Scheduler
     }
 
     // This is used to determine the duration of a files array
-    public function timeLengthOfFiles($files)
+    public function timeLengthOfFiles($files): float
     {
         return array_reduce(
             $files,

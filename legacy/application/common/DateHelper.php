@@ -416,7 +416,7 @@ class Application_Common_DateHelper
      * @return int
      *             seconds
      */
-    public static function playlistTimeToSeconds($plt)
+    public static function playlistTimeToSeconds($plt): float
     {
         $arr = preg_split('/:/', $plt);
         if (isset($arr[2])) {

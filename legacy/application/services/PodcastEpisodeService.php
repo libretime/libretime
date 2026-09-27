@@ -198,7 +198,7 @@ class Application_Service_PodcastEpisodeService implements Publish
      *             -1 if the file is in a pending state,
      *             2 if the source is unreachable (disconnected)
      */
-    public function getPublishStatus($fileId)
+    public function getPublishStatus($fileId): int
     {
         $stationPodcast = StationPodcastQuery::create()
             ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId());

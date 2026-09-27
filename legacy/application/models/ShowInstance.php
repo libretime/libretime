@@ -482,14 +482,14 @@ SQL;
         return $time;
     }
 
-    public function getTimeScheduledSecs()
+    public function getTimeScheduledSecs(): float
     {
         $time_filled = $this->getTimeScheduled();
 
         return Application_Common_DateHelper::playlistTimeToSeconds($time_filled);
     }
 
-    public function getDurationSecs()
+    public function getDurationSecs(): int
     {
         $ends = $this->getShowInstanceEnd(null);
         $starts = $this->getShowInstanceStart(null);
@@ -498,7 +498,7 @@ SQL;
     }
 
     // should return the amount of seconds remaining to be scheduled in a show instance
-    public function getSecondsRemaining()
+    public function getSecondsRemaining(): float
     {
         return $this->getDurationSecs() - $this->getTimeScheduledSecs();
     }

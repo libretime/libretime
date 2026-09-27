@@ -103,7 +103,7 @@ class PodcastManager
      *
      * @return bool boolean for ordering
      */
-    protected static function _sortByEpisodePubDate($a, $b)
+    protected static function _sortByEpisodePubDate($a, $b): int
     {
         if ($a['pub_date'] == $b['pub_date']) {
             return 0;

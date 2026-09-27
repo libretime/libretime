@@ -9,7 +9,7 @@ class Application_Model_StreamConfig
         return 's' . $id;
     }
 
-    private static function toOutputId($key)
+    private static function toOutputId($key): int
     {
         return intval(trim($key, 's'));
     }
