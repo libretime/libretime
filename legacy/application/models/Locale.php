@@ -36,7 +36,7 @@ final class Application_Model_Locale
         return self::$locales;
     }
 
-    public static function configureLocalization($locale = null)
+    public static function configureLocalization($locale = null): void
     {
         $codeset = 'UTF-8';
         if (is_null($locale)) {

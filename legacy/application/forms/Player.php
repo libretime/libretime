@@ -4,7 +4,7 @@ define('OPUS', 'opus');
 
 class Application_Form_Player extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         $this->setDecorators([
             ['ViewScript', ['viewScript' => 'form/player.phtml']],

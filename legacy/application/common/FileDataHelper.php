@@ -51,7 +51,7 @@ class FileDataHelper
      *
      * @param array $data array containing new file metadata
      */
-    public static function sanitizeData(&$data)
+    public static function sanitizeData(&$data): void
     {
         if (array_key_exists('track_number', $data)) {
             // If the track number isn't numeric, this will return 0
@@ -351,7 +351,7 @@ class FileDataHelper
      * @param string $file
      * @param string $ext
      */
-    public static function resizeGroup($file, $ext)
+    public static function resizeGroup($file, $ext): void
     {
         if (file_exists($file)) {
             self::resizeImage($file, $file . '-32.jpg', $ext, 32, 100);
@@ -374,7 +374,7 @@ class FileDataHelper
      *
      * @param string $file
      */
-    public static function renderImage($file)
+    public static function renderImage($file): void
     {
         if ($file && file_exists($file)) {
             $im = @imagecreatefromjpeg($file);
@@ -394,7 +394,7 @@ class FileDataHelper
      *
      * @param string $dataFile
      */
-    public static function renderDataURI($dataFile)
+    public static function renderDataURI($dataFile): void
     {
         if ($filecontent = file_get_contents($dataFile) !== false) {
             $image = @file_get_contents($dataFile);
@@ -422,7 +422,7 @@ class FileDataHelper
      * @param string $size               Default: 500
      * @param string $quality            Default: 75
      */
-    public static function resizeImage($orig_filename, $converted_filename, $ext, $size = 500, $quality = 75)
+    public static function resizeImage($orig_filename, $converted_filename, $ext, $size = 500, $quality = 75): void
     {
         $get_cont = file_get_contents($orig_filename);
         if ($ext == 'png') {
@@ -458,7 +458,7 @@ class FileDataHelper
      * @param string $orig_filename
      * @param string $conv_filename
      */
-    public static function imgToDataURI($orig_filename, $conv_filename)
+    public static function imgToDataURI($orig_filename, $conv_filename): void
     {
         $file = file_get_contents($orig_filename);
         $Image = 'data:image/jpeg;charset=utf-8;base64,' . base64_encode($file);

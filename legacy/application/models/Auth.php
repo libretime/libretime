@@ -46,7 +46,7 @@ class Application_Model_Auth
         return Application_Model_Email::send($subject, $message, $user->getDbEmail());
     }
 
-    public function invalidateTokens($user, $action)
+    public function invalidateTokens($user, $action): void
     {
         CcSubjsTokenQuery::create()
             ->filterByDbAction($action)
@@ -140,7 +140,7 @@ class Application_Model_Auth
      *
      * @param Zend_Auth $auth get this with Zend_Auth::getInstance()
      */
-    public static function pinSessionToClient($auth)
+    public static function pinSessionToClient($auth): void
     {
         $auth->setStorage(new Zend_Auth_Storage_Session('libretime'));
     }

@@ -69,7 +69,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     public function init() {}
 
     // converts UTC timestamp citeria into user timezone strings.
-    private function convertTimestamps(&$criteria)
+    private function convertTimestamps(&$criteria): void
     {
         $columns = ['utime', 'mtime', 'lptime'];
 
@@ -99,7 +99,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
      *
      */
 
-    public function startForm($p_blockId, $p_isValid = false)
+    public function startForm($p_blockId, $p_isValid = false): void
     {
         // load type
         $out = CcBlockQuery::create()->findPk($p_blockId);

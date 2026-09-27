@@ -2,7 +2,7 @@
 
 class Application_Form_AddShowRepeats extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         $linked = new Zend_Form_Element_Checkbox('add_show_linked');
         $linked->setLabel(_('Link:'));
@@ -72,7 +72,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
         ]);
     }
 
-    public function disable()
+    public function disable(): void
     {
         $elements = $this->getElements();
         foreach ($elements as $element) {

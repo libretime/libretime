@@ -2,7 +2,7 @@
 
 class Application_Form_AddShowWhat extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         // retrieves the length limit for each char field
@@ -84,7 +84,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
     /**
      * Enable the instance description when editing a show instance.
      */
-    public function enableInstanceDesc()
+    public function enableInstanceDesc(): void
     {
         $el = $this->getElement('add_show_instance_description');
         Logging::info($el);
@@ -92,7 +92,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
         $el->setAttrib('readonly', null);
     }
 
-    public function disable()
+    public function disable(): void
     {
         $elements = $this->getElements();
         foreach ($elements as $element) {
@@ -102,7 +102,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
         }
     }
 
-    public function makeReadonly()
+    public function makeReadonly(): void
     {
         $elements = $this->getElements();
         foreach ($elements as $element) {

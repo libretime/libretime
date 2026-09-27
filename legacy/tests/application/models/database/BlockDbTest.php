@@ -9,7 +9,7 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase // PHPUnit_Framewor
 {
     private $_connectionMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         TestHelper::installTestDatabase();
         TestHelper::setupZendBootstrap();

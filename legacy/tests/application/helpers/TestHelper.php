@@ -2,7 +2,7 @@
 
 class TestHelper
 {
-    public static function loginUser()
+    public static function loginUser(): void
     {
         $authAdapter = Application_Model_Auth::getAuthAdapter();
 
@@ -37,7 +37,7 @@ class TestHelper
         );
     }
 
-    public static function installTestDatabase()
+    public static function installTestDatabase(): void
     {
         // We need to load the config before our app bootstrap runs. The config
         // is normally

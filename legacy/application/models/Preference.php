@@ -21,7 +21,7 @@ class Application_Model_Preference
      * @param mixed $key
      * @param mixed $value
      */
-    private static function setValue($key, $value, $isUserValue = false)
+    private static function setValue($key, $value, $isUserValue = false): void
     {
         $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
 
@@ -123,7 +123,7 @@ class Application_Model_Preference
      *
      * @param PDO $con
      */
-    private static function _lock($con)
+    private static function _lock($con): void
     {
         // If we're not in a transaction, a lock is pointless
         if (!$con->inTransaction()) {
@@ -214,7 +214,7 @@ class Application_Model_Preference
         return $title;
     }
 
-    public static function SetHeadTitle($title, $view = null)
+    public static function SetHeadTitle($title, $view = null): void
     {
         self::setValue('station_name', $title);
 
@@ -239,7 +239,7 @@ class Application_Model_Preference
      * @param DateTime $dateTime
      *                           A row from cc_show_days table
      */
-    public static function SetShowsPopulatedUntil($dateTime)
+    public static function SetShowsPopulatedUntil($dateTime): void
     {
         $dateTime->setTimezone(new DateTimeZone('UTC'));
         self::setValue('shows_populated_until', $dateTime->format(DEFAULT_TIMESTAMP_FORMAT));
@@ -265,7 +265,7 @@ class Application_Model_Preference
         return new DateTime($date, new DateTimeZone('UTC'));
     }
 
-    public static function SetDefaultCrossfadeDuration($duration)
+    public static function SetDefaultCrossfadeDuration($duration): void
     {
         self::setValue('default_crossfade_duration', $duration);
     }
@@ -282,7 +282,7 @@ class Application_Model_Preference
         return $duration;
     }
 
-    public static function SetDefaultFadeIn($fade)
+    public static function SetDefaultFadeIn($fade): void
     {
         self::setValue('default_fade_in', $fade);
     }
@@ -299,7 +299,7 @@ class Application_Model_Preference
         return $fade;
     }
 
-    public static function SetDefaultFadeOut($fade)
+    public static function SetDefaultFadeOut($fade): void
     {
         self::setValue('default_fade_out', $fade);
     }
@@ -316,12 +316,12 @@ class Application_Model_Preference
         return $fade;
     }
 
-    public static function SetDefaultFade($fade)
+    public static function SetDefaultFade($fade): void
     {
         self::setValue('default_fade', $fade);
     }
 
-    public static function SetDefaultTransitionFade($fade)
+    public static function SetDefaultTransitionFade($fade): void
     {
         self::setValue('default_transition_fade', $fade);
 
@@ -337,7 +337,7 @@ class Application_Model_Preference
         return ($transition_fade == '') ? '0.000' : $transition_fade;
     }
 
-    public static function SetStreamLabelFormat($type)
+    public static function SetStreamLabelFormat($type): void
     {
         self::setValue('stream_label_format', $type);
 
@@ -362,7 +362,7 @@ class Application_Model_Preference
         return self::getValue('off_air_meta');
     }
 
-    public static function setOffAirMeta($offAirMeta)
+    public static function setOffAirMeta($offAirMeta): void
     {
         self::setValue('off_air_meta', $offAirMeta);
 
@@ -377,12 +377,12 @@ class Application_Model_Preference
         return self::getValue('station_name');
     }
 
-    public static function SetStationName($station_name)
+    public static function SetStationName($station_name): void
     {
         self::setValue('station_name', $station_name);
     }
 
-    public static function SetAllow3rdPartyApi($bool)
+    public static function SetAllow3rdPartyApi($bool): void
     {
         self::setValue('third_party_api', $bool);
     }
@@ -394,7 +394,7 @@ class Application_Model_Preference
         return (strlen($val) == 0) ? '1' : $val;
     }
 
-    public static function SetPodcastAlbumOverride($bool)
+    public static function SetPodcastAlbumOverride($bool): void
     {
         self::setValue('podcast_album_override', $bool);
     }
@@ -406,7 +406,7 @@ class Application_Model_Preference
         return $val === '1' ? true : false;
     }
 
-    public static function SetPodcastAutoSmartblock($bool)
+    public static function SetPodcastAutoSmartblock($bool): void
     {
         self::setValue('podcast_auto_smartblock', $bool);
     }
@@ -418,7 +418,7 @@ class Application_Model_Preference
         return $val === '1' ? true : false;
     }
 
-    public static function SetTrackTypeDefault($tracktype)
+    public static function SetTrackTypeDefault($tracktype): void
     {
         self::setValue('tracktype_default', $tracktype);
     }
@@ -438,17 +438,17 @@ class Application_Model_Preference
         return self::getValue('outro_playlist');
     }
 
-    public static function SetIntroPlaylist($playlist)
+    public static function SetIntroPlaylist($playlist): void
     {
         self::setValue('intro_playlist', $playlist);
     }
 
-    public static function SetOutroPlaylist($playlist)
+    public static function SetOutroPlaylist($playlist): void
     {
         self::setValue('outro_playlist', $playlist);
     }
 
-    public static function SetPhone($phone)
+    public static function SetPhone($phone): void
     {
         self::setValue('phone', $phone);
     }
@@ -458,7 +458,7 @@ class Application_Model_Preference
         return self::getValue('phone');
     }
 
-    public static function SetEmail($email)
+    public static function SetEmail($email): void
     {
         self::setValue('email', $email);
     }
@@ -468,7 +468,7 @@ class Application_Model_Preference
         return self::getValue('email');
     }
 
-    public static function SetStationWebSite($site)
+    public static function SetStationWebSite($site): void
     {
         self::setValue('station_website', $site);
     }
@@ -478,7 +478,7 @@ class Application_Model_Preference
         return self::getValue('station_website');
     }
 
-    public static function SetSupportFeedback($feedback)
+    public static function SetSupportFeedback($feedback): void
     {
         self::setValue('support_feedback', $feedback);
     }
@@ -488,7 +488,7 @@ class Application_Model_Preference
         return self::getValue('support_feedback');
     }
 
-    public static function SetPublicise($publicise)
+    public static function SetPublicise($publicise): void
     {
         self::setValue('publicise', $publicise);
     }
@@ -498,7 +498,7 @@ class Application_Model_Preference
         return self::getValue('publicise');
     }
 
-    public static function SetRegistered($registered)
+    public static function SetRegistered($registered): void
     {
         self::setValue('registered', $registered);
     }
@@ -508,7 +508,7 @@ class Application_Model_Preference
         return self::getValue('registered');
     }
 
-    public static function SetStationCountry($country)
+    public static function SetStationCountry($country): void
     {
         self::setValue('country', $country);
     }
@@ -518,7 +518,7 @@ class Application_Model_Preference
         return self::getValue('country');
     }
 
-    public static function SetStationCity($city)
+    public static function SetStationCity($city): void
     {
         self::setValue('city', $city);
     }
@@ -528,7 +528,7 @@ class Application_Model_Preference
         return self::getValue('city');
     }
 
-    public static function SetStationDescription($description)
+    public static function SetStationDescription($description): void
     {
         self::setValue('description', $description);
     }
@@ -549,7 +549,7 @@ class Application_Model_Preference
         return Config::get('general.timezone');
     }
 
-    public static function SetUserTimezone($timezone = null)
+    public static function SetUserTimezone($timezone = null): void
     {
         self::setValue('user_timezone', $timezone, true);
     }
@@ -577,7 +577,7 @@ class Application_Model_Preference
     }
 
     // This is the language setting on preferences page
-    public static function SetDefaultLocale($locale)
+    public static function SetDefaultLocale($locale): void
     {
         self::setValue('locale', $locale);
     }
@@ -598,7 +598,7 @@ class Application_Model_Preference
         return $locale;
     }
 
-    public static function SetUserLocale($locale = null)
+    public static function SetUserLocale($locale = null): void
     {
         // When a new user is created they will get the default locale
         // setting which the admin sets on preferences page
@@ -619,7 +619,7 @@ class Application_Model_Preference
         return self::GetDefaultLocale();
     }
 
-    public static function SetStationLogo($imagePath)
+    public static function SetStationLogo($imagePath): void
     {
         if (empty($imagePath)) {
             Logging::info('Removed station logo');
@@ -642,7 +642,7 @@ class Application_Model_Preference
         return base64_encode($image);
     }
 
-    public static function SetUniqueId($id)
+    public static function SetUniqueId($id): void
     {
         self::setValue('uniqueId', $id);
     }
@@ -768,7 +768,7 @@ class Application_Model_Preference
         return 'manual_install';
     }
 
-    public static function SetRemindMeDate($p_never = false)
+    public static function SetRemindMeDate($p_never = false): void
     {
         if ($p_never) {
             self::setValue('remindme', -1);
@@ -783,7 +783,7 @@ class Application_Model_Preference
         return self::getValue('remindme');
     }
 
-    public static function SetImportTimestamp()
+    public static function SetImportTimestamp(): void
     {
         $now = time();
         if (self::GetImportTimestamp() + 5 < $now) {
@@ -796,7 +796,7 @@ class Application_Model_Preference
         return (int) self::getValue('import_timestamp');
     }
 
-    public static function SetPrivacyPolicyCheck($flag)
+    public static function SetPrivacyPolicyCheck($flag): void
     {
         self::setValue('privacy_policy', $flag);
     }
@@ -811,7 +811,7 @@ class Application_Model_Preference
         return count(Config::get('stream.outputs.merged'));
     }
 
-    public static function SetEnableStreamConf($bool)
+    public static function SetEnableStreamConf($bool): void
     {
         self::setValue('enable_stream_conf', $bool);
     }
@@ -845,7 +845,7 @@ class Application_Model_Preference
         return $pref->getValStr();
     }
 
-    public static function SetSchemaVersion($version)
+    public static function SetSchemaVersion($version): void
     {
         self::setValue('schema_version', $version);
     }
@@ -881,7 +881,7 @@ class Application_Model_Preference
         return $latest;
     }
 
-    public static function SetLatestVersion($version)
+    public static function SetLatestVersion($version): void
     {
         $pattern = '/^[0-9]+\.[0-9]+\.[0-9]+/';
         if (preg_match($pattern, $version)) {
@@ -899,7 +899,7 @@ class Application_Model_Preference
         return $link;
     }
 
-    public static function SetLatestLink($link)
+    public static function SetLatestLink($link): void
     {
         $pattern = '#^(http|https|ftp)://'
             . '([a-zA-Z0-9]+\.)*[a-zA-Z0-9]+'
@@ -909,7 +909,7 @@ class Application_Model_Preference
         }
     }
 
-    public static function SetWeekStartDay($day)
+    public static function SetWeekStartDay($day): void
     {
         self::setValue('week_start_day', $day);
     }
@@ -924,7 +924,7 @@ class Application_Model_Preference
     /**
      * Stores the last timestamp of user updating stream setting.
      */
-    public static function SetStreamUpdateTimestamp()
+    public static function SetStreamUpdateTimestamp(): void
     {
         $now = time();
         self::setValue('stream_update_timestamp', $now);
@@ -945,7 +945,7 @@ class Application_Model_Preference
         return self::getValue('client_id');
     }
 
-    public static function SetClientId($id)
+    public static function SetClientId($id): void
     {
         if (is_numeric($id)) {
             self::setValue('client_id', $id);
@@ -961,7 +961,7 @@ class Application_Model_Preference
      *
      * @param $timeScale new time scale
      */
-    public static function SetCalendarTimeScale($timeScale)
+    public static function SetCalendarTimeScale($timeScale): void
     {
         self::setValue('calendar_time_scale', $timeScale, true /* user specific */);
     }
@@ -985,7 +985,7 @@ class Application_Model_Preference
      *
      * @param $numEntries new number of entries to show
      */
-    public static function SetLibraryNumEntries($numEntries)
+    public static function SetLibraryNumEntries($numEntries): void
     {
         self::setValue('library_num_entries', $numEntries, true /* user specific */);
     }
@@ -1009,7 +1009,7 @@ class Application_Model_Preference
      *
      * @param $timeInterval new time interval
      */
-    public static function SetCalendarTimeInterval($timeInterval)
+    public static function SetCalendarTimeInterval($timeInterval): void
     {
         self::setValue('calendar_time_interval', $timeInterval, true /* user specific */);
     }
@@ -1025,7 +1025,7 @@ class Application_Model_Preference
         return (strlen($val) == 0) ? '30' : $val;
     }
 
-    public static function SetDiskQuota($value)
+    public static function SetDiskQuota($value): void
     {
         self::setValue('disk_quota', $value, false);
     }
@@ -1037,7 +1037,7 @@ class Application_Model_Preference
         return empty($val) ? 2147483648 : $val;  // If there is no value for disk quota, return 2GB
     }
 
-    public static function SetLiveStreamMasterUsername($value)
+    public static function SetLiveStreamMasterUsername($value): void
     {
         self::setValue('live_stream_master_username', $value, false);
     }
@@ -1047,7 +1047,7 @@ class Application_Model_Preference
         return self::getValue('live_stream_master_username');
     }
 
-    public static function SetLiveStreamMasterPassword($value)
+    public static function SetLiveStreamMasterPassword($value): void
     {
         self::setValue('live_stream_master_password', $value, false);
     }
@@ -1057,7 +1057,7 @@ class Application_Model_Preference
         return self::getValue('live_stream_master_password');
     }
 
-    public static function SetSourceStatus($sourcename, $status)
+    public static function SetSourceStatus($sourcename, $status): void
     {
         self::setValue($sourcename, $status, false);
     }
@@ -1069,7 +1069,7 @@ class Application_Model_Preference
         return !($value == null || $value == 'false');
     }
 
-    public static function SetSourceSwitchStatus($sourcename, $status)
+    public static function SetSourceSwitchStatus($sourcename, $status): void
     {
         self::setValue($sourcename . '_switch', $status, false);
     }
@@ -1120,7 +1120,7 @@ class Application_Model_Preference
         return "{$scheme}://{$host}:{$port}/{$mount}";
     }
 
-    public static function SetAutoTransition($value)
+    public static function SetAutoTransition($value): void
     {
         self::setValue('auto_transition', $value, false);
     }
@@ -1130,7 +1130,7 @@ class Application_Model_Preference
         return self::getValue('auto_transition');
     }
 
-    public static function SetAutoSwitch($value)
+    public static function SetAutoSwitch($value): void
     {
         self::setValue('auto_switch', $value, false);
     }
@@ -1195,7 +1195,7 @@ class Application_Model_Preference
         return self::getOrderingMap('library_datatable');
     }
 
-    public static function setCurrentLibraryTableSetting($settings)
+    public static function setCurrentLibraryTableSetting($settings): void
     {
         $data = serialize($settings);
         self::setValue('library_datatable', $data, true);
@@ -1208,7 +1208,7 @@ class Application_Model_Preference
         return ($data != '') ? unserialize($data) : null;
     }
 
-    public static function setTimelineDatatableSetting($settings)
+    public static function setTimelineDatatableSetting($settings): void
     {
         $data = serialize($settings);
         self::setValue('timeline_datatable', $data, true);
@@ -1221,7 +1221,7 @@ class Application_Model_Preference
         return ($data != '') ? unserialize($data) : null;
     }
 
-    public static function setNowPlayingScreenSettings($settings)
+    public static function setNowPlayingScreenSettings($settings): void
     {
         $data = serialize($settings);
         self::setValue('nowplaying_screen', $data, true);
@@ -1234,7 +1234,7 @@ class Application_Model_Preference
         return ($data != '') ? unserialize($data) : null;
     }
 
-    public static function setLibraryScreenSettings($settings)
+    public static function setLibraryScreenSettings($settings): void
     {
         $data = serialize($settings);
         self::setValue('library_screen', $data, true);
@@ -1247,7 +1247,7 @@ class Application_Model_Preference
         return ($data != '') ? unserialize($data) : null;
     }
 
-    public static function SetEnableReplayGain($value)
+    public static function SetEnableReplayGain($value): void
     {
         self::setValue('enable_replay_gain', $value, false);
     }
@@ -1268,12 +1268,12 @@ class Application_Model_Preference
         return $rg_modifier;
     }
 
-    public static function setReplayGainModifier($rg_modifier)
+    public static function setReplayGainModifier($rg_modifier): void
     {
         self::setValue('replay_gain_modifier', $rg_modifier, false);
     }
 
-    public static function SetHistoryItemTemplate($value)
+    public static function SetHistoryItemTemplate($value): void
     {
         self::setValue('history_item_template', $value);
     }
@@ -1283,7 +1283,7 @@ class Application_Model_Preference
         return self::getValue('history_item_template');
     }
 
-    public static function SetHistoryFileTemplate($value)
+    public static function SetHistoryFileTemplate($value): void
     {
         self::setValue('history_file_template', $value);
     }
@@ -1300,12 +1300,12 @@ class Application_Model_Preference
         return (strlen($val) == 0) ? 0 : $val;
     }
 
-    public static function setDiskUsage($value)
+    public static function setDiskUsage($value): void
     {
         self::setValue('disk_usage', $value);
     }
 
-    public static function updateDiskUsage($filesize)
+    public static function updateDiskUsage($filesize): void
     {
         $currentDiskUsage = self::getDiskUsage();
         if (empty($currentDiskUsage)) {
@@ -1315,7 +1315,7 @@ class Application_Model_Preference
         self::setDiskUsage($currentDiskUsage + $filesize);
     }
 
-    public static function setTuneinEnabled($value)
+    public static function setTuneinEnabled($value): void
     {
         self::setValue('tunein_enabled', $value);
     }
@@ -1325,7 +1325,7 @@ class Application_Model_Preference
         return self::getValue('tunein_enabled');
     }
 
-    public static function setTuneinPartnerKey($value)
+    public static function setTuneinPartnerKey($value): void
     {
         self::setValue('tunein_partner_key', $value);
     }
@@ -1335,7 +1335,7 @@ class Application_Model_Preference
         return self::getValue('tunein_partner_key');
     }
 
-    public static function setTuneinPartnerId($value)
+    public static function setTuneinPartnerId($value): void
     {
         self::setValue('tunein_partner_id', $value);
     }
@@ -1345,7 +1345,7 @@ class Application_Model_Preference
         return self::getValue('tunein_partner_id');
     }
 
-    public static function setTuneinStationId($value)
+    public static function setTuneinStationId($value): void
     {
         self::setValue('tunein_station_id', $value);
     }
@@ -1360,7 +1360,7 @@ class Application_Model_Preference
         return self::getValue('last_tunein_metadata_update');
     }
 
-    public static function setLastTuneinMetadataUpdate($value)
+    public static function setLastTuneinMetadataUpdate($value): void
     {
         self::setValue('last_tunein_metadata_update', $value);
     }
@@ -1372,7 +1372,7 @@ class Application_Model_Preference
         return self::getValue('task_manager_lock');
     }
 
-    public static function setTaskManagerLock($value)
+    public static function setTaskManagerLock($value): void
     {
         self::setValue('task_manager_lock', $value);
     }
@@ -1386,7 +1386,7 @@ class Application_Model_Preference
         return empty($val) ? false : $val;
     }
 
-    public static function setUsingCustomStreamSettings($value)
+    public static function setUsingCustomStreamSettings($value): void
     {
         self::setValue('using_custom_stream_settings', $value);
     }
@@ -1399,7 +1399,7 @@ class Application_Model_Preference
         return self::getValue('radio_page_display_login_button');
     }
 
-    public static function setRadioPageDisplayLoginButton($value)
+    public static function setRadioPageDisplayLoginButton($value): void
     {
         self::setValue('radio_page_display_login_button', $value);
     }
@@ -1409,7 +1409,7 @@ class Application_Model_Preference
         return boolval(self::getValue('schedule_trim_overbooked', false));
     }
 
-    public static function setScheduleTrimOverbooked($value)
+    public static function setScheduleTrimOverbooked($value): void
     {
         self::setValue('schedule_trim_overbooked', $value);
     }
@@ -1419,7 +1419,7 @@ class Application_Model_Preference
         return boolval(self::getValue('radio_page_disabled', false));
     }
 
-    public static function setRadioPageDisabled($value)
+    public static function setRadioPageDisabled($value): void
     {
         self::setValue('radio_page_disabled', $value);
     }
@@ -1429,7 +1429,7 @@ class Application_Model_Preference
         return self::getValue('lang_tz_setup_complete');
     }
 
-    public static function setLangTimezoneSetupComplete($value)
+    public static function setLangTimezoneSetupComplete($value): void
     {
         self::setValue('lang_tz_setup_complete', $value);
     }
@@ -1446,7 +1446,7 @@ class Application_Model_Preference
         return empty($val) ? false : $val;
     }
 
-    public static function setWhatsNewDialogViewed($value)
+    public static function setWhatsNewDialogViewed($value): void
     {
         self::setValue('whats_new_dialog_viewed', $value, true);
     }
@@ -1456,7 +1456,7 @@ class Application_Model_Preference
         return self::getValue('autoplaylist_poll_lock');
     }
 
-    public static function setAutoPlaylistPollLock($value)
+    public static function setAutoPlaylistPollLock($value): void
     {
         self::setValue('autoplaylist_poll_lock', $value);
     }
@@ -1466,7 +1466,7 @@ class Application_Model_Preference
         return self::getValue('podcast_poll_lock');
     }
 
-    public static function setPodcastPollLock($value)
+    public static function setPodcastPollLock($value): void
     {
         self::setValue('podcast_poll_lock', $value);
     }
@@ -1482,7 +1482,7 @@ class Application_Model_Preference
         return $stationPodcastId;
     }
 
-    public static function setStationPodcastId($value)
+    public static function setStationPodcastId($value): void
     {
         self::setValue('station_podcast_id', $value);
     }
@@ -1495,7 +1495,7 @@ class Application_Model_Preference
         return self::getValue('station_podcast_download_key');
     }
 
-    public static function setStationPodcastDownloadKey($value = null)
+    public static function setStationPodcastDownloadKey($value = null): void
     {
         $value = empty($value) ? (new Application_Model_Auth())->generateRandomString() : $value;
         self::setValue('station_podcast_download_key', $value);
@@ -1506,7 +1506,7 @@ class Application_Model_Preference
         return self::getValue('station_podcast_download_reset_timer');
     }
 
-    public static function setStationPodcastDownloadResetTimer($value)
+    public static function setStationPodcastDownloadResetTimer($value): void
     {
         self::setValue('station_podcast_download_reset_timer', $value);
     }
@@ -1516,19 +1516,19 @@ class Application_Model_Preference
         return self::getValue('station_podcast_download_counter');
     }
 
-    public static function resetStationPodcastDownloadCounter()
+    public static function resetStationPodcastDownloadCounter(): void
     {
         self::setValue('station_podcast_download_counter', 0);
     }
 
-    public static function incrementStationPodcastDownloadCounter()
+    public static function incrementStationPodcastDownloadCounter(): void
     {
         $c = self::getStationPodcastDownloadCounter();
         self::setValue('station_podcast_download_counter', empty($c) ? 1 : ++$c);
     }
 
     // For fail cases, we may need to decrement the download counter
-    public static function decrementStationPodcastDownloadCounter()
+    public static function decrementStationPodcastDownloadCounter(): void
     {
         $c = self::getStationPodcastDownloadCounter();
         self::setValue('station_podcast_download_counter', empty($c) ? 0 : --$c);
@@ -1542,7 +1542,7 @@ class Application_Model_Preference
         return self::getValue('station_podcast_privacy');
     }
 
-    public static function setStationPodcastPrivacy($value)
+    public static function setStationPodcastPrivacy($value): void
     {
         self::setValue('station_podcast_privacy', $value);
     }
@@ -1569,7 +1569,7 @@ class Application_Model_Preference
      * Stores liquidsoap status if $boot_time > save time.
      * save time is the time that user clicked save on stream setting page
      */
-    public static function setLiquidsoapError($stream_id, $msg, $boot_time = null)
+    public static function setLiquidsoapError($stream_id, $msg, $boot_time = null): void
     {
         $update_time = Application_Model_Preference::GetStreamUpdateTimestemp();
 
@@ -1597,7 +1597,7 @@ SQL;
         return Application_Common_Database::prepareAndExecute($sql, []);
     }
 
-    public static function SetListenerStatError($stream_id, $value)
+    public static function SetListenerStatError($stream_id, $value): void
     {
         $stream_id = trim($stream_id, 's');
         self::setValue("stream_stats_status:{$stream_id}", $value);

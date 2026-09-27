@@ -2,7 +2,7 @@
 
 class Application_Form_StationPodcast extends Zend_Form
 {
-    public function init()
+    public function init(): void
     {
         // Station Podcast form
         $podcastPreferences = new Application_Form_PodcastPreferences();

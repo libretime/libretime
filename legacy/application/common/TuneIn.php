@@ -6,7 +6,7 @@ class Application_Common_TuneIn
      * @param $title  url encoded string
      * @param $artist url encoded string
      */
-    public static function sendMetadataToTunein($title, $artist)
+    public static function sendMetadataToTunein($title, $artist): void
     {
         $credQryStr = self::getCredentialsQueryString();
         $metadataQryStr = '&title=' . $title . '&artist=' . $artist . '&commercial=false';

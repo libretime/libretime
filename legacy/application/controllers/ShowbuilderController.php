@@ -2,7 +2,7 @@
 
 class ShowbuilderController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('schedule-move', 'json')
@@ -15,7 +15,7 @@ class ShowbuilderController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         $userType = Application_Model_User::GetCurrentUser()->getType();
 
@@ -95,7 +95,7 @@ class ShowbuilderController extends Zend_Controller_Action
     }
 
     /** Check if we need to show the timezone/language setup popup and display it. (eg. on first run) */
-    public function checkAndShowSetupPopup($request)
+    public function checkAndShowSetupPopup($request): void
     {
         $setupComplete = Application_Model_Preference::getLangTimezoneSetupComplete();
         $previousPage = strtolower($request->getHeader('Referer'));
@@ -113,7 +113,7 @@ class ShowbuilderController extends Zend_Controller_Action
         }
     }
 
-    public function contextMenuAction()
+    public function contextMenuAction(): void
     {
         $baseUrl = Config::getBasePath();
 
@@ -141,7 +141,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->items = $menu;
     }
 
-    public function builderDialogAction()
+    public function builderDialogAction(): void
     {
         $request = $this->getRequest();
         $id = $request->getParam('id');
@@ -182,7 +182,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->dialog = $this->view->render('showbuilder/builderDialog.phtml');
     }
 
-    public function checkBuilderFeedAction()
+    public function checkBuilderFeedAction(): void
     {
         $request = $this->getRequest();
         $show_filter = intval($request->getParam('showFilter', 0));
@@ -203,7 +203,7 @@ class ShowbuilderController extends Zend_Controller_Action
         );
     }
 
-    public function builderFeedAction()
+    public function builderFeedAction(): void
     {
         $current_time = time();
 
@@ -227,7 +227,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->timestamp = $current_time;
     }
 
-    public function scheduleAddAction()
+    public function scheduleAddAction(): void
     {
         $request = $this->getRequest();
 
@@ -254,7 +254,7 @@ class ShowbuilderController extends Zend_Controller_Action
         }
     }
 
-    public function scheduleRemoveAction()
+    public function scheduleRemoveAction(): void
     {
         $request = $this->getRequest();
         $items = $request->getParam('items', []);
@@ -278,7 +278,7 @@ class ShowbuilderController extends Zend_Controller_Action
         }
     }
 
-    public function scheduleMoveAction()
+    public function scheduleMoveAction(): void
     {
         $request = $this->getRequest();
         $selectedItems = $request->getParam('selectedItem');

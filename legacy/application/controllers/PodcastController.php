@@ -2,7 +2,7 @@
 
 class PodcastController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $headScript = $this->view->headScript();
         AirtimeTableView::injectTableJavaScriptDependencies($headScript);
@@ -23,7 +23,7 @@ class PodcastController extends Zend_Controller_Action
     /**
      * Renders the Station podcast view.
      */
-    public function stationAction()
+    public function stationAction(): void
     {
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
         $podcast = Application_Service_PodcastService::getPodcastById($stationPodcastId);

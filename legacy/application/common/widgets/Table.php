@@ -26,7 +26,7 @@ class AirtimeTableView
         ];
     }
 
-    public static function injectTableJavaScriptDependencies(&$headScript)
+    public static function injectTableJavaScriptDependencies(&$headScript): void
     {
         foreach (self::_getTableJavaScriptDependencies() as $path) {
             $headScript->appendFile(Assets::url($path), 'text/javascript');

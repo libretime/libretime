@@ -46,7 +46,7 @@ class Application_Service_SchedulerService
      * @param       $diff        (integer, difference between unix epoch in seconds)
      * @param mixed $instanceIds
      */
-    public static function updateScheduleStartTime($instanceIds, $diff)
+    public static function updateScheduleStartTime($instanceIds, $diff): void
     {
         $con = Propel::getConnection();
         if (count($instanceIds) > 0) {
@@ -79,7 +79,7 @@ class Application_Service_SchedulerService
      * @param array $schedIds schedule ids to exclude
      * @param mixed $showId
      */
-    public function removeGaps($showId, $schedIds = null)
+    public function removeGaps($showId, $schedIds = null): void
     {
         $ccShowInstances = CcShowInstancesQuery::create()->filterByDbShowId($showId)->find();
 
@@ -208,7 +208,7 @@ class Application_Service_SchedulerService
      *                                       need their schedules filled
      * @param null|mixed  $instanceId
      */
-    public static function fillLinkedInstances($ccShow, $instanceIdsToFill, $instanceId = null)
+    public static function fillLinkedInstances($ccShow, $instanceIdsToFill, $instanceId = null): void
     {
         // Get the "template" schedule for the linked show (contents of the linked show) that will be
         // copied into to all the new show instances.
@@ -328,7 +328,7 @@ class Application_Service_SchedulerService
         }
     }
 
-    public static function fillPreservedLinkedShowContent($ccShow, $showStamp)
+    public static function fillPreservedLinkedShowContent($ccShow, $showStamp): void
     {
         $item = $showStamp->getFirst();
         $timeFilled = $item->getCcShowInstances()->getDbTimeFilled();
@@ -374,7 +374,7 @@ class Application_Service_SchedulerService
     }
 
     /** Clears a show instance's schedule (which is actually clearing cc_schedule during that show instance's time slot.) */
-    private static function clearShowInstanceContents($instanceId)
+    private static function clearShowInstanceContents($instanceId): void
     {
         // Application_Common_Database::prepareAndExecute($delete_sql, array(), Application_Common_Database::EXECUTE);
         $con = Propel::getConnection();

@@ -92,7 +92,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
      *
      * @param string $p_newname
      */
-    public function setName($p_newname)
+    public function setName($p_newname): void
     {
         $this->block->setDbName($p_newname);
         $this->block->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
@@ -109,7 +109,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
         return $this->block->getDbName();
     }
 
-    public function setDescription($p_description)
+    public function setDescription($p_description): void
     {
         $this->block->setDbDescription($p_description);
         $this->block->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
@@ -131,7 +131,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
         return $this->block->getCcSubjs()->getDbId();
     }
 
-    public function setCreator($p_id)
+    public function setCreator($p_id): void
     {
         $this->block->setDbCreatorId($p_id);
         $this->block->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
@@ -354,7 +354,7 @@ SQL;
         return $result[0][0];
     }
 
-    private function insertBlockElement($info)
+    private function insertBlockElement($info): void
     {
         $row = new CcBlockcontents();
         $row->setDbBlockId($this->id);
@@ -408,7 +408,7 @@ SQL;
     * @param string (before|after) $addAfter
     *      whether to add the clips before or after the selected item.
     */
-    public function addAudioClips($p_items, $p_afterItem = null, $addType = 'after')
+    public function addAudioClips($p_items, $p_afterItem = null, $addType = 'after'): void
     {
         $this->con->beginTransaction();
         $contentsToUpdate = [];
@@ -507,7 +507,7 @@ SQL;
      * @param int   $p_afterItem
      *                           unique id of the item to move the clip after
      */
-    public function moveAudioClips($p_items, $p_afterItem = null)
+    public function moveAudioClips($p_items, $p_afterItem = null): void
     {
         $this->con->beginTransaction();
 
@@ -578,7 +578,7 @@ SQL;
      * @param array $p_items
      *                       array of unique item ids to remove from the block..
      */
-    public function delAudioClips($p_items)
+    public function delAudioClips($p_items): void
     {
         $this->con->beginTransaction();
 
@@ -652,7 +652,7 @@ SQL;
     * $fadeIn length of fade in in seconds of $id2
     * $offset time in seconds from end of $id1 that $id2 will begin to play.
     */
-    public function createCrossfade($id1, $fadeOut, $id2, $fadeIn, $offset)
+    public function createCrossfade($id1, $fadeOut, $id2, $fadeIn, $offset): void
     {
         $this->con->beginTransaction();
 
@@ -756,7 +756,7 @@ SQL;
         return ['fadeIn' => $fadeIn, 'fadeOut' => $fadeOut];
     }
 
-    public function setfades($fadein, $fadeout)
+    public function setfades($fadein, $fadeout): void
     {
         if (isset($fadein)) {
             Logging::info("Setting block fade in {$fadein}");
@@ -977,7 +977,7 @@ SQL;
         return $this->{$method}();
     }
 
-    public function setMetadata($category, $value)
+    public function setMetadata($category, $value): void
     {
         $cat = $this->categories[$category];
 
@@ -1001,7 +1001,7 @@ SQL;
      *
      * @param string $p_fileId
      */
-    public static function DeleteFileFromAllBlocks($p_fileId)
+    public static function DeleteFileFromAllBlocks($p_fileId): void
     {
         CcBlockcontentsQuery::create()->filterByDbFileId($p_fileId)->delete();
     }
@@ -1012,7 +1012,7 @@ SQL;
      * @param array $p_ids
      * @param mixed $p_userId
      */
-    public static function deleteBlocks($p_ids, $p_userId)
+    public static function deleteBlocks($p_ids, $p_userId): void
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -1069,7 +1069,7 @@ SQL;
     /**
      * Delete all files from block.
      */
-    public function deleteAllFilesFromBlock()
+    public function deleteAllFilesFromBlock(): void
     {
         // get only the files from the playlist
         // we are about to clear out
@@ -1115,13 +1115,13 @@ SQL;
         return ['result' => 0];
     }
 
-    public function saveType($p_blockType)
+    public function saveType($p_blockType): void
     {
         // saving dynamic/static flag
         CcBlockQuery::create()->findPk($this->id)->setDbType($p_blockType)->save();
     }
 
-    public function setLength($value)
+    public function setLength($value): void
     {
         $this->block->setDbLength($value);
         $this->block->save($this->con);
@@ -1133,7 +1133,7 @@ SQL;
      *
      * @param array $p_criteria
      */
-    public function saveSmartBlockCriteria($p_criteria)
+    public function saveSmartBlockCriteria($p_criteria): void
     {
         $data = $this->organizeSmartPlaylistCriteria($p_criteria);
 
@@ -1168,7 +1168,7 @@ SQL;
         return $modifier == 'items';
     }
 
-    public function storeCriteriaIntoDb($p_criteriaData)
+    public function storeCriteriaIntoDb($p_criteriaData): void
     {
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
@@ -1291,7 +1291,7 @@ SQL;
         return ['result' => 0];
     }
 
-    public function updateBlockLengthInAllPlaylist()
+    public function updateBlockLengthInAllPlaylist(): void
     {
         $blocks = CcPlaylistcontentsQuery::create()->filterByDbBlockId($this->id)->find();
         $blocks->getFirst();

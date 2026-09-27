@@ -2,7 +2,7 @@
 
 class UserController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('get-hosts', 'json')
@@ -13,7 +13,7 @@ class UserController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function addUserAction()
+    public function addUserAction(): void
     {
         // Start the session to re-open write permission to the session so we can
         // create the namespace for our csrf token verification
@@ -94,13 +94,13 @@ class UserController extends Zend_Controller_Action
         $this->view->form = $form;
     }
 
-    public function getHostsAction()
+    public function getHostsAction(): void
     {
         $search = $this->_getParam('term');
         $this->view->hosts = Application_Model_User::getHosts($search);
     }
 
-    public function getUserDataTableInfoAction()
+    public function getUserDataTableInfoAction(): void
     {
         $post = $this->getRequest()->getPost();
         $users = Application_Model_User::getUsersDataTablesInfo($post);
@@ -108,13 +108,13 @@ class UserController extends Zend_Controller_Action
         $this->_helper->json->sendJson($users);
     }
 
-    public function getUserDataAction()
+    public function getUserDataAction(): void
     {
         $id = $this->_getParam('id');
         $this->view->entries = Application_Model_User::GetUserData($id);
     }
 
-    public function editUserAction()
+    public function editUserAction(): void
     {
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 
@@ -190,7 +190,7 @@ class UserController extends Zend_Controller_Action
         $this->view->html = $this->view->render('user/edit-user.phtml');
     }
 
-    public function removeUserAction()
+    public function removeUserAction(): void
     {
         // action body
         $delId = $this->_getParam('id');

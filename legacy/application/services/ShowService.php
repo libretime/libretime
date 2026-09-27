@@ -51,7 +51,7 @@ class Application_Service_ShowService
         $this->newInstanceIdsCreated = [];
     }
 
-    public function editRepeatingShowInstance($showData)
+    public function editRepeatingShowInstance($showData): void
     {
         $service_user = new Application_Service_UserService();
         $currentUser = $service_user->getCurrentUser();
@@ -179,7 +179,7 @@ class Application_Service_ShowService
      * start time in case the show's timezone is changed and we are crossing
      * over DST.
      */
-    private function storeOrigLocalShowInfo()
+    private function storeOrigLocalShowInfo(): void
     {
         if ($this->ccShow->isRepeating()) {
             $this->origCcShowDay = clone $this->ccShow->getFirstRepeatingCcShowDay();
@@ -292,7 +292,7 @@ class Application_Service_ShowService
      * instances that already exist and any new instances that
      * get created (by adding a new repeat show day).
      */
-    private function storeInstanceIds()
+    private function storeInstanceIds(): void
     {
         $instances = $this->ccShow->getFutureCcShowInstancess();
         foreach ($instances as $instance) {
@@ -306,7 +306,7 @@ class Application_Service_ShowService
      *
      * @param mixed $showData
      */
-    private function adjustSchedule($showData)
+    private function adjustSchedule($showData): void
     {
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
@@ -496,12 +496,12 @@ class Application_Service_ShowService
      * that is currently being edited. They will get recreated with
      * the new show day specs.
      */
-    private function deleteCcShowDays()
+    private function deleteCcShowDays(): void
     {
         CcShowDaysQuery::create()->filterByDbShowId($this->ccShow->getDbId())->delete();
     }
 
-    private function deleteRebroadcastInstances()
+    private function deleteRebroadcastInstances(): void
     {
         $sql = <<<'SQL'
 DELETE FROM cc_show_instances
@@ -515,7 +515,7 @@ SQL;
         ], 'execute');
     }
 
-    private function deleteAllShowDays($showId)
+    private function deleteAllShowDays($showId): void
     {
         CcShowDaysQuery::create()
             ->filterByDbShowId($showId)
@@ -724,7 +724,7 @@ SQL;
         return $date;
     }
 
-    private function deleteInstancesFromDate($endDate, $showId)
+    private function deleteInstancesFromDate($endDate, $showId): void
     {
         $sql = <<<'SQL'
 DELETE FROM cc_show_instances
@@ -738,7 +738,7 @@ SQL;
         ], 'execute');
     }
 
-    private function deleteInstancesBeforeDate($newStartDate, $showId)
+    private function deleteInstancesBeforeDate($newStartDate, $showId): void
     {
         $sql = <<<'SQL'
 DELETE
@@ -763,7 +763,7 @@ SQL;
      * @param       $showDays    array of ccShowDays objects
      * @param mixed $showId
      */
-    private function deleteRemovedShowDayInstances($daysRemoved, $showDays, $showId)
+    private function deleteRemovedShowDayInstances($daysRemoved, $showDays, $showId): void
     {
         $daysRemovedUTC = [];
 
@@ -862,7 +862,7 @@ SQL;
         }
     }
 
-    public function deleteShowInstances($ccShowInstances, $showId)
+    public function deleteShowInstances($ccShowInstances, $showId): void
     {
         foreach ($ccShowInstances as $ccShowInstance) {
             $instanceId = $ccShowInstance->getDbId();
@@ -897,7 +897,7 @@ SQL;
         }
     }
 
-    private function setLastRepeatingShowDate($showId)
+    private function setLastRepeatingShowDate($showId): void
     {
         $ccShowInstances = CcShowInstancesQuery::create()
             ->filterByDbShowId($showId)
@@ -983,7 +983,7 @@ SQL;
         return false;
     }
 
-    private function deleteAllInstances($showId)
+    private function deleteAllInstances($showId): void
     {
         $sql = <<<'SQL'
 DELETE
@@ -1001,7 +1001,7 @@ SQL;
         );
     }
 
-    private function deleteAllRepeatInstances($currentShowDay, $showId)
+    private function deleteAllRepeatInstances($currentShowDay, $showId): void
     {
         $firstShow = $currentShowDay->getUTCStartDateAndTime();
 
@@ -1057,7 +1057,7 @@ SQL;
         return $endDate;
     }
 
-    private function updateScheduleStartEndTimes($showData)
+    private function updateScheduleStartEndTimes($showData): void
     {
         $showId = $this->ccShow->getDbId();
         // DateTime in show's local time
@@ -1096,7 +1096,7 @@ SQL;
      *
      * @param mixed $diff
      */
-    private function updateInstanceStartEndTime($diff)
+    private function updateInstanceStartEndTime($diff): void
     {
         $sql = <<<'SQL'
 UPDATE cc_show_instances
@@ -1123,7 +1123,7 @@ SQL;
      * @param DateTime   $showStartDate user's local time
      * @param mixed      $instanceId
      */
-    private function createRebroadcastInstances($showDay, $showStartDate, $instanceId)
+    private function createRebroadcastInstances($showDay, $showStartDate, $instanceId): void
     {
         $currentUtcTimestamp = gmdate(DEFAULT_TIMESTAMP_FORMAT);
         $showId = $this->ccShow->getDbId();
@@ -1219,7 +1219,7 @@ SQL;
         $repeatType,
         $repeatInterval,
         $daysAdded = null
-    ) {
+    ): void {
         $show_id = $showDay->getDbShowId();
         $first_show = $showDay->getDbFirstShow(); // non-UTC
         $last_show = $showDay->getDbLastShow(); // non-UTC
@@ -1322,7 +1322,7 @@ SQL;
         }
     }
 
-    private function createMonthlyRepeatInstances($showDay, $populateUntil)
+    private function createMonthlyRepeatInstances($showDay, $populateUntil): void
     {
         $show_id = $showDay->getDbShowId();
         $first_show = $showDay->getDbFirstShow(); // non-UTC
@@ -1652,7 +1652,7 @@ SQL;
      *
      * @param mixed $showData
      */
-    public function setCcShow($showData)
+    public function setCcShow($showData): void
     {
         if (!$this->isUpdate) {
             $ccShow = new CcShow();
@@ -1706,7 +1706,7 @@ SQL;
      *
      * @param mixed $showData
      */
-    private function setCcShowDays($showData)
+    private function setCcShowDays($showData): void
     {
         $showId = $this->ccShow->getDbId();
 
@@ -1824,7 +1824,7 @@ SQL;
      * that is currently being edited. They will get recreated with
      * the new show specs.
      */
-    private function deleteCcShowRebroadcasts()
+    private function deleteCcShowRebroadcasts(): void
     {
         CcShowRebroadcastQuery::create()->filterByDbShowId($this->ccShow->getDbId())->delete();
     }
@@ -1834,7 +1834,7 @@ SQL;
      *
      * @param mixed $showData
      */
-    private function setCcShowRebroadcasts($showData)
+    private function setCcShowRebroadcasts($showData): void
     {
         $showId = $this->ccShow->getDbId();
 
@@ -1870,7 +1870,7 @@ SQL;
      * that is currently being edited. They will get recreated with
      * the new show specs.
      */
-    private function deleteCcShowHosts()
+    private function deleteCcShowHosts(): void
     {
         CcShowHostsQuery::create()->filterByDbShow($this->ccShow->getDbId())->delete();
     }
@@ -1880,7 +1880,7 @@ SQL;
      *
      * @param mixed $showData
      */
-    private function setCcShowHosts($showData)
+    private function setCcShowHosts($showData): void
     {
         if (is_array($showData['add_show_hosts'])) {
             foreach ($showData['add_show_hosts'] as $host) {
@@ -1953,7 +1953,7 @@ SQL;
      * @param mixed $day
      * @param mixed $showId
      */
-    private function setNextRepeatingShowDate($nextDate, $day, $showId)
+    private function setNextRepeatingShowDate($nextDate, $day, $showId): void
     {
         $nextInfo = explode(' ', $nextDate);
 

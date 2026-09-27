@@ -49,12 +49,12 @@ final class Application_Model_Scheduler
         $this->crossfadeDuration = Application_Model_Preference::GetDefaultCrossfadeDuration();
     }
 
-    public function setCheckUserPermissions($value)
+    public function setCheckUserPermissions($value): void
     {
         $this->checkUserPermissions = $value;
     }
 
-    private function validateItemMove($itemsToMove, $destination)
+    private function validateItemMove($itemsToMove, $destination): void
     {
         $destinationInstanceId = $destination['instance'];
         $destinationCcShowInstance = CcShowInstancesQuery::create()
@@ -86,7 +86,7 @@ final class Application_Model_Scheduler
     *
     * @param array $items, an array containing pks of cc_schedule items.
     */
-    private function validateRequest($items, $addRemoveAction = false, $cancelShow = false)
+    private function validateRequest($items, $addRemoveAction = false, $cancelShow = false): void
     {
         // $items is where tracks get inserted (they are schedule locations)
 
@@ -484,7 +484,7 @@ final class Application_Model_Scheduler
      *   This function recalculates the start/end times of items in a gapless show to
      *   account for crossfade durations.
      */
-    private function calculateCrossfades($instanceId)
+    private function calculateCrossfades($instanceId): void
     {
         Logging::info('adjusting start, end times of scheduled items to account for crossfades show instance #' . $instanceId);
         $instance = CcShowInstancesQuery::create()->findPk($instanceId);
@@ -522,7 +522,7 @@ final class Application_Model_Scheduler
      *   This function squeezes all items of a show together so that
      *   there are no gaps between them.
      */
-    public function removeGaps($showInstance, $exclude = null)
+    public function removeGaps($showInstance, $exclude = null): void
     {
         Logging::info('removing gaps from show instance #' . $showInstance);
 
@@ -563,7 +563,7 @@ final class Application_Model_Scheduler
      * @param mixed      $showInstance
      * @param null|mixed $exclude
      */
-    public function removeGaps2($showInstance, $exclude = null)
+    public function removeGaps2($showInstance, $exclude = null): void
     {
         $instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
         if (is_null($instance)) {
@@ -622,7 +622,7 @@ final class Application_Model_Scheduler
      * @param mixed $moveAction
      * @param mixed $adjustSched
      */
-    private function insertAfter($scheduleItems, $mediaItems, $filesToInsert = null, $adjustSched = true, $moveAction = false)
+    private function insertAfter($scheduleItems, $mediaItems, $filesToInsert = null, $adjustSched = true, $moveAction = false): void
     {
         try {
             // temporary fix for CC-5665
@@ -1084,7 +1084,7 @@ final class Application_Model_Scheduler
         }
     }
 
-    private function updateMovedItem() {}
+    private function updateMovedItem(): void {}
 
     private function getInstances($instanceId)
     {
@@ -1101,7 +1101,7 @@ final class Application_Model_Scheduler
      * @param array $scheduleItems (schedule_id and instance_id it belongs to)
      * @param array $mediaItems (file|block|playlist|webstream)
      */
-    public function scheduleAfter($scheduleItems, $mediaItems, $adjustSched = true)
+    public function scheduleAfter($scheduleItems, $mediaItems, $adjustSched = true): void
     {
         $this->con->beginTransaction();
 
@@ -1153,7 +1153,7 @@ final class Application_Model_Scheduler
      * @param array $selectedItem
      * @param array $afterItem
      */
-    public function moveItem($selectedItems, $afterItems, $adjustSched = true)
+    public function moveItem($selectedItems, $afterItems, $adjustSched = true): void
     {
         // $startProfile = microtime(true);
 
@@ -1242,7 +1242,7 @@ final class Application_Model_Scheduler
         }
     }
 
-    public function removeItems($scheduledItems, $adjustSched = true, $cancelShow = false)
+    public function removeItems($scheduledItems, $adjustSched = true, $cancelShow = false): void
     {
         $showInstances = [];
         $this->con->beginTransaction();
@@ -1359,7 +1359,7 @@ final class Application_Model_Scheduler
      *
      * @param $p_id id of the show instance to cancel.
      */
-    public function cancelShow($p_id)
+    public function cancelShow($p_id): void
     {
         $this->con->beginTransaction();
 

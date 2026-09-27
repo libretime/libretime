@@ -63,7 +63,7 @@ class Application_Service_MediaService
      * @throws Exception
      * @throws LibreTimeFileNotFoundException
      */
-    public static function streamFileDownload($fileId, $inline = false)
+    public static function streamFileDownload($fileId, $inline = false): void
     {
         $media = Application_Model_StoredFile::RecallById($fileId);
         if ($media == null) {
@@ -147,7 +147,7 @@ class Application_Service_MediaService
     /**
      * Clean up stuck imports by changing their import status to Failed.
      */
-    public static function clearStuckPendingImports()
+    public static function clearStuckPendingImports(): void
     {
         foreach (self::$_pendingFiles as $file) {
             // @var $file CcFiles

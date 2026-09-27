@@ -2,7 +2,7 @@
 
 class Application_Form_PasswordChange extends Zend_Form
 {
-    public function init()
+    public function init(): void
     {
         $this->setDecorators([
             ['ViewScript', ['viewScript' => 'form/password-change.phtml']],

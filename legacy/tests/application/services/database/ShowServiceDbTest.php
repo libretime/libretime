@@ -20,7 +20,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     private $_connectionMock;
     // private $_nowDT;
 
-    public function setUp()
+    public function setUp(): void
     {
         TestHelper::installTestDatabase();
         TestHelper::setupZendBootstrap();

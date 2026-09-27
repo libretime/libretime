@@ -605,7 +605,7 @@ SQL;
         );
     }
 
-    public static function UpdateMediaPlayedStatus($p_id)
+    public static function UpdateMediaPlayedStatus($p_id): void
     {
         $sql = 'UPDATE cc_schedule'
             . ' SET media_item_played=TRUE';
@@ -825,7 +825,7 @@ SQL;
      * @param mixed $time
      * @param mixed $item
      */
-    private static function appendScheduleItem(&$data, $time, $item)
+    private static function appendScheduleItem(&$data, $time, $item): void
     {
         $key = $time;
         $i = 0;
@@ -838,7 +838,7 @@ SQL;
         $data['media'][$key] = $item;
     }
 
-    private static function createInputHarborKickTimes(&$data, $range_start, $range_end)
+    private static function createInputHarborKickTimes(&$data, $range_start, $range_end): void
     {
         $utcTimeZone = new DateTimeZone('UTC');
         $kick_times = Application_Model_ShowInstance::GetEndTimeOfNextShowWithLiveDJ($range_start, $range_end);
@@ -879,7 +879,7 @@ SQL;
      * @param string $uri      path to the scheduled item's physical location
      * @param mixed  $filesize
      */
-    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $filesize)
+    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $filesize): void
     {
         $start = self::AirtimeTimeToPypoTime($item['start']);
         $end = self::AirtimeTimeToPypoTime($item['end']);
@@ -918,7 +918,7 @@ SQL;
         self::appendScheduleItem($data, $start, $schedule_item);
     }
 
-    private static function createStreamScheduleEvent(&$data, $item, $media_id, $uri)
+    private static function createStreamScheduleEvent(&$data, $item, $media_id, $uri): void
     {
         $start = self::AirtimeTimeToPypoTime($item['start']);
         $end = self::AirtimeTimeToPypoTime($item['end']);
@@ -1014,7 +1014,7 @@ SQL;
         return [$range_start, $range_end];
     }
 
-    private static function createScheduledEvents(&$data, $range_start, $range_end)
+    private static function createScheduledEvents(&$data, $range_start, $range_end): void
     {
         $utcTimeZone = new DateTimeZone('UTC');
         $items = self::getItems($range_start, $range_end);
@@ -1093,7 +1093,7 @@ SQL;
      *
      * @param mixed $data
      */
-    private static function foldData(&$data)
+    private static function foldData(&$data): void
     {
         $previous_key = null;
         $previous_val = null;
@@ -1148,7 +1148,7 @@ SQL;
         return $data;
     }
 
-    public static function deleteAll()
+    public static function deleteAll(): void
     {
         $sql = 'TRUNCATE TABLE cc_schedule';
         Application_Common_Database::prepareAndExecute(
@@ -1158,7 +1158,7 @@ SQL;
         );
     }
 
-    public static function deleteWithFileId($fileId)
+    public static function deleteWithFileId($fileId): void
     {
         $sql = 'DELETE FROM cc_schedule WHERE file_id=:file_id';
         Application_Common_Database::prepareAndExecute($sql, [':file_id' => $fileId], 'execute');

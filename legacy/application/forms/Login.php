@@ -2,7 +2,7 @@
 
 class Application_Form_Login extends Zend_Form
 {
-    public function init()
+    public function init(): void
     {
         $CC_CONFIG = Config::getConfig();
 

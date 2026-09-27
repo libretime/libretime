@@ -16,7 +16,7 @@ class Application_Service_PublishService
      * @param int   $fileId ID of the file to be published
      * @param array $data   request data containing what services to publish to
      */
-    public static function publish($fileId, $data)
+    public static function publish($fileId, $data): void
     {
         foreach ($data as $k => $v) {
             $service = PublishServiceFactory::getService($k);

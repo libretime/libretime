@@ -144,7 +144,7 @@ SQL;
         return $all_show_data;
     }
 
-    public static function insertDataPoints($p_dataPoints)
+    public static function insertDataPoints($p_dataPoints): void
     {
         $timestamp_sql = 'INSERT INTO cc_timestamp (timestamp) VALUES
             (:ts::TIMESTAMP) RETURNING id;';

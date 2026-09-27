@@ -2,7 +2,7 @@
 
 class LoginController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $baseUrl = Config::getBasePath();
 
@@ -12,7 +12,7 @@ class LoginController extends Zend_Controller_Action
             ->appendStylesheet(Assets::url('css/styles.css'));
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         $CC_CONFIG = Config::getConfig();
 
@@ -86,7 +86,7 @@ class LoginController extends Zend_Controller_Action
         }
     }
 
-    public function logoutAction()
+    public function logoutAction(): void
     {
         // Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
         SessionHelper::reopenSessionForWriting();
@@ -99,7 +99,7 @@ class LoginController extends Zend_Controller_Action
         $this->_redirect('showbuilder/index');
     }
 
-    public function passwordRestoreAction()
+    public function passwordRestoreAction(): void
     {
         $request = $this->getRequest();
         $stationLocale = Application_Model_Preference::GetDefaultLocale();
@@ -148,7 +148,7 @@ class LoginController extends Zend_Controller_Action
         $this->view->form = $form;
     }
 
-    public function passwordRestoreAfterAction()
+    public function passwordRestoreAfterAction(): void
     {
         $request = $this->getRequest();
         $stationLocale = Application_Model_Preference::GetDefaultLocale();
@@ -159,7 +159,7 @@ class LoginController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('login');
     }
 
-    public function passwordChangeAction()
+    public function passwordChangeAction(): void
     {
         // uses separate layout without a navigation.
         $this->_helper->layout->setLayout('login');

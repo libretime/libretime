@@ -81,7 +81,7 @@ class Application_Model_StoredFile
         return $this->_file;
     }
 
-    public function setFormat($p_format)
+    public function setFormat($p_format): void
     {
         $this->_file->setDbFtype($p_format);
     }
@@ -89,7 +89,7 @@ class Application_Model_StoredFile
     /* This function is only called after liquidsoap
      * has notified that a track has started playing.
      */
-    public function setLastPlayedTime($p_now)
+    public function setLastPlayedTime($p_now): void
     {
         $this->_file->setDbLPtime($p_now);
         /* Normally we would only call save after all columns have been set
@@ -110,7 +110,7 @@ class Application_Model_StoredFile
      * @param array $p_md
      *                    example: $p_md['MDATA_KEY_URL'] = 'https://example.org'
      */
-    public function setMetadata($p_md = null)
+    public function setMetadata($p_md = null): void
     {
         if (is_null($p_md)) {
             $this->setDbColMetadata();
@@ -165,7 +165,7 @@ class Application_Model_StoredFile
      * @param array $p_md
      *                    example: $p_md['url'] = 'https://www.example.com'
      */
-    public function setDbColMetadata($p_md = null)
+    public function setDbColMetadata($p_md = null): void
     {
         if (is_null($p_md)) {
             foreach ($this->_dbMD as $propelColumn) {
@@ -250,7 +250,7 @@ class Application_Model_StoredFile
      * @param mixed $p_category
      * @param mixed $p_value
      */
-    public function setMetadataValue($p_category, $p_value)
+    public function setMetadataValue($p_category, $p_value): void
     {
         // constant() was used because it gets quoted constant name value from
         // api_client.py. This is the wrapper funtion
@@ -263,7 +263,7 @@ class Application_Model_StoredFile
      * @param mixed $p_category
      * @param mixed $p_value
      */
-    public function setDbColMetadataValue($p_category, $p_value)
+    public function setDbColMetadataValue($p_category, $p_value): void
     {
         // don't blank out name, defaults to original filename on first insertion to database.
         if ($p_category == 'track_title' && (is_null($p_value) || $p_value == '')) {
@@ -383,7 +383,7 @@ SQL;
      *
      * @param mixed $quiet
      */
-    public function delete($quiet = false)
+    public function delete($quiet = false): void
     {
         // Check if the file is scheduled to be played in the future
         if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->_file->getCcFileId())) {
@@ -439,7 +439,7 @@ SQL;
      * deleted from the library. It re-calculates the length of
      * all blocks and playlists that contained the deleted file.
      */
-    private static function updateBlockAndPlaylistLength($fileId)
+    private static function updateBlockAndPlaylistLength($fileId): void
     {
         $plRows = CcPlaylistcontentsQuery::create()->filterByDbFileId($fileId)->find();
         foreach ($plRows as $row) {
@@ -462,7 +462,7 @@ SQL;
      *
      * @param mixed $deleteFromPlaylist
      */
-    public function deleteByMediaMonitor($deleteFromPlaylist = false)
+    public function deleteByMediaMonitor($deleteFromPlaylist = false): void
     {
         if ($deleteFromPlaylist) {
             Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
@@ -1101,13 +1101,13 @@ SQL;
         return $rows;
     }
 
-    public function setFileExistsFlag($flag)
+    public function setFileExistsFlag($flag): void
     {
         $this->_file->setDbFileExists($flag)
             ->save();
     }
 
-    public function setFileHiddenFlag($flag)
+    public function setFileHiddenFlag($flag): void
     {
         $this->_file->setDbHidden($flag)
             ->save();
@@ -1126,7 +1126,7 @@ SQL;
         return $this->_file->getDbOwnerId();
     }
 
-    public static function setIsPlaylist($p_playlistItems, $p_type, $p_status)
+    public static function setIsPlaylist($p_playlistItems, $p_type, $p_status): void
     {
         foreach ($p_playlistItems as $item) {
             $file = self::RecallById($item->getDbFileId());
@@ -1167,7 +1167,7 @@ SQL;
      * all files scheduled in the future and all files with is_scheduled = true.
      * The difference of the two result sets is what we need to update.
      */
-    public static function updatePastFilesIsScheduled()
+    public static function updatePastFilesIsScheduled(): void
     {
         $futureScheduledFilesSelectCriteria = new Criteria();
         $futureScheduledFilesSelectCriteria->addSelectColumn(CcSchedulePeer::FILE_ID);

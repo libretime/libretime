@@ -2,7 +2,7 @@
 
 class RabbitMqPlugin extends Zend_Controller_Plugin_Abstract
 {
-    public function dispatchLoopShutdown()
+    public function dispatchLoopShutdown(): void
     {
         if (Application_Model_RabbitMq::$doPush) {
             // The side effects of this function are still required to fill the schedule, we

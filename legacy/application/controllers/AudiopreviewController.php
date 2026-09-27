@@ -2,7 +2,7 @@
 
 class AudiopreviewController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('show-preview', 'json')
@@ -17,7 +17,7 @@ class AudiopreviewController extends Zend_Controller_Action
      * Simply sets up the view to play the required audio track.
      *  Gets the parameters from the request and sets them to the view.
      */
-    public function audioPreviewAction()
+    public function audioPreviewAction(): void
     {
         $CC_CONFIG = Config::getConfig();
 
@@ -74,7 +74,7 @@ class AudiopreviewController extends Zend_Controller_Action
      * Simply sets up the view to play the required playlist track.
      *  Gets the parameters from the request and sets them to the view.
      */
-    public function playlistPreviewAction()
+    public function playlistPreviewAction(): void
     {
         $CC_CONFIG = Config::getConfig();
 
@@ -100,7 +100,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setRender('audio-preview');
     }
 
-    public function blockPreviewAction()
+    public function blockPreviewAction(): void
     {
         $CC_CONFIG = Config::getConfig();
 
@@ -126,7 +126,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setRender('audio-preview');
     }
 
-    public function getBlockAction()
+    public function getBlockAction(): void
     {
         // disable the view and the layout
         $this->view->layout()->disableLayout();
@@ -149,7 +149,7 @@ class AudiopreviewController extends Zend_Controller_Action
     /**
      *Function will load and return the contents of the requested playlist.
      */
-    public function getPlaylistAction()
+    public function getPlaylistAction(): void
     {
         // disable the view and the layout
         $this->view->layout()->disableLayout();
@@ -227,7 +227,7 @@ class AudiopreviewController extends Zend_Controller_Action
      * Simply sets up the view to play the required show track.
      *  Gets the parameters from the request and sets them to the view.
      */
-    public function showPreviewAction()
+    public function showPreviewAction(): void
     {
         $CC_CONFIG = Config::getConfig();
 
@@ -257,7 +257,7 @@ class AudiopreviewController extends Zend_Controller_Action
     /**
      *Function will load and return the contents of the requested show.
      */
-    public function getShowAction()
+    public function getShowAction(): void
     {
         $baseUrl = Config::getBasePath();
         // disable the view and the layout

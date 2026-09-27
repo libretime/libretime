@@ -108,7 +108,7 @@ class Application_Service_PodcastEpisodeService implements Publish
      *
      * @param array $episodes array of podcast episodes
      */
-    public function downloadEpisodes($episodes)
+    public function downloadEpisodes($episodes): void
     {
         /** @var PodcastEpisodes $episode */
         foreach ($episodes as $episode) {
@@ -146,7 +146,7 @@ class Application_Service_PodcastEpisodeService implements Publish
      * @param bool       $album_override should we override the album name when downloading
      * @param null|mixed $track_title
      */
-    private function _download($id, $url, $title, $album_override, $track_title = null)
+    private function _download($id, $url, $title, $album_override, $track_title = null): void
     {
         Celery::sendTask('libretime_api.podcasts.tasks.import_episode', [], [
             'episode_id' => $id,
@@ -162,7 +162,7 @@ class Application_Service_PodcastEpisodeService implements Publish
      *
      * @param int $fileId ID of the file to be published
      */
-    public function publish($fileId)
+    public function publish($fileId): void
     {
         $id = Application_Model_Preference::getStationPodcastId();
         $url = $guid = Config::getPublicUrl() . "rest/media/{$fileId}/download";
@@ -179,7 +179,7 @@ class Application_Service_PodcastEpisodeService implements Publish
      *
      * @param int $fileId ID of the file to be unpublished
      */
-    public function unpublish($fileId)
+    public function unpublish($fileId): void
     {
         $id = Application_Model_Preference::getStationPodcastId();
         PodcastEpisodesQuery::create()
@@ -400,7 +400,7 @@ class Application_Service_PodcastEpisodeService implements Publish
         return $authorString;
     }
 
-    public function deletePodcastEpisodeById($episodeId)
+    public function deletePodcastEpisodeById($episodeId): void
     {
         $episode = PodcastEpisodesQuery::create()->findByDbId($episodeId);
 

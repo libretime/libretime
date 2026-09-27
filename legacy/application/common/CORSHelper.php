@@ -2,7 +2,7 @@
 
 class CORSHelper
 {
-    public static function enableCrossOriginRequests(&$request, &$response)
+    public static function enableCrossOriginRequests(&$request, &$response): void
     {
         // Chrome sends the Origin header for all requests, so we whitelist the webserver's hostname as well.
         $origin = $request->getHeader('Origin');

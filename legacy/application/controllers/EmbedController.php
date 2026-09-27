@@ -2,7 +2,7 @@
 
 class EmbedController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         // translate widgets to station default language
         $locale = Application_Model_Preference::GetDefaultLocale();
@@ -19,7 +19,7 @@ class EmbedController extends Zend_Controller_Action
      * The view for this action contains all the inline javascript needed to
      * create the player.
      */
-    public function playerAction()
+    public function playerAction(): void
     {
         $this->view->layout()->disableLayout();
 
@@ -69,7 +69,7 @@ class EmbedController extends Zend_Controller_Action
         $this->view->availableDesktopStreams = json_encode($availableDesktopStreams);
     }
 
-    public function weeklyProgramAction()
+    public function weeklyProgramAction(): void
     {
         $this->view->layout()->disableLayout();
 

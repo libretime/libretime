@@ -305,7 +305,7 @@ class Application_Common_DateHelper
      * @param string (station|user) convert to either station or user timezone
      * @param mixed $domain
      */
-    public static function convertTimestamps(&$rows, $columnsToConvert, $domain = 'station')
+    public static function convertTimestamps(&$rows, $columnsToConvert, $domain = 'station'): void
     {
         if (!is_array($rows)) {
             return;
@@ -329,7 +329,7 @@ class Application_Common_DateHelper
      * @param string $timezone         convert to the given timezone
      * @param string $format           time format to convert to
      */
-    public static function convertTimestampsToTimezone(&$rows, $columnsToConvert, $timezone, $format = DEFAULT_TIMESTAMP_FORMAT)
+    public static function convertTimestampsToTimezone(&$rows, $columnsToConvert, $timezone, $format = DEFAULT_TIMESTAMP_FORMAT): void
     {
         $timezone = strtolower($timezone);
         // Check that the timezone is valid and rows is an array

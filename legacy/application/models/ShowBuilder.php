@@ -80,7 +80,7 @@ class Application_Model_ShowBuilder
     }
 
     // check to see if this row should be editable by the user.
-    private function isAllowed($p_item, &$row)
+    private function isAllowed($p_item, &$row): void
     {
         // cannot schedule in a recorded show.
         if (intval($p_item['si_record']) === 1) {
@@ -104,7 +104,7 @@ class Application_Model_ShowBuilder
         }
     }
 
-    private function getItemColor($p_item, &$row)
+    private function getItemColor($p_item, &$row): void
     {
         $defaultColor = 'ffffff';
         $defaultBackground = DEFAULT_SHOW_COLOR;
@@ -123,12 +123,12 @@ class Application_Model_ShowBuilder
     }
 
     // information about whether a track is inside|boundary|outside a show.
-    private function getItemStatus($p_item, &$row)
+    private function getItemStatus($p_item, &$row): void
     {
         $row['status'] = intval($p_item['playout_status']);
     }
 
-    private function getRowTimestamp($p_item, &$row)
+    private function getRowTimestamp($p_item, &$row): void
     {
         if (is_null($p_item['si_last_scheduled'])) {
             $ts = 0;
@@ -146,7 +146,7 @@ class Application_Model_ShowBuilder
      * 2 = future
      * TODO : change all of the above to real constants -- RG
      */
-    private function getScheduledStatus($p_epochItemStart, $p_epochItemEnd, &$row)
+    private function getScheduledStatus($p_epochItemStart, $p_epochItemEnd, &$row): void
     {
         if (
             $row['footer'] === true && $this->epoch_now > $p_epochItemStart

@@ -109,7 +109,7 @@ class CcShowInstances extends BaseCcShowInstances
     }
 
     // post save hook to update the cc_schedule status column for the tracks in the show.
-    public function updateScheduleStatus(PropelPDO $con)
+    public function updateScheduleStatus(PropelPDO $con): void
     {
         $this->updateDbTimeFilled($con);
 
@@ -147,7 +147,7 @@ class CcShowInstances extends BaseCcShowInstances
      * from linekd shows filled with dyanmic smart blocks, where each instance
      * has a different amount of scheduled items
      */
-    public function correctSchedulePositions()
+    public function correctSchedulePositions(): void
     {
         $schedule = CcScheduleQuery::create()
             ->filterByDbInstanceId($this->id)
@@ -182,7 +182,7 @@ class CcShowInstances extends BaseCcShowInstances
      *
      * @param PropelPDO $con A connection object
      */
-    public function updateDbTimeFilled(PropelPDO $con)
+    public function updateDbTimeFilled(PropelPDO $con): void
     {
         $timefilled = $this->computeDbTimeFilled($con);
         if (is_null($timefilled)) {

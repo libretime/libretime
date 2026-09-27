@@ -64,7 +64,7 @@ class Application_Service_ShowFormService
      * @param mixed $formWhen
      * @param mixed $formRepeats
      */
-    public function populateNewShowForms($formWhat, $formWhen, $formRepeats)
+    public function populateNewShowForms($formWhat, $formWhen, $formRepeats): void
     {
         $formWhat->populate(
             [
@@ -86,7 +86,7 @@ class Application_Service_ShowFormService
         $formRepeats->populate(['add_show_end_date' => date('Y-m-d')]);
     }
 
-    public function delegateShowInstanceFormPopulation($forms)
+    public function delegateShowInstanceFormPopulation($forms): void
     {
         $this->populateFormWhat($forms['what']);
         $this->populateInstanceFormWhen($forms['when']);
@@ -123,7 +123,7 @@ class Application_Service_ShowFormService
      *
      * @param mixed $forms
      */
-    public function delegateShowFormPopulation($forms)
+    public function delegateShowFormPopulation($forms): void
     {
         $this->populateFormWhat($forms['what']);
         // local show start DT
@@ -138,7 +138,7 @@ class Application_Service_ShowFormService
         $this->populateFormRebroadcastAbsolute($forms['abs_rebroadcast']);
     }
 
-    private function populateFormWhat($form)
+    private function populateFormWhat($form): void
     {
         $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
 
@@ -155,7 +155,7 @@ class Application_Service_ShowFormService
         );
     }
 
-    private function populateFormAutoPlaylist($form)
+    private function populateFormAutoPlaylist($form): void
     {
         $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
 
@@ -240,7 +240,7 @@ class Application_Service_ShowFormService
         return ['starts' => $starts, 'ends' => $ends];
     }
 
-    private function populateInstanceFormWhen($form)
+    private function populateInstanceFormWhen($form): void
     {
         $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
 
@@ -289,7 +289,7 @@ class Application_Service_ShowFormService
      * @param DateTime $nextFutureShowStart user's local timezone
      * @param mixed    $form
      */
-    private function populateFormRepeats($form, $nextFutureShowStart)
+    private function populateFormRepeats($form, $nextFutureShowStart): void
     {
         if ($this->ccShow->isRepeating()) {
             $ccShowDays = $this->ccShow->getRepeatingCcShowDays();
@@ -350,7 +350,7 @@ class Application_Service_ShowFormService
         }
     }
 
-    private function populateFormWho($form)
+    private function populateFormWho($form): void
     {
         $ccShowHosts = $this->ccShow->getCcShowHostss();
 
@@ -362,7 +362,7 @@ class Application_Service_ShowFormService
         $form->populate(['add_show_hosts' => $hosts]);
     }
 
-    private function populateFormStyle($form)
+    private function populateFormStyle($form): void
     {
         $src = $this->ccShow->getDbImagePath()
             ? $this->imagePathToDataUri($this->ccShow->getDbImagePath()) : '';
@@ -409,7 +409,7 @@ class Application_Service_ShowFormService
             ? '' : 'data: ' . mime_content_type($path) . ';base64,' . $imageData;
     }
 
-    private function populateFormLive($form)
+    private function populateFormLive($form): void
     {
         $form->populate(
             [
@@ -421,7 +421,7 @@ class Application_Service_ShowFormService
         );
     }
 
-    private function populateFormRecord($form)
+    private function populateFormRecord($form): void
     {
         $form->populate(
             [
@@ -433,7 +433,7 @@ class Application_Service_ShowFormService
         $form->getElement('add_show_record')->setOptions(['disabled' => true]);
     }
 
-    private function populateFormRebroadcastRelative($form)
+    private function populateFormRebroadcastRelative($form): void
     {
         $relativeRebroadcasts = $this->ccShow->getRebroadcastsRelative();
 
@@ -450,7 +450,7 @@ class Application_Service_ShowFormService
         $form->populate($formValues);
     }
 
-    private function populateFormRebroadcastAbsolute($form)
+    private function populateFormRebroadcastAbsolute($form): void
     {
         $absolutRebroadcasts = $this->ccShow->getRebroadcastsAbsolute();
         $timezone = $this->ccShow->getFirstCcShowDay()->getDbTimezone();

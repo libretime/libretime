@@ -23,7 +23,7 @@ class AutoPlaylistManager
     /**
      * Find all shows with autoplaylists who have yet to have their playlists built and added to the schedule.
      */
-    public static function buildAutoPlaylist()
+    public static function buildAutoPlaylist(): void
     {
         $autoPlaylists = static::_upcomingAutoPlaylistShows();
         foreach ($autoPlaylists as $autoplaylist) {

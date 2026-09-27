@@ -15,7 +15,7 @@
  */
 class Rest_ShowImageController extends Zend_Rest_Controller
 {
-    public function init()
+    public function init(): void
     {
         // Remove layout dependencies
         $this->view->layout()->disableLayout();
@@ -26,22 +26,22 @@ class Rest_ShowImageController extends Zend_Rest_Controller
     /**
      * headAction is needed as it is defined as an abstract function in the base controller.
      */
-    public function headAction()
+    public function headAction(): void
     {
         Logging::info('HEAD action received');
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         Logging::info('INDEX action received');
     }
 
-    public function getAction()
+    public function getAction(): void
     {
         Logging::info('GET action received');
     }
 
-    public function putAction()
+    public function putAction(): void
     {
         Logging::info('PUT action received');
     }
@@ -49,7 +49,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
     /**
      * RESTful POST endpoint; used when uploading show images.
      */
-    public function postAction()
+    public function postAction(): void
     {
         $showId = $this->getShowId();
 
@@ -96,7 +96,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
     /**
      * RESTful DELETE endpoint; used when deleting show images.
      */
-    public function deleteAction()
+    public function deleteAction(): void
     {
         $showId = $this->getShowId();
 
