@@ -56,7 +56,7 @@ class LibreTime_Auth_Adaptor_Header implements Zend_Auth_Adapter_Interface
 
         $separator = Config::get('header_auth.group_separator');
 
-        $groups = array_map(fn ($group) => trim($group), explode($separator, $groups));
+        $groups = array_map(fn ($group): string => trim($group), explode($separator, $groups));
 
         $superAdminGroup = Config::get('header_auth.group_map.superadmin');
         if (in_array($superAdminGroup, $groups)) {

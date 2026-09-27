@@ -26,9 +26,9 @@ return RectorConfig::configure()
     ->withFileExtensions(['php', 'phtml'])
     ->withPhpVersion(PhpVersion::PHP_82)
     ->withPhpLevel(6)
-    ->withCodeQualityLevel(5)
+    ->withCodeQualityLevel(6)
     ->withDeadCodeLevel(0)
-    ->withTypeCoverageLevel(5)
+    ->withTypeCoverageLevel(6)
     ->withTypeCoverageDocblockLevel(6)
     ->withRules([
         VariableInStringInterpolationFixerRector::class,
