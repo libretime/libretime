@@ -38,7 +38,7 @@ class Application_Service_HistoryService
         $fields_general = [];
         $general_keys = [];
 
-        foreach ($fields as $index => $field) {
+        foreach ($fields as $field) {
             if (in_array($field['name'], $required)) {
                 continue;
             }
@@ -253,13 +253,13 @@ class Application_Service_HistoryService
         $timezoneLocal = new DateTimeZone($this->timezone);
 
         $boolCast = [];
-        foreach ($fields as $index => $field) {
+        foreach ($fields as $field) {
             if ($field['type'] == TEMPLATE_BOOLEAN) {
                 $boolCast[] = $field;
             }
         }
 
-        foreach ($rows as $index => &$result) {
+        foreach ($rows as &$result) {
             foreach ($boolCast as $field) {
                 $result[$field['label']] = (bool) $result[$field['name']];
             }
@@ -319,7 +319,7 @@ class Application_Service_HistoryService
         $fields = $template['fields'];
         $required = $this->mandatoryFileFields();
 
-        foreach ($fields as $index => $field) {
+        foreach ($fields as $field) {
             $key = $field['name'];
 
             if (in_array($field['name'], $required)) {
@@ -626,7 +626,7 @@ class Application_Service_HistoryService
                 $prefix = Application_Form_EditHistoryItem::ID_PREFIX;
                 $formValues["{$prefix}id"] = $id;
 
-                foreach ($template['fields'] as $index => $field) {
+                foreach ($template['fields'] as $field) {
                     $key = $field['name'];
                     $value = '';
 
@@ -679,7 +679,7 @@ class Application_Service_HistoryService
             $formValues = [];
             $formValues["{$prefix}id"] = $id;
 
-            foreach ($template['fields'] as $index => $field) {
+            foreach ($template['fields'] as $field) {
                 $key = $field['name'];
 
                 if (in_array($key, $required)) {

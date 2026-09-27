@@ -27,6 +27,7 @@ return RectorConfig::configure()
     ->withPhpVersion(PhpVersion::PHP_82)
     ->withPhpLevel(4)
     ->withCodeQualityLevel(4)
+    ->withDeadCodeLevel(0)
     ->withTypeCoverageLevel(4)
     ->withTypeCoverageDocblockLevel(4)
     ->withRules([

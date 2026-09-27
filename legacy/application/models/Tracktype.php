@@ -161,7 +161,7 @@ class Application_Model_Tracktype
 
         $res = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
 
-        foreach ($res['aaData'] as $key => &$record) {
+        foreach ($res['aaData'] as &$record) {
             if ($record['code'] == $tracktypename) {
                 $record['delete'] = 'self';
             } else {

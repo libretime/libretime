@@ -168,7 +168,7 @@ class Application_Model_StoredFile
     public function setDbColMetadata($p_md = null)
     {
         if (is_null($p_md)) {
-            foreach ($this->_dbMD as $dbColumn => $propelColumn) {
+            foreach ($this->_dbMD as $propelColumn) {
                 $method = "set{$propelColumn}";
                 $this->_file->{$method}(null);
             }

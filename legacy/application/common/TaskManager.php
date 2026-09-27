@@ -33,7 +33,7 @@ final class TaskManager
      */
     private function __construct()
     {
-        foreach (TaskFactory::getTasks() as $k => $task) {
+        foreach (TaskFactory::getTasks() as $task) {
             $this->_taskList[$task] = false;
         }
     }

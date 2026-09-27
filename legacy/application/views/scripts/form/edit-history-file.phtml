@@ -8,7 +8,7 @@
       <?php echo $form->getElement($name); ?>
     </dd>
 
-    <?php foreach ($form->getSubForm('his_file_template') as $index => $el) : ?>
+    <?php foreach ($form->getSubForm('his_file_template') as $el) : ?>
       <?php $name = $el->getName(); ?>
 
       <dt id="<?php echo $name; ?>-label">

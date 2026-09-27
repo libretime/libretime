@@ -214,7 +214,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
     public static function isValid($analysis)
     {
-        foreach ($analysis as $k => $v) {
+        foreach ($analysis as $v) {
             if ($v[0] === false) {
                 return false;
             }

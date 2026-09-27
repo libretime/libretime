@@ -89,7 +89,7 @@ class Application_Service_PodcastService
         $itunesCategory = $rss->get_channel_tags($itunesChannel, 'category');
         $categoryArray = [];
         if (is_array($itunesCategory)) {
-            foreach ($itunesCategory as $c => $data) {
+            foreach ($itunesCategory as $data) {
                 foreach ($data['attribs'] as $attrib) {
                     array_push($categoryArray, $attrib['text']);
                 }
