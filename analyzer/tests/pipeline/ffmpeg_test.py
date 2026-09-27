@@ -14,7 +14,7 @@ from ..fixtures import FILES
 @pytest.mark.skip(reason="fixtures files are missing replaygain metadata")
 @pytest.mark.parametrize(
     "filepath,replaygain",
-    map(lambda i: pytest.param(i.path, i.replaygain, id=i.path.name), FILES),
+    [pytest.param(i.path, i.replaygain, id=i.path.name) for i in FILES],
 )
 def test_probe_replaygain(filepath, replaygain):
     assert probe_replaygain(filepath) == pytest.approx(replaygain, abs=0.05)
@@ -22,7 +22,7 @@ def test_probe_replaygain(filepath, replaygain):
 
 @pytest.mark.parametrize(
     "filepath,replaygain",
-    map(lambda i: pytest.param(i.path, i.replaygain, id=i.path.name), FILES),
+    [pytest.param(i.path, i.replaygain, id=i.path.name) for i in FILES],
 )
 def test_compute_replaygain(filepath, replaygain):
     tolerance = 0.8
@@ -56,9 +56,11 @@ SILENCE_DETECT_RE_EXPECTED = [
 
 @pytest.mark.parametrize(
     "line,expected",
-    zip(
-        SILENCE_DETECT_RE_RAW.strip().splitlines(),
-        SILENCE_DETECT_RE_EXPECTED,
+    list(
+        zip(
+            SILENCE_DETECT_RE_RAW.strip().splitlines(),
+            SILENCE_DETECT_RE_EXPECTED,
+        )
     ),
 )
 def test_silence_detect_re(line, expected):
@@ -70,10 +72,7 @@ def test_silence_detect_re(line, expected):
 
 @pytest.mark.parametrize(
     "filepath,length,cuein,cueout",
-    map(
-        lambda i: pytest.param(i.path, i.length, i.cuein, i.cueout, id=i.path.name),
-        FILES,
-    ),
+    [pytest.param(i.path, i.length, i.cuein, i.cueout, id=i.path.name) for i in FILES],
 )
 def test_compute_silences(filepath, length, cuein, cueout):
     result = compute_silences(filepath)
@@ -93,7 +92,7 @@ def test_compute_silences(filepath, length, cuein, cueout):
 
 @pytest.mark.parametrize(
     "filepath,length",
-    map(lambda i: pytest.param(i.path, i.length, id=i.path.name), FILES),
+    [pytest.param(i.path, i.length, id=i.path.name) for i in FILES],
 )
 def test_probe_duration(filepath, length):
     assert probe_duration(filepath) == pytest.approx(length, abs=0.05)

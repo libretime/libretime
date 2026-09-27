@@ -29,7 +29,6 @@ setup(
     ],
     extras_require={
         "dev": [
-            "distro>=1.8.0,<2",
             "types-requests>=2.31.0,<3",
         ],
         "sentry": [
