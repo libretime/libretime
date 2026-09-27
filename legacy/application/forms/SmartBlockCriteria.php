@@ -437,7 +437,12 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         return preg_match('/before|after|between/', $modValue) == 1;
     }
 
-    public function preValidation($params)
+    /**
+     * @param mixed $params
+     *
+     * @return mixed[]
+     */
+    public function preValidation($params): array
     {
         $data = Application_Model_Block::organizeSmartPlaylistCriteria($params['data']);
         // add elements that needs to be added
