@@ -27,7 +27,7 @@ class Application_Model_ShowInstance
         return $this->_instanceId;
     }
 
-    public function getShow()
+    public function getShow(): Application_Model_Show
     {
         return new Application_Model_Show($this->getShowId());
     }
@@ -206,7 +206,7 @@ SQL;
      * @return $newDateTime
      *      php DateTime, $dateTime with the added time deltas.
      */
-    public static function addDeltas($dateTime, $deltaDay, $deltaMin)
+    public static function addDeltas($dateTime, $deltaDay, $deltaMin): DateTime
     {
         $newDateTime = clone $dateTime;
 

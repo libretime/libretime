@@ -99,7 +99,7 @@ class Application_Model_StoredFile
         $this->_file->save();
     }
 
-    public static function createWithFile($f, $con)
+    public static function createWithFile($f, $con): Application_Model_StoredFile
     {
         return new Application_Model_StoredFile($f, $con);
     }

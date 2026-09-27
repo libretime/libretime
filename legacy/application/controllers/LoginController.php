@@ -217,7 +217,7 @@ class LoginController extends Zend_Controller_Action
      *
      * @return new form
      */
-    private function loginError($username)
+    private function loginError($username): Application_Form_Login
     {
         $this->view->message = _('Wrong username or password provided. Please try again.');
         Application_Model_Subjects::increaseLoginAttempts($username);

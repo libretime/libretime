@@ -88,7 +88,7 @@ class Application_Common_DateHelper
     /**
      * @return DateTime - YYYY-MM-DD 00:00 in station timezone of today
      */
-    public static function getTodayStationStartDateTime()
+    public static function getTodayStationStartDateTime(): DateTime
     {
         $stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
         $now = new DateTime('now', $stationTimezone);
@@ -101,7 +101,7 @@ class Application_Common_DateHelper
     /**
      * @return DateTime - YYYY-MM-DD 00:00 in station timezone of tomorrow
      */
-    public static function getTodayStationEndDateTime()
+    public static function getTodayStationEndDateTime(): DateTime
     {
         $stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
         $now = new DateTime('now', $stationTimezone);
@@ -359,10 +359,8 @@ class Application_Common_DateHelper
      *
      * @param mixed $timezoneString
      * @param mixed $days
-     *
-     * @return DateTime
      */
-    public static function getEndDateTime($timezoneString, $days)
+    public static function getEndDateTime($timezoneString, $days): DateTime
     {
         $timezone = new DateTimeZone($timezoneString);
         $now = new DateTime('now', $timezone);

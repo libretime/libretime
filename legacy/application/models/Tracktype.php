@@ -99,7 +99,7 @@ class Application_Model_Tracktype
         }
     }
 
-    private function createTracktype()
+    private function createTracktype(): CcTracktypes
     {
         return new CcTracktypes();
     }

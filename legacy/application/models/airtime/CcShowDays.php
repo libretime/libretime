@@ -14,7 +14,7 @@ class CcShowDays extends BaseCcShowDays
         return $this->getDbRepeatType() != -1;
     }
 
-    public function getUTCStartDateAndTime()
+    public function getUTCStartDateAndTime(): DateTime
     {
         $dt = new DateTime(
             "{$this->getDbFirstShow()} {$this->getDbStartTime()}",
@@ -26,7 +26,7 @@ class CcShowDays extends BaseCcShowDays
     }
 
     // Returns the start of a show in the timezone it was created in
-    public function getLocalStartDateAndTime()
+    public function getLocalStartDateAndTime(): DateTime
     {
         return new DateTime(
             "{$this->getDbFirstShow()} {$this->getDbStartTime()}",

@@ -54,10 +54,8 @@ class LibreTime_Model_FreeIpa
 
     /**
      * Bind to ldap so we can fetch additional user info.
-     *
-     * @return Zend_Ldap
      */
-    private static function _getLdapConnection()
+    private static function _getLdapConnection(): Zend_Ldap
     {
         $config = Config::getConfig();
 

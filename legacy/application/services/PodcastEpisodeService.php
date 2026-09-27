@@ -89,7 +89,7 @@ class Application_Service_PodcastEpisodeService implements Publish
      * @throws Exception
      * @throws PropelException
      */
-    private function _buildEpisode($podcastId, $url, $guid, $publicationDate, $title = null, $description = null)
+    private function _buildEpisode($podcastId, $url, $guid, $publicationDate, $title = null, $description = null): PodcastEpisodes
     {
         $e = new PodcastEpisodes();
         $e->setDbPodcastId($podcastId);

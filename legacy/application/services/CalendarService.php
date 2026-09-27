@@ -233,7 +233,7 @@ class Application_Service_CalendarService
      * @param int      $deltaDay delta days show moved
      * @param int      $deltaMin delta minutes show moved
      */
-    public static function addDeltas($dateTime, $deltaDay, $deltaMin)
+    public static function addDeltas($dateTime, $deltaDay, $deltaMin): DateTime
     {
         $newDateTime = clone $dateTime;
 

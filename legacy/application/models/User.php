@@ -248,7 +248,7 @@ class Application_Model_User
         }
     }
 
-    private function createUser()
+    private function createUser(): CcSubjs
     {
         return new CcSubjs();
     }

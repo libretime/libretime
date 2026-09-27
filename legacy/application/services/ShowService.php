@@ -1488,7 +1488,7 @@ SQL;
      * @param mixed $timezone
      * @param mixed $startTime
      */
-    private function getNextMonthlyMonthlyRepeatDate($start, $timezone, $startTime)
+    private function getNextMonthlyMonthlyRepeatDate($start, $timezone, $startTime): DateTime
     {
         $dt = new DateTime($start->format('Y-m'), new DateTimeZone($timezone));
 
@@ -1555,7 +1555,7 @@ SQL;
         return $dt;
     }
 
-    private function getNextRepeatingPopulateStartDateTime($showDay)
+    private function getNextRepeatingPopulateStartDateTime($showDay): DateTime
     {
         $nextPopDate = $showDay->getDbNextPopDate();
         $startTime = $showDay->getDbStartTime();
@@ -1577,7 +1577,7 @@ SQL;
      * @param mixed $repeatInterval
      * @param mixed $populateUntil
      */
-    private function getDatePeriod($start, $timezone, $lastShow, $repeatInterval, $populateUntil)
+    private function getDatePeriod($start, $timezone, $lastShow, $repeatInterval, $populateUntil): DatePeriod
     {
         if (isset($lastShow)) {
             $endDatePeriod = new DateTime($lastShow, new DateTimeZone($timezone));
