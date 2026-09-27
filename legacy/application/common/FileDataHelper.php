@@ -305,7 +305,7 @@ class FileDataHelper
      *
      * @param mixed $trackid
      */
-    public static function removeArtwork($trackid)
+    public static function removeArtwork($trackid): string
     {
         $file = Application_Model_StoredFile::RecallById($trackid);
         $md = $file->getMetadata();

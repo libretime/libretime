@@ -753,7 +753,7 @@ class Application_Model_Preference
         return $outputString;
     }
 
-    public static function GetInstallMethod()
+    public static function GetInstallMethod(): string
     {
         $easy_install = file_exists('/usr/bin/airtime-easy-setup');
         $debian_install = file_exists('/var/lib/dpkg/info/airtime.config');

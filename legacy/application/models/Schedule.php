@@ -1264,7 +1264,7 @@ SQL;
         return $overlapping;
     }
 
-    public static function GetType($p_scheduleId)
+    public static function GetType($p_scheduleId): string
     {
         $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
         if ($scheduledItem->getDbFileId() == null) {

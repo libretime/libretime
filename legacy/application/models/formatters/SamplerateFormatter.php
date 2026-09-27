@@ -13,7 +13,7 @@ class SamplerateFormatter
         $this->_samplerate = $samplerate;
     }
 
-    public function format()
+    public function format(): string
     {
         $kHz = bcdiv($this->_samplerate, 1000, 1);
 
