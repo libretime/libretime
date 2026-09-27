@@ -303,7 +303,7 @@ class CcFiles extends BaseCcFiles
         return true;
     }
 
-    public function getCueLength()
+    public function getCueLength(): string
     {
         $cuein = $this->getDbCuein();
         $cueout = $this->getDbCueout();
@@ -362,7 +362,7 @@ class CcFiles extends BaseCcFiles
         return $this->getDbFilesize();
     }
 
-    public function getFilename()
+    public function getFilename(): string
     {
         $info = pathinfo($this->getAbsoluteFilePath());
 
@@ -386,7 +386,7 @@ class CcFiles extends BaseCcFiles
     /**
      * Returns the file's absolute file path stored on disk.
      */
-    public function getAbsoluteFilePath()
+    public function getAbsoluteFilePath(): string
     {
         $directory = Config::getStoragePath();
         $filepath = $this->getDbFilepath();
@@ -397,7 +397,7 @@ class CcFiles extends BaseCcFiles
     /**
      * Returns the artwork's absolute file path stored on disk.
      */
-    public function getAbsoluteArtworkPath()
+    public function getAbsoluteArtworkPath(): string
     {
         $directory = Config::getStoragePath();
         $filepath = $this->getDbArtwork();

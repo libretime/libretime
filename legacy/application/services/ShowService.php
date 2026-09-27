@@ -472,7 +472,7 @@ class Application_Service_ShowService
         return CcShowDaysPeer::doSelect($c);
     }
 
-    public static function formatShowDuration($duration)
+    public static function formatShowDuration($duration): string
     {
         $hPos = strpos($duration, 'h');
         $mPos = strpos($duration, 'm');

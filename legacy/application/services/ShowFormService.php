@@ -385,7 +385,7 @@ class Application_Service_ShowFormService
      * @return string
      *                - the data URI representation of the image
      */
-    private function imagePathToDataUri($path)
+    private function imagePathToDataUri($path): string
     {
         $imageData = null;
         $bytesRead = 0;

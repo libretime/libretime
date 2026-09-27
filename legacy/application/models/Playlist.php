@@ -296,7 +296,7 @@ SQL;
      *
      * @param mixed $fade
      */
-    public function normalizeFade($fade)
+    public function normalizeFade($fade): string
     {
         // First get rid of the first six characters 00:00: which will be added back later for db update
         $fade = substr($fade, 6);

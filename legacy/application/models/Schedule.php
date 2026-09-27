@@ -354,7 +354,7 @@ SQL;
      *
      * @return string the source name
      */
-    private static function _getSource()
+    private static function _getSource(): string
     {
         $live_dj = Application_Model_Preference::GetSourceStatus('live_dj');
         $master_dj = Application_Model_Preference::GetSourceStatus('master_dj');
@@ -663,10 +663,8 @@ SQL;
      * to "YYYY-MM-DD-HH-mm-SS".
      *
      * @param string $p_time
-     *
-     * @return string
      */
-    private static function AirtimeTimeToPypoTime($p_time)
+    private static function AirtimeTimeToPypoTime($p_time): string
     {
         $p_time = substr($p_time, 0, 19);
         $p_time = str_replace(' ', '-', $p_time);
@@ -679,10 +677,8 @@ SQL;
      * "YYYY-MM-DD HH:mm:SS".
      *
      * @param string $p_time
-     *
-     * @return string
      */
-    private static function PypoTimeToAirtimeTime($p_time)
+    private static function PypoTimeToAirtimeTime($p_time): string
     {
         $t = explode('-', $p_time);
 

@@ -3,7 +3,7 @@
 class Application_Common_OsPath
 {
     // this function is from https://stackoverflow.com/questions/2670299/is-there-a-php-equivalent-function-to-the-python-os-path-normpath
-    public static function normpath($path)
+    public static function normpath($path): string
     {
         if (empty($path)) {
             return '.';

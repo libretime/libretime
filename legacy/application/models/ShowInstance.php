@@ -128,7 +128,7 @@ SQL;
         return $this->_showInstance->getDbEnds($format);
     }
 
-    public function getStartDate()
+    public function getStartDate(): string
     {
         $showStart = $this->getShowInstanceStart();
         $showStartExplode = explode(' ', $showStart);
@@ -136,7 +136,7 @@ SQL;
         return $showStartExplode[0];
     }
 
-    public function getStartTime()
+    public function getStartTime(): string
     {
         $showStart = $this->getShowInstanceStart();
         $showStartExplode = explode(' ', $showStart);
@@ -462,7 +462,7 @@ SQL;
         }
     }
 
-    public function getTimeScheduled()
+    public function getTimeScheduled(): string
     {
         $time = $this->_showInstance->getDbTimeFilled();
 
@@ -517,7 +517,7 @@ SQL;
         return $percent;
     }
 
-    public function getShowLength()
+    public function getShowLength(): string
     {
         $start = $this->getShowInstanceStart(null);
         $end = $this->getShowInstanceEnd(null);

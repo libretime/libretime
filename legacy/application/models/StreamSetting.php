@@ -4,7 +4,7 @@ define('MAX_NUM_STREAMS', 4);
 
 class Application_Model_StreamConfig
 {
-    private static function toOutputKey($id)
+    private static function toOutputKey($id): string
     {
         return 's' . $id;
     }

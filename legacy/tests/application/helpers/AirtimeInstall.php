@@ -10,12 +10,12 @@ class AirtimeInstall
     public const CONF_DIR_LOG = LIBRETIME_LOG_DIR;
     public static $databaseTablesCreated = false;
 
-    public static function GetAirtimeSrcDir()
+    public static function GetAirtimeSrcDir(): string
     {
         return __DIR__ . '/../../..';
     }
 
-    public static function GetUtilsSrcDir()
+    public static function GetUtilsSrcDir(): string
     {
         return __DIR__ . '/../../../../utils';
     }

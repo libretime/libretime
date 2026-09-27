@@ -4,7 +4,7 @@ class Application_Model_Auth
 {
     public const TOKEN_LIFETIME = 'P2D'; // DateInterval syntax
 
-    private function generateToken($action, $user_id)
+    private function generateToken($action, $user_id): string
     {
         $salt = md5('pro');
         $token = self::generateRandomString();
@@ -21,7 +21,7 @@ class Application_Model_Auth
         return $token;
     }
 
-    public function sendPasswordRestoreLink($user, $view)
+    public function sendPasswordRestoreLink($user, $view): string
     {
         $public_url = Config::getPublicUrl();
 
@@ -123,10 +123,8 @@ class Application_Model_Auth
      *
      * @param int    $length
      * @param string $allowed_chars
-     *
-     * @return string
      */
-    final public function generateRandomString($length = 12, $allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
+    final public function generateRandomString($length = 12, $allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'): string
     {
         $string = '';
         for ($i = 0; $i < $length; ++$i) {

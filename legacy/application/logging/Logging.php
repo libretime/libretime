@@ -45,7 +45,7 @@ class Logging
      *                   so don't use it unless you need it.
      * @param mixed $debugMode
      */
-    private static function getLinePrefix($debugMode = false)
+    private static function getLinePrefix($debugMode = false): string
     {
         $linePrefix = '';
 

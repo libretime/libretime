@@ -505,7 +505,7 @@ SQL;
     /**
      * Get the URL to access this file.
      */
-    public function getFileUrl()
+    public function getFileUrl(): string
     {
         return $this->getRelativeFileUrl(Config::getPublicUrl());
     }
@@ -516,7 +516,7 @@ SQL;
      *
      * @param mixed $baseUrl
      */
-    public function getRelativeFileUrl($baseUrl)
+    public function getRelativeFileUrl($baseUrl): string
     {
         return $baseUrl . 'api/get-media/file/' . $this->getId();
     }

@@ -685,7 +685,7 @@ SQL;
      *                The start date in the format YYYY-MM-DD or empty string in case
      *                start date could not be found
      */
-    public function getStartDateAndTime()
+    public function getStartDateAndTime(): string
     {
         $con = Propel::getConnection();
 
@@ -719,7 +719,7 @@ SQL;
      * @return string
      *                The start date in the format YYYY-MM-DD
      */
-    public function getStartDate()
+    public function getStartDate(): string
     {
         [$date] = explode(' ', $this->getStartDateAndTime());
 
@@ -732,7 +732,7 @@ SQL;
      * @return string
      *                The start time in the format HH:MM
      */
-    public function getStartTime()
+    public function getStartTime(): string
     {
         [, $time] = explode(' ', $this->getStartDateAndTime());
 
@@ -746,7 +746,7 @@ SQL;
      * @return string
      *                The end date in the format YYYY-MM-DD
      */
-    public function getEndDate()
+    public function getEndDate(): string
     {
         $startDate = $this->getStartDate();
         $startTime = $this->getStartTime();
@@ -766,7 +766,7 @@ SQL;
      * @return string
      *                The start time in the format HH:MM:SS
      */
-    public function getEndTime()
+    public function getEndTime(): string
     {
         $startDate = $this->getStartDate();
         $startTime = $this->getStartTime();
@@ -1238,7 +1238,7 @@ SQL;
     }
 
     /** Get a palettized colour for the show. */
-    private static function getDefaultBackgroundColor($date)
+    private static function getDefaultBackgroundColor($date): string
     {
         $basePalette = ['A22BE8', '2FFF8D', 'FF743C', '2ED4FF', 'E8D82B'];
         // 'B23F11', 'FF7E4A', 'FF6C31'

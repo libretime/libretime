@@ -1074,7 +1074,7 @@ class Application_Model_Preference
         self::setValue($sourcename . '_switch', $status, false);
     }
 
-    public static function GetSourceSwitchStatus($sourcename)
+    public static function GetSourceSwitchStatus($sourcename): string
     {
         // Scheduled play switch should always be "on".
         // Even though we've hidden this element in the dashboard we should

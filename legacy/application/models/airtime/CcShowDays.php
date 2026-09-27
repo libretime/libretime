@@ -53,7 +53,7 @@ class CcShowDays extends BaseCcShowDays
         return $this->getUTCStartDateAndTime()->format('Y-m-d H:i:s') < gmdate('Y-m-d H:i:s');
     }
 
-    public function formatDuration()
+    public function formatDuration(): string
     {
         $info = explode(':', $this->getDbDuration());
 

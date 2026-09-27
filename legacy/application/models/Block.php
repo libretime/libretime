@@ -249,7 +249,7 @@ SQL;
      *
      * @param mixed $fade
      */
-    public function normalizeFade($fade)
+    public function normalizeFade($fade): string
     {
         // First get rid of the first six characters 00:00: which will be added back later for db update
         $fade = substr($fade, 6);
@@ -280,7 +280,7 @@ SQL;
         return $length;
     }
 
-    public function getLength()
+    public function getLength(): string
     {
         $this->block->reload();
         $prepend = '';
@@ -297,7 +297,7 @@ SQL;
         return $prepend . $formatter->format();
     }
 
-    public function getDynamicBlockLength()
+    public function getDynamicBlockLength(): string
     {
         [$value, $modifier] = $this->getLimitValueAndModifier();
         if ($modifier == 'items') {

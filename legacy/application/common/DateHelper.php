@@ -13,7 +13,7 @@ class Application_Common_DateHelper
      * Get time of object construction in the format
      * YYYY-MM-DD HH:mm:ss.
      */
-    public function getTimestamp()
+    public function getTimestamp(): string
     {
         return date(DEFAULT_TIMESTAMP_FORMAT, $this->_dateTime);
     }
@@ -22,7 +22,7 @@ class Application_Common_DateHelper
      * Get time of object construction in the format
      * YYYY-MM-DD HH:mm:ss.
      */
-    public function getUtcTimestamp()
+    public function getUtcTimestamp(): string
     {
         return gmdate(DEFAULT_TIMESTAMP_FORMAT, $this->_dateTime);
     }
@@ -31,7 +31,7 @@ class Application_Common_DateHelper
      * Get date of object construction in the format
      * YYYY-MM-DD.
      */
-    public function getDate()
+    public function getDate(): string
     {
         return gmdate('Y-m-d', $this->_dateTime);
     }
@@ -40,7 +40,7 @@ class Application_Common_DateHelper
      * Get time of object construction in the format
      * HH:mm:ss.
      */
-    public function getTime()
+    public function getTime(): string
     {
         return gmdate('H:i:s', $this->_dateTime);
     }
@@ -48,7 +48,7 @@ class Application_Common_DateHelper
     /** Get the abbreviated timezone for the currently logged in user.
      * @return string A string containing the short form of the timezone set in the preferences for the current user (eg. EST, CEST, etc.)
      */
-    public static function getUserTimezoneAbbreviation()
+    public static function getUserTimezoneAbbreviation(): string
     {
         return self::getTimezoneAbbreviation(Application_Model_Preference::GetUserTimezone());
     }
@@ -56,12 +56,12 @@ class Application_Common_DateHelper
     /** Get the abbreviated timezone string of the timezone the station is set to.
      * @return string A string containing the short form of the station's timezone (eg. EST, CEST, etc.)
      */
-    public static function getStationTimezoneAbbreviation()
+    public static function getStationTimezoneAbbreviation(): string
     {
         return self::getTimezoneAbbreviation(Application_Model_Preference::GetDefaultTimezone());
     }
 
-    private static function getTimezoneAbbreviation($fullTimeZoneName)
+    private static function getTimezoneAbbreviation($fullTimeZoneName): string
     {
         $timeZone = new DateTimeZone($fullTimeZoneName);
         $now = new DateTime('now', $timeZone);
@@ -69,7 +69,7 @@ class Application_Common_DateHelper
         return $now->format('T');
     }
 
-    public static function getUserTimezoneOffset()
+    public static function getUserTimezoneOffset(): string
     {
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $now = new DateTime('now', $userTimezone);
@@ -77,7 +77,7 @@ class Application_Common_DateHelper
         return $now->format('Z');
     }
 
-    public static function getStationTimezoneOffset()
+    public static function getStationTimezoneOffset(): string
     {
         $stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
         $now = new DateTime('now', $stationTimezone);
@@ -253,7 +253,7 @@ class Application_Common_DateHelper
      *
      * @return string in $format default Y-m-d H:i:s in station timezone
      */
-    public static function UTCStringToStationTimezoneString($datetime, $format = DEFAULT_TIMESTAMP_FORMAT)
+    public static function UTCStringToStationTimezoneString($datetime, $format = DEFAULT_TIMESTAMP_FORMAT): string
     {
         $stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
         $utcTimezone = new DateTimeZone('UTC');
@@ -269,7 +269,7 @@ class Application_Common_DateHelper
     *
     * @return string Y-m-d H:i:s in user's timezone
     */
-    public static function UTCStringToUserTimezoneString($datetime, $format = DEFAULT_TIMESTAMP_FORMAT)
+    public static function UTCStringToUserTimezoneString($datetime, $format = DEFAULT_TIMESTAMP_FORMAT): string
     {
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $utcTimezone = new DateTimeZone('UTC');
@@ -285,7 +285,7 @@ class Application_Common_DateHelper
     *
     * @return string Y-m-d H:i:s in UTC timezone
     */
-    public static function UserTimezoneStringToUTCString($datetime, $format = DEFAULT_TIMESTAMP_FORMAT)
+    public static function UserTimezoneStringToUTCString($datetime, $format = DEFAULT_TIMESTAMP_FORMAT): string
     {
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $utcTimezone = new DateTimeZone('UTC');
@@ -381,7 +381,7 @@ class Application_Common_DateHelper
      * @param unknown $timezone the timezone to convert to
      * @param string  $format   the formatted string
      */
-    public static function UTCStringToTimezoneString($datetime, $timezone, $format = DEFAULT_TIMESTAMP_FORMAT)
+    public static function UTCStringToTimezoneString($datetime, $timezone, $format = DEFAULT_TIMESTAMP_FORMAT): string
     {
         $d = new DateTime($datetime, new DateTimeZone('UTC'));
         $timezone = strtolower($timezone);
@@ -396,7 +396,7 @@ class Application_Common_DateHelper
      *
      * @param unknown $userDefinedTimezone the timezone used to determine the offset
      */
-    public static function getTimezoneOffset($userDefinedTimezone)
+    public static function getTimezoneOffset($userDefinedTimezone): string
     {
         $now = new DateTimeZone($userDefinedTimezone);
 
@@ -439,7 +439,7 @@ class Application_Common_DateHelper
      * @return string
      *                interval in playlist time format (HH:mm:ss.d)
      */
-    public static function secondsToPlaylistTime($p_seconds)
+    public static function secondsToPlaylistTime($p_seconds): string
     {
         $info = explode('.', $p_seconds);
         $seconds = $info[0];

@@ -4,10 +4,8 @@ class Application_Common_UsabilityHints
 {
     /**
      * @param $userPath User's current location in Airtime (i.e. /Plupload)
-     *
-     * @return string
      */
-    public static function getUsabilityHint($userPath = null)
+    public static function getUsabilityHint($userPath = null): string
     {
         // We want to display hints in this order:
         // 1. Check if files are uploaded
