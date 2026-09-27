@@ -100,7 +100,7 @@ if (count($items) && ($isSmartBlock || $isPlaylist)) : ?>
             </div>
             <?php if ($item['type'] == 0) { ?>
                 <div id="cues_<?php echo $i ?>" class="cue-edit clearfix" style="display: none">
-                    <?php echo $this->partial('playlist/set-cue.phtml', array(
+                    <?php echo $this->partial('playlist/set-cue.phtml', [
                         'id' => $item["id"],
                         'cueIn' => $item['cuein'],
                         'cueOut' => $item['cueout'],
@@ -108,7 +108,7 @@ if (count($items) && ($isSmartBlock || $isPlaylist)) : ?>
                         'cueOutSec' => $item['cueOutSec'],
                         'uri' => $fileUrl,
                         'origLength' => $item['orig_length']
-                    )); ?>
+                    ]); ?>
                 </div>
             <?php } ?>
 
@@ -120,7 +120,7 @@ if (count($items) && ($isSmartBlock || $isPlaylist)) : ?>
                 <div id="crossfade_<?php echo $i ?>-<?php echo $i + 1 ?>" class="crossfade clearfix" style="display: none">
                     <?php
 
-                    $vars = array(
+                    $vars = [
                         'item1' => $items[$i]['id'],
                         'fadeOut' => $items[$i]['fadeout'],
                         'fadeIn' => $items[$i + 1]['fadein'],
@@ -128,16 +128,16 @@ if (count($items) && ($isSmartBlock || $isPlaylist)) : ?>
                         'cueIn1' => $items[$i]['cueInSec'],
                         'cueOut1' => $items[$i]['cueOutSec'],
                         'item1Url' => $fileUrl
-                    );
+                    ];
 
-                    $item2 = array(
+                    $item2 = [
                         'item2Url' => $nextFileUrl,
                         'item2' => $items[$i + 1]['id'],
                         'item2Type' => $items[$i + 1]['type'],
                         'offset' => $items[$i]['trackSec'] - $items[$i + 1]['trackoffset'],
                         'cueIn2' => $items[$i + 1]['cueInSec'],
                         'cueOut2' => $items[$i + 1]['cueOutSec']
-                    );
+                    ];
 
                     if (isset($nextFileUrl)) {
                         $vars += $item2;
