@@ -2,7 +2,7 @@
 
 class Application_Model_Datatables
 {
-    private static function buildWhereClauseForAdvancedSearch($dbname2searchTerm)
+    private static function buildWhereClauseForAdvancedSearch($dbname2searchTerm): array
     {
         $where = [];
         $where['clause'] = [];

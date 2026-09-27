@@ -249,7 +249,7 @@ SQL;
      *
      * @param mixed $fade
      */
-    public function normalizeFade($fade)
+    public function normalizeFade($fade): string
     {
         // First get rid of the first six characters 00:00: which will be added back later for db update
         $fade = substr($fade, 6);
@@ -280,7 +280,7 @@ SQL;
         return $length;
     }
 
-    public function getLength()
+    public function getLength(): string
     {
         $this->block->reload();
         $prepend = '';
@@ -297,7 +297,7 @@ SQL;
         return $prepend . $formatter->format();
     }
 
-    public function getDynamicBlockLength()
+    public function getDynamicBlockLength(): string
     {
         [$value, $modifier] = $this->getLimitValueAndModifier();
         if ($modifier == 'items') {
@@ -395,7 +395,7 @@ SQL;
         throw new Exception('trying to add a file that does not exist.');
     }
 
-    public function isStatic()
+    public function isStatic(): bool
     {
         return $this->block->getDbType() == 'static';
     }
@@ -790,7 +790,7 @@ SQL;
      *
      * @return bool or pear error object
      */
-    public function changeClipLength($id, $cueIn, $cueOut)
+    public function changeClipLength($id, $cueIn, $cueOut): array
     {
         $this->con->beginTransaction();
 
@@ -953,7 +953,10 @@ SQL;
         ];
     }
 
-    public function getAllPLMetaData()
+    /**
+     * @return mixed[]
+     */
+    public function getAllPLMetaData(): array
     {
         $categories = $this->categories;
         $md = [];
@@ -1158,7 +1161,7 @@ SQL;
         $this->updateBlockLengthInAllPlaylist();
     }
 
-    public function hasItemLimit()
+    public function hasItemLimit(): bool
     {
         [$value, $modifier] = $this->getLimitValueAndModifier();
 
@@ -1305,7 +1308,7 @@ SQL;
         }
     }
 
-    public function getListOfFilesUnderLimit($show = null, $showStartTime = null)
+    public function getListOfFilesUnderLimit($show = null, $showStartTime = null): array
     {
         $info = $this->getListofFilesMeetCriteria($show, $showStartTime);
         $files = $info['files'];
@@ -1396,8 +1399,10 @@ SQL;
     /**
      * Parses each row in the database for the criteria associated with this block and renders human readable labels.
      * Returns it as an array with each criteria_name and modifier_name added based upon options array lookup.
+     *
+     * @return array<'crit'|'limit'|'overflow_tracks'|'repeat_tracks'|'sort', non-empty-array>
      */
-    public function getCriteria()
+    public function getCriteria(): array
     {
         $allCriteria = BlockCriteria::criteriaMap();
         $allOptions = CriteriaModifier::mapToDisplay();
@@ -1446,8 +1451,10 @@ SQL;
      * Parses each row in the database for the criteria associated with this block and renders human readable labels.
      * Returns it as an array with each criteria_name and modifier_name added based upon options array lookup.
      * Maintains original separation of similar criteria that were separated by and statements.
+     *
+     * @return array<'crit'|'limit'|'overflow_tracks'|'repeat_tracks'|'sort', non-empty-array<string, mixed>>
      */
-    public function getCriteriaGrouped()
+    public function getCriteriaGrouped(): array
     {
         $criteriaOptions = BlockCriteria::displayCriteria();
         $modifierOptions = CriteriaModifier::mapToDisplay();
@@ -1713,7 +1720,12 @@ SQL;
         }
     }
 
-    public static function organizeSmartPlaylistCriteria($p_criteria)
+    /**
+     * @param mixed $p_criteria
+     *
+     * @return array<'criteria'|'etc', non-empty-array>
+     */
+    public static function organizeSmartPlaylistCriteria($p_criteria): array
     {
         $fieldNames = ['sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra', 'sp_criteria_datetime_select', 'sp_criteria_extra_datetime_select'];
         $output = [];
@@ -1756,7 +1768,10 @@ SQL;
         return $output;
     }
 
-    public static function getAllBlockFiles()
+    /**
+     * @return mixed[]
+     */
+    public static function getAllBlockFiles(): array
     {
         $sql = <<<'SQL'
 SELECT distinct(file_id)

@@ -14,7 +14,7 @@ class Application_Model_Subjects
 {
     // ======================================================= public methods
 
-    public static function increaseLoginAttempts($login)
+    public static function increaseLoginAttempts($login): bool
     {
         $sql = 'UPDATE cc_subjs SET login_attempts = login_attempts+1'
             . ' WHERE login=:login';

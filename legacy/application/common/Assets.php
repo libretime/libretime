@@ -19,7 +19,7 @@ class Assets
         return strval(time());
     }
 
-    public static function url($path)
+    public static function url($path): string
     {
         $base_url = Config::getBasePath();
 

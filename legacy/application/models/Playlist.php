@@ -296,7 +296,7 @@ SQL;
      *
      * @param mixed $fade
      */
-    public function normalizeFade($fade)
+    public function normalizeFade($fade): string
     {
         // First get rid of the first six characters 00:00: which will be added back later for db update
         $fade = substr($fade, 6);
@@ -789,7 +789,7 @@ SQL;
      *
      * @return bool or pear error object
      */
-    public function changeClipLength($id, $cueIn, $cueOut)
+    public function changeClipLength($id, $cueIn, $cueOut): array
     {
         $this->con->beginTransaction();
 
@@ -920,7 +920,10 @@ SQL;
         ];
     }
 
-    public function getAllPLMetaData()
+    /**
+     * @return mixed[]
+     */
+    public function getAllPLMetaData(): array
     {
         $categories = $this->categories;
         $md = [];
@@ -1081,7 +1084,10 @@ SQL;
         return ['result' => 0];
     }
 
-    public static function getAllPlaylistFiles()
+    /**
+     * @return mixed[]
+     */
+    public static function getAllPlaylistFiles(): array
     {
         $sql = <<<'SQL'
 SELECT distinct(file_id)
@@ -1097,7 +1103,10 @@ SQL;
         return $real_files;
     }
 
-    public static function getAllPlaylistStreams()
+    /**
+     * @return mixed[]
+     */
+    public static function getAllPlaylistStreams(): array
     {
         $sql = <<<'SQL'
 SELECT distinct(stream_id)

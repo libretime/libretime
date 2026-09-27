@@ -838,7 +838,13 @@ class Application_Service_HistoryService
     }
 
     // start,end timestamp strings in local timezone.
-    public function populateShowInstances($start, $end)
+    /**
+     * @param mixed $start
+     * @param mixed $end
+     *
+     * @return mixed[]
+     */
+    public function populateShowInstances($start, $end): array
     {
         $timezoneLocal = new DateTimeZone($this->timezone);
 
@@ -1110,7 +1116,7 @@ class Application_Service_HistoryService
         return ['played'];
     }
 
-    private function defaultItemTemplate()
+    private function defaultItemTemplate(): array
     {
         $template = [];
         $fields = [];
@@ -1127,7 +1133,7 @@ class Application_Service_HistoryService
     }
 
     // Default File Summary Template. Taken from The Czech radio requirements (customer requested this in the past).
-    private function defaultFileTemplate()
+    private function defaultFileTemplate(): array
     {
         $template = [];
         $fields = [];
@@ -1198,7 +1204,12 @@ class Application_Service_HistoryService
         return $template;
     }
 
-    public function getTemplates($type)
+    /**
+     * @param mixed $type
+     *
+     * @return mixed[]
+     */
+    public function getTemplates($type): array
     {
         $list = [];
 
@@ -1232,7 +1243,7 @@ class Application_Service_HistoryService
         return $this->getTemplates(self::TEMPLATE_TYPE_FILE);
     }
 
-    private function datatablesColumns($fields)
+    private function datatablesColumns($fields): array
     {
         $columns = [];
 

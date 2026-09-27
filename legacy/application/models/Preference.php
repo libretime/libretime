@@ -399,7 +399,7 @@ class Application_Model_Preference
         self::setValue('podcast_album_override', $bool);
     }
 
-    public static function GetPodcastAlbumOverride()
+    public static function GetPodcastAlbumOverride(): bool
     {
         $val = self::getValue('podcast_album_override');
 
@@ -411,7 +411,7 @@ class Application_Model_Preference
         self::setValue('podcast_auto_smartblock', $bool);
     }
 
-    public static function GetPodcastAutoSmartblock()
+    public static function GetPodcastAutoSmartblock(): bool
     {
         $val = self::getValue('podcast_auto_smartblock');
 
@@ -652,7 +652,10 @@ class Application_Model_Preference
         return self::getValue('uniqueId');
     }
 
-    public static function GetCountryList()
+    /**
+     * @return mixed[]
+     */
+    public static function GetCountryList(): array
     {
         $sql = 'SELECT * FROM cc_country';
 
@@ -750,7 +753,7 @@ class Application_Model_Preference
         return $outputString;
     }
 
-    public static function GetInstallMethod()
+    public static function GetInstallMethod(): string
     {
         $easy_install = file_exists('/usr/bin/airtime-easy-setup');
         $debian_install = file_exists('/var/lib/dpkg/info/airtime.config');
@@ -788,7 +791,7 @@ class Application_Model_Preference
         }
     }
 
-    public static function GetImportTimestamp()
+    public static function GetImportTimestamp(): int
     {
         return (int) self::getValue('import_timestamp');
     }
@@ -803,7 +806,7 @@ class Application_Model_Preference
         return self::getValue('privacy_policy');
     }
 
-    public static function GetNumOfStreams()
+    public static function GetNumOfStreams(): int
     {
         return count(Config::get('stream.outputs.merged'));
     }
@@ -1059,7 +1062,7 @@ class Application_Model_Preference
         self::setValue($sourcename, $status, false);
     }
 
-    public static function GetSourceStatus($sourcename)
+    public static function GetSourceStatus($sourcename): bool
     {
         $value = self::getValue($sourcename);
 
@@ -1071,7 +1074,7 @@ class Application_Model_Preference
         self::setValue($sourcename . '_switch', $status, false);
     }
 
-    public static function GetSourceSwitchStatus($sourcename)
+    public static function GetSourceSwitchStatus($sourcename): string
     {
         // Scheduled play switch should always be "on".
         // Even though we've hidden this element in the dashboard we should
@@ -1401,7 +1404,7 @@ class Application_Model_Preference
         self::setValue('radio_page_display_login_button', $value);
     }
 
-    public static function getScheduleTrimOverbooked()
+    public static function getScheduleTrimOverbooked(): bool
     {
         return boolval(self::getValue('schedule_trim_overbooked', false));
     }
@@ -1411,7 +1414,7 @@ class Application_Model_Preference
         self::setValue('schedule_trim_overbooked', $value);
     }
 
-    public static function getRadioPageDisabled()
+    public static function getRadioPageDisabled(): bool
     {
         return boolval(self::getValue('radio_page_disabled', false));
     }
@@ -1546,10 +1549,8 @@ class Application_Model_Preference
 
     /**
      * Getter for feature preview mode.
-     *
-     * @return bool
      */
-    public static function GetFeaturePreviewMode()
+    public static function GetFeaturePreviewMode(): bool
     {
         return self::getValue('feature_preview_mode') === '1';
     }

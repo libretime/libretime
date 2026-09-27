@@ -13,7 +13,7 @@ class AutoPlaylistManager
      *
      * @return bool true if $_AUTOPLAYLIST_POLL_INTERVAL_SECONDS has passed since the last check
      */
-    public static function hasAutoPlaylistPollIntervalPassed()
+    public static function hasAutoPlaylistPollIntervalPassed(): bool
     {
         $lastPolled = Application_Model_Preference::getAutoPlaylistPollLock();
 

@@ -43,7 +43,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return $this->webstream->getDbMtime();
     }
 
-    public function getDefaultLength()
+    public function getDefaultLength(): string
     {
         $dateString = $this->webstream->getDbLength();
         $arr = explode(':', $dateString);
@@ -57,7 +57,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return '';
     }
 
-    public function getLength()
+    public function getLength(): string
     {
         return $this->getDefaultLength();
     }
@@ -285,7 +285,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         throw new Exception(_('Could not parse XSPF playlist'));
     }
 
-    private static function getPlsUrl($url)
+    private static function getPlsUrl($url): string
     {
         $content = self::getUrlData($url);
 
@@ -306,7 +306,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         throw new Exception(_('Could not parse PLS playlist'));
     }
 
-    private static function getM3uUrl($url)
+    private static function getM3uUrl($url): string
     {
         $content = self::getUrlData($url);
 

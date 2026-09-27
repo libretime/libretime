@@ -23,7 +23,7 @@ class Application_Service_CalendarService
     /**
      * Enter description here ...
      */
-    public function makeContextMenu()
+    public function makeContextMenu(): array
     {
         $menu = [];
         $now = time();

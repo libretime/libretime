@@ -133,7 +133,7 @@ class Application_Service_MediaService
      * @return bool true if there are any files stuck pending,
      *              otherwise false
      */
-    public static function areFilesStuckInPending()
+    public static function areFilesStuckInPending(): bool
     {
         $oneHourAgo = gmdate(DEFAULT_TIMESTAMP_FORMAT, intval(microtime(true)) - self::PENDING_FILE_TIMEOUT_SECONDS);
         self::$_pendingFiles = CcFilesQuery::create()

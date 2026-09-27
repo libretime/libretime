@@ -160,7 +160,7 @@ class PluploadController extends Zend_Controller_Action
      *
      * @param mixed $size
      */
-    private function bytes_to_int($size)
+    private function bytes_to_int($size): float
     {
         // Remove the non-unit characters from the size.
         $unit = preg_replace('/[^bkmgtpezy]/i', '', $size);

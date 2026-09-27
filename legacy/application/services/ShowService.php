@@ -472,7 +472,7 @@ class Application_Service_ShowService
         return CcShowDaysPeer::doSelect($c);
     }
 
-    public static function formatShowDuration($duration)
+    public static function formatShowDuration($duration): string
     {
         $hPos = strpos($duration, 'h');
         $mPos = strpos($duration, 'm');
@@ -531,8 +531,10 @@ SQL;
      * - Update start and end time
      *
      * @param $showData edit show form values in raw form
+     *
+     * @return mixed[]
      */
-    private function delegateInstanceCleanup($showData)
+    private function delegateInstanceCleanup($showData): array
     {
         $showId = $this->ccShow->getDbId();
 
@@ -1586,7 +1588,7 @@ SQL;
         return new DatePeriod($start, $repeatInterval, $endDatePeriod);
     }
 
-    private function hasInstance($starts)
+    private function hasInstance($starts): bool
     {
         return $this->getInstance($starts) ? true : false;
     }
@@ -1624,7 +1626,7 @@ SQL;
         return $ccShowInstance[0];
     }
 
-    private function hasCcShowDay($repeatType, $day)
+    private function hasCcShowDay($repeatType, $day): bool
     {
         return $this->getCcShowDay($repeatType, $day) ? true : false;
     }

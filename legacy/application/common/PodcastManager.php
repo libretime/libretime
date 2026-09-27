@@ -13,7 +13,7 @@ class PodcastManager
      *
      * @return bool true if $_PODCAST_POLL_INTERVAL_SECONDS has passed since the last check
      */
-    public static function hasPodcastPollIntervalPassed()
+    public static function hasPodcastPollIntervalPassed(): bool
     {
         $lastPolled = Application_Model_Preference::getPodcastPollLock();
 
@@ -56,11 +56,11 @@ class PodcastManager
      *
      * @return array array of episodes to append be downloaded
      */
-    protected static function _findUningestedEpisodes($podcast, $service)
+    protected static function _findUningestedEpisodes($podcast, $service): array
     {
         $episodeList = $service->getPodcastEpisodes($podcast->getDbPodcastId());
         $episodes = [];
-        usort($episodeList, [__CLASS__, '_sortByEpisodePubDate']);
+        usort($episodeList, [self::class, '_sortByEpisodePubDate']);
         for ($i = 0; $i < count($episodeList); ++$i) {
             $episodeData = $episodeList[$i];
             $ts = $podcast->getDbAutoIngestTimestamp();
@@ -103,7 +103,7 @@ class PodcastManager
      *
      * @return bool boolean for ordering
      */
-    protected static function _sortByEpisodePubDate($a, $b)
+    protected static function _sortByEpisodePubDate($a, $b): int
     {
         if ($a['pub_date'] == $b['pub_date']) {
             return 0;

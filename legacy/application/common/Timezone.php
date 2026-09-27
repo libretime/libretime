@@ -2,7 +2,10 @@
 
 class Application_Common_Timezone
 {
-    public static function getTimezones()
+    /**
+     * @return mixed[]
+     */
+    public static function getTimezones(): array
     {
         $regions = [
             'Africa' => DateTimeZone::AFRICA,

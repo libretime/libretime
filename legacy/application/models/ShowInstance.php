@@ -128,7 +128,7 @@ SQL;
         return $this->_showInstance->getDbEnds($format);
     }
 
-    public function getStartDate()
+    public function getStartDate(): string
     {
         $showStart = $this->getShowInstanceStart();
         $showStartExplode = explode(' ', $showStart);
@@ -136,7 +136,7 @@ SQL;
         return $showStartExplode[0];
     }
 
-    public function getStartTime()
+    public function getStartTime(): string
     {
         $showStart = $this->getShowInstanceStart();
         $showStartExplode = explode(' ', $showStart);
@@ -462,7 +462,7 @@ SQL;
         }
     }
 
-    public function getTimeScheduled()
+    public function getTimeScheduled(): string
     {
         $time = $this->_showInstance->getDbTimeFilled();
 
@@ -482,14 +482,14 @@ SQL;
         return $time;
     }
 
-    public function getTimeScheduledSecs()
+    public function getTimeScheduledSecs(): float
     {
         $time_filled = $this->getTimeScheduled();
 
         return Application_Common_DateHelper::playlistTimeToSeconds($time_filled);
     }
 
-    public function getDurationSecs()
+    public function getDurationSecs(): int
     {
         $ends = $this->getShowInstanceEnd(null);
         $starts = $this->getShowInstanceStart(null);
@@ -498,7 +498,7 @@ SQL;
     }
 
     // should return the amount of seconds remaining to be scheduled in a show instance
-    public function getSecondsRemaining()
+    public function getSecondsRemaining(): float
     {
         return $this->getDurationSecs() - $this->getTimeScheduledSecs();
     }
@@ -517,7 +517,7 @@ SQL;
         return $percent;
     }
 
-    public function getShowLength()
+    public function getShowLength(): string
     {
         $start = $this->getShowInstanceStart(null);
         $end = $this->getShowInstanceEnd(null);
@@ -537,7 +537,13 @@ SQL;
         return $returnStr;
     }
 
-    public static function getContentCount($p_start, $p_end)
+    /**
+     * @param mixed $p_start
+     * @param mixed $p_end
+     *
+     * @return mixed[]
+     */
+    public static function getContentCount($p_start, $p_end): array
     {
         $sql = <<<'SQL'
 SELECT instance_id,
@@ -561,7 +567,13 @@ SQL;
         return $real_counts;
     }
 
-    public static function getIsFull($p_start, $p_end)
+    /**
+     * @param mixed $p_start
+     * @param mixed $p_end
+     *
+     * @return mixed[]
+     */
+    public static function getIsFull($p_start, $p_end): array
     {
         $sql = <<<'SQL'
 SELECT id, ends-starts-'00:00:05' < time_filled as filled
@@ -744,7 +756,7 @@ SQL;
         return ($query !== false) ? $query : null;
     }
 
-    public static function GetLastShowInstance($p_timeNow)
+    public static function GetLastShowInstance($p_timeNow): ?Application_Model_ShowInstance
     {
         $sql = <<<'SQL'
 SELECT si.id
@@ -760,7 +772,7 @@ SQL;
         return $id ? new Application_Model_ShowInstance($id) : null;
     }
 
-    public static function GetCurrentShowInstance($p_timeNow)
+    public static function GetCurrentShowInstance($p_timeNow): ?Application_Model_ShowInstance
     {
         /* Orderby si.starts descending, because in some cases
          * we can have multiple shows overlapping each other. In
@@ -785,7 +797,7 @@ SQL;
         return $id ? new Application_Model_ShowInstance($id) : null;
     }
 
-    public static function GetNextShowInstance($p_timeNow)
+    public static function GetNextShowInstance($p_timeNow): ?Application_Model_ShowInstance
     {
         $sql = <<<'SQL'
 SELECT si.id

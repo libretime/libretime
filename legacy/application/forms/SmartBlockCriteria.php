@@ -432,12 +432,17 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     }
 
     // This is a simple function that determines if a modValue should enable a datetime
-    public function enableDateTimeUnit($modValue)
+    public function enableDateTimeUnit($modValue): bool
     {
         return preg_match('/before|after|between/', $modValue) == 1;
     }
 
-    public function preValidation($params)
+    /**
+     * @param mixed $params
+     *
+     * @return mixed[]
+     */
+    public function preValidation($params): array
     {
         $data = Application_Model_Block::organizeSmartPlaylistCriteria($params['data']);
         // add elements that needs to be added

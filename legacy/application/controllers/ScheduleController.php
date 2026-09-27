@@ -630,7 +630,12 @@ class ScheduleController extends Zend_Controller_Action
         }
     }
 
-    public function createShowFormAction($populateDefaults = false)
+    /**
+     * @param mixed $populateDefaults
+     *
+     * @return mixed[]
+     */
+    public function createShowFormAction($populateDefaults = false): array
     {
         $service_showForm = new Application_Service_ShowFormService();
 

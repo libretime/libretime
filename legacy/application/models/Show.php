@@ -224,7 +224,7 @@ class Application_Model_Show
     /**
      * @return string[]
      */
-    public function getHosts()
+    public function getHosts(): array
     {
         $sql = <<<'SQL'
 SELECT first_name,
@@ -505,7 +505,7 @@ SQL;
      * @return bool
      *              true if originated from recording, otherwise false
      */
-    public function isRecorded()
+    public function isRecorded(): bool
     {
         $showInstancesRow = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->getId())
@@ -523,7 +523,7 @@ SQL;
      * @return bool
      *              true if show has rebroadcasts, otherwise false
      */
-    public function isRebroadcast()
+    public function isRebroadcast(): bool
     {
         $showInstancesRow = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->_showId)
@@ -685,7 +685,7 @@ SQL;
      *                The start date in the format YYYY-MM-DD or empty string in case
      *                start date could not be found
      */
-    public function getStartDateAndTime()
+    public function getStartDateAndTime(): string
     {
         $con = Propel::getConnection();
 
@@ -719,7 +719,7 @@ SQL;
      * @return string
      *                The start date in the format YYYY-MM-DD
      */
-    public function getStartDate()
+    public function getStartDate(): string
     {
         [$date] = explode(' ', $this->getStartDateAndTime());
 
@@ -732,7 +732,7 @@ SQL;
      * @return string
      *                The start time in the format HH:MM
      */
-    public function getStartTime()
+    public function getStartTime(): string
     {
         [, $time] = explode(' ', $this->getStartDateAndTime());
 
@@ -746,7 +746,7 @@ SQL;
      * @return string
      *                The end date in the format YYYY-MM-DD
      */
-    public function getEndDate()
+    public function getEndDate(): string
     {
         $startDate = $this->getStartDate();
         $startTime = $this->getStartTime();
@@ -766,7 +766,7 @@ SQL;
      * @return string
      *                The start time in the format HH:MM:SS
      */
-    public function getEndTime()
+    public function getEndTime(): string
     {
         $startDate = $this->getStartDate();
         $startTime = $this->getStartTime();
@@ -787,7 +787,7 @@ SQL;
      * @return bool
      *              true if the StartDate is in the past, false otherwise
      */
-    public function isStartDateTimeInPast()
+    public function isStartDateTimeInPast(): bool
     {
         return gmdate(DEFAULT_TIMESTAMP_FORMAT) > ($this->getStartDate() . ' ' . $this->getStartTime());
     }
@@ -799,7 +799,7 @@ SQL;
      *               A simple array containing all ID's of show instance
      *               scheduled in the future
      */
-    public function getAllFutureInstanceIds()
+    public function getAllFutureInstanceIds(): array
     {
         $sql = <<<'SQL'
 SELECT id
@@ -871,7 +871,10 @@ SQL;
         return str_pad(intval($info[0]), 2, '0', STR_PAD_LEFT) . 'h ' . str_pad(intval($info[1]), 2, '0', STR_PAD_LEFT) . 'm';
     }
 
-    public function getShowDays()
+    /**
+     * @return mixed[]
+     */
+    public function getShowDays(): array
     {
         $showDays = CcShowDaysQuery::create()->filterByDbShowId(
             $this->getId()
@@ -887,7 +890,7 @@ SQL;
     /* Only used for shows that aren't repeating.
      *
      * @return Boolean: true if show has an instance, otherwise false. */
-    public function hasInstance()
+    public function hasInstance(): bool
     {
         return !is_null($this->getInstance());
     }
@@ -905,8 +908,10 @@ SQL;
 
     /**
      *  returns info about live stream override info.
+     *
+     * @return mixed[]
      */
-    public function getLiveStreamInfo()
+    public function getLiveStreamInfo(): array
     {
         $info = [];
         if ($this->getId() == null) {
@@ -932,7 +937,7 @@ SQL;
      *
      * @return Boolean: true if show has an instance on $p_dateTime,
      *      otherwise false. */
-    public function hasInstanceOnDate($p_dateTime)
+    public function hasInstanceOnDate($p_dateTime): bool
     {
         return !is_null($this->getInstanceOnDate($p_dateTime));
     }
@@ -1112,7 +1117,7 @@ SQL;
      * @param mixed $p_end
      * @param mixed $p_editable
      */
-    public static function &getFullCalendarEvents($p_start, $p_end, $p_editable = false)
+    public static function &getFullCalendarEvents($p_start, $p_end, $p_editable = false): array
     {
         $events = [];
         $interval = $p_start->diff($p_end);
@@ -1233,7 +1238,7 @@ SQL;
     }
 
     /** Get a palettized colour for the show. */
-    private static function getDefaultBackgroundColor($date)
+    private static function getDefaultBackgroundColor($date): string
     {
         $basePalette = ['A22BE8', '2FFF8D', 'FF743C', '2ED4FF', 'E8D82B'];
         // 'B23F11', 'FF7E4A', 'FF6C31'
@@ -1656,7 +1661,10 @@ SQL;
         return Application_Common_Database::prepareAndExecute($sql, $params, 'all');
     }
 
-    public static function getMaxLengths()
+    /**
+     * @return mixed[]
+     */
+    public static function getMaxLengths(): array
     {
         $sql = <<<'SQL'
 SELECT column_name, character_maximum_length FROM information_schema.columns

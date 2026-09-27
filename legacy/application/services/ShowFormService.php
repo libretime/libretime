@@ -17,7 +17,7 @@ class Application_Service_ShowFormService
     /**
      * @return array<string, Zend_Form_SubForm> of show forms
      */
-    public function createShowForms()
+    public function createShowForms(): array
     {
         $formWhat = new Application_Form_AddShowWhat();
         $formAutoPlaylist = new Application_Form_AddShowAutoPlaylist();
@@ -385,7 +385,7 @@ class Application_Service_ShowFormService
      * @return string
      *                - the data URI representation of the image
      */
-    private function imagePathToDataUri($path)
+    private function imagePathToDataUri($path): string
     {
         $imageData = null;
         $bytesRead = 0;
@@ -553,8 +553,6 @@ class Application_Service_ShowFormService
      * @param null|mixed $originalStartDate
      * @param mixed      $editShow
      * @param null|mixed $instanceId
-     *
-     * @return bool
      */
     public function validateShowForms(
         $forms,
@@ -563,7 +561,7 @@ class Application_Service_ShowFormService
         $originalStartDate = null,
         $editShow = false,
         $instanceId = null
-    ) {
+    ): bool {
         $what = $forms['what']->isValid($formData);
         $autoplaylist = $forms['autoplaylist']->isValid($formData);
         $live = $forms['live']->isValid($formData);

@@ -12,7 +12,7 @@ class Application_Model_Schedule
      *
      * @param string $p_fileId
      */
-    public static function IsFileScheduledInTheFuture($p_fileId)
+    public static function IsFileScheduledInTheFuture($p_fileId): bool
     {
         $sql = <<<'SQL'
 SELECT COUNT(*)
@@ -27,7 +27,12 @@ SQL;
         return is_numeric($count) && ($count != '0');
     }
 
-    public static function getAllFutureScheduledFiles($instanceId = null)
+    /**
+     * @param null|mixed $instanceId
+     *
+     * @return mixed[]
+     */
+    public static function getAllFutureScheduledFiles($instanceId = null): array
     {
         $sql = <<<'SQL'
 SELECT distinct(file_id)
@@ -46,7 +51,10 @@ SQL;
         return $real_files;
     }
 
-    public static function getAllFutureScheduledWebstreams()
+    /**
+     * @return mixed[]
+     */
+    public static function getAllFutureScheduledWebstreams(): array
     {
         $sql = <<<'SQL'
 SELECT distinct(stream_id)
@@ -346,7 +354,7 @@ SQL;
      *
      * @return string the source name
      */
-    private static function _getSource()
+    private static function _getSource(): string
     {
         $live_dj = Application_Model_Preference::GetSourceStatus('live_dj');
         $master_dj = Application_Model_Preference::GetSourceStatus('master_dj');
@@ -655,10 +663,8 @@ SQL;
      * to "YYYY-MM-DD-HH-mm-SS".
      *
      * @param string $p_time
-     *
-     * @return string
      */
-    private static function AirtimeTimeToPypoTime($p_time)
+    private static function AirtimeTimeToPypoTime($p_time): string
     {
         $p_time = substr($p_time, 0, 19);
         $p_time = str_replace(' ', '-', $p_time);
@@ -671,10 +677,8 @@ SQL;
      * "YYYY-MM-DD HH:mm:SS".
      *
      * @param string $p_time
-     *
-     * @return string
      */
-    private static function PypoTimeToAirtimeTime($p_time)
+    private static function PypoTimeToAirtimeTime($p_time): string
     {
         $t = explode('-', $p_time);
 
@@ -1061,7 +1065,7 @@ SQL;
     }
 
     // Check if two events are less than or equal to 1 second apart
-    public static function areEventsLinked($event1, $event2)
+    public static function areEventsLinked($event1, $event2): bool
     {
         $dt1 = DateTime::createFromFormat('Y-m-d-H-i-s', $event1['start']);
         $dt2 = DateTime::createFromFormat('Y-m-d-H-i-s', $event2['start']);
@@ -1256,7 +1260,7 @@ SQL;
         return $overlapping;
     }
 
-    public static function GetType($p_scheduleId)
+    public static function GetType($p_scheduleId): string
     {
         $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
         if ($scheduledItem->getDbFileId() == null) {

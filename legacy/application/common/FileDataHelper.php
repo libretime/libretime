@@ -78,7 +78,7 @@ class FileDataHelper
      *
      * @throws Exception
      */
-    public static function getFileExtensionFromMime($mime)
+    public static function getFileExtensionFromMime($mime): string
     {
         $mime = trim(strtolower($mime));
 
@@ -132,7 +132,7 @@ class FileDataHelper
      *
      * @return string Path to artwork
      */
-    public static function saveArtworkData($analyzeFile, $filename, $importDir = null, $DbPath = null)
+    public static function saveArtworkData($analyzeFile, $filename, $importDir = null, $DbPath = null): string
     {
         if (class_exists('getID3')) {
             $getID3 = new getID3();
@@ -191,7 +191,7 @@ class FileDataHelper
      *
      * @return string $get_img Path to artwork
      */
-    public static function resetArtwork($trackid)
+    public static function resetArtwork($trackid): string
     {
         $file = Application_Model_StoredFile::RecallById($trackid);
         $md = $file->getMetadata();
@@ -254,7 +254,7 @@ class FileDataHelper
      *
      * @return string Path to artwork
      */
-    public static function setArtwork($trackid, $data)
+    public static function setArtwork($trackid, $data): string
     {
         $file = Application_Model_StoredFile::RecallById($trackid);
         $md = $file->getMetadata();
@@ -305,7 +305,7 @@ class FileDataHelper
      *
      * @param mixed $trackid
      */
-    public static function removeArtwork($trackid)
+    public static function removeArtwork($trackid): string
     {
         $file = Application_Model_StoredFile::RecallById($trackid);
         $md = $file->getMetadata();

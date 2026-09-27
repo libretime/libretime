@@ -152,7 +152,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
      *                   - when a file with an unsupported file extension is uploaded or an
      *                   error occurs in copyFileToStor
      */
-    private function processUploadedImage($showId, $tempFilePath)
+    private function processUploadedImage($showId, $tempFilePath): string
     {
         $ownerId = RestAuth::getOwnerId();
 
@@ -185,7 +185,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
      *
      * @return string the file extension for the new file based on its MIME type
      */
-    private function getFileExtension($tempFilePath)
+    private function getFileExtension($tempFilePath): string
     {
         // Don't trust the extension - get the MIME-type instead
         $fileInfo = finfo_open();
@@ -201,7 +201,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
      *
      * @return string the file extension based on the given MIME type
      */
-    private function getExtensionFromMime($mime)
+    private function getExtensionFromMime($mime): string
     {
         $extensions = [
             'image/jpeg' => 'jpg',
@@ -226,7 +226,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
      *                   enabled, or the user's hard drive does not have enough space to
      *                   store the file
      */
-    private function copyFileToStor($tempFilePath, $importedStorageDirectory, $fileExtension)
+    private function copyFileToStor($tempFilePath, $importedStorageDirectory, $fileExtension): string
     {
         $image_file = $tempFilePath;
 
@@ -290,7 +290,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
     }
 
     // from a note @ https://php.net/manual/en/function.rmdir.php
-    private static function delTree($dir)
+    private static function delTree($dir): bool
     {
         $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {

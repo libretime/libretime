@@ -303,7 +303,7 @@ class CcFiles extends BaseCcFiles
         return true;
     }
 
-    public function getCueLength()
+    public function getCueLength(): string
     {
         $cuein = $this->getDbCuein();
         $cueout = $this->getDbCueout();
@@ -324,7 +324,7 @@ class CcFiles extends BaseCcFiles
     }
 
     // returns true if the file exists and is not hidden
-    public function visible()
+    public function visible(): bool
     {
         return $this->getDbFileExists() && !$this->getDbHidden();
     }
@@ -362,7 +362,7 @@ class CcFiles extends BaseCcFiles
         return $this->getDbFilesize();
     }
 
-    public function getFilename()
+    public function getFilename(): string
     {
         $info = pathinfo($this->getAbsoluteFilePath());
 
@@ -386,7 +386,7 @@ class CcFiles extends BaseCcFiles
     /**
      * Returns the file's absolute file path stored on disk.
      */
-    public function getAbsoluteFilePath()
+    public function getAbsoluteFilePath(): string
     {
         $directory = Config::getStoragePath();
         $filepath = $this->getDbFilepath();
@@ -397,7 +397,7 @@ class CcFiles extends BaseCcFiles
     /**
      * Returns the artwork's absolute file path stored on disk.
      */
-    public function getAbsoluteArtworkPath()
+    public function getAbsoluteArtworkPath(): string
     {
         $directory = Config::getStoragePath();
         $filepath = $this->getDbArtwork();
@@ -491,7 +491,7 @@ class CcFiles extends BaseCcFiles
     /**
      * Checks if the file is a regular file that can be previewed and downloaded.
      */
-    public function isValidPhysicalFile()
+    public function isValidPhysicalFile(): bool
     {
         return is_file($this->getAbsoluteFilePath());
     }
@@ -519,7 +519,7 @@ class CcFiles extends BaseCcFiles
      * This function refers to the file's Amazon S3 resource id.
      * Returns null because cc_files are stored on local disk.
      */
-    public function getResourceId()
+    public function getResourceId(): null
     {
         return null;
     }

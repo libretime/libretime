@@ -83,7 +83,7 @@ class Celery
      * Build a random UUID v4.
      * Thanks to https://stackoverflow.com/a/15875555/1285669.
      */
-    public static function uuid4()
+    public static function uuid4(): string
     {
         $data = random_bytes(16);
 

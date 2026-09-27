@@ -32,7 +32,7 @@ class Application_Common_TuneIn
         }
     }
 
-    private static function getCredentialsQueryString()
+    private static function getCredentialsQueryString(): string
     {
         $tuneInStationID = Application_Model_Preference::getTuneinStationId();
         $tuneInPartnerID = Application_Model_Preference::getTuneinPartnerId();

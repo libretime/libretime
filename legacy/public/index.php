@@ -25,7 +25,7 @@ function showConfigCheckPage(): void
     exit;
 }
 
-function isApiCall()
+function isApiCall(): bool
 {
     $path = $_SERVER['PHP_SELF'];
 

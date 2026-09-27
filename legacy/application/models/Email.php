@@ -8,10 +8,8 @@ class Application_Model_Email
      * @param string $subject
      * @param string $message
      * @param mixed  $to
-     *
-     * @return string
      */
-    public static function send($subject, $message, $to)
+    public static function send($subject, $message, $to): string
     {
         return Celery::sendTask('libretime_api.core.tasks.send_mail', [], [
             'subject' => $subject,

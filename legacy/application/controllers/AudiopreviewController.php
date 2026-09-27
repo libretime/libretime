@@ -180,7 +180,12 @@ class AudiopreviewController extends Zend_Controller_Action
         $this->_helper->json($result);
     }
 
-    private function createElementMap($track)
+    /**
+     * @param mixed $track
+     *
+     * @return mixed[]
+     */
+    private function createElementMap($track): array
     {
         $baseUrl = Config::getBasePath();
 

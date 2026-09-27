@@ -32,7 +32,7 @@ class Application_Service_PodcastEpisodeService implements Publish
      *
      * @return array the stored PodcastEpisodes objects
      */
-    public function addPodcastEpisodePlaceholders($podcastId, $episodes)
+    public function addPodcastEpisodePlaceholders($podcastId, $episodes): array
     {
         $storedEpisodes = [];
         foreach ($episodes as $episode) {
@@ -198,7 +198,7 @@ class Application_Service_PodcastEpisodeService implements Publish
      *             -1 if the file is in a pending state,
      *             2 if the source is unreachable (disconnected)
      */
-    public function getPublishStatus($fileId)
+    public function getPublishStatus($fileId): int
     {
         $stationPodcast = StationPodcastQuery::create()
             ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId());
@@ -232,8 +232,6 @@ class Application_Service_PodcastEpisodeService implements Publish
      * @param string $sortDir    "ASC" || "DESC"
      * @param mixed  $podcastId
      *
-     * @return array
-     *
      * @throws PodcastNotFoundException
      */
     public function getPodcastEpisodes(
@@ -242,7 +240,7 @@ class Application_Service_PodcastEpisodeService implements Publish
         $limit = 10,
         $sortColumn = PodcastEpisodesPeer::PUBLICATION_DATE,
         $sortDir = 'ASC'
-    ) {
+    ): array {
         $podcast = PodcastQuery::create()->findPk($podcastId);
         if (!$podcast) {
             throw new PodcastNotFoundException();
@@ -272,10 +270,8 @@ class Application_Service_PodcastEpisodeService implements Publish
      * convert the episode data into array form.
      *
      * @param array $episodes array of PodcastEpisodes to convert
-     *
-     * @return array
      */
-    private function _getStationPodcastEpisodeArray($episodes)
+    private function _getStationPodcastEpisodeArray($episodes): array
     {
         $episodesArray = [];
         foreach ($episodes as $episode) {
@@ -301,7 +297,7 @@ class Application_Service_PodcastEpisodeService implements Publish
      *
      * @throws CcFiles/LibreTimeFileNotFoundException
      */
-    public function _getImportedPodcastEpisodeArray($podcast, $episodes)
+    public function _getImportedPodcastEpisodeArray($podcast, $episodes): array
     {
         $rss = Application_Service_PodcastService::getPodcastFeed($podcast->getDbUrl());
         $episodeIds = [];
