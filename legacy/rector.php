@@ -23,6 +23,7 @@ return RectorConfig::configure()
     ->withBootstrapFiles([__DIR__ . '/vendor/autoload.php'])
     ->withFileExtensions(['php', 'phtml'])
     ->withPhpVersion(PhpVersion::PHP_82)
+    ->withPhpLevel(4)
     ->withRules([
         VariableInStringInterpolationFixerRector::class,
         Utf8DecodeEncodeToMbConvertEncodingRector::class,
