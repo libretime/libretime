@@ -1316,6 +1316,9 @@ class Application_Service_HistoryService
         }
     }
 
+    /**
+     * @return float[]|int[]|numeric-string[]
+     */
     public function getConfiguredTemplateIds()
     {
         try {

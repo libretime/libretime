@@ -221,6 +221,9 @@ class Application_Model_Show
         $show->setDbOutroPlaylistId($playlistid);
     }
 
+    /**
+     * @return string[]
+     */
     public function getHosts()
     {
         $sql = <<<'SQL'
