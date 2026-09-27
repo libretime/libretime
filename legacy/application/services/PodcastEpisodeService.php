@@ -32,7 +32,7 @@ class Application_Service_PodcastEpisodeService implements Publish
      *
      * @return array the stored PodcastEpisodes objects
      */
-    public function addPodcastEpisodePlaceholders($podcastId, $episodes)
+    public function addPodcastEpisodePlaceholders($podcastId, $episodes): array
     {
         $storedEpisodes = [];
         foreach ($episodes as $episode) {
@@ -299,7 +299,7 @@ class Application_Service_PodcastEpisodeService implements Publish
      *
      * @throws CcFiles/LibreTimeFileNotFoundException
      */
-    public function _getImportedPodcastEpisodeArray($podcast, $episodes)
+    public function _getImportedPodcastEpisodeArray($podcast, $episodes): array
     {
         $rss = Application_Service_PodcastService::getPodcastFeed($podcast->getDbUrl());
         $episodeIds = [];

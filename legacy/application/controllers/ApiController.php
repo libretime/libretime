@@ -874,7 +874,13 @@ class ApiController extends Zend_Controller_Action
         $this->view->watched_dirs = $watchedDirsPath;
     }
 
-    public function dispatchMetadata($md, $mode)
+    /**
+     * @param mixed $md
+     * @param mixed $mode
+     *
+     * @return mixed[]
+     */
+    public function dispatchMetadata($md, $mode): array
     {
         $return_hash = [];
         Application_Model_Preference::SetImportTimestamp();

@@ -60,7 +60,7 @@ function with_systemd()
  *
  * @return array associative array of external service check results
  */
-function checkExternalServices()
+function checkExternalServices(): array
 {
     $result = [
         'database' => checkDatabaseConfiguration(),

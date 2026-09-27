@@ -17,7 +17,7 @@ class Application_Service_ShowFormService
     /**
      * @return array<string, Zend_Form_SubForm> of show forms
      */
-    public function createShowForms()
+    public function createShowForms(): array
     {
         $formWhat = new Application_Form_AddShowWhat();
         $formAutoPlaylist = new Application_Form_AddShowAutoPlaylist();

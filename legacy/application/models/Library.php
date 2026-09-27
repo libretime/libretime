@@ -2,7 +2,7 @@
 
 class Application_Model_Library
 {
-    public static function getObjInfo($p_type)
+    public static function getObjInfo($p_type): array
     {
         $info = [];
 
@@ -31,7 +31,12 @@ class Application_Model_Library
         }
     }
 
-    public static function getPlaylistNames($alphasort = false)
+    /**
+     * @param mixed $alphasort
+     *
+     * @return mixed[]
+     */
+    public static function getPlaylistNames($alphasort = false): array
     {
         $playlistNames = [null => _('None')];
         // if we want to return the playlists sorted alphabetically by name
@@ -52,7 +57,10 @@ class Application_Model_Library
         return $playlistNames;
     }
 
-    public static function getTracktypes()
+    /**
+     * @return mixed[]
+     */
+    public static function getTracktypes(): array
     {
         $track_type_options = [null => _('None')];
         $track_types = Application_Model_Tracktype::getTracktypes();

@@ -652,7 +652,10 @@ class Application_Model_Preference
         return self::getValue('uniqueId');
     }
 
-    public static function GetCountryList()
+    /**
+     * @return mixed[]
+     */
+    public static function GetCountryList(): array
     {
         $sql = 'SELECT * FROM cc_country';
 

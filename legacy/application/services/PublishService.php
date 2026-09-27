@@ -46,7 +46,7 @@ class Application_Service_PublishService
      *               ]
      *               ]
      */
-    public static function getSourceLists($fileId)
+    public static function getSourceLists($fileId): array
     {
         $sources = [];
         foreach (self::$SOURCES as $source => $label) {

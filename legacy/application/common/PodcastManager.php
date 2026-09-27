@@ -56,7 +56,7 @@ class PodcastManager
      *
      * @return array array of episodes to append be downloaded
      */
-    protected static function _findUningestedEpisodes($podcast, $service)
+    protected static function _findUningestedEpisodes($podcast, $service): array
     {
         $episodeList = $service->getPodcastEpisodes($podcast->getDbPodcastId());
         $episodes = [];

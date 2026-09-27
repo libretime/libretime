@@ -537,7 +537,13 @@ SQL;
         return $returnStr;
     }
 
-    public static function getContentCount($p_start, $p_end)
+    /**
+     * @param mixed $p_start
+     * @param mixed $p_end
+     *
+     * @return mixed[]
+     */
+    public static function getContentCount($p_start, $p_end): array
     {
         $sql = <<<'SQL'
 SELECT instance_id,
@@ -561,7 +567,13 @@ SQL;
         return $real_counts;
     }
 
-    public static function getIsFull($p_start, $p_end)
+    /**
+     * @param mixed $p_start
+     * @param mixed $p_end
+     *
+     * @return mixed[]
+     */
+    public static function getIsFull($p_start, $p_end): array
     {
         $sql = <<<'SQL'
 SELECT id, ends-starts-'00:00:05' < time_filled as filled

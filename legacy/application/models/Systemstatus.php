@@ -33,7 +33,7 @@ class Application_Model_Systemstatus
         return $docRoot;
     }
 
-    public static function ExtractServiceInformation($p_docRoot, $p_serviceName)
+    public static function ExtractServiceInformation($p_docRoot, $p_serviceName): array
     {
         $starting = [
             'name' => '',
@@ -122,7 +122,7 @@ class Application_Model_Systemstatus
         return $data;
     }
 
-    public static function GetPlatformInfo()
+    public static function GetPlatformInfo(): array
     {
         $keys = ['release', 'machine', 'memory', 'swap'];
         $data = [];
@@ -191,7 +191,10 @@ class Application_Model_Systemstatus
         return self::ExtractServiceInformation($docRoot, 'icecast2');
     }
 
-    public static function GetRabbitMqStatus()
+    /**
+     * @return mixed[]
+     */
+    public static function GetRabbitMqStatus(): array
     {
         if (isset($_SERVER['RABBITMQ_HOST'])) {
             $rabbitmq_host = $_SERVER['RABBITMQ_HOST'];

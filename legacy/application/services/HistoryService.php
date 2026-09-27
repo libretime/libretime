@@ -838,7 +838,13 @@ class Application_Service_HistoryService
     }
 
     // start,end timestamp strings in local timezone.
-    public function populateShowInstances($start, $end)
+    /**
+     * @param mixed $start
+     * @param mixed $end
+     *
+     * @return mixed[]
+     */
+    public function populateShowInstances($start, $end): array
     {
         $timezoneLocal = new DateTimeZone($this->timezone);
 
@@ -1198,7 +1204,12 @@ class Application_Service_HistoryService
         return $template;
     }
 
-    public function getTemplates($type)
+    /**
+     * @param mixed $type
+     *
+     * @return mixed[]
+     */
+    public function getTemplates($type): array
     {
         $list = [];
 

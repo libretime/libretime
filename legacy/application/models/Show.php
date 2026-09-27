@@ -224,7 +224,7 @@ class Application_Model_Show
     /**
      * @return string[]
      */
-    public function getHosts()
+    public function getHosts(): array
     {
         $sql = <<<'SQL'
 SELECT first_name,
@@ -799,7 +799,7 @@ SQL;
      *               A simple array containing all ID's of show instance
      *               scheduled in the future
      */
-    public function getAllFutureInstanceIds()
+    public function getAllFutureInstanceIds(): array
     {
         $sql = <<<'SQL'
 SELECT id
@@ -871,7 +871,10 @@ SQL;
         return str_pad(intval($info[0]), 2, '0', STR_PAD_LEFT) . 'h ' . str_pad(intval($info[1]), 2, '0', STR_PAD_LEFT) . 'm';
     }
 
-    public function getShowDays()
+    /**
+     * @return mixed[]
+     */
+    public function getShowDays(): array
     {
         $showDays = CcShowDaysQuery::create()->filterByDbShowId(
             $this->getId()
@@ -905,8 +908,10 @@ SQL;
 
     /**
      *  returns info about live stream override info.
+     *
+     * @return mixed[]
      */
-    public function getLiveStreamInfo()
+    public function getLiveStreamInfo(): array
     {
         $info = [];
         if ($this->getId() == null) {
@@ -1112,7 +1117,7 @@ SQL;
      * @param mixed $p_end
      * @param mixed $p_editable
      */
-    public static function &getFullCalendarEvents($p_start, $p_end, $p_editable = false)
+    public static function &getFullCalendarEvents($p_start, $p_end, $p_editable = false): array
     {
         $events = [];
         $interval = $p_start->diff($p_end);
@@ -1656,7 +1661,10 @@ SQL;
         return Application_Common_Database::prepareAndExecute($sql, $params, 'all');
     }
 
-    public static function getMaxLengths()
+    /**
+     * @return mixed[]
+     */
+    public static function getMaxLengths(): array
     {
         $sql = <<<'SQL'
 SELECT column_name, character_maximum_length FROM information_schema.columns

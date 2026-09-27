@@ -27,7 +27,12 @@ SQL;
         return is_numeric($count) && ($count != '0');
     }
 
-    public static function getAllFutureScheduledFiles($instanceId = null)
+    /**
+     * @param null|mixed $instanceId
+     *
+     * @return mixed[]
+     */
+    public static function getAllFutureScheduledFiles($instanceId = null): array
     {
         $sql = <<<'SQL'
 SELECT distinct(file_id)
@@ -46,7 +51,10 @@ SQL;
         return $real_files;
     }
 
-    public static function getAllFutureScheduledWebstreams()
+    /**
+     * @return mixed[]
+     */
+    public static function getAllFutureScheduledWebstreams(): array
     {
         $sql = <<<'SQL'
 SELECT distinct(stream_id)

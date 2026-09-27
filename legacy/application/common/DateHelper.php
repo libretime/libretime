@@ -197,7 +197,7 @@ class Application_Common_DateHelper
      * @param string $p_datetime
      *                           should be in format of '0000-00-00 00:00:00'
      */
-    public static function checkDateTimeRangeForSQL($p_datetime)
+    public static function checkDateTimeRangeForSQL($p_datetime): array
     {
         $info = explode(' ', $p_datetime);
         $dateInfo = explode('-', $info[0]);

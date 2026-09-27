@@ -280,10 +280,8 @@ class Application_Model_StoredFile
 
     /**
      * Get metadata as array, indexed by the column names in the database.
-     *
-     * @return array
      */
-    public function getDbColMetadata()
+    public function getDbColMetadata(): array
     {
         $md = [];
         foreach ($this->_dbMD as $dbColumn => $propelColumn) {
@@ -296,10 +294,8 @@ class Application_Model_StoredFile
 
     /**
      * Get metadata as array, indexed by the constant names.
-     *
-     * @return array
      */
-    public function getMetadata()
+    public function getMetadata(): array
     {
         $c = get_defined_constants(true);
         $md = [];
@@ -1010,8 +1006,10 @@ SQL;
      * @param       $dir_id - if this is not provided, it returns all files with full
      *                     path constructed
      * @param mixed $all
+     *
+     * @return mixed[]
      */
-    public static function listAllFiles($dir_id = null, $all = true)
+    public static function listAllFiles($dir_id = null, $all = true): array
     {
         $con = Propel::getConnection();
 

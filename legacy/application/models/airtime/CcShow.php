@@ -110,8 +110,10 @@ class CcShow extends BaseCcShow
     /**
      * Returns all cc_show_instances that have been edited out of
      * a repeating sequence.
+     *
+     * @return mixed[]
      */
-    public function getEditedRepeatingInstanceIds()
+    public function getEditedRepeatingInstanceIds(): array
     {
         // get cc_show_days that have been edited (not repeating)
         $ccShowDays = CcShowDaysQuery::create()
@@ -274,7 +276,10 @@ class CcShow extends BaseCcShow
         return $this->collCcShowInstancess;*/
     }
 
-    public function getInstanceIds()
+    /**
+     * @return mixed[]
+     */
+    public function getInstanceIds(): array
     {
         $instanceIds = [];
         foreach ($this->getCcShowInstancess() as $ccShowInstance) {
@@ -291,7 +296,12 @@ class CcShow extends BaseCcShow
      * If a Criteria object is passed in Propel will always fetch the
      * results from the database and not return a cached collection
      */
-    public function getFutureInstanceIds($criteria = null)
+    /**
+     * @param null|mixed $criteria
+     *
+     * @return mixed[]
+     */
+    public function getFutureInstanceIds($criteria = null): array
     {
         $instanceIds = [];
         foreach ($this->getFutureCcShowInstancess($criteria) as $ccShowInstance) {
@@ -310,7 +320,10 @@ class CcShow extends BaseCcShow
             ->find();
     }
 
-    public function getShowInfo()
+    /**
+     * @return mixed[]
+     */
+    public function getShowInfo(): array
     {
         $info = [];
         if ($this->getDbId() == null) {
