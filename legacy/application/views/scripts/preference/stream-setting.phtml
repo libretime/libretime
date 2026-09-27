@@ -27,7 +27,7 @@
                                 <?php echo $radio ?><br><br>
                                 </input>
                             </label>
-                            <?php $i = $i + 1; ?>
+                            <?php $i += 1; ?>
                         <?php endforeach; ?>
                         <?php if ($this->form->getElement('streamFormat')->hasErrors()) : ?>
                             <ul class='errors'>

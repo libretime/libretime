@@ -140,7 +140,7 @@ if (count($items) && ($isSmartBlock || $isPlaylist)) : ?>
                     );
 
                     if (isset($nextFileUrl)) {
-                        $vars = $vars + $item2;
+                        $vars += $item2;
                     }
 
                     echo $this->partial('playlist/set-fade.phtml', $vars);
@@ -152,7 +152,7 @@ if (count($items) && ($isSmartBlock || $isPlaylist)) : ?>
                 <ul style='display:none' id="block_<?php echo $item["id"] ?>_info" class="smart-block-info expand-block-separate"></ul>
             <?php } ?>
         </li>
-        <?php $i = $i + 1; ?>
+        <?php $i += 1; ?>
     <?php endforeach; ?>
 
 <?php else : ?>
