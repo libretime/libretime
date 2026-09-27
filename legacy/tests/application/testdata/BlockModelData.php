@@ -3,7 +3,7 @@
 class BlockModelData
 {
     /**
-     * @return array<int, array<string, string>|array<string, string|int>>
+     * @return array<int, array<string, int|string>|array<string, string>>
      */
     public static function getCriteriaSingleNewestLabelNada()
     {
@@ -22,7 +22,7 @@ class BlockModelData
     }
 
     /**
-     * @return array<int, array<string, string>|array<string, string|int>>
+     * @return array<int, array<string, int|string>|array<string, string>>
      */
     public static function getCriteriaMultiTrackAndAlbum1Hour()
     {

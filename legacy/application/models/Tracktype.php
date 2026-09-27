@@ -111,6 +111,7 @@ class Application_Model_Tracktype
 
     /**
      * @param array<int, mixed> $visible
+     * @param null|mixed        $search
      */
     public static function getTracktypesData(array $visible, $search = null)
     {

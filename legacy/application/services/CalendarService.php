@@ -259,6 +259,9 @@ class Application_Service_CalendarService
     }
 
     /**
+     * @param mixed $deltaDay
+     * @param mixed $deltaMin
+     *
      * @return array<int, mixed>
      */
     private function validateShowMove($deltaDay, $deltaMin)

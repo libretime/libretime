@@ -292,6 +292,7 @@ class Application_Model_User
 
     /**
      * @param array<int, mixed> $type
+     * @param null|mixed        $search
      */
     public static function getUsers(array $type, $search = null)
     {

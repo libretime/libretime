@@ -24,7 +24,12 @@ class Application_Service_HistoryService
 
     // opts is from datatables.
     /**
-     * @return array<string, int|mixed[]|null>
+     * @param mixed      $startDT
+     * @param mixed      $endDT
+     * @param mixed      $opts
+     * @param null|mixed $instanceId
+     *
+     * @return array<string, null|int|mixed[]>
      */
     public function getPlayedItemData($startDT, $endDT, $opts, $instanceId = null)
     {
@@ -305,6 +310,10 @@ class Application_Service_HistoryService
     }
 
     /**
+     * @param mixed $startDT
+     * @param mixed $endDT
+     * @param mixed $opts
+     *
      * @return array<string, int|mixed[]>
      */
     public function getFileSummaryData($startDT, $endDT, $opts)

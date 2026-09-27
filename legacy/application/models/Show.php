@@ -1672,7 +1672,7 @@ SQL;
     }
 
     /**
-     * @return \DateTime[]
+     * @return DateTime[]
      */
     public static function getStartEndCurrentMonthView()
     {
@@ -1693,7 +1693,8 @@ SQL;
      *
      *  FullCalendar displays 6 weeks, starting on a Sunday, for a total of 42 days. This function returns 42 days worth
      *  of data (a few days before, and a few days after.)
-     * @return \DateTime[]
+     *
+     * @return DateTime[]
      */
     public static function getStartEndCurrentMonthPlusView()
     {
@@ -1714,7 +1715,7 @@ SQL;
     }
 
     /**
-     * @return \DateTime[]
+     * @return DateTime[]
      */
     public static function getStartEndCurrentWeekView()
     {
@@ -1734,7 +1735,7 @@ SQL;
     }
 
     /**
-     * @return \DateTime[]
+     * @return DateTime[]
      */
     public static function getStartEndCurrentDayView()
     {

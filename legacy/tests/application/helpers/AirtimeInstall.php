@@ -119,8 +119,6 @@ class AirtimeInstall
      *
      * @param bool $p_exitOnError
      *                            Exit the program on failure
-     *
-     * @return bool
      */
     public static function DbConnect($p_exitOnError = true): bool
     {

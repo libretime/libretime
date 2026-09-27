@@ -623,6 +623,8 @@ SQL;
     }
 
     /**
+     * @param mixed $pos
+     *
      * @return array<int, string>
      */
     public function getFadeInfo($pos)
@@ -1266,6 +1268,7 @@ SQL;
      *
      * @param array $p_criteria
      * @param mixed $returnList
+     *
      * @return array<string, int>
      */
     public function generateSmartBlock($p_criteria, $returnList = false)
@@ -1826,7 +1829,7 @@ class SSPSolution
 
     public function replace(Track $old, Track $new): SSPSolution
     {
-        return new SSPSolution(array_map(fn (Track $it): \Track => $it === $old ? $new : $it, $this->tracks));
+        return new SSPSolution(array_map(fn (Track $it): Track => $it === $old ? $new : $it, $this->tracks));
     }
 
     public static function isCloseEnough(float $delta): bool

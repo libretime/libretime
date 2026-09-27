@@ -92,6 +92,7 @@ SQL;
      *
      * @param null|mixed $utcTimeEnd
      * @param mixed      $showsToRetrieve
+     *
      * @return array<string, array<string, mixed>>
      */
     public static function GetPlayOrderRange($utcTimeEnd = null, $showsToRetrieve = 5)
@@ -141,6 +142,7 @@ SQL;
      * Old version of the function for backwards compatibility.
      *
      * @deprecated
+     *
      * @return array<string, mixed>
      */
     public static function GetPlayOrderRangeOld()
@@ -683,8 +685,6 @@ SQL;
      * Return true if the input string is in the format YYYY-MM-DD-HH-mm.
      *
      * @param string $p_time
-     *
-     * @return bool
      */
     public static function ValidPypoTimeFormat($p_time): bool
     {
@@ -970,6 +970,9 @@ SQL;
     }
 
     /**
+     * @param mixed $p_fromDateTime
+     * @param mixed $p_toDateTime
+     *
      * @return array<int, string>
      */
     private static function getRangeStartAndEnd($p_fromDateTime, $p_toDateTime)

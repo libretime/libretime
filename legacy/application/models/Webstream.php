@@ -124,6 +124,8 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     }
 
     /**
+     * @param mixed $parameters
+     *
      * @return array<int, mixed>
      */
     public static function analyzeFormData($parameters)
@@ -382,7 +384,9 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     }
 
     /**
-     * @return array<int, string|bool|null>
+     * @param mixed $url
+     *
+     * @return array<int, null|bool|string>
      */
     private static function discoverStreamMime($url)
     {

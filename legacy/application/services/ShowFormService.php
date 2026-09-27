@@ -15,7 +15,7 @@ class Application_Service_ShowFormService
     }
 
     /**
-     * @return array<string, \Zend_Form_SubForm> of show forms
+     * @return array<string, Zend_Form_SubForm> of show forms
      */
     public function createShowForms()
     {
@@ -491,6 +491,7 @@ class Application_Service_ShowFormService
      * are a few fields we may need to adjust first.
      *
      * @param mixed $formData
+     *
      * @return array<int, mixed>
      */
     public function preEditShowValidationCheck($formData)
@@ -665,6 +666,7 @@ class Application_Service_ShowFormService
      * @param       $time        String
      * @param mixed $newTimezone
      * @param mixed $oldTimezone
+     *
      * @return array<string, string>
      */
     public static function localizeDateTime($date, $time, $newTimezone, $oldTimezone)
