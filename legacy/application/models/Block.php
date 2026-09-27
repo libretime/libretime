@@ -1347,7 +1347,7 @@ SQL;
                 return $blockItems !== null && count($insertList) >= $blockItems || $totalTime > $blockTime;
             };
 
-            $addTrack = function (Track $track) use ($overflow, $blockTime, &$insertList, &$totalTime) {
+            $addTrack = function (Track $track) use ($overflow, $blockTime, &$insertList, &$totalTime): void {
                 if ($overflow) {
                     $insertList[] = $track;
                     $totalTime += $track->length;

@@ -14,6 +14,8 @@ return RectorConfig::configure()
         __DIR__ . '/tests',
     ])
     ->withSkip([
+        __DIR__ . '/application/configs/airtime-conf-production.php',
+        __DIR__ . '/application/configs/airtime-conf.php',
         __DIR__ . '/application/configs/conf.php',
         __DIR__ . '/application/models/airtime/map',
         __DIR__ . '/application/models/airtime/om',
@@ -24,6 +26,7 @@ return RectorConfig::configure()
     ->withFileExtensions(['php', 'phtml'])
     ->withPhpVersion(PhpVersion::PHP_82)
     ->withPhpLevel(4)
+    ->withTypeCoverageLevel(0)
     ->withRules([
         VariableInStringInterpolationFixerRector::class,
         Utf8DecodeEncodeToMbConvertEncodingRector::class,

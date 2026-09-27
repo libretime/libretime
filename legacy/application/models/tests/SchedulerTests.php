@@ -19,11 +19,11 @@ class SchedulerTests extends PHPUnit_TestCase
         // $sql = "DELETE FROM ".$CC_CONFIG["filesTable"];
 
         // Add a file
-        $values = ['filepath' => dirname(__FILE__) . '/test10001.mp3'];
+        $values = ['filepath' => __DIR__ . '/test10001.mp3'];
         $this->storedFile = Application_Model_StoredFile::Insert($values, false);
 
         // Add a file
-        $values = ['filepath' => dirname(__FILE__) . '/test10002.mp3'];
+        $values = ['filepath' => __DIR__ . '/test10002.mp3'];
         $this->storedFile2 = Application_Model_StoredFile::Insert($values, false);
 
         // Clear the schedule table

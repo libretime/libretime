@@ -16,7 +16,7 @@ class StoredFileTest extends PHPUnit_TestCase
 
     public function testGetAudioMetadata()
     {
-        $filePath = dirname(__FILE__) . '/ex1.mp3';
+        $filePath = __DIR__ . '/ex1.mp3';
         $metadata = Metadata::LoadFromFile($filePath);
         if (($metadata['dc:description'] != 'Tmu sem tam videla ...')
             || ($metadata['audio']['dataformat'] != 'mp3')
@@ -33,8 +33,8 @@ class StoredFileTest extends PHPUnit_TestCase
 
     public function testDeleteAndPutFile()
     {
-        $STORAGE_SERVER_PATH = dirname(__FILE__) . '/../../';
-        $filePath = dirname(__FILE__) . '/ex1.mp3';
+        $STORAGE_SERVER_PATH = __DIR__ . '/../../';
+        $filePath = __DIR__ . '/ex1.mp3';
 
         // Delete any old data from previous tests
         $md5 = md5_file($filePath);
