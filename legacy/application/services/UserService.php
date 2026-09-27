@@ -7,7 +7,7 @@ class Application_Service_UserService
     public function __construct()
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        if (!is_null($userInfo->id)) {
+        if (!is_null($userInfo) && !is_null($userInfo->id)) {
             $this->currentUser = CcSubjsQuery::create()->findPK($userInfo->id);
         }
     }
