@@ -679,10 +679,7 @@ class Application_Model_Preference
                 $key = str_replace(' ', '_', trim($info[0]));
                 $key = strtoupper($key);
                 if (
-                    $key == 'WEB_SERVER' || $key == 'CPU' || $key == 'OS' || $key == 'TOTAL_RAM'
-                    || $key == 'FREE_RAM' || $key == 'AIRTIME_VERSION' || $key == 'KERNAL_VERSION'
-                    || $key == 'MACHINE_ARCHITECTURE' || $key == 'TOTAL_MEMORY_MBYTES' || $key == 'TOTAL_SWAP_MBYTES'
-                    || $key == 'PLAYOUT_ENGINE_CPU_PERC'
+                    in_array($key, ['WEB_SERVER', 'CPU', 'OS', 'TOTAL_RAM', 'FREE_RAM', 'AIRTIME_VERSION', 'KERNAL_VERSION', 'MACHINE_ARCHITECTURE', 'TOTAL_MEMORY_MBYTES', 'TOTAL_SWAP_MBYTES', 'PLAYOUT_ENGINE_CPU_PERC'])
                 ) {
                     if ($key == 'AIRTIME_VERSION') {
                         // remove hash tag on the version string

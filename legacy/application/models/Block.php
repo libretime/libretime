@@ -1183,7 +1183,7 @@ SQL;
                         $extradatetimeunit = $d['sp_criteria_extra_datetime_select'];
                     }
 
-                    if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
+                    if (in_array($field, ['utime', 'mtime', 'lptime'])) {
                         // if the date isn't relative we  want to convert the value to a specific UTC date
                         if (!in_array($modifier, ['before', 'after', 'between'])) {
                             $value = Application_Common_DateHelper::UserTimezoneStringToUTCString($value);
@@ -1200,7 +1200,7 @@ SQL;
                         ->setDbBlockId($this->id);
 
                     if (isset($d['sp_criteria_extra'])) {
-                        if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
+                        if (in_array($field, ['utime', 'mtime', 'lptime'])) {
                             // if the date isn't relative we  want to convert the value to a specific UTC date
                             if (!in_array($modifier, ['before', 'after', 'between'])) {
                                 $extra = Application_Common_DateHelper::UserTimezoneStringToUTCString($extra);

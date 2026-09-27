@@ -11,7 +11,7 @@ class CcSubjs extends BaseCcSubjs
 {
     public function isAdminOrPM()
     {
-        return $this->type === UTYPE_SUPERADMIN || $this->type === UTYPE_ADMIN || $this->type === UTYPE_PROGRAM_MANAGER;
+        return in_array($this->type, [UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER], true);
     }
 
     public function isSuperAdmin()
