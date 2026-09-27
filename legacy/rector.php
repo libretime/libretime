@@ -26,7 +26,7 @@ return RectorConfig::configure()
     ->withFileExtensions(['php', 'phtml'])
     ->withPhpVersion(PhpVersion::PHP_82)
     ->withPhpLevel(4)
-    ->withCodeQualityLevel(1)
+    ->withCodeQualityLevel(4)
     ->withTypeCoverageLevel(4)
     ->withTypeCoverageDocblockLevel(4)
     ->withRules([
