@@ -519,7 +519,7 @@ class CcFiles extends BaseCcFiles
      * This function refers to the file's Amazon S3 resource id.
      * Returns null because cc_files are stored on local disk.
      */
-    public function getResourceId()
+    public function getResourceId(): null
     {
         return null;
     }

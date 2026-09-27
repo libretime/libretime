@@ -324,7 +324,7 @@ class TaskFactory
      */
     public static function getTasks()
     {
-        return array_filter(get_declared_classes(), [__CLASS__, '_isTask']);
+        return array_filter(get_declared_classes(), [self::class, '_isTask']);
     }
 
     /**

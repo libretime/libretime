@@ -60,7 +60,7 @@ class PodcastManager
     {
         $episodeList = $service->getPodcastEpisodes($podcast->getDbPodcastId());
         $episodes = [];
-        usort($episodeList, [__CLASS__, '_sortByEpisodePubDate']);
+        usort($episodeList, [self::class, '_sortByEpisodePubDate']);
         for ($i = 0; $i < count($episodeList); ++$i) {
             $episodeData = $episodeList[$i];
             $ts = $podcast->getDbAutoIngestTimestamp();
