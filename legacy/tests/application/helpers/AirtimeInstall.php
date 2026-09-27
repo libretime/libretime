@@ -329,7 +329,7 @@ class AirtimeInstall
         echo substr($msg, strpos($msg, "\n")) . PHP_EOL;
     }
 
-    public static function getOpts()
+    public static function getOpts(): ?Zend_Console_Getopt
     {
         try {
             $autoloader = Zend_Loader_Autoloader::getInstance();

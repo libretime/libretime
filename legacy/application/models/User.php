@@ -403,7 +403,7 @@ SQL;
         ], 'single');
     }
 
-    public static function getCurrentUser()
+    public static function getCurrentUser(): ?Application_Model_User
     {
         $userinfo = Zend_Auth::getInstance()->getStorage()->read();
         if (is_null($userinfo)) {

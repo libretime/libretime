@@ -35,7 +35,7 @@ class PlaylistController extends Zend_Controller_Action
         SessionHelper::reopenSessionForWriting();
     }
 
-    private function getPlaylist($p_type)
+    private function getPlaylist($p_type): Application_Model_Block|Application_Model_Playlist|Application_Model_Webstream|null
     {
         $obj = null;
         $objInfo = Application_Model_Library::getObjInfo($p_type);

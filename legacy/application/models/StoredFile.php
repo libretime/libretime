@@ -539,7 +539,7 @@ SQL;
         return $filesize;
     }
 
-    public static function Insert($md, $con)
+    public static function Insert($md, $con): ?Application_Model_StoredFile
     {
         // save some work by checking if filepath is given right away
         if (!isset($md['MDATA_KEY_FILEPATH'])) {
@@ -610,10 +610,8 @@ SQL;
      *
      * @param string $p_filepath path of file stored in Airtime
      * @param mixed  $con
-     *
-     * @return null|Application_Model_StoredFile
      */
-    public static function RecallByFilepath($p_filepath, $con)
+    public static function RecallByFilepath($p_filepath, $con): ?Application_Model_StoredFile
     {
         $path_info = Application_Common_Storage::splitFilePath($p_filepath);
 
@@ -628,7 +626,7 @@ SQL;
         return is_null($file) ? null : self::createWithFile($file, $con);
     }
 
-    public static function RecallByPartialFilepath($partial_path, $con)
+    public static function RecallByPartialFilepath($partial_path, $con): ?array
     {
         $path_info = Application_Common_Storage::splitFilePath($partial_path);
 

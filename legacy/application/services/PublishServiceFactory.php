@@ -9,7 +9,7 @@ class PublishServiceFactory
      *
      * @return null|Publish
      */
-    public static function getService($serviceName)
+    public static function getService($serviceName): ?Application_Service_PodcastEpisodeService
     {
         switch ($serviceName) {
             case STATION_PODCAST_SERVICE_NAME:

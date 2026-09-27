@@ -696,7 +696,7 @@ SQL;
     }*/
 
     // returns a DateTime of the current show end date set to the timezone of the show.
-    public function getRepeatingEndDate()
+    public function getRepeatingEndDate(): ?DateTime
     {
         $sql = <<<'SQL'
 SELECT last_show, timezone
@@ -1031,7 +1031,7 @@ SQL;
      *
      * @return DateTime object in user's local timezone
      */
-    private function calculateEndDate($showData)
+    private function calculateEndDate($showData): ?DateTime
     {
         // if no end return null
         if ($showData['add_show_no_end']) {

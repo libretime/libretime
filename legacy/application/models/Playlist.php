@@ -641,7 +641,7 @@ SQL;
         }
     }
 
-    public function getFadeInfo($pos)
+    public function getFadeInfo($pos): ?array
     {
         $row = CcPlaylistcontentsQuery::create()
             ->joinWith(CcFilesPeer::OM_CLASS)

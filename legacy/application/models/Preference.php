@@ -254,7 +254,7 @@ class Application_Model_Preference
      *
      * @return DateTime (in UTC Timezone)
      */
-    public static function GetShowsPopulatedUntil()
+    public static function GetShowsPopulatedUntil(): ?DateTime
     {
         $date = self::getValue('shows_populated_until');
 

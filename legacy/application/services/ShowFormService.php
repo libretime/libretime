@@ -217,7 +217,7 @@ class Application_Service_ShowFormService
         return $showStart;
     }
 
-    public function getNextFutureRepeatShowTime()
+    public function getNextFutureRepeatShowTime(): ?array
     {
         $ccShowInstance = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->ccShow->getDbId())
@@ -523,7 +523,7 @@ class Application_Service_ShowFormService
      *
      * Returns null if there is no next future repeating show instance
      */
-    public function getCurrentOrNextInstanceStartTime()
+    public function getCurrentOrNextInstanceStartTime(): ?DateTime
     {
         $ccShowInstance = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->ccShow->getDbId())

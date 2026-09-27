@@ -80,7 +80,7 @@ SQL;
      *
      * Data is based on GetPlayOrderRange() in this class.
      */
-    public static function getCurrentPlayingTrack()
+    public static function getCurrentPlayingTrack(): ?array
     {
         $currentScheduleInfo = self::GetPlayOrderRange();
         if (empty($currentScheduleInfo['tracks']['current'])) {
