@@ -15,7 +15,7 @@ class Application_Service_ShowFormService
     }
 
     /**
-     * @return array of show forms
+     * @return array<string, \Zend_Form_SubForm> of show forms
      */
     public function createShowForms()
     {

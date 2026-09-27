@@ -1668,6 +1668,9 @@ SQL;
         return $assocArray;
     }
 
+    /**
+     * @return \DateTime[]
+     */
     public static function getStartEndCurrentMonthView()
     {
         $utcTimeZone = new DateTimeZone('UTC');
@@ -1687,6 +1690,7 @@ SQL;
      *
      *  FullCalendar displays 6 weeks, starting on a Sunday, for a total of 42 days. This function returns 42 days worth
      *  of data (a few days before, and a few days after.)
+     * @return \DateTime[]
      */
     public static function getStartEndCurrentMonthPlusView()
     {
@@ -1706,6 +1710,9 @@ SQL;
         return [$start, $end];
     }
 
+    /**
+     * @return \DateTime[]
+     */
     public static function getStartEndCurrentWeekView()
     {
         $weekStartDayNum = Application_Model_Preference::GetWeekStartDay();
@@ -1723,6 +1730,9 @@ SQL;
         return [$start, $end];
     }
 
+    /**
+     * @return \DateTime[]
+     */
     public static function getStartEndCurrentDayView()
     {
         $utcTimeZone = new DateTimeZone('UTC');
