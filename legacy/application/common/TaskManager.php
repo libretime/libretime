@@ -24,6 +24,11 @@ final class TaskManager
     public const TASK_INTERVAL_SECONDS = 30;
 
     /**
+     * @var int TASK_LOCK_KEY postgres advisory lock key used to serialize the TaskManager runs
+     */
+    public const TASK_LOCK_KEY = 1_634_952_052;
+
+    /**
      * @var PDO Propel connection object
      */
     private $_con;
@@ -75,8 +80,8 @@ final class TaskManager
      * Run all tasks that need to be run.
      *
      * To prevent blocking and making too many requests to the database,
-     * we implement a row-level, non-blocking, read-protected lock on a
-     * timestamp that we check each time the application is bootstrapped,
+     * we acquire a non-blocking transaction-level advisory lock before
+     * checking a timestamp each time the application is bootstrapped,
      * which, assuming enough time has passed, is updated before running
      * the tasks.
      */
@@ -91,6 +96,12 @@ final class TaskManager
         $this->_con->beginTransaction();
 
         try {
+            if (!$this->_tryLock()) {
+                // Another request is already checking/running the tasks
+                $this->_con->commit();
+
+                return;
+            }
             $lock = $this->_getLock();
             if ($lock && (microtime(true) < ($lock['valstr'] + self::TASK_INTERVAL_SECONDS))) {
                 // Propel caches the database connection and uses it persistently, so if we don't
@@ -102,14 +113,8 @@ final class TaskManager
             $this->_updateLock($lock);
             $this->_con->commit();
         } catch (PDOException $e) {
-            // We get here if there are simultaneous requests trying to fetch the lock row
             $this->_con->rollBack();
-
-            // Do not log 'could not obtain lock' exception
-            // SQLSTATE[55P03]: Lock not available: 7 ERROR:  could not obtain lock on row in relation "cc_pref"
-            if ($e->getCode() != '55P03') {
-                Logging::warn($e->getMessage());
-            }
+            Logging::warn($e->getMessage());
 
             return;
         }
@@ -138,17 +143,32 @@ final class TaskManager
     }
 
     /**
-     * Get the task_manager_lock from cc_pref with a row-level lock for atomicity.
+     * Try to acquire the TaskManager advisory lock without blocking.
      *
-     * The lock is exclusive (prevent reads) and will only last for the duration
-     * of the transaction. We add NOWAIT so reads on the row during the transaction
-     * won't block
+     * The lock is released at the end of the transaction. Unlike a row-level
+     * lock with NOWAIT, failing to acquire the lock does not raise an error
+     * (which would abort the transaction and be logged by postgres).
+     *
+     * @return bool true if the lock was acquired, otherwise false
+     */
+    private function _tryLock(): bool
+    {
+        $st = $this->_con->prepare('SELECT pg_try_advisory_xact_lock(:key)');
+        $st->execute([':key' => self::TASK_LOCK_KEY]);
+
+        return (bool) $st->fetchColumn();
+    }
+
+    /**
+     * Get the task_manager_lock from cc_pref.
+     *
+     * Must be called while holding the TaskManager advisory lock.
      *
      * @return array|bool an array containing the row values, or false on failure
      */
     private function _getLock()
     {
-        $sql = "SELECT * FROM cc_pref WHERE keystr='task_manager_lock' LIMIT 1 FOR UPDATE NOWAIT";
+        $sql = "SELECT * FROM cc_pref WHERE keystr='task_manager_lock' LIMIT 1";
         $st = $this->_con->prepare($sql);
         $st->execute();
 
