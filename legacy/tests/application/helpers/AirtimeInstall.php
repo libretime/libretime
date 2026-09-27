@@ -25,7 +25,7 @@ class AirtimeInstall
      * permissions. If not running with root permissions, causes the
      * script to exit.
      */
-    public static function ExitIfNotRoot()
+    public static function ExitIfNotRoot(): void
     {
         // Need to check that we are superuser before running this.
         if (posix_geteuid() != 0) {
@@ -93,7 +93,7 @@ class AirtimeInstall
         return true;
     }
 
-    public static function InstallQuery($sql, $verbose = true)
+    public static function InstallQuery($sql, $verbose = true): void
     {
         $con = Propel::getConnection();
 
@@ -109,7 +109,7 @@ class AirtimeInstall
         }
     }
 
-    public static function DropSequence($p_sequenceName)
+    public static function DropSequence($p_sequenceName): void
     {
         AirtimeInstall::InstallQuery("DROP SEQUENCE IF EXISTS {$p_sequenceName}", false);
     }
@@ -141,7 +141,7 @@ class AirtimeInstall
         return true;
     }
 
-    public static function CreateDatabaseUser()
+    public static function CreateDatabaseUser(): void
     {
         $CC_CONFIG = Config::getConfig();
         echo ' * Creating Airtime database user' . PHP_EOL;
@@ -194,7 +194,7 @@ class AirtimeInstall
         return $dbExists;
     }
 
-    public static function InstallPostgresScriptingLanguage()
+    public static function InstallPostgresScriptingLanguage(): void
     {
         $con = Propel::getConnection();
         // Install postgres scripting language
@@ -209,7 +209,7 @@ class AirtimeInstall
         }
     }
 
-    public static function CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost, $dbport)
+    public static function CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost, $dbport): void
     {
         echo ' * Creating database tables' . PHP_EOL;
         $con = Propel::getConnection();
@@ -228,7 +228,7 @@ class AirtimeInstall
         AirtimeInstall::$databaseTablesCreated = true;
     }
 
-    public static function SetAirtimeVersion($p_version)
+    public static function SetAirtimeVersion($p_version): void
     {
         $con = Propel::getConnection();
         $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
@@ -236,7 +236,7 @@ class AirtimeInstall
         Application_Model_Preference::SetAirtimeVersion($p_version);
     }
 
-    public static function SetUniqueId()
+    public static function SetUniqueId(): void
     {
         $uniqueId = md5(uniqid('', true));
         Application_Model_Preference::SetUniqueId($uniqueId);
@@ -249,13 +249,13 @@ class AirtimeInstall
         return $config['airtime_version'];
     }
 
-    public static function DeleteFilesRecursive($p_path)
+    public static function DeleteFilesRecursive($p_path): void
     {
         $command = "rm -rf \"{$p_path}\"";
         exec($command);
     }
 
-    public static function InstallPhpCode()
+    public static function InstallPhpCode(): void
     {
         $CC_CONFIG = Config::getConfig();
         echo '* Installing PHP code to ' . AirtimeInstall::CONF_DIR_WWW . PHP_EOL;
@@ -263,13 +263,13 @@ class AirtimeInstall
         exec('cp -R ' . AirtimeInstall::GetAirtimeSrcDir() . '/* ' . AirtimeInstall::CONF_DIR_WWW);
     }
 
-    public static function UninstallPhpCode()
+    public static function UninstallPhpCode(): void
     {
         echo '* Removing PHP code from ' . AirtimeInstall::CONF_DIR_WWW . PHP_EOL;
         exec('rm -rf "' . AirtimeInstall::CONF_DIR_WWW . '"');
     }
 
-    public static function DirCheck()
+    public static function DirCheck(): void
     {
         echo 'Legend: "+" means the dir/file exists, "-" means that it does not.' . PHP_EOL;
         $dirs = [
@@ -293,7 +293,7 @@ class AirtimeInstall
         }
     }
 
-    public static function CreateZendPhpLogFile()
+    public static function CreateZendPhpLogFile(): void
     {
         $CC_CONFIG = Config::getConfig();
         $path = AirtimeInstall::CONF_DIR_LOG;
@@ -307,14 +307,14 @@ class AirtimeInstall
         chgrp($file, $CC_CONFIG['webServerUser']);
     }
 
-    public static function RemoveLogDirectories()
+    public static function RemoveLogDirectories(): void
     {
         $path = AirtimeInstall::CONF_DIR_LOG;
         echo '* Removing logs directory ' . $path . PHP_EOL;
         exec("rm -rf \"{$path}\"");
     }
 
-    public static function removeVirtualEnvDistributeFile()
+    public static function removeVirtualEnvDistributeFile(): void
     {
         echo '* Removing distribute-0.6.10.tar.gz' . PHP_EOL;
         if (file_exists('/usr/share/python-virtualenv/distribute-0.6.10.tar.gz')) {
@@ -322,14 +322,14 @@ class AirtimeInstall
         }
     }
 
-    public static function printUsage($opts)
+    public static function printUsage($opts): void
     {
         $msg = $opts->getUsageMessage();
         echo PHP_EOL . 'Usage: airtime-install [options]';
         echo substr($msg, strpos($msg, "\n")) . PHP_EOL;
     }
 
-    public static function getOpts()
+    public static function getOpts(): ?Zend_Console_Getopt
     {
         try {
             $autoloader = Zend_Loader_Autoloader::getInstance();

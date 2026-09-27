@@ -4,7 +4,7 @@ class IndexController extends Zend_Controller_Action
 {
     public function init() {}
 
-    public function indexAction()
+    public function indexAction(): void
     {
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Config::getBasePath();
@@ -93,12 +93,12 @@ class IndexController extends Zend_Controller_Action
         $this->view->emptyPodcastMessage = _('No tracks have been published yet.');
     }
 
-    public function mainAction()
+    public function mainAction(): void
     {
         $this->_helper->layout->setLayout('layout');
     }
 
-    public function maintenanceAction()
+    public function maintenanceAction(): void
     {
         $this->getResponse()->setHttpResponseCode(503);
     }

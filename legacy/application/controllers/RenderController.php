@@ -2,7 +2,7 @@
 
 class RenderController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -13,7 +13,7 @@ class RenderController extends Zend_Controller_Action
         $this->view->csrf = $csrf_element;
     }
 
-    public function podcastUrlDialogAction()
+    public function podcastUrlDialogAction(): void
     {
         $path = 'podcast/podcast_url_dialog.phtml';
         $this->_helper->json->sendJson(['html' => $this->view->render($path)]);

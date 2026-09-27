@@ -17,7 +17,7 @@ class Application_Service_HistoryService
     /**
      * @return array<int, string>
      */
-    public function getSupportedTemplateTypes()
+    public function getSupportedTemplateTypes(): array
     {
         return [self::TEMPLATE_TYPE_ITEM, self::TEMPLATE_TYPE_FILE];
     }
@@ -31,7 +31,7 @@ class Application_Service_HistoryService
      *
      * @return array<string, null|int|mixed[]>
      */
-    public function getPlayedItemData($startDT, $endDT, $opts, $instanceId = null)
+    public function getPlayedItemData($startDT, $endDT, $opts, $instanceId = null): array
     {
         $mainSqlQuery = '';
         $paramMap = [];
@@ -316,7 +316,7 @@ class Application_Service_HistoryService
      *
      * @return array<string, int|mixed[]>
      */
-    public function getFileSummaryData($startDT, $endDT, $opts)
+    public function getFileSummaryData($startDT, $endDT, $opts): array
     {
         $select = [
             'summary.played',
@@ -505,7 +505,7 @@ class Application_Service_HistoryService
         return $filteredShows;
     }
 
-    public function insertWebstreamMetadata($schedId, $startDT, $data)
+    public function insertWebstreamMetadata($schedId, $startDT, $data): void
     {
         $this->con->beginTransaction();
 
@@ -546,7 +546,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function insertPlayedItem($schedId)
+    public function insertPlayedItem($schedId): void
     {
         $this->con->beginTransaction();
 
@@ -718,7 +718,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function populateTemplateFile($values, $id)
+    public function populateTemplateFile($values, $id): void
     {
         $this->con->beginTransaction();
 
@@ -745,7 +745,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function populateTemplateItem($values, $id = null, $instance_id = null)
+    public function populateTemplateItem($values, $id = null, $instance_id = null): void
     {
         $this->con->beginTransaction();
 
@@ -992,7 +992,7 @@ class Application_Service_HistoryService
     }
 
     // id is an id in cc_playout_history
-    public function deletePlayedItem($id)
+    public function deletePlayedItem($id): void
     {
         $this->con->beginTransaction();
 
@@ -1010,7 +1010,7 @@ class Application_Service_HistoryService
     }
 
     // id is an id in cc_playout_history
-    public function deletePlayedItems($ids)
+    public function deletePlayedItems($ids): void
     {
         $this->con->beginTransaction();
 
@@ -1031,7 +1031,7 @@ class Application_Service_HistoryService
     /**
      * @return array<int, string>
      */
-    public function getFieldTypes()
+    public function getFieldTypes(): array
     {
         return [
             // TEMPLATE_DATE,
@@ -1047,7 +1047,7 @@ class Application_Service_HistoryService
     /**
      * @return array<string, string>
      */
-    private function getPhpCasts()
+    private function getPhpCasts(): array
     {
         return [
             TEMPLATE_DATE => 'strval',
@@ -1063,7 +1063,7 @@ class Application_Service_HistoryService
     /**
      * @return array<string, string>
      */
-    private function getSqlTypes()
+    private function getSqlTypes(): array
     {
         return [
             TEMPLATE_DATE => 'date',
@@ -1079,7 +1079,7 @@ class Application_Service_HistoryService
     /**
      * @return array<int, array<string, string>>
      */
-    public function getFileMetadataTypes()
+    public function getFileMetadataTypes(): array
     {
         return [
             ['name' => MDATA_KEY_TITLE, 'label' => _('Title'), 'type' => TEMPLATE_STRING],
@@ -1103,7 +1103,7 @@ class Application_Service_HistoryService
     /**
      * @return array<int, string>
      */
-    public function mandatoryItemFields()
+    public function mandatoryItemFields(): array
     {
         return ['starts', 'ends'];
     }
@@ -1111,7 +1111,7 @@ class Application_Service_HistoryService
     /**
      * @return array<int, string>
      */
-    public function mandatoryFileFields()
+    public function mandatoryFileFields(): array
     {
         return ['played'];
     }
@@ -1313,7 +1313,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function setConfiguredItemTemplate($id)
+    public function setConfiguredItemTemplate($id): void
     {
         try {
             Application_Model_Preference::SetHistoryItemTemplate($id);
@@ -1339,7 +1339,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function setConfiguredFileTemplate($id)
+    public function setConfiguredFileTemplate($id): void
     {
         try {
             Application_Model_Preference::SetHistoryFileTemplate($id);
@@ -1348,7 +1348,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function setConfiguredTemplate($id)
+    public function setConfiguredTemplate($id): void
     {
         try {
             $template = $this->loadTemplate($id);
@@ -1435,7 +1435,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function updateItemTemplate($id, $name, $fields, $doSetDefault = false)
+    public function updateItemTemplate($id, $name, $fields, $doSetDefault = false): void
     {
         $this->con->beginTransaction();
 
@@ -1477,7 +1477,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function deleteTemplate($id)
+    public function deleteTemplate($id): void
     {
         $this->con->beginTransaction();
 

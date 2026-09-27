@@ -95,55 +95,55 @@ class Application_Model_User
         return in_array($real_type, $type);
     }
 
-    public function setLogin($login)
+    public function setLogin($login): void
     {
         $user = $this->_userInstance;
         $user->setDbLogin($login);
     }
 
-    public function setPassword($password)
+    public function setPassword($password): void
     {
         $user = $this->_userInstance;
         $user->setDbPass(md5($password));
     }
 
-    public function setFirstName($firstName)
+    public function setFirstName($firstName): void
     {
         $user = $this->_userInstance;
         $user->setDbFirstName($firstName);
     }
 
-    public function setLastName($lastName)
+    public function setLastName($lastName): void
     {
         $user = $this->_userInstance;
         $user->setDbLastName($lastName);
     }
 
-    public function setType($type)
+    public function setType($type): void
     {
         $user = $this->_userInstance;
         $user->setDbType($type);
     }
 
-    public function setEmail($email)
+    public function setEmail($email): void
     {
         $user = $this->_userInstance;
         $user->setDbEmail(strtolower($email));
     }
 
-    public function setCellPhone($cellPhone)
+    public function setCellPhone($cellPhone): void
     {
         $user = $this->_userInstance;
         $user->setDbCellPhone($cellPhone);
     }
 
-    public function setSkype($skype)
+    public function setSkype($skype): void
     {
         $user = $this->_userInstance;
         $user->setDbSkypeContact($skype);
     }
 
-    public function setJabber($jabber)
+    public function setJabber($jabber): void
     {
         $user = $this->_userInstance;
         $user->setDbJabberContact($jabber);
@@ -212,12 +212,12 @@ class Application_Model_User
         return $user->getDbJabberContact();
     }
 
-    public function save()
+    public function save(): void
     {
         $this->_userInstance->save();
     }
 
-    public function delete()
+    public function delete(): void
     {
         if (!$this->_userInstance->isDeleted()) {
             $this->_userInstance->delete();
@@ -232,7 +232,7 @@ class Application_Model_User
         return $user->getCcFilessRelatedByDbOwnerId();
     }
 
-    public function donateFilesTo($user) // $user is object not user id
+    public function donateFilesTo($user): void // $user is object not user id
     {
         $my_files = $this->getOwnedFiles();
         foreach ($my_files as $file) {
@@ -240,7 +240,7 @@ class Application_Model_User
         }
     }
 
-    public function deleteAllFiles()
+    public function deleteAllFiles(): void
     {
         $my_files = $this->getOwnedFiles();
         foreach ($my_files as $file) {
@@ -248,7 +248,7 @@ class Application_Model_User
         }
     }
 
-    private function createUser()
+    private function createUser(): CcSubjs
     {
         return new CcSubjs();
     }
@@ -343,7 +343,12 @@ class Application_Model_User
         return Application_Model_User::getUsers(['H', 'A', 'S', 'P'], $search);
     }
 
-    public static function getUsersDataTablesInfo($datatables)
+    /**
+     * @param mixed $datatables
+     *
+     * @return mixed[]
+     */
+    public static function getUsersDataTablesInfo($datatables): array
     {
         $con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME);
 
@@ -398,7 +403,7 @@ SQL;
         ], 'single');
     }
 
-    public static function getCurrentUser()
+    public static function getCurrentUser(): ?Application_Model_User
     {
         $userinfo = Zend_Auth::getInstance()->getStorage()->read();
         if (is_null($userinfo)) {

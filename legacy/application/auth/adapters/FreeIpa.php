@@ -113,10 +113,8 @@ class LibreTime_Auth_Adaptor_FreeIpa implements Zend_Auth_Adapter_Interface
      * return dummy object for internal auth handling.
      *
      * we need to build a dummpy object since the auth layer knows nothing about the db
-     *
-     * @return stdClass
      */
-    public function getResultRowObject()
+    public function getResultRowObject(): stdClass
     {
         $o = new stdClass();
         $o->id = $this->user->getId();

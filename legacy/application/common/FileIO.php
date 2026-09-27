@@ -17,7 +17,7 @@ class Application_Common_FileIO
      * @see https://groups.google.com/d/msg/jplayer/nSM2UmnSKKA/Hu76jDZS4xcJ
      * @see https://php.net/manual/en/function.readfile.php#86244
      */
-    public static function smartReadFile($filePath, $size, $mimeType)
+    public static function smartReadFile($filePath, $size, $mimeType): void
     {
         $fm = @fopen($filePath, 'rb');
         if (!$fm) {

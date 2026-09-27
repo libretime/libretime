@@ -2,7 +2,7 @@
 
 class PluploadController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('upload', 'json')
@@ -10,7 +10,7 @@ class PluploadController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         $locale = Application_Model_Preference::GetLocale();
 
@@ -51,7 +51,7 @@ class PluploadController extends Zend_Controller_Action
         $this->view->uploadMaxSize = $uploadMaxSize;
     }
 
-    public function uploadAction()
+    public function uploadAction(): void
     {
         $current_namespace = new Zend_Session_Namespace('csrf_namespace');
         $observed_csrf_token = $this->_getParam('csrf_token');
@@ -68,7 +68,7 @@ class PluploadController extends Zend_Controller_Action
         }
     }
 
-    public function recentUploadsAction()
+    public function recentUploadsAction(): void
     {
         $request = $this->getRequest();
 

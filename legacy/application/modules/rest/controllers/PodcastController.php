@@ -2,7 +2,7 @@
 
 class Rest_PodcastController extends Zend_Rest_Controller
 {
-    public function init()
+    public function init(): void
     {
         $this->view->layout()->disableLayout();
 
@@ -14,12 +14,12 @@ class Rest_PodcastController extends Zend_Rest_Controller
     /**
      * headAction is needed as it is defined as an abstract function in the base controller.
      */
-    public function headAction()
+    public function headAction(): void
     {
         Logging::info('HEAD action received');
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         // Check if offset and limit were sent with request.
         // Default limit to zero and offset to $totalFileCount
@@ -52,7 +52,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
             ->appendBody(json_encode($podcastArray));
     }
 
-    public function getAction()
+    public function getAction(): void
     {
         $id = $this->getId();
         if (!$id) {
@@ -70,7 +70,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         }
     }
 
-    public function postAction()
+    public function postAction(): void
     {
         // If we do get an ID on a POST, then that doesn't make any sense
         // since POST is only for creating.
@@ -103,7 +103,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         }
     }
 
-    public function putAction()
+    public function putAction(): void
     {
         $id = $this->getId();
         if (!$id) {
@@ -126,7 +126,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         }
     }
 
-    public function deleteAction()
+    public function deleteAction(): void
     {
         $id = $this->getId();
         if (!$id) {
@@ -149,7 +149,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
     /**
      * Endpoint for performing bulk actions (deleting multiple podcasts, opening multiple editors).
      */
-    public function bulkAction()
+    public function bulkAction(): void
     {
         if ($this->_request->getMethod() != HttpRequestType::POST) {
             $this->getResponse()
@@ -190,7 +190,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
     /**
      * Endpoint for triggering the generation of a smartblock and playlist to match the podcast name.
      */
-    public function smartblockAction()
+    public function smartblockAction(): void
     {
         $title = $this->_getParam('title', []);
         $id = $this->_getParam('id', []);
@@ -208,7 +208,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
      *
      * @deprecated
      */
-    public function stationAction()
+    public function stationAction(): void
     {
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
         $podcast = Application_Service_PodcastService::getPodcastById($stationPodcastId);
@@ -233,14 +233,14 @@ class Rest_PodcastController extends Zend_Rest_Controller
         return $id;
     }
 
-    private function unknownErrorResponse()
+    private function unknownErrorResponse(): void
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(500);
         $resp->appendBody('An unknown error occurred.');
     }
 
-    private function podcastNotFoundResponse()
+    private function podcastNotFoundResponse(): void
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(404);

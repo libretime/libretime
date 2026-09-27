@@ -2,7 +2,7 @@
 
 final class LocaleController extends Zend_Controller_Action
 {
-    public function datatablesTranslationTableAction()
+    public function datatablesTranslationTableAction(): void
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -20,7 +20,7 @@ final class LocaleController extends Zend_Controller_Action
             );
     }
 
-    public function generalTranslationTableAction()
+    public function generalTranslationTableAction(): void
     {
         $translations = [
             // common/common.js

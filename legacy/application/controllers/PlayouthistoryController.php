@@ -2,7 +2,7 @@
 
 class PlayouthistoryController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext
@@ -19,7 +19,7 @@ class PlayouthistoryController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Config::getBasePath();
@@ -75,7 +75,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->userType = $user->getType();
     }
 
-    public function fileHistoryFeedAction()
+    public function fileHistoryFeedAction(): void
     {
         try {
             $request = $this->getRequest();
@@ -98,7 +98,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         }
     }
 
-    public function itemHistoryFeedAction()
+    public function itemHistoryFeedAction(): void
     {
         try {
             $request = $this->getRequest();
@@ -121,7 +121,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         }
     }
 
-    public function showHistoryFeedAction()
+    public function showHistoryFeedAction(): void
     {
         try {
             $request = $this->getRequest();
@@ -141,7 +141,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         }
     }
 
-    public function editFileItemAction()
+    public function editFileItemAction(): void
     {
         $file_id = $this->_getParam('id');
 
@@ -154,7 +154,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         unset($this->view->form);
     }
 
-    public function createListItemAction()
+    public function createListItemAction(): void
     {
         try {
             $request = $this->getRequest();
@@ -178,7 +178,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         }
     }
 
-    public function editListItemAction()
+    public function editListItemAction(): void
     {
         $id = $this->_getParam('id', null);
 
@@ -193,7 +193,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         unset($this->view->form);
     }
 
-    public function deleteListItemAction()
+    public function deleteListItemAction(): void
     {
         $history_id = $this->_getParam('id');
 
@@ -201,7 +201,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $historyService->deletePlayedItem($history_id);
     }
 
-    public function deleteListItemsAction()
+    public function deleteListItemsAction(): void
     {
         $history_ids = $this->_getParam('ids');
 
@@ -209,7 +209,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $historyService->deletePlayedItems($history_ids);
     }
 
-    public function updateListItemAction()
+    public function updateListItemAction(): void
     {
         try {
             $request = $this->getRequest();
@@ -233,7 +233,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         }
     }
 
-    public function updateFileItemAction()
+    public function updateFileItemAction(): void
     {
         $request = $this->getRequest();
         $params = $request->getPost();

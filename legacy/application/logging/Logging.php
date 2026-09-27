@@ -24,7 +24,7 @@ class Logging
         return self::$_logger;
     }
 
-    public static function setLogPath($path)
+    public static function setLogPath($path): void
     {
         self::$_path = $path;
     }
@@ -65,19 +65,19 @@ class Logging
         return $linePrefix;
     }
 
-    public static function info($p_msg)
+    public static function info($p_msg): void
     {
         $logger = self::getLogger();
         $logger->info(self::getLinePrefix() . self::toString($p_msg));
     }
 
-    public static function warn($p_msg)
+    public static function warn($p_msg): void
     {
         $logger = self::getLogger();
         $logger->warn(self::getLinePrefix() . self::toString($p_msg));
     }
 
-    public static function error($p_msg)
+    public static function error($p_msg): void
     {
         $logger = self::getLogger();
         $logger->err(self::getLinePrefix(true) . self::toString($p_msg));
@@ -87,7 +87,7 @@ class Logging
         $msg = str_replace('%', '%%', $msg);
     }
 
-    public static function debug($p_msg)
+    public static function debug($p_msg): void
     {
         if (!(defined('APPLICATION_ENV') && APPLICATION_ENV == 'development')) {
             return;
@@ -99,13 +99,13 @@ class Logging
     // kind of like debug but for printing arrays more compactly (skipping
     // empty elements
 
-    public static function debug_sparse(array $p_msg)
+    public static function debug_sparse(array $p_msg): void
     {
         Logging::debug('Sparse output:');
         Logging::debug(array_filter($p_msg));
     }
 
-    public static function enablePropelLogging()
+    public static function enablePropelLogging(): void
     {
         $logger = Logging::getLogger();
         Propel::setLogger($logger);
@@ -119,14 +119,14 @@ class Logging
         $config->setParameter('debugpdo.logging.details.mem.enabled', true);
     }
 
-    public static function disablePropelLogging()
+    public static function disablePropelLogging(): void
     {
         $con = Propel::getConnection();
         $con->useDebug(false);
         Propel::setLogger(null);
     }
 
-    public static function loggingShutdownCallback()
+    public static function loggingShutdownCallback(): void
     {
         // Catch the types of errors that PHP doesn't normally let us catch and
         // would otherwise log to the apache log. We route these to our Airtime log to improve the modularity
@@ -164,7 +164,7 @@ class Logging
         }
     }
 
-    public static function setupParseErrorLogging()
+    public static function setupParseErrorLogging(): void
     {
         // Static callback:
         register_shutdown_function('Logging::loggingShutdownCallback');

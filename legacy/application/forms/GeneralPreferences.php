@@ -6,7 +6,7 @@ require_once 'customfilters/ImageSize.php';
 
 class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         $maxLens = Application_Model_Show::getMaxLengths();
         $this->setEnctype(Zend_Form::ENCTYPE_MULTIPART);
@@ -254,7 +254,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
     /**
      * @return array<int, string>
      */
-    private function getWeekStartDays()
+    private function getWeekStartDays(): array
     {
         return [
             _('Sunday'),

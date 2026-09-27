@@ -9,7 +9,7 @@ class LibreTime_Model_FreeIpa
      *
      * @return array<string, mixed>
      */
-    public static function GetUserInfo($username)
+    public static function GetUserInfo($username): array
     {
         $config = Config::getConfig();
         $conn = self::_getLdapConnection();
@@ -54,10 +54,8 @@ class LibreTime_Model_FreeIpa
 
     /**
      * Bind to ldap so we can fetch additional user info.
-     *
-     * @return Zend_Ldap
      */
-    private static function _getLdapConnection()
+    private static function _getLdapConnection(): Zend_Ldap
     {
         $config = Config::getConfig();
 

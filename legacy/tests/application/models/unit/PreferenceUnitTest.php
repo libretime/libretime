@@ -9,7 +9,7 @@ require_once '../application/configs/conf.php';
  */
 class PreferenceUnitTest extends PHPUnit_Framework_TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         TestHelper::installTestDatabase();
         TestHelper::setupZendBootstrap();

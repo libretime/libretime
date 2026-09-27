@@ -2,7 +2,7 @@
 
 class Application_Form_AddShowAutoPlaylist extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         $this->setDecorators([
             ['ViewScript', ['viewScript' => 'form/add-show-autoplaylist.phtml']],
@@ -56,7 +56,7 @@ class Application_Form_AddShowAutoPlaylist extends Zend_Form_SubForm
         $this->addElement($outroPlaylistSelect);
     }
 
-    public function disable()
+    public function disable(): void
     {
         $elements = $this->getElements();
         foreach ($elements as $element) {
@@ -66,7 +66,7 @@ class Application_Form_AddShowAutoPlaylist extends Zend_Form_SubForm
         }
     }
 
-    public function makeReadonly()
+    public function makeReadonly(): void
     {
         $elements = $this->getElements();
         foreach ($elements as $element) {

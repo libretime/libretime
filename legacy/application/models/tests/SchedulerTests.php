@@ -11,7 +11,7 @@ class SchedulerTests extends PHPUnit_TestCase
     private $storedFile;
     private $storedFile2;
 
-    public function setup()
+    public function setup(): void
     {
         global $CC_CONFIG;
 
@@ -30,7 +30,7 @@ class SchedulerTests extends PHPUnit_TestCase
         // $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"];
     }
 
-    public function testDateToId()
+    public function testDateToId(): void
     {
         $dateStr = '2006-04-02 10:20:08.123456';
         $id = Application_Model_ScheduleGroup::dateToId($dateStr);
@@ -47,7 +47,7 @@ class SchedulerTests extends PHPUnit_TestCase
         }
     }
 
-    public function testAddAndRemoveAudioFile()
+    public function testAddAndRemoveAudioFile(): void
     {
         $i = new Application_Model_ScheduleGroup();
         $this->groupIdCreated = $i->add('2010-10-10 01:30:23', $this->storedFile->getId());
@@ -59,7 +59,7 @@ class SchedulerTests extends PHPUnit_TestCase
         }
     }
 
-    public function testAddAndRemovePlaylist()
+    public function testAddAndRemovePlaylist(): void
     {
         // Create a playlist
         $playlist = new Application_Model_Playlist();
@@ -87,7 +87,7 @@ class SchedulerTests extends PHPUnit_TestCase
         Application_Model_Playlist::Delete($playlist->getId());
     }
 
-    public function testIsScheduleEmptyInRange()
+    public function testIsScheduleEmptyInRange(): void
     {
         $i = new Application_Model_ScheduleGroup();
         $this->groupIdCreated = $i->add('2011-10-10 01:30:23', $this->storedFile->getId());

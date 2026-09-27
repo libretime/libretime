@@ -27,12 +27,12 @@ class Application_Model_ShowInstance
         return $this->_instanceId;
     }
 
-    public function getShow()
+    public function getShow(): Application_Model_Show
     {
         return new Application_Model_Show($this->getShowId());
     }
 
-    public function deleteRebroadcasts()
+    public function deleteRebroadcasts(): void
     {
         $timestamp = gmdate(DEFAULT_TIMESTAMP_FORMAT);
         $instance_id = $this->getShowInstanceId();
@@ -162,33 +162,33 @@ SQL;
         return null;
     }
 
-    public function setShowStart($start)
+    public function setShowStart($start): void
     {
         $this->_showInstance->setDbStarts($start)
             ->save();
         Application_Model_RabbitMq::PushSchedule();
     }
 
-    public function setShowEnd($end)
+    public function setShowEnd($end): void
     {
         $this->_showInstance->setDbEnds($end)
             ->save();
         Application_Model_RabbitMq::PushSchedule();
     }
 
-    public function setAutoPlaylistBuilt($bool)
+    public function setAutoPlaylistBuilt($bool): void
     {
         $this->_showInstance->setDbAutoPlaylistBuilt($bool)
             ->save();
     }
 
-    public function updateScheduledTime()
+    public function updateScheduledTime(): void
     {
         $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
         $this->_showInstance->updateDbTimeFilled($con);
     }
 
-    public function isDeleted()
+    public function isDeleted(): void
     {
         $this->_showInstance->getDbModifiedInstance();
     }
@@ -206,7 +206,7 @@ SQL;
      * @return $newDateTime
      *      php DateTime, $dateTime with the added time deltas.
      */
-    public static function addDeltas($dateTime, $deltaDay, $deltaMin)
+    public static function addDeltas($dateTime, $deltaDay, $deltaMin): DateTime
     {
         $newDateTime = clone $dateTime;
 
@@ -237,7 +237,7 @@ SQL;
      * @param mixed $pl_id
      * @param mixed $checkUserPerm
      */
-    public function addPlaylistToShow($pl_id, $checkUserPerm = true)
+    public function addPlaylistToShow($pl_id, $checkUserPerm = true): void
     {
         $ts = intval($this->_showInstance->getDbLastScheduled('U')) ?: 0;
         $id = $this->_showInstance->getDbId();
@@ -258,7 +258,7 @@ SQL;
      * @param mixed $pl_id
      * @param mixed $checkUserPerm
      */
-    public function addPlaylistToShowStart($pl_id, $checkUserPerm = true)
+    public function addPlaylistToShowStart($pl_id, $checkUserPerm = true): void
     {
         $ts = intval($this->_showInstance->getDbLastScheduled('U')) ?: 0;
         $id = $this->_showInstance->getDbId();
@@ -278,7 +278,7 @@ SQL;
      * @param int   $file_id
      * @param mixed $checkUserPerm
      */
-    public function addFileToShow($file_id, $checkUserPerm = true)
+    public function addFileToShow($file_id, $checkUserPerm = true): void
     {
         $ts = intval($this->_showInstance->getDbLastScheduled('U')) ?: 0;
         $id = $this->_showInstance->getDbId();
@@ -297,14 +297,14 @@ SQL;
      * @param array $plIds
      *                     An array of playlist IDs
      */
-    public function scheduleShow($plIds)
+    public function scheduleShow($plIds): void
     {
         foreach ($plIds as $plId) {
             $this->addPlaylistToShow($plId);
         }
     }
 
-    public function clearShow()
+    public function clearShow(): void
     {
         CcScheduleQuery::create()
             ->filterByDbInstanceId($this->_instanceId)
@@ -388,7 +388,7 @@ SQL;
         return false;
     }
 
-    public function delete($rabbitmqPush = true)
+    public function delete($rabbitmqPush = true): void
     {
         // see if it was recording show
         $recording = $this->isRecorded();
@@ -441,7 +441,7 @@ SQL;
         }
     }
 
-    public function setRecordedFile($file_id)
+    public function setRecordedFile($file_id): void
     {
         $showInstance = CcShowInstancesQuery::create()
             ->findPK($this->_instanceId);

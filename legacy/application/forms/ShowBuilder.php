@@ -2,7 +2,7 @@
 
 class Application_Form_ShowBuilder extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         $user = Application_Model_User::getCurrentUser();
 

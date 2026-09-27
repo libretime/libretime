@@ -2,7 +2,7 @@
 
 class Application_Form_EditUser extends Zend_Form
 {
-    public function init()
+    public function init(): void
     {
         /*
         $this->addElementPrefixPath('Application_Validate',

@@ -2,7 +2,7 @@
 
 class ErrorController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         // The default layout includes the Dashboard header, which may contain private information.
         // We cannot show that.
@@ -19,7 +19,7 @@ class ErrorController extends Zend_Controller_Action
         }
     }
 
-    public function errorAction()
+    public function errorAction(): void
     {
         $errors = $this->_getParam('error_handler');
 
@@ -86,7 +86,7 @@ class ErrorController extends Zend_Controller_Action
         $this->view->request = $errors->request;
     }
 
-    private function setupCSS()
+    private function setupCSS(): void
     {
         $this->view->headLink()->appendStylesheet(Assets::url('css/styles.css'));
     }
@@ -104,7 +104,7 @@ class ErrorController extends Zend_Controller_Action
     /**
      * 404 error - route or controller.
      */
-    public function error404Action()
+    public function error404Action(): void
     {
         $this->_helper->viewRenderer('error');
         $this->getResponse()->setHttpResponseCode(404);
@@ -114,7 +114,7 @@ class ErrorController extends Zend_Controller_Action
     /**
      * 400 error - no such action.
      */
-    public function error400Action()
+    public function error400Action(): void
     {
         $this->_helper->viewRenderer('error-400');
         $this->getResponse()->setHttpResponseCode(400);
@@ -124,7 +124,7 @@ class ErrorController extends Zend_Controller_Action
     /**
      * 403 error - permission denied.
      */
-    public function error403Action()
+    public function error403Action(): void
     {
         $this->_helper->viewRenderer('error-403');
         $this->getResponse()->setHttpResponseCode(403);
@@ -134,7 +134,7 @@ class ErrorController extends Zend_Controller_Action
     /**
      * 500 error - internal server error.
      */
-    public function error500Action()
+    public function error500Action(): void
     {
         $this->_helper->viewRenderer('error-500');
 

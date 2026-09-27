@@ -75,7 +75,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     /**
      * @return array<string, mixed>
      */
-    public function getMetadata()
+    public function getMetadata(): array
     {
         $subjs = CcSubjsQuery::create()->findPK($this->webstream->getDbCreatorId());
 
@@ -90,7 +90,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         ];
     }
 
-    public static function deleteStreams($p_ids, $p_userId)
+    public static function deleteStreams($p_ids, $p_userId): void
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -128,7 +128,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
      *
      * @return array<int, mixed>
      */
-    public static function analyzeFormData($parameters)
+    public static function analyzeFormData($parameters): array
     {
         $valid = [
             'length' => [true, ''],
@@ -238,12 +238,12 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         throw new Exception('Not implemented.');
     }
 
-    public function setName($name)
+    public function setName($name): void
     {
         $this->webstream->setDbName($name);
     }
 
-    public function setLastPlayed($timestamp)
+    public function setLastPlayed($timestamp): void
     {
         $this->webstream->setDbLPtime($timestamp);
         $this->webstream->save();
@@ -388,7 +388,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
      *
      * @return array<int, null|bool|string>
      */
-    private static function discoverStreamMime($url)
+    private static function discoverStreamMime($url): array
     {
         try {
             $headers = @get_headers($url);

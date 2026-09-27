@@ -308,7 +308,7 @@ class Application_Model_LiveLog
         return $log;
     }
 
-    public static function SetNewLogTime($state, $dateTime)
+    public static function SetNewLogTime($state, $dateTime): void
     {
         try {
             $scheduled = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play');
@@ -356,7 +356,7 @@ class Application_Model_LiveLog
         }
     }
 
-    public static function SetEndTime($state, $dateTime, $override = false)
+    public static function SetEndTime($state, $dateTime, $override = false): void
     {
         try {
             $dj_live = Application_Model_Preference::GetSourceSwitchStatus('live_dj');

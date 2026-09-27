@@ -4,7 +4,7 @@ class Application_Form_EditAudioMD extends Zend_Form
 {
     public function init() {}
 
-    public function startForm($p_id)
+    public function startForm($p_id): void
     {
         // Set the method for the display form to POST
         $this->setMethod('post');
@@ -301,19 +301,19 @@ class Application_Form_EditAudioMD extends Zend_Form
         ]);
     }
 
-    public function makeReadOnly()
+    public function makeReadOnly(): void
     {
         foreach ($this as $element) {
             $element->setAttrib('readonly', 'readonly');
         }
     }
 
-    public function removeOwnerEdit()
+    public function removeOwnerEdit(): void
     {
         $this->removeElement('owner_id');
     }
 
-    public function removeActionButtons()
+    public function removeActionButtons(): void
     {
         $this->removeElement('editmdsave');
         $this->removeElement('editmdcancel');

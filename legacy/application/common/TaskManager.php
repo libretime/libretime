@@ -57,7 +57,7 @@ final class TaskManager
      *
      * @param string $taskName the ENUM name of the task to be run
      */
-    public function runTask($taskName)
+    public function runTask($taskName): void
     {
         $task = TaskFactory::getTask($taskName);
         if ($task && $task->shouldBeRun()) {
@@ -80,7 +80,7 @@ final class TaskManager
      * which, assuming enough time has passed, is updated before running
      * the tasks.
      */
-    public function runTasks()
+    public function runTasks(): void
     {
         // If there is data in auth storage, this could be a user request
         // so we should just return to avoid blocking
@@ -160,7 +160,7 @@ final class TaskManager
      *
      * @param $lock array cc_pref lock row values
      */
-    private function _updateLock($lock)
+    private function _updateLock($lock): void
     {
         $sql = empty($lock) ? "INSERT INTO cc_pref (keystr, valstr) VALUES ('task_manager_lock', :value)"
             : "UPDATE cc_pref SET valstr=:value WHERE keystr='task_manager_lock'";
@@ -207,7 +207,7 @@ class AutoPlaylistTask implements AirtimeTask
     /**
      *  Schedule the autoplaylist for the shows.
      */
-    public function run()
+    public function run(): void
     {
         AutoPlaylistManager::buildAutoPlaylist();
     }
@@ -236,7 +236,7 @@ class PodcastTask implements AirtimeTask
     /**
      * Download the latest episode for all podcasts flagged for automatic ingest.
      */
-    public function run()
+    public function run(): void
     {
         PodcastManager::downloadNewestEpisodes();
     }
@@ -262,7 +262,7 @@ class ImportCleanupTask implements AirtimeTask
     /**
      * Clean up stuck imports by changing their import status to Failed.
      */
-    public function run()
+    public function run(): void
     {
         Application_Service_MediaService::clearStuckPendingImports();
     }
@@ -293,7 +293,7 @@ class StationPodcastTask implements AirtimeTask
     /**
      * Reset the station podcast download counter.
      */
-    public function run()
+    public function run(): void
     {
         Application_Model_Preference::resetStationPodcastDownloadCounter();
         Application_Model_Preference::setStationPodcastDownloadResetTimer(microtime(true));

@@ -22,31 +22,31 @@ class Application_Model_Tracktype
         return $this->_tracktypeInstance->getDbId();
     }
 
-    public function setCode($code)
+    public function setCode($code): void
     {
         $tracktype = $this->_tracktypeInstance;
         $tracktype->setDbCode($code);
     }
 
-    public function setTypeName($typeName)
+    public function setTypeName($typeName): void
     {
         $tracktype = $this->_tracktypeInstance;
         $tracktype->setDbTypeName($typeName);
     }
 
-    public function setDescription($description)
+    public function setDescription($description): void
     {
         $tracktype = $this->_tracktypeInstance;
         $tracktype->setDbDescription($description);
     }
 
-    public function setVisibility($visibility)
+    public function setVisibility($visibility): void
     {
         $tracktype = $this->_tracktypeInstance;
         $tracktype->setDbVisibility($visibility);
     }
 
-    public function setAnalyzeCuePoints($value)
+    public function setAnalyzeCuePoints($value): void
     {
         $tracktype = $this->_tracktypeInstance;
         $tracktype->setDbAnalyzeCuePoints($value);
@@ -87,19 +87,19 @@ class Application_Model_Tracktype
         return $tracktype->getDbAnalyzeCuePoints();
     }
 
-    public function save()
+    public function save(): void
     {
         $this->_tracktypeInstance->save();
     }
 
-    public function delete()
+    public function delete(): void
     {
         if (!$this->_tracktypeInstance->isDeleted()) {
             $this->_tracktypeInstance->delete();
         }
     }
 
-    private function createTracktype()
+    private function createTracktype(): CcTracktypes
     {
         return new CcTracktypes();
     }
@@ -152,7 +152,12 @@ class Application_Model_Tracktype
         return ($query !== false) ? $query : null;
     }
 
-    public static function getTracktypesDataTablesInfo($datatables)
+    /**
+     * @param mixed $datatables
+     *
+     * @return mixed[]
+     */
+    public static function getTracktypesDataTablesInfo($datatables): array
     {
         $con = Propel::getConnection(CcTracktypesPeer::DATABASE_NAME);
 

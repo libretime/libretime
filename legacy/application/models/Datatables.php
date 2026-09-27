@@ -71,7 +71,7 @@ class Application_Model_Datatables
         $fromTable,
         $data,
         $dataProp = 'aaData'
-    ) {
+    ): array {
         $where = [];
         /* Holds the parameters for binding after the statement has been
             prepared */

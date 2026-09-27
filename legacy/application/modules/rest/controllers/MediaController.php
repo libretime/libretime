@@ -2,7 +2,7 @@
 
 class Rest_MediaController extends Zend_Rest_Controller
 {
-    public function init()
+    public function init(): void
     {
         $this->view->layout()->disableLayout();
 
@@ -13,12 +13,12 @@ class Rest_MediaController extends Zend_Rest_Controller
     /**
      * headAction is needed as it is defined as an abstract function in the base controller.
      */
-    public function headAction()
+    public function headAction(): void
     {
         Logging::info('HEAD action received');
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         $totalFileCount = CcFilesQuery::create()->count();
 
@@ -60,7 +60,7 @@ class Rest_MediaController extends Zend_Rest_Controller
          */
     }
 
-    public function downloadAction()
+    public function downloadAction(): void
     {
         $id = $this->getId();
         if (!$id) {
@@ -92,7 +92,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
     }
 
-    public function getAction()
+    public function getAction(): void
     {
         $id = $this->getId();
         if (!$id) {
@@ -112,7 +112,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
     }
 
-    public function postAction()
+    public function postAction(): void
     {
         // If we do get an ID on a POST, then that doesn't make any sense
         // since POST is only for creating.
@@ -155,7 +155,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
     }
 
-    public function putAction()
+    public function putAction(): void
     {
         $id = $this->getId();
         if (!$id) {
@@ -181,7 +181,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
     }
 
-    public function deleteAction()
+    public function deleteAction(): void
     {
         $id = $this->getId();
         if (!$id) {
@@ -204,7 +204,7 @@ class Rest_MediaController extends Zend_Rest_Controller
     /**
      * Publish endpoint for individual media items.
      */
-    public function publishAction()
+    public function publishAction(): void
     {
         $id = $this->getId();
 
@@ -220,7 +220,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
     }
 
-    public function publishSourcesAction()
+    public function publishSourcesAction(): void
     {
         $id = $this->_getParam('id', false);
         $sources = Application_Service_PublishService::getSourceLists($id);
@@ -242,28 +242,28 @@ class Rest_MediaController extends Zend_Rest_Controller
         return $id;
     }
 
-    private function fileNotFoundResponse()
+    private function fileNotFoundResponse(): void
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(404);
         $resp->appendBody('ERROR: Media not found.');
     }
 
-    private function importFailedResponse()
+    private function importFailedResponse(): void
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(200);
         $resp->appendBody('ERROR: Import Failed.');
     }
 
-    private function unknownErrorResponse()
+    private function unknownErrorResponse(): void
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(400);
         $resp->appendBody('An unknown error occurred.');
     }
 
-    private function serviceUnavailableResponse()
+    private function serviceUnavailableResponse(): void
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(400);

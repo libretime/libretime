@@ -88,7 +88,7 @@ class Application_Common_DateHelper
     /**
      * @return DateTime - YYYY-MM-DD 00:00 in station timezone of today
      */
-    public static function getTodayStationStartDateTime()
+    public static function getTodayStationStartDateTime(): DateTime
     {
         $stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
         $now = new DateTime('now', $stationTimezone);
@@ -101,7 +101,7 @@ class Application_Common_DateHelper
     /**
      * @return DateTime - YYYY-MM-DD 00:00 in station timezone of tomorrow
      */
-    public static function getTodayStationEndDateTime()
+    public static function getTodayStationEndDateTime(): DateTime
     {
         $stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
         $now = new DateTime('now', $stationTimezone);
@@ -305,7 +305,7 @@ class Application_Common_DateHelper
      * @param string (station|user) convert to either station or user timezone
      * @param mixed $domain
      */
-    public static function convertTimestamps(&$rows, $columnsToConvert, $domain = 'station')
+    public static function convertTimestamps(&$rows, $columnsToConvert, $domain = 'station'): void
     {
         if (!is_array($rows)) {
             return;
@@ -329,7 +329,7 @@ class Application_Common_DateHelper
      * @param string $timezone         convert to the given timezone
      * @param string $format           time format to convert to
      */
-    public static function convertTimestampsToTimezone(&$rows, $columnsToConvert, $timezone, $format = DEFAULT_TIMESTAMP_FORMAT)
+    public static function convertTimestampsToTimezone(&$rows, $columnsToConvert, $timezone, $format = DEFAULT_TIMESTAMP_FORMAT): void
     {
         $timezone = strtolower($timezone);
         // Check that the timezone is valid and rows is an array
@@ -359,10 +359,8 @@ class Application_Common_DateHelper
      *
      * @param mixed $timezoneString
      * @param mixed $days
-     *
-     * @return DateTime
      */
-    public static function getEndDateTime($timezoneString, $days)
+    public static function getEndDateTime($timezoneString, $days): DateTime
     {
         $timezone = new DateTimeZone($timezoneString);
         $now = new DateTime('now', $timezone);
@@ -470,7 +468,7 @@ class Application_Common_DateHelper
      *
      * @return DateTime[] (start DateTime, end DateTime) in UTC timezone
      */
-    public static function getStartEnd($startTimestamp, $endTimestamp, $timezone)
+    public static function getStartEnd($startTimestamp, $endTimestamp, $timezone): array
     {
         $prefTimezone = Application_Model_Preference::GetTimezone();
         $utcTimezone = new DateTimeZone('UTC');

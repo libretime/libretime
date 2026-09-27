@@ -6,7 +6,7 @@ class ApiController extends Zend_Controller_Action
 
     public const DEFAULT_DAYS_TO_RETRIEVE = '2';
 
-    public function init()
+    public function init(): void
     {
         if ($this->view) { // skip if already missing (ie in tests)
             $this->view->layout()->disableLayout();
@@ -114,7 +114,7 @@ class ApiController extends Zend_Controller_Action
         exit;
     }
 
-    public function versionAction()
+    public function versionAction(): void
     {
         $config = Config::getConfig();
         $this->_helper->json->sendJson([
@@ -126,7 +126,7 @@ class ApiController extends Zend_Controller_Action
     /**
      * Allows remote client to download requested media file.
      */
-    public function getMediaAction()
+    public function getMediaAction(): void
     {
         // Close the session so other HTTP requests can be completed while
         // tracks are read for previewing or downloading.
@@ -145,7 +145,7 @@ class ApiController extends Zend_Controller_Action
      *
      * Update station bandwidth usage based on icecast log data
      */
-    public function bandwidthUsageAction()
+    public function bandwidthUsageAction(): void
     {
         $bandwidthUsage = json_decode($this->getRequest()->getParam('bandwidth_data'));
         $usageBytes = 0;
@@ -180,7 +180,7 @@ class ApiController extends Zend_Controller_Action
     }
 
     // Used by the SaaS monitoring
-    public function onAirLightAction()
+    public function onAirLightAction(): void
     {
         $request = $this->getRequest();
         $this->view->layout()->disableLayout();
@@ -260,7 +260,7 @@ class ApiController extends Zend_Controller_Action
      * limit - How many shows to retrieve
      *         Default is "5".
      */
-    public function liveInfoAction()
+    public function liveInfoAction(): void
     {
         if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             // disable the view and the layout
@@ -389,7 +389,7 @@ class ApiController extends Zend_Controller_Action
      * timezone - The timezone to send the times in
      *            Defaults to the station timezone
      */
-    public function liveInfoV2Action()
+    public function liveInfoV2Action(): void
     {
         if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             // disable the view and the layout
@@ -461,7 +461,7 @@ class ApiController extends Zend_Controller_Action
      * @param string $timezone            the default timezone
      * @param bool   $upcase              whether the timezone output should be upcased
      */
-    private function updateTimezone($userDefinedTimezone, &$timezone, &$upcase)
+    private function updateTimezone($userDefinedTimezone, &$timezone, &$upcase): void
     {
         $delimiter = '/';
         // if the user passes in a timezone in standard form ("Continent/City")
@@ -486,7 +486,7 @@ class ApiController extends Zend_Controller_Action
      * @param string $timezone the user's timezone parameter value
      * @param bool   $upcase   whether the timezone output should be upcased
      */
-    private function applyLiveTimezoneAdjustments(&$result, $timezone, $upcase)
+    private function applyLiveTimezoneAdjustments(&$result, $timezone, $upcase): void
     {
         Application_Common_DateHelper::convertTimestampsToTimezone(
             $result,
@@ -499,7 +499,7 @@ class ApiController extends Zend_Controller_Action
         $result['station']['timezone'] = $upcase ? strtoupper($timezone) : $timezone;
     }
 
-    public function weekInfoAction()
+    public function weekInfoAction(): void
     {
         if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             // disable the view and the layout
@@ -524,7 +524,7 @@ class ApiController extends Zend_Controller_Action
     /**
      * API endpoint to display the show logo.
      */
-    public function showLogoAction()
+    public function showLogoAction(): void
     {
         // Disable the view and the layout
         $this->view->layout()->disableLayout();
@@ -581,7 +581,7 @@ class ApiController extends Zend_Controller_Action
      *
      * Find metadata to any track imported (eg. id=1&return=json)
      */
-    public function trackAction()
+    public function trackAction(): void
     {
         // Disable the view and the layout
         $this->view->layout()->disableLayout();
@@ -661,7 +661,7 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
-    public function trackTypesAction()
+    public function trackTypesAction(): void
     {
         if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             // disable the view and the layout
@@ -681,7 +681,7 @@ class ApiController extends Zend_Controller_Action
     /**
      * API endpoint to provide station metadata.
      */
-    public function stationMetadataAction()
+    public function stationMetadataAction(): void
     {
         if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             // disable the view and the layout
@@ -712,7 +712,7 @@ class ApiController extends Zend_Controller_Action
     /**
      * API endpoint to display the current station logo.
      */
-    public function stationLogoAction()
+    public function stationLogoAction(): void
     {
         if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             // disable the view and the layout
@@ -743,7 +743,7 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
-    public function scheduleAction()
+    public function scheduleAction(): void
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -755,7 +755,7 @@ class ApiController extends Zend_Controller_Action
         echo json_encode($data, JSON_FORCE_OBJECT);
     }
 
-    public function notifyMediaItemStartPlayAction()
+    public function notifyMediaItemStartPlayAction(): void
     {
         $media_id = $this->_getParam('media_id');
 
@@ -807,7 +807,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->json->sendJson(['status' => 1, 'message' => '']);
     }
 
-    public function recordedShowsAction()
+    public function recordedShowsAction(): void
     {
         $utcTimezone = new DateTimeZone('UTC');
         $nowDateTime = new DateTime('now', $utcTimezone);
@@ -830,7 +830,7 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
-    public function uploadRecordedAction()
+    public function uploadRecordedAction(): void
     {
         $show_instance_id = $this->_getParam('showinstanceid');
         $file_id = $this->_getParam('fileid');
@@ -842,7 +842,7 @@ class ApiController extends Zend_Controller_Action
     // The paramterized version of the uploadRecordedAction controller.
     // We want this controller's action to be invokable from other
     // controllers instead being of only through http
-    public function uploadRecordedActionParam($show_instance_id, $file_id)
+    public function uploadRecordedActionParam($show_instance_id, $file_id): void
     {
         $showCanceled = false;
         $file = Application_Model_StoredFile::RecallById($file_id);
@@ -866,7 +866,7 @@ class ApiController extends Zend_Controller_Action
         $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', $show_instance_id);
     }
 
-    public function mediaMonitorSetupAction()
+    public function mediaMonitorSetupAction(): void
     {
         $this->view->stor = Config::getStoragePath();
 
@@ -976,7 +976,7 @@ class ApiController extends Zend_Controller_Action
         return $return_hash;
     }
 
-    public function reloadMetadataGroupAction()
+    public function reloadMetadataGroupAction(): void
     {
         // extract all file metadata params from the request.
         // The value is a json encoded hash that has all the information related to this action
@@ -1037,7 +1037,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->json->sendJson($responses);
     }
 
-    public function listAllFilesAction()
+    public function listAllFilesAction(): void
     {
         $request = $this->getRequest();
         $dir_id = $request->getParam('dir_id');
@@ -1046,13 +1046,13 @@ class ApiController extends Zend_Controller_Action
         $this->view->files = Application_Model_StoredFile::listAllFiles($dir_id, $all);
     }
 
-    public function getStreamSettingAction()
+    public function getStreamSettingAction(): void
     {
         $info = Application_Model_StreamSetting::getStreamSetting();
         $this->view->msg = $info;
     }
 
-    public function statusAction()
+    public function statusAction(): void
     {
         $request = $this->getRequest();
         $getDiskInfo = $request->getParam('diskinfo') == 'true';
@@ -1075,7 +1075,7 @@ class ApiController extends Zend_Controller_Action
         $this->view->status = $status;
     }
 
-    public function registerComponentAction()
+    public function registerComponentAction(): void
     {
         $request = $this->getRequest();
 
@@ -1086,7 +1086,7 @@ class ApiController extends Zend_Controller_Action
         Application_Model_ServiceRegister::Register($component, $remoteAddr);
     }
 
-    public function updateLiquidsoapStatusAction()
+    public function updateLiquidsoapStatusAction(): void
     {
         $request = $this->getRequest();
 
@@ -1097,7 +1097,7 @@ class ApiController extends Zend_Controller_Action
         Application_Model_Preference::setLiquidsoapError($stream_id, $msg, $boot_time);
     }
 
-    public function updateSourceStatusAction()
+    public function updateSourceStatusAction(): void
     {
         $request = $this->getRequest();
 
@@ -1129,7 +1129,7 @@ class ApiController extends Zend_Controller_Action
     /* This action is for use by our dev scripts, that make
      * a change to the database and we want rabbitmq to send
      * out a message to pypo that a potential change has been made. */
-    public function rabbitmqDoPushAction()
+    public function rabbitmqDoPushAction(): void
     {
         Logging::info('Notifying RabbitMQ to send message to pypo');
 
@@ -1137,7 +1137,7 @@ class ApiController extends Zend_Controller_Action
         Application_Model_RabbitMq::PushSchedule();
     }
 
-    public function getBootstrapInfoAction()
+    public function getBootstrapInfoAction(): void
     {
         $live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj');
         $master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj');
@@ -1151,7 +1151,7 @@ class ApiController extends Zend_Controller_Action
     }
 
     // This is used but Liquidsoap to check authentication of live streams
-    public function checkLiveStreamAuthAction()
+    public function checkLiveStreamAuthAction(): void
     {
         $request = $this->getRequest();
 
@@ -1217,7 +1217,7 @@ class ApiController extends Zend_Controller_Action
     /* This action is for use by our dev scripts, that make
      * a change to the database and we want rabbitmq to send
      * out a message to pypo that a potential change has been made. */
-    public function getFilesWithoutReplayGainAction()
+    public function getFilesWithoutReplayGainAction(): void
     {
         $dir_id = $this->_getParam('dir_id');
 
@@ -1227,7 +1227,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->json->sendJson($rows);
     }
 
-    public function getFilesWithoutSilanValueAction()
+    public function getFilesWithoutSilanValueAction(): void
     {
         // connect to db and get get sql
         $rows = Application_Model_StoredFile::getAllFilesWithoutSilan();
@@ -1235,7 +1235,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->json->sendJson($rows);
     }
 
-    public function updateReplayGainValueAction()
+    public function updateReplayGainValueAction(): void
     {
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'));
@@ -1251,7 +1251,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->json->sendJson([]);
     }
 
-    public function updateCueValuesBySilanAction()
+    public function updateCueValuesBySilanAction(): void
     {
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'), $assoc = true);
@@ -1294,7 +1294,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->json->sendJson([]);
     }
 
-    public function notifyWebstreamDataAction()
+    public function notifyWebstreamDataAction(): void
     {
         $request = $this->getRequest();
         $data = $request->getParam('data');
@@ -1338,7 +1338,7 @@ class ApiController extends Zend_Controller_Action
         $this->view->media_id = $media_id;
     }
 
-    public function getStreamParametersAction()
+    public function getStreamParametersAction(): void
     {
         $streams = ['s1', 's2', 's3', 's4'];
         $stream_params = [];
@@ -1348,7 +1348,7 @@ class ApiController extends Zend_Controller_Action
         $this->view->stream_params = $stream_params;
     }
 
-    public function pushStreamStatsAction()
+    public function pushStreamStatsAction(): void
     {
         $request = $this->getRequest();
 
@@ -1367,7 +1367,7 @@ class ApiController extends Zend_Controller_Action
         $this->view->data = $data;
     }
 
-    public function updateStreamSettingTableAction()
+    public function updateStreamSettingTableAction(): void
     {
         $request = $this->getRequest();
 
@@ -1392,7 +1392,7 @@ class ApiController extends Zend_Controller_Action
      *
      * @return json array
      */
-    public function itemHistoryFeedAction()
+    public function itemHistoryFeedAction(): void
     {
         try {
             $request = $this->getRequest();
@@ -1416,7 +1416,7 @@ class ApiController extends Zend_Controller_Action
      *
      * @return json array
      */
-    public function showHistoryFeedAction()
+    public function showHistoryFeedAction(): void
     {
         try {
             $request = $this->getRequest();
@@ -1440,7 +1440,7 @@ class ApiController extends Zend_Controller_Action
      *
      * @return json array
      */
-    public function showsAction()
+    public function showsAction(): void
     {
         try {
             $request = $this->getRequest();
@@ -1470,7 +1470,7 @@ class ApiController extends Zend_Controller_Action
      *
      * @return json array
      */
-    public function showSchedulesAction()
+    public function showSchedulesAction(): void
     {
         try {
             $request = $this->getRequest();
@@ -1507,7 +1507,7 @@ class ApiController extends Zend_Controller_Action
      *
      * @return json array
      */
-    public function showTracksAction()
+    public function showTracksAction(): void
     {
         $baseUrl = Config::getBasePath();
         $prefTimezone = Application_Model_Preference::GetTimezone();
@@ -1556,7 +1556,7 @@ class ApiController extends Zend_Controller_Action
      * to do this because TuneIn turns off metadata if it has not received a
      * request within 5 minutes. This is necessary for long tracks > 5 minutes.
      */
-    public function updateMetadataOnTuneinAction()
+    public function updateMetadataOnTuneinAction(): void
     {
         if (!Application_Model_Preference::getTuneinEnabled()) {
             $this->_helper->json->sendJson([0]);
@@ -1575,7 +1575,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->json->sendJson([1]);
     }
 
-    public function getUsabilityHintAction()
+    public function getUsabilityHintAction(): void
     {
         $userPath = $this->_getParam('userPath');
 
@@ -1583,7 +1583,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->json->sendJson($hint);
     }
 
-    public function streamM3uAction()
+    public function streamM3uAction(): void
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -1602,7 +1602,7 @@ class ApiController extends Zend_Controller_Action
         echo $m3uFile;
     }
 
-    public function recalculateScheduleAction()
+    public function recalculateScheduleAction(): void
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -1633,7 +1633,7 @@ class ApiController extends Zend_Controller_Action
         echo "Recalculated {$total} shows.";
     }
 
-    private function returnJsonOrJsonp($request, $result)
+    private function returnJsonOrJsonp($request, $result): void
     {
         $response = $this->getResponse();
 
@@ -1661,7 +1661,7 @@ class ApiController extends Zend_Controller_Action
      * @param mixed $status
      * @param mixed $message
      */
-    private function jsonError($status, $message)
+    private function jsonError($status, $message): void
     {
         $this->getResponse()
             ->setHttpResponseCode($status)

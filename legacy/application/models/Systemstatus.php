@@ -2,7 +2,7 @@
 
 class Application_Model_Systemstatus
 {
-    public static function GetMonitStatus($p_ip)
+    public static function GetMonitStatus($p_ip): ?DOMElement
     {
         $CC_CONFIG = Config::getConfig();
         //         $monit_user = $CC_CONFIG['monit_user'];
@@ -145,7 +145,7 @@ class Application_Model_Systemstatus
         return $data;
     }
 
-    public static function GetPypoStatus()
+    public static function GetPypoStatus(): ?array
     {
         $component = CcServiceRegisterQuery::create()->findOneByDbName('pypo');
         if (is_null($component)) {
@@ -158,7 +158,7 @@ class Application_Model_Systemstatus
         return self::ExtractServiceInformation($docRoot, 'libretime-playout');
     }
 
-    public static function GetLiquidsoapStatus()
+    public static function GetLiquidsoapStatus(): ?array
     {
         $component = CcServiceRegisterQuery::create()->findOneByDbName('pypo');
         if (is_null($component)) {
@@ -171,7 +171,7 @@ class Application_Model_Systemstatus
         return self::ExtractServiceInformation($docRoot, 'libretime-liquidsoap');
     }
 
-    public static function GetMediaMonitorStatus()
+    public static function GetMediaMonitorStatus(): ?array
     {
         $component = CcServiceRegisterQuery::create()->findOneByDbName('media-monitor');
         if (is_null($component)) {

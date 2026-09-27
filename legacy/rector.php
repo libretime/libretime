@@ -3,6 +3,7 @@
 use Rector\Config\RectorConfig;
 use Rector\Php82\Rector\Encapsed\VariableInStringInterpolationFixerRector;
 use Rector\Php82\Rector\FuncCall\Utf8DecodeEncodeToMbConvertEncodingRector;
+use Rector\Set\ValueObject\SetList;
 use Rector\ValueObject\PhpVersion;
 
 return RectorConfig::configure()
@@ -25,11 +26,13 @@ return RectorConfig::configure()
     ->withBootstrapFiles([__DIR__ . '/vendor/autoload.php'])
     ->withFileExtensions(['php', 'phtml'])
     ->withPhpVersion(PhpVersion::PHP_82)
-    ->withPhpLevel(10)
+    ->withPhpLevel(13)
     ->withCodeQualityLevel(9)
     ->withDeadCodeLevel(0)
-    ->withTypeCoverageLevel(16)
-    ->withTypeCoverageDocblockLevel(9)
+    ->withTypeCoverageLevel(24)
+    ->withSets([
+        SetList::TYPE_DECLARATION_DOCBLOCKS,
+    ])
     ->withRules([
         VariableInStringInterpolationFixerRector::class,
         Utf8DecodeEncodeToMbConvertEncodingRector::class,

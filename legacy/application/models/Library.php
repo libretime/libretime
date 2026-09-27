@@ -19,7 +19,7 @@ class Application_Model_Library
         return $info;
     }
 
-    public static function changePlaylist($p_id, $p_type)
+    public static function changePlaylist($p_id, $p_type): void
     {
         $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
 

@@ -14,7 +14,7 @@ class StoredFileTest extends PHPUnit_TestCase
 
     public function setup() {}
 
-    public function testGetAudioMetadata()
+    public function testGetAudioMetadata(): void
     {
         $filePath = __DIR__ . '/ex1.mp3';
         $metadata = Metadata::LoadFromFile($filePath);
@@ -31,7 +31,7 @@ class StoredFileTest extends PHPUnit_TestCase
         // $this->assertTrue(FALSE);
     }
 
-    public function testDeleteAndPutFile()
+    public function testDeleteAndPutFile(): void
     {
         $STORAGE_SERVER_PATH = __DIR__ . '/../../';
         $filePath = __DIR__ . '/ex1.mp3';

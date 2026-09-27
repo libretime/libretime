@@ -2,7 +2,7 @@
 
 class Application_Form_Helper_ValidationTypes
 {
-    public static function overrideNotEmptyValidator()
+    public static function overrideNotEmptyValidator(): Zend_Validate_NotEmpty
     {
         $validator = new Zend_Validate_NotEmpty();
         $validator->setMessage(
@@ -13,7 +13,7 @@ class Application_Form_Helper_ValidationTypes
         return $validator;
     }
 
-    public static function overrideEmailAddressValidator()
+    public static function overrideEmailAddressValidator(): Zend_Validate_EmailAddress
     {
         $validator = new Zend_Validate_EmailAddress();
         $validator->setMessage(
@@ -24,7 +24,7 @@ class Application_Form_Helper_ValidationTypes
         return $validator;
     }
 
-    public static function overrrideDateValidator($p_format)
+    public static function overrrideDateValidator($p_format): Zend_Validate_Date
     {
         $validator = new Zend_Validate_Date();
 
@@ -38,7 +38,7 @@ class Application_Form_Helper_ValidationTypes
         return $validator;
     }
 
-    public static function overrideRegexValidator($p_pattern, $p_msg)
+    public static function overrideRegexValidator($p_pattern, $p_msg): Zend_Validate_Regex
     {
         $validator = new Zend_Validate_Regex($p_pattern);
 
@@ -50,7 +50,7 @@ class Application_Form_Helper_ValidationTypes
         return $validator;
     }
 
-    public static function overrideStringLengthValidator($p_min, $p_max)
+    public static function overrideStringLengthValidator($p_min, $p_max): Zend_Validate_StringLength
     {
         $validator = new Zend_Validate_StringLength();
         $validator->setMin($p_min);
@@ -69,7 +69,7 @@ class Application_Form_Helper_ValidationTypes
         return $validator;
     }
 
-    public static function overrideBetweenValidator($p_min, $p_max)
+    public static function overrideBetweenValidator($p_min, $p_max): Zend_Validate_Between
     {
         $validator = new Zend_Validate_Between($p_min, $p_max, true);
 
@@ -81,7 +81,7 @@ class Application_Form_Helper_ValidationTypes
         return $validator;
     }
 
-    public static function overridePasswordIdenticalValidator($p_matchAgainst)
+    public static function overridePasswordIdenticalValidator($p_matchAgainst): Zend_Validate_Identical
     {
         $validator = new Zend_Validate_Identical();
         $validator->setToken($p_matchAgainst);

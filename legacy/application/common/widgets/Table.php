@@ -11,7 +11,7 @@ class AirtimeTableView
     /**
      * @return array<int, string>
      */
-    private static function _getTableJavaScriptDependencies()
+    private static function _getTableJavaScriptDependencies(): array
     {
         return [
             'js/airtime/widgets/table.js',
@@ -26,7 +26,7 @@ class AirtimeTableView
         ];
     }
 
-    public static function injectTableJavaScriptDependencies(&$headScript)
+    public static function injectTableJavaScriptDependencies(&$headScript): void
     {
         foreach (self::_getTableJavaScriptDependencies() as $path) {
             $headScript->appendFile(Assets::url($path), 'text/javascript');

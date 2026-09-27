@@ -132,10 +132,8 @@ class LibreTime_Auth_Adaptor_Header implements Zend_Auth_Adapter_Interface
      *
      * @param null $returnColumns
      * @param null $omitColumns
-     *
-     * @return stdClass
      */
-    public function getResultRowObject($returnColumns = null, $omitColumns = null)
+    public function getResultRowObject($returnColumns = null, $omitColumns = null): stdClass
     {
         $o = new stdClass();
         $o->id = $this->user->getId();

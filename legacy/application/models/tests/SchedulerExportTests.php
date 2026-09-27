@@ -7,7 +7,7 @@
  */
 class SchedulerExportTests extends PHPUnit_TestCase
 {
-    public function setup()
+    public function setup(): void
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
@@ -40,7 +40,7 @@ class SchedulerExportTests extends PHPUnit_TestCase
         $this->groupIdCreated = $i->add('2010-11-11 01:30:23', null, $playlist->getId());
     }
 
-    public function testExport()
+    public function testExport(): void
     {
         echo Application_Model_Schedule::ExportRangeAsJson('2010-01-01 00:00:00', '2011-01-01 00:00:00');
     }

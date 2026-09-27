@@ -14,7 +14,7 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
 
     protected $_showService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_reflectionOfShowService = new ReflectionClass('Application_Service_ShowService');
 

@@ -4,7 +4,7 @@ class Application_Model_LoginAttempts
 {
     public function __construct() {}
 
-    public static function increaseAttempts($ip)
+    public static function increaseAttempts($ip): void
     {
         $sql = 'select count(*) from cc_login_attempts WHERE ip= :ip';
         $res = Application_Common_Database::prepareAndExecute($sql, [':ip' => $ip], Application_Common_Database::ALL);
@@ -25,7 +25,7 @@ class Application_Model_LoginAttempts
         return $res ?: 0;
     }
 
-    public static function resetAttempts($ip)
+    public static function resetAttempts($ip): void
     {
         $sql = 'select count(*) from cc_login_attempts WHERE ip= :ip';
         $res = Application_Common_Database::prepareAndExecute($sql, [':ip' => $ip], Application_Common_Database::COLUMN);

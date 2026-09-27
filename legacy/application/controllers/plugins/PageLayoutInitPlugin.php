@@ -21,7 +21,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
      *
      * @throws Zend_Session_Exception
      */
-    public function routeShutdown(Zend_Controller_Request_Abstract $request)
+    public function routeShutdown(Zend_Controller_Request_Abstract $request): void
     {
         $controller = strtolower($request->getControllerName());
         $action = strtolower($request->getActionName());
@@ -127,7 +127,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
      * from a php init function. This will save us from having to
      * reinitialize them every request.
      */
-    private function _initTranslationGlobals()
+    private function _initTranslationGlobals(): void
     {
         $view = $this->_bootstrap->getResource('view');
         $view->headScript()->appendScript("var PRODUCT_NAME = '" . PRODUCT_NAME . "';");

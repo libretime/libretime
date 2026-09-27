@@ -105,7 +105,7 @@ class CcFiles extends BaseCcFiles
      *
      * @throws Exception
      */
-    public static function createFromLocalFile($fileArray, $filePath, $copyFile = false)
+    public static function createFromLocalFile($fileArray, $filePath, $copyFile = false): void
     {
         $info = pathinfo($filePath);
         $fileName = basename($filePath) . '.' . $info['extension'];
@@ -251,7 +251,7 @@ class CcFiles extends BaseCcFiles
      * @throws LibreTimeFileNotFoundException
      * @throws PropelException
      */
-    public static function deleteById($id)
+    public static function deleteById($id): void
     {
         $file = CcFilesQuery::create()->findPk($id);
         if ($file) {
@@ -329,7 +329,7 @@ class CcFiles extends BaseCcFiles
         return $this->getDbFileExists() && !$this->getDbHidden();
     }
 
-    public function reassignTo($user)
+    public function reassignTo($user): void
     {
         $this->setDbOwnerId($user->getDbId());
         $this->save();
@@ -378,7 +378,7 @@ class CcFiles extends BaseCcFiles
      *
      * @return array<int, string>
      */
-    public function getURLsForTrackPreviewOrDownload()
+    public function getURLsForTrackPreviewOrDownload(): array
     {
         return [$this->getAbsoluteFilePath()];
     }
@@ -483,7 +483,7 @@ class CcFiles extends BaseCcFiles
         return mb_convert_encoding($string, 'UTF-8', 'UTF-8');
     }
 
-    private function removeEmptySubFolders($path)
+    private function removeEmptySubFolders($path): void
     {
         exec("find {$path} -empty -type d -delete");
     }
@@ -499,7 +499,7 @@ class CcFiles extends BaseCcFiles
     /**
      * Deletes the file from the stor directory on disk.
      */
-    public function deletePhysicalFile()
+    public function deletePhysicalFile(): void
     {
         $filepath = $this->getAbsoluteFilePath();
         $artworkpath = $this->getAbsoluteArtworkPath();

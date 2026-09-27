@@ -2,7 +2,7 @@
 
 class PlaylistController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('add-items', 'json')
@@ -35,7 +35,7 @@ class PlaylistController extends Zend_Controller_Action
         SessionHelper::reopenSessionForWriting();
     }
 
-    private function getPlaylist($p_type)
+    private function getPlaylist($p_type): Application_Model_Block|Application_Model_Playlist|Application_Model_Webstream|null
     {
         $obj = null;
         $objInfo = Application_Model_Library::getObjInfo($p_type);
@@ -56,7 +56,7 @@ class PlaylistController extends Zend_Controller_Action
         return $obj;
     }
 
-    private function createUpdateResponse($obj, $formIsValid = false)
+    private function createUpdateResponse($obj, $formIsValid = false): void
     {
         $formatter = new LengthFormatter($obj->getLength());
         $this->view->length = $formatter->format();
@@ -132,18 +132,18 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    private function playlistOutdated($e)
+    private function playlistOutdated($e): void
     {
         $this->view->error = $e->getMessage();
     }
 
-    private function blockDynamic($obj)
+    private function blockDynamic($obj): void
     {
         $this->view->error = _('You cannot add tracks to dynamic blocks.');
         $this->createFullResponse($obj);
     }
 
-    private function playlistNotFound($p_type, $p_isJson = false)
+    private function playlistNotFound($p_type, $p_isJson = false): void
     {
         $p_type = ucfirst($p_type);
         $this->view->error = sprintf(_('%s not found'), $p_type);
@@ -158,32 +158,32 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    private function playlistNoPermission($p_type)
+    private function playlistNoPermission($p_type): void
     {
         $this->view->error = sprintf(_("You don't have permission to delete selected %s(s)."), $p_type);
         $this->changePlaylist(null, $p_type);
         $this->createFullResponse(null);
     }
 
-    private function playlistUnknownError($e)
+    private function playlistUnknownError($e): void
     {
         $this->view->error = _('Something went wrong.');
         Logging::info($e->getMessage());
     }
 
-    private function wrongTypeToBlock($obj)
+    private function wrongTypeToBlock($obj): void
     {
         $this->view->error = _('You can only add tracks to smart block.');
         $this->createFullResponse($obj);
     }
 
-    private function wrongTypeToPlaylist($obj)
+    private function wrongTypeToPlaylist($obj): void
     {
         $this->view->error = _('You can only add tracks, smart blocks, and webstreams to playlists.');
         $this->createFullResponse($obj);
     }
 
-    public function newAction()
+    public function newAction(): void
     {
         // $pl_sess = $this->pl_sess;
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
@@ -204,7 +204,7 @@ class PlaylistController extends Zend_Controller_Action
         $this->createFullResponse($obj);
     }
 
-    public function changePlaylistAction()
+    public function changePlaylistAction(): void
     {
         $this->view->layout()->disableLayout();  // Don't inject the standard Now Playing header.
         $this->_helper->viewRenderer->setNoRender(true);  // Don't use (phtml) templates
@@ -215,7 +215,7 @@ class PlaylistController extends Zend_Controller_Action
         Application_Model_Library::changePlaylist($id, $type);
     }
 
-    public function editAction()
+    public function editAction(): void
     {
         $id = $this->_getParam('id', null);
         $type = $this->_getParam('type');
@@ -233,7 +233,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function deleteAction()
+    public function deleteAction(): void
     {
         $ids = $this->_getParam('ids');
         $ids = (!is_array($ids)) ? [$ids] : $ids;
@@ -276,7 +276,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function closePlaylistAction()
+    public function closePlaylistAction(): void
     {
         $type = $this->_getParam('type');
         $obj = null;
@@ -284,7 +284,7 @@ class PlaylistController extends Zend_Controller_Action
         $this->createFullResponse($obj);
     }
 
-    public function addItemsAction()
+    public function addItemsAction(): void
     {
         $ids = $this->_getParam('aItems', []);
         $ids = (!is_array($ids)) ? [$ids] : $ids;
@@ -336,7 +336,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function moveItemsAction()
+    public function moveItemsAction(): void
     {
         $ids = $this->_getParam('ids');
         $ids = (!is_array($ids)) ? [$ids] : $ids;
@@ -356,7 +356,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function deleteItemsAction()
+    public function deleteItemsAction(): void
     {
         $ids = $this->_getParam('ids');
         $ids = (!is_array($ids)) ? [$ids] : $ids;
@@ -376,7 +376,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function emptyContentAction()
+    public function emptyContentAction(): void
     {
         $type = $this->_getParam('obj_type');
 
@@ -397,7 +397,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function setCueAction()
+    public function setCueAction(): void
     {
         $id = $this->_getParam('id');
         $cueIn = $this->_getParam('cueIn', null);
@@ -424,7 +424,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function setFadeAction()
+    public function setFadeAction(): void
     {
         $id = $this->_getParam('id');
         $fadeIn = $this->_getParam('fadeIn', null);
@@ -450,7 +450,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function setCrossfadeAction()
+    public function setCrossfadeAction(): void
     {
         $id1 = $this->_getParam('id1', null);
         $id2 = $this->_getParam('id2', null);
@@ -477,7 +477,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function getPlaylistFadesAction()
+    public function getPlaylistFadesAction(): void
     {
         $type = $this->_getParam('type');
 
@@ -502,7 +502,7 @@ class PlaylistController extends Zend_Controller_Action
      * The fade in is set to the first elements fade in and
      * the fade out is set to the last elements fade out.
      */
-    public function setPlaylistFadesAction()
+    public function setPlaylistFadesAction(): void
     {
         $fadeIn = $this->_getParam('fadeIn', null);
         $fadeOut = $this->_getParam('fadeOut', null);
@@ -521,7 +521,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function setPlaylistNameDescAction()
+    public function setPlaylistNameDescAction(): void
     {
         $name = $this->_getParam('name', _('Unknown Playlist'));
         $description = $this->_getParam('description', '');
@@ -543,7 +543,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function saveAction()
+    public function saveAction(): void
     {
         $request = $this->getRequest();
         $params = $request->getPost();
@@ -586,7 +586,7 @@ class PlaylistController extends Zend_Controller_Action
         // $this->_helper->json->sendJson($result);
     }
 
-    public function smartBlockGenerateAction()
+    public function smartBlockGenerateAction(): void
     {
         $request = $this->getRequest();
         $params = $request->getPost();
@@ -616,7 +616,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function smartBlockShuffleAction()
+    public function smartBlockShuffleAction(): void
     {
         $request = $this->getRequest();
         $params = $request->getPost();
@@ -645,7 +645,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function shuffleAction()
+    public function shuffleAction(): void
     {
         $request = $this->getRequest();
         $params = $request->getPost();
@@ -672,7 +672,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function getBlockInfoAction()
+    public function getBlockInfoAction(): void
     {
         $request = $this->getRequest();
         $params = $request->getPost();

@@ -142,7 +142,7 @@ class Application_Service_PodcastService
      *                      This will automatically create a smartblock and playlist for this podcast
      * @param mixed $podcast
      */
-    public static function createPodcastSmartblockAndPlaylist($podcast, $title = null)
+    public static function createPodcastSmartblockAndPlaylist($podcast, $title = null): void
     {
         if (is_array($podcast)) {
             $newpodcast = new Podcast();
@@ -250,7 +250,7 @@ class Application_Service_PodcastService
      *
      * @param PodcastArray &$podcastArray
      */
-    private static function validatePodcastMetadata(&$podcastArray)
+    private static function validatePodcastMetadata(&$podcastArray): void
     {
         $podcastTable = PodcastPeer::getTableMap();
 
@@ -300,7 +300,7 @@ class Application_Service_PodcastService
      * @throws Exception
      * @throws PodcastNotFoundException
      */
-    public static function deletePodcastById($podcastId)
+    public static function deletePodcastById($podcastId): void
     {
         $podcast = PodcastQuery::create()->findPk($podcastId);
         if ($podcast) {
@@ -325,7 +325,7 @@ class Application_Service_PodcastService
      *
      * @throws PodcastNotFoundException
      */
-    public static function buildPodcastEditorResponse($podcastId, $view)
+    public static function buildPodcastEditorResponse($podcastId, $view): array
     {
         // Check the StationPodcast table rather than checking
         // the station podcast ID key in preferences for extensibility
@@ -376,7 +376,7 @@ class Application_Service_PodcastService
      * @param Podcast $podcast Podcast object to update
      * @param array   $data    Podcast update data array
      */
-    private static function _updateAutoIngestTimestamp($podcast, $data)
+    private static function _updateAutoIngestTimestamp($podcast, $data): void
     {
         // Get podcast data with lazy loaded columns since we can't directly call getDbAutoIngest()
         $currData = $podcast->toArray(BasePeer::TYPE_FIELDNAME, true);
@@ -386,7 +386,7 @@ class Application_Service_PodcastService
         }
     }
 
-    private static function removePrivateFields(&$data)
+    private static function removePrivateFields(&$data): void
     {
         foreach (self::$privateFields as $key) {
             unset($data[$key]);

@@ -6,7 +6,7 @@ class ShowServiceData
     /**
      * @return array<string, null|bool|int|string>
      */
-    public static function getNoRepeatNoRRData()
+    public static function getNoRepeatNoRRData(): array
     {
         return [
             'add_show_id' => -1,
@@ -91,7 +91,7 @@ class ShowServiceData
     /**
      * @return array<string, null|bool|int|int[]|string>
      */
-    public static function getWeeklyRepeatNoEndNoRRData()
+    public static function getWeeklyRepeatNoEndNoRRData(): array
     {
         return [
             'add_show_id' => -1,
@@ -176,7 +176,7 @@ class ShowServiceData
     /**
      * @return array<string, null|bool|int|int[]|string>
      */
-    public static function getWeeklyRepeatWithEndNoRRData()
+    public static function getWeeklyRepeatWithEndNoRRData(): array
     {
         return [
             'add_show_id' => -1,
@@ -261,7 +261,7 @@ class ShowServiceData
     /**
      * @return array<int, int>
      */
-    public static function getWeeklyRepeatDays()
+    public static function getWeeklyRepeatDays(): array
     {
         return [1, 2, 3, 4, 5];
     }
@@ -269,7 +269,7 @@ class ShowServiceData
     /**
      * @return array<int, int>
      */
-    public static function getDailyRepeatDays()
+    public static function getDailyRepeatDays(): array
     {
         return [0, 1, 2, 3, 4, 5, 6];
     }
@@ -277,7 +277,7 @@ class ShowServiceData
     /**
      * @return array<string, null|bool|int|string>
      */
-    public static function getEditRepeatInstanceData()
+    public static function getEditRepeatInstanceData(): array
     {
         return [
             'add_show_id' => 1,
@@ -314,7 +314,7 @@ class ShowServiceData
     /**
      * @return array<string, null|bool|int|int[]|string>
      */
-    public static function getOverlappingShowCheckTestData()
+    public static function getOverlappingShowCheckTestData(): array
     {
         return [
             'add_show_id' => -1,
@@ -399,7 +399,7 @@ class ShowServiceData
     /** Returns form data for a non-repeating, record and rebroadcast(RR) show.
      * @return array<string, null|bool|int|string>
      */
-    public static function getNoRepeatRRData()
+    public static function getNoRepeatRRData(): array
     {
         return [
             'add_show_id' => -1,
@@ -484,7 +484,7 @@ class ShowServiceData
     /**
      * @return array<string, null|bool|int|int[]|string>
      */
-    public static function getWeeklyRepeatRRData()
+    public static function getWeeklyRepeatRRData(): array
     {
         return [
             'add_show_id' => -1,

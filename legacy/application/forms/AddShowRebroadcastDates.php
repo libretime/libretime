@@ -2,7 +2,7 @@
 
 class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         $this->setDecorators([
             ['ViewScript', ['viewScript' => 'form/add-show-rebroadcast.phtml']],
@@ -33,7 +33,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
         }
     }
 
-    public function disable()
+    public function disable(): void
     {
         $elements = $this->getElements();
         foreach ($elements as $element) {

@@ -27,7 +27,7 @@ class PodcastManager
      * @throws InvalidPodcastException
      * @throws PodcastNotFoundException
      */
-    public static function downloadNewestEpisodes()
+    public static function downloadNewestEpisodes(): void
     {
         $autoIngestPodcasts = static::_getAutoIngestPodcasts();
         $service = new Application_Service_PodcastEpisodeService();

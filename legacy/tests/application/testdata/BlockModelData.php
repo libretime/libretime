@@ -5,7 +5,7 @@ class BlockModelData
     /**
      * @return array<int, array<string, int|string>|array<string, string>>
      */
-    public static function getCriteriaSingleNewestLabelNada()
+    public static function getCriteriaSingleNewestLabelNada(): array
     {
         return [
             ['name' => 'sp_type', 'value' => 0],
@@ -24,7 +24,7 @@ class BlockModelData
     /**
      * @return array<int, array<string, int|string>|array<string, string>>
      */
-    public static function getCriteriaMultiTrackAndAlbum1Hour()
+    public static function getCriteriaMultiTrackAndAlbum1Hour(): array
     {
         return [
             ['name' => 'sp_type', 'value' => 1],
