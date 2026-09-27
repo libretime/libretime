@@ -505,7 +505,7 @@ SQL;
      * @return bool
      *              true if originated from recording, otherwise false
      */
-    public function isRecorded()
+    public function isRecorded(): bool
     {
         $showInstancesRow = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->getId())
@@ -523,7 +523,7 @@ SQL;
      * @return bool
      *              true if show has rebroadcasts, otherwise false
      */
-    public function isRebroadcast()
+    public function isRebroadcast(): bool
     {
         $showInstancesRow = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->_showId)
@@ -787,7 +787,7 @@ SQL;
      * @return bool
      *              true if the StartDate is in the past, false otherwise
      */
-    public function isStartDateTimeInPast()
+    public function isStartDateTimeInPast(): bool
     {
         return gmdate(DEFAULT_TIMESTAMP_FORMAT) > ($this->getStartDate() . ' ' . $this->getStartTime());
     }
@@ -890,7 +890,7 @@ SQL;
     /* Only used for shows that aren't repeating.
      *
      * @return Boolean: true if show has an instance, otherwise false. */
-    public function hasInstance()
+    public function hasInstance(): bool
     {
         return !is_null($this->getInstance());
     }
@@ -937,7 +937,7 @@ SQL;
      *
      * @return Boolean: true if show has an instance on $p_dateTime,
      *      otherwise false. */
-    public function hasInstanceOnDate($p_dateTime)
+    public function hasInstanceOnDate($p_dateTime): bool
     {
         return !is_null($this->getInstanceOnDate($p_dateTime));
     }

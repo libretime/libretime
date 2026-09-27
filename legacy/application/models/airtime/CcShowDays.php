@@ -9,7 +9,7 @@
  */
 class CcShowDays extends BaseCcShowDays
 {
-    public function isRepeating()
+    public function isRepeating(): bool
     {
         return $this->getDbRepeatType() != -1;
     }
@@ -48,7 +48,7 @@ class CcShowDays extends BaseCcShowDays
         return $startDateTime->add(new DateInterval('PT' . $duration[0] . 'H' . $duration[1] . 'M'));
     }
 
-    public function isShowStartInPast()
+    public function isShowStartInPast(): bool
     {
         return $this->getUTCStartDateAndTime()->format('Y-m-d H:i:s') < gmdate('Y-m-d H:i:s');
     }

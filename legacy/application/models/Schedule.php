@@ -12,7 +12,7 @@ class Application_Model_Schedule
      *
      * @param string $p_fileId
      */
-    public static function IsFileScheduledInTheFuture($p_fileId)
+    public static function IsFileScheduledInTheFuture($p_fileId): bool
     {
         $sql = <<<'SQL'
 SELECT COUNT(*)
@@ -1069,7 +1069,7 @@ SQL;
     }
 
     // Check if two events are less than or equal to 1 second apart
-    public static function areEventsLinked($event1, $event2)
+    public static function areEventsLinked($event1, $event2): bool
     {
         $dt1 = DateTime::createFromFormat('Y-m-d-H-i-s', $event1['start']);
         $dt2 = DateTime::createFromFormat('Y-m-d-H-i-s', $event2['start']);

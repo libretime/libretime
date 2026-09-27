@@ -185,7 +185,7 @@ class CcShow extends BaseCcShow
         return $this->collCcShowInstancess;
     }
 
-    public function isRecorded()
+    public function isRecorded(): bool
     {
         $ccShowDay = CcShowDaysQuery::create()
             ->filterByDbShowId($this->getDbId())
@@ -195,7 +195,7 @@ class CcShow extends BaseCcShow
         return !is_null($ccShowDay);
     }
 
-    public function isRebroadcast()
+    public function isRebroadcast(): bool
     {
         $ccShowRebroadcast = CcShowRebroadcastQuery::create()
             ->filterByDbShowId($this->getDbId())

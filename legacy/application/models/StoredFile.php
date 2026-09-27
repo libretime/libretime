@@ -968,7 +968,7 @@ SQL;
     }
 
     // Pass the file through Liquidsoap and test if it is readable. Return True if readable, and False otherwise.
-    public static function liquidsoapFilePlayabilityTest($audio_file)
+    public static function liquidsoapFilePlayabilityTest($audio_file): bool
     {
         $LIQUIDSOAP_ERRORS = ['TagLib: MPEG::Properties::read() -- Could not find a valid last MPEG frame in the stream.'];
 

@@ -22,12 +22,12 @@ class Application_Model_User
         return $this->_userInstance->getDbId();
     }
 
-    public function isGuest()
+    public function isGuest(): bool
     {
         return $this->getType() == UTYPE_GUEST;
     }
 
-    public function isHostOfShow($showId)
+    public function isHostOfShow($showId): bool
     {
         $userId = $this->_userInstance->getDbId();
 
@@ -85,7 +85,7 @@ class Application_Model_User
 
     // TODO : refactor code to only accept arrays for isUserType and
     // simplify code even further
-    public function isUserType($type)
+    public function isUserType($type): bool
     {
         if (!is_array($type)) {
             $type = [$type];

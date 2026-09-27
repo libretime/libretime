@@ -290,7 +290,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
     }
 
     // from a note @ https://php.net/manual/en/function.rmdir.php
-    private static function delTree($dir)
+    private static function delTree($dir): bool
     {
         $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {

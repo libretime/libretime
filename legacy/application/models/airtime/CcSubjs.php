@@ -9,17 +9,17 @@
  */
 class CcSubjs extends BaseCcSubjs
 {
-    public function isAdminOrPM()
+    public function isAdminOrPM(): bool
     {
         return in_array($this->type, [UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER], true);
     }
 
-    public function isSuperAdmin()
+    public function isSuperAdmin(): bool
     {
         return $this->type === UTYPE_SUPERADMIN;
     }
 
-    public function isHostOfShow($showId)
+    public function isHostOfShow($showId): bool
     {
         return CcShowHostsQuery::create()
             ->filterByDbShow($showId)
@@ -27,7 +27,7 @@ class CcSubjs extends BaseCcSubjs
             ->count() > 0;
     }
 
-    public function isHostOfShowInstance($instanceId)
+    public function isHostOfShowInstance($instanceId): bool
     {
         $showInstance = CcShowInstancesQuery::create()
             ->findPk($instanceId);

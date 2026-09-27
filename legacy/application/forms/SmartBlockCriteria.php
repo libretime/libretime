@@ -432,7 +432,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     }
 
     // This is a simple function that determines if a modValue should enable a datetime
-    public function enableDateTimeUnit($modValue)
+    public function enableDateTimeUnit($modValue): bool
     {
         return preg_match('/before|after|between/', $modValue) == 1;
     }

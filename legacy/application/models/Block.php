@@ -395,7 +395,7 @@ SQL;
         throw new Exception('trying to add a file that does not exist.');
     }
 
-    public function isStatic()
+    public function isStatic(): bool
     {
         return $this->block->getDbType() == 'static';
     }
@@ -1161,7 +1161,7 @@ SQL;
         $this->updateBlockLengthInAllPlaylist();
     }
 
-    public function hasItemLimit()
+    public function hasItemLimit(): bool
     {
         [$value, $modifier] = $this->getLimitValueAndModifier();
 

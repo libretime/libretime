@@ -553,8 +553,6 @@ class Application_Service_ShowFormService
      * @param null|mixed $originalStartDate
      * @param mixed      $editShow
      * @param null|mixed $instanceId
-     *
-     * @return bool
      */
     public function validateShowForms(
         $forms,
@@ -563,7 +561,7 @@ class Application_Service_ShowFormService
         $originalStartDate = null,
         $editShow = false,
         $instanceId = null
-    ) {
+    ): bool {
         $what = $forms['what']->isValid($formData);
         $autoplaylist = $forms['autoplaylist']->isValid($formData);
         $live = $forms['live']->isValid($formData);

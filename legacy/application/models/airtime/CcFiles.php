@@ -324,7 +324,7 @@ class CcFiles extends BaseCcFiles
     }
 
     // returns true if the file exists and is not hidden
-    public function visible()
+    public function visible(): bool
     {
         return $this->getDbFileExists() && !$this->getDbHidden();
     }
@@ -491,7 +491,7 @@ class CcFiles extends BaseCcFiles
     /**
      * Checks if the file is a regular file that can be previewed and downloaded.
      */
-    public function isValidPhysicalFile()
+    public function isValidPhysicalFile(): bool
     {
         return is_file($this->getAbsoluteFilePath());
     }

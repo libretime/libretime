@@ -226,7 +226,7 @@ class PodcastTask implements AirtimeTask
      *
      * @return bool true if the podcast polling interval has passed
      */
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         $overQuota = Application_Model_Systemstatus::isDiskOverQuota();
 
@@ -283,7 +283,7 @@ class StationPodcastTask implements AirtimeTask
      *
      * @return bool true if enough time has passed
      */
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         $lastReset = Application_Model_Preference::getStationPodcastDownloadResetTimer();
 
@@ -312,7 +312,7 @@ class TaskFactory
      *
      * @return bool true if the class $c implements AirtimeTask
      */
-    private static function _isTask($c)
+    private static function _isTask($c): bool
     {
         return array_key_exists('AirtimeTask', class_implements($c));
     }

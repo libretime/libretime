@@ -1062,7 +1062,7 @@ class Application_Model_Preference
         self::setValue($sourcename, $status, false);
     }
 
-    public static function GetSourceStatus($sourcename)
+    public static function GetSourceStatus($sourcename): bool
     {
         $value = self::getValue($sourcename);
 
@@ -1404,7 +1404,7 @@ class Application_Model_Preference
         self::setValue('radio_page_display_login_button', $value);
     }
 
-    public static function getScheduleTrimOverbooked()
+    public static function getScheduleTrimOverbooked(): bool
     {
         return boolval(self::getValue('schedule_trim_overbooked', false));
     }
@@ -1414,7 +1414,7 @@ class Application_Model_Preference
         self::setValue('schedule_trim_overbooked', $value);
     }
 
-    public static function getRadioPageDisabled()
+    public static function getRadioPageDisabled(): bool
     {
         return boolval(self::getValue('radio_page_disabled', false));
     }
@@ -1549,10 +1549,8 @@ class Application_Model_Preference
 
     /**
      * Getter for feature preview mode.
-     *
-     * @return bool
      */
-    public static function GetFeaturePreviewMode()
+    public static function GetFeaturePreviewMode(): bool
     {
         return self::getValue('feature_preview_mode') === '1';
     }

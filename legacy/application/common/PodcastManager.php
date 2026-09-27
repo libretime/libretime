@@ -13,7 +13,7 @@ class PodcastManager
      *
      * @return bool true if $_PODCAST_POLL_INTERVAL_SECONDS has passed since the last check
      */
-    public static function hasPodcastPollIntervalPassed()
+    public static function hasPodcastPollIntervalPassed(): bool
     {
         $lastPolled = Application_Model_Preference::getPodcastPollLock();
 

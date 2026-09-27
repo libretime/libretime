@@ -236,10 +236,8 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      *  * request path is /rest/media/:id/download
      *  * download key is correct
      *  * requested file belongs to the station podcast.
-     *
-     * @return bool
      */
-    private function isVerifiedDownload()
+    private function isVerifiedDownload(): bool
     {
         $request = $this->getRequest();
         $fileId = $request->getParam('id');
@@ -260,7 +258,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         return SecurityHelper::verifyCSRFToken($token);
     }
 
-    private function verifyAPIKey()
+    private function verifyAPIKey(): bool
     {
         // The API key is passed in via HTTP "basic authentication":
         // https://en.wikipedia.org/wiki/Basic_access_authentication

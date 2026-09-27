@@ -163,7 +163,7 @@ class Application_Model_StreamSetting
         return $settings;
     }
 
-    public static function getStreamEnabled($stream_id)
+    public static function getStreamEnabled($stream_id): bool
     {
         return in_array('s' . $stream_id, self::getEnabledStreamIds());
     }
