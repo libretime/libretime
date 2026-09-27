@@ -3,6 +3,7 @@
 use Rector\Config\RectorConfig;
 use Rector\Php82\Rector\Encapsed\VariableInStringInterpolationFixerRector;
 use Rector\Php82\Rector\FuncCall\Utf8DecodeEncodeToMbConvertEncodingRector;
+use Rector\Set\ValueObject\SetList;
 use Rector\ValueObject\PhpVersion;
 
 return RectorConfig::configure()
@@ -29,7 +30,9 @@ return RectorConfig::configure()
     ->withCodeQualityLevel(9)
     ->withDeadCodeLevel(0)
     ->withTypeCoverageLevel(24)
-    ->withTypeCoverageDocblockLevel(20)
+    ->withSets([
+        SetList::TYPE_DECLARATION_DOCBLOCKS,
+    ])
     ->withRules([
         VariableInStringInterpolationFixerRector::class,
         Utf8DecodeEncodeToMbConvertEncodingRector::class,
