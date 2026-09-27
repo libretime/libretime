@@ -28,7 +28,7 @@ return RectorConfig::configure()
     ->withPhpLevel(10)
     ->withCodeQualityLevel(9)
     ->withDeadCodeLevel(0)
-    ->withTypeCoverageLevel(17)
+    ->withTypeCoverageLevel(18)
     ->withTypeCoverageDocblockLevel(9)
     ->withRules([
         VariableInStringInterpolationFixerRector::class,

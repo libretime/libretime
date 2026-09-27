@@ -152,7 +152,12 @@ class Application_Model_Tracktype
         return ($query !== false) ? $query : null;
     }
 
-    public static function getTracktypesDataTablesInfo($datatables)
+    /**
+     * @param mixed $datatables
+     *
+     * @return mixed[]
+     */
+    public static function getTracktypesDataTablesInfo($datatables): array
     {
         $con = Propel::getConnection(CcTracktypesPeer::DATABASE_NAME);
 

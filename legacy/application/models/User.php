@@ -343,7 +343,12 @@ class Application_Model_User
         return Application_Model_User::getUsers(['H', 'A', 'S', 'P'], $search);
     }
 
-    public static function getUsersDataTablesInfo($datatables)
+    /**
+     * @param mixed $datatables
+     *
+     * @return mixed[]
+     */
+    public static function getUsersDataTablesInfo($datatables): array
     {
         $con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME);
 
