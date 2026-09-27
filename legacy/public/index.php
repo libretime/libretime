@@ -11,7 +11,7 @@ $configRun = false;
 $extensions = get_loaded_extensions();
 $airtimeSetup = false;
 
-function showConfigCheckPage()
+function showConfigCheckPage(): void
 {
     global $configRun;
     if (!$configRun) {

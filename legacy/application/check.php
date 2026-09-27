@@ -104,7 +104,7 @@ function checkDatabaseConfiguration()
 /**
  * Initialize Propel to configure the Airtime database.
  */
-function configureDatabase()
+function configureDatabase(): void
 {
     Propel::init(PROPEL_CONFIG_FILEPATH);
 }
