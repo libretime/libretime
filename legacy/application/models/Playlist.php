@@ -704,7 +704,7 @@ SQL;
      *
      * @return bool
      */
-    public function changeFadeInfo($id, $fadeIn, $fadeOut, $offset = null)
+    public function changeFadeInfo($id, $fadeIn, $fadeOut, $offset = null): array
     {
         // See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
         // For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
@@ -1061,7 +1061,7 @@ SQL;
     /**
      * @return array<string, int>
      */
-    public function shuffle()
+    public function shuffle(): array
     {
         $sql = <<<'SQL'
 SELECT max(position) from cc_playlistcontents WHERE playlist_id=:p1

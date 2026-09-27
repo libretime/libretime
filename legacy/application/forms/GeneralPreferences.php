@@ -254,7 +254,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
     /**
      * @return array<int, string>
      */
-    private function getWeekStartDays()
+    private function getWeekStartDays(): array
     {
         return [
             _('Sunday'),

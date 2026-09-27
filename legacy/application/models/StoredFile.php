@@ -651,7 +651,7 @@ SQL;
     /**
      * @return array<int, string>
      */
-    public static function getLibraryColumns()
+    public static function getLibraryColumns(): array
     {
         return [
             'id', 'track_title', 'artist_name', 'album_title',
@@ -664,7 +664,12 @@ SQL;
         ];
     }
 
-    public static function searchLibraryFiles($datatables)
+    /**
+     * @param mixed $datatables
+     *
+     * @return mixed[]
+     */
+    public static function searchLibraryFiles($datatables): array
     {
         $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
 

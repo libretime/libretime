@@ -17,7 +17,7 @@ class Application_Service_HistoryService
     /**
      * @return array<int, string>
      */
-    public function getSupportedTemplateTypes()
+    public function getSupportedTemplateTypes(): array
     {
         return [self::TEMPLATE_TYPE_ITEM, self::TEMPLATE_TYPE_FILE];
     }
@@ -31,7 +31,7 @@ class Application_Service_HistoryService
      *
      * @return array<string, null|int|mixed[]>
      */
-    public function getPlayedItemData($startDT, $endDT, $opts, $instanceId = null)
+    public function getPlayedItemData($startDT, $endDT, $opts, $instanceId = null): array
     {
         $mainSqlQuery = '';
         $paramMap = [];
@@ -316,7 +316,7 @@ class Application_Service_HistoryService
      *
      * @return array<string, int|mixed[]>
      */
-    public function getFileSummaryData($startDT, $endDT, $opts)
+    public function getFileSummaryData($startDT, $endDT, $opts): array
     {
         $select = [
             'summary.played',
@@ -1031,7 +1031,7 @@ class Application_Service_HistoryService
     /**
      * @return array<int, string>
      */
-    public function getFieldTypes()
+    public function getFieldTypes(): array
     {
         return [
             // TEMPLATE_DATE,
@@ -1047,7 +1047,7 @@ class Application_Service_HistoryService
     /**
      * @return array<string, string>
      */
-    private function getPhpCasts()
+    private function getPhpCasts(): array
     {
         return [
             TEMPLATE_DATE => 'strval',
@@ -1063,7 +1063,7 @@ class Application_Service_HistoryService
     /**
      * @return array<string, string>
      */
-    private function getSqlTypes()
+    private function getSqlTypes(): array
     {
         return [
             TEMPLATE_DATE => 'date',
@@ -1079,7 +1079,7 @@ class Application_Service_HistoryService
     /**
      * @return array<int, array<string, string>>
      */
-    public function getFileMetadataTypes()
+    public function getFileMetadataTypes(): array
     {
         return [
             ['name' => MDATA_KEY_TITLE, 'label' => _('Title'), 'type' => TEMPLATE_STRING],
@@ -1103,7 +1103,7 @@ class Application_Service_HistoryService
     /**
      * @return array<int, string>
      */
-    public function mandatoryItemFields()
+    public function mandatoryItemFields(): array
     {
         return ['starts', 'ends'];
     }
@@ -1111,7 +1111,7 @@ class Application_Service_HistoryService
     /**
      * @return array<int, string>
      */
-    public function mandatoryFileFields()
+    public function mandatoryFileFields(): array
     {
         return ['played'];
     }

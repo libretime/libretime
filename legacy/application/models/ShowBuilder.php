@@ -435,7 +435,7 @@ class Application_Model_ShowBuilder
     /**
      * @return array<string, mixed>
      */
-    public function getItems()
+    public function getItems(): array
     {
         $current_id = -1;
         $display_items = [];

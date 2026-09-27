@@ -103,7 +103,7 @@ SQL;
      *
      * @return array<string, array<string, mixed>>
      */
-    public static function GetPlayOrderRange($utcTimeEnd = null, $showsToRetrieve = 5)
+    public static function GetPlayOrderRange($utcTimeEnd = null, $showsToRetrieve = 5): array
     {
         // Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
 
@@ -153,7 +153,7 @@ SQL;
      *
      * @return array<string, mixed>
      */
-    public static function GetPlayOrderRangeOld()
+    public static function GetPlayOrderRangeOld(): array
     {
         // Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
 
@@ -979,7 +979,7 @@ SQL;
      *
      * @return array<int, string>
      */
-    private static function getRangeStartAndEnd($p_fromDateTime, $p_toDateTime)
+    private static function getRangeStartAndEnd($p_fromDateTime, $p_toDateTime): array
     {
         $CC_CONFIG = Config::getConfig();
 

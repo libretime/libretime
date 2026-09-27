@@ -28,7 +28,7 @@ function checkConfiguration(): bool
  *
  * @return array<string, bool> associative array of dependency check results
  */
-function checkPhpDependencies()
+function checkPhpDependencies(): array
 {
     return [
         'postgres' => checkDatabaseDependencies(),

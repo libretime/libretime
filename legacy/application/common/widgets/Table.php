@@ -11,7 +11,7 @@ class AirtimeTableView
     /**
      * @return array<int, string>
      */
-    private static function _getTableJavaScriptDependencies()
+    private static function _getTableJavaScriptDependencies(): array
     {
         return [
             'js/airtime/widgets/table.js',

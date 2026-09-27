@@ -470,7 +470,7 @@ class Application_Common_DateHelper
      *
      * @return DateTime[] (start DateTime, end DateTime) in UTC timezone
      */
-    public static function getStartEnd($startTimestamp, $endTimestamp, $timezone)
+    public static function getStartEnd($startTimestamp, $endTimestamp, $timezone): array
     {
         $prefTimezone = Application_Model_Preference::GetTimezone();
         $utcTimezone = new DateTimeZone('UTC');

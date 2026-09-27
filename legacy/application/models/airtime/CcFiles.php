@@ -378,7 +378,7 @@ class CcFiles extends BaseCcFiles
      *
      * @return array<int, string>
      */
-    public function getURLsForTrackPreviewOrDownload()
+    public function getURLsForTrackPreviewOrDownload(): array
     {
         return [$this->getAbsoluteFilePath()];
     }

@@ -494,7 +494,7 @@ class Application_Service_ShowFormService
      *
      * @return array<int, mixed>
      */
-    public function preEditShowValidationCheck($formData)
+    public function preEditShowValidationCheck($formData): array
     {
         // If the start date or time were disabled, don't validate them
         $validateStartDate = $formData['start_date_disabled'] === 'false';
@@ -667,7 +667,7 @@ class Application_Service_ShowFormService
      *
      * @return array<string, string>
      */
-    public static function localizeDateTime($date, $time, $newTimezone, $oldTimezone)
+    public static function localizeDateTime($date, $time, $newTimezone, $oldTimezone): array
     {
         $dt = new DateTime($date . ' ' . $time, new DateTimeZone($oldTimezone));
 

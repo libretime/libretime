@@ -75,7 +75,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     /**
      * @return array<string, mixed>
      */
-    public function getMetadata()
+    public function getMetadata(): array
     {
         $subjs = CcSubjsQuery::create()->findPK($this->webstream->getDbCreatorId());
 
@@ -128,7 +128,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
      *
      * @return array<int, mixed>
      */
-    public static function analyzeFormData($parameters)
+    public static function analyzeFormData($parameters): array
     {
         $valid = [
             'length' => [true, ''],
@@ -388,7 +388,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
      *
      * @return array<int, null|bool|string>
      */
-    private static function discoverStreamMime($url)
+    private static function discoverStreamMime($url): array
     {
         try {
             $headers = @get_headers($url);

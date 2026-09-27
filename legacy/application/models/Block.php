@@ -627,7 +627,7 @@ SQL;
      *
      * @return array<int, string>
      */
-    public function getFadeInfo($pos)
+    public function getFadeInfo($pos): array
     {
         // Logging::info("Getting fade info for pos {$pos}");
 
@@ -688,7 +688,7 @@ SQL;
      *
      * @return bool
      */
-    public function changeFadeInfo($id, $fadeIn, $fadeOut, $offset = null)
+    public function changeFadeInfo($id, $fadeIn, $fadeOut, $offset = null): array
     {
         // See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
         // For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
@@ -1097,7 +1097,7 @@ SQL;
     /**
      * @return array<string, int>
      */
-    public function shuffleSmartBlock()
+    public function shuffleSmartBlock(): array
     {
         // if it here that means it's static pl
         $this->saveType('static');
@@ -1274,7 +1274,7 @@ SQL;
      *
      * @return array<string, int>
      */
-    public function generateSmartBlock($p_criteria, $returnList = false)
+    public function generateSmartBlock($p_criteria, $returnList = false): array
     {
         $this->saveSmartBlockCriteria($p_criteria);
         $insertList = $this->getListOfFilesUnderLimit();

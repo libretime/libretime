@@ -1432,7 +1432,7 @@ SQL;
      *
      * @return array<int, mixed>
      */
-    public static function getMonthlyWeeklyRepeatInterval($showStart)
+    public static function getMonthlyWeeklyRepeatInterval($showStart): array
     {
         $start = clone $showStart;
         $dayOfMonth = $start->format('j');
@@ -1919,7 +1919,7 @@ SQL;
      *
      * @return DateTime[] of 2 DateTime objects, start/end time of the show in UTC
      */
-    private function createUTCStartEndDateTime($showStart, $duration, $offset = null)
+    private function createUTCStartEndDateTime($showStart, $duration, $offset = null): array
     {
         $startDateTime = clone $showStart;
         $timezone = $startDateTime->getTimezone();

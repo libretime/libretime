@@ -325,7 +325,7 @@ class Application_Service_PodcastService
      *
      * @throws PodcastNotFoundException
      */
-    public static function buildPodcastEditorResponse($podcastId, $view)
+    public static function buildPodcastEditorResponse($podcastId, $view): array
     {
         // Check the StationPodcast table rather than checking
         // the station podcast ID key in preferences for extensibility

@@ -5,7 +5,7 @@ class FileDataHelper
     /**
      * @return array<string, string>
      */
-    public static function getAudioMimeTypeArray()
+    public static function getAudioMimeTypeArray(): array
     {
         return [
             'audio/ogg' => 'ogg',
@@ -30,7 +30,10 @@ class FileDataHelper
         ];
     }
 
-    public static function getUploadAudioMimeTypeArray()
+    /**
+     * @return mixed[]
+     */
+    public static function getUploadAudioMimeTypeArray(): array
     {
         $mimes = self::getAudioMimeTypeArray();
         unset($mimes['audio/x-ms-wma']);

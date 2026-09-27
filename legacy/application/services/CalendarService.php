@@ -264,7 +264,7 @@ class Application_Service_CalendarService
      *
      * @return array<int, mixed>
      */
-    private function validateShowMove($deltaDay, $deltaMin)
+    private function validateShowMove($deltaDay, $deltaMin): array
     {
         if (!$this->currentUser->isAdminOrPM()) {
             throw new Exception(_('Permission denied'));

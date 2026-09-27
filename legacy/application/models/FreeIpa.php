@@ -9,7 +9,7 @@ class LibreTime_Model_FreeIpa
      *
      * @return array<string, mixed>
      */
-    public static function GetUserInfo($username)
+    public static function GetUserInfo($username): array
     {
         $config = Config::getConfig();
         $conn = self::_getLdapConnection();

@@ -1682,7 +1682,7 @@ SQL;
     /**
      * @return DateTime[]
      */
-    public static function getStartEndCurrentMonthView()
+    public static function getStartEndCurrentMonthView(): array
     {
         $utcTimeZone = new DateTimeZone('UTC');
 
@@ -1704,7 +1704,7 @@ SQL;
      *
      * @return DateTime[]
      */
-    public static function getStartEndCurrentMonthPlusView()
+    public static function getStartEndCurrentMonthPlusView(): array
     {
         $utcTimeZone = new DateTimeZone('UTC');
 
@@ -1725,7 +1725,7 @@ SQL;
     /**
      * @return DateTime[]
      */
-    public static function getStartEndCurrentWeekView()
+    public static function getStartEndCurrentWeekView(): array
     {
         $weekStartDayNum = Application_Model_Preference::GetWeekStartDay();
         $utcTimeZone = new DateTimeZone('UTC');
@@ -1745,7 +1745,7 @@ SQL;
     /**
      * @return DateTime[]
      */
-    public static function getStartEndCurrentDayView()
+    public static function getStartEndCurrentDayView(): array
     {
         $utcTimeZone = new DateTimeZone('UTC');
 
