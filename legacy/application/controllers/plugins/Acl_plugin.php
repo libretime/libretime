@@ -217,7 +217,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         }
     }
 
-    private function verifyAuth()
+    private function verifyAuth(): bool
     {
         if ($this->verifyAPIKey() || $this->isVerifiedDownload()) {
             return true;

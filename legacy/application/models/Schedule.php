@@ -684,7 +684,7 @@ SQL;
      *
      * @return bool
      */
-    public static function ValidPypoTimeFormat($p_time)
+    public static function ValidPypoTimeFormat($p_time): bool
     {
         $t = explode('-', $p_time);
         if (count($t) != 5) {

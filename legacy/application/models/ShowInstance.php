@@ -313,7 +313,7 @@ SQL;
         $this->updateScheduledTime();
     }
 
-    private function checkToDeleteShow($showId)
+    private function checkToDeleteShow($showId): bool
     {
         // UTC DateTime object
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
@@ -609,7 +609,7 @@ SQL;
         }
     }
 
-    public function showEmpty()
+    public function showEmpty(): bool
     {
         $sql = <<<'SQL'
 SELECT s.starts

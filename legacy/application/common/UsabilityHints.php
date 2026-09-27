@@ -120,7 +120,7 @@ class Application_Common_UsabilityHints
     /**
      * Returns true if no files have been uploaded.
      */
-    private static function zeroFilesUploaded()
+    private static function zeroFilesUploaded(): bool
     {
         $fileCount = CcFilesQuery::create()
             ->filterByDbFileExists(true)
@@ -138,7 +138,7 @@ class Application_Common_UsabilityHints
      * Returns true if there is at least one show currently scheduled
      * or in the future.
      */
-    private static function isFutureOrCurrentShowScheduled()
+    private static function isFutureOrCurrentShowScheduled(): bool
     {
         $futureShow = self::getNextFutureShow();
         $currentShow = self::getCurrentShow();
@@ -150,7 +150,7 @@ class Application_Common_UsabilityHints
         return true;
     }
 
-    private static function isCurrentShowEmpty()
+    private static function isCurrentShowEmpty(): bool
     {
         $currentShow = self::getCurrentShow();
 
@@ -169,7 +169,7 @@ class Application_Common_UsabilityHints
         return false;
     }
 
-    private static function isNextShowEmpty()
+    private static function isNextShowEmpty(): bool
     {
         $futureShow = self::getNextFutureShow();
 
@@ -210,7 +210,7 @@ class Application_Common_UsabilityHints
             ->findOne();
     }
 
-    private static function isCurrentShowLinked()
+    private static function isCurrentShowLinked(): bool
     {
         $currentShow = self::getCurrentShow();
         if (!is_null($currentShow)) {

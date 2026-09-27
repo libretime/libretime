@@ -212,7 +212,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return [$valid, $mime, $mediaUrl, $di];
     }
 
-    public static function isValid($analysis)
+    public static function isValid($analysis): bool
     {
         foreach ($analysis as $v) {
             if ($v[0] === false) {

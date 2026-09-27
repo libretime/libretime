@@ -79,7 +79,7 @@ class AirtimeInstall
         return $version;
     }
 
-    public static function DbTableExists($p_name)
+    public static function DbTableExists($p_name): bool
     {
         $con = Propel::getConnection();
 
@@ -122,7 +122,7 @@ class AirtimeInstall
      *
      * @return bool
      */
-    public static function DbConnect($p_exitOnError = true)
+    public static function DbConnect($p_exitOnError = true): bool
     {
         $CC_CONFIG = Config::getConfig();
 
@@ -356,7 +356,7 @@ class AirtimeInstall
         return $opts;
     }
 
-    public static function checkPHPVersion()
+    public static function checkPHPVersion(): bool
     {
         if (PHP_VERSION_ID < 50300) {
             echo 'Error: Airtime requires PHP 5.3 or greater.';

@@ -83,7 +83,7 @@ function checkExternalServices()
  *
  * @return bool true if a connection is made to the database
  */
-function checkDatabaseConfiguration()
+function checkDatabaseConfiguration(): bool
 {
     configureDatabase();
 

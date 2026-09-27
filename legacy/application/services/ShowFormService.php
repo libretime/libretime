@@ -474,7 +474,7 @@ class Application_Service_ShowFormService
      *
      * @param mixed $p_showStart
      */
-    private function hasShowStarted($p_showStart)
+    private function hasShowStarted($p_showStart): bool
     {
         $showStart = clone $p_showStart;
         $showStart->setTimeZone(new DateTimeZone('UTC'));

@@ -71,7 +71,7 @@ class Application_Service_PublishService
      * @return bool true if the file has been published to any source,
      *              otherwise false
      */
-    public static function isPublished($fileId)
+    public static function isPublished($fileId): bool
     {
         foreach (self::$SOURCES as $source => $label) {
             $service = PublishServiceFactory::getService($source);

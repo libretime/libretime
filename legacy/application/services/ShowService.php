@@ -964,7 +964,7 @@ SQL;
         }
     }
 
-    private function checkToDeleteCcShow($showId)
+    private function checkToDeleteCcShow($showId): bool
     {
         // check if there are any non deleted show instances remaining.
         $ccShowInstances = CcShowInstancesQuery::create()

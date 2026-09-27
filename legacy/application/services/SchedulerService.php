@@ -417,7 +417,7 @@ class Application_Service_SchedulerService
         return false;
     }*/
 
-    public function emptyShowContent($instanceId)
+    public function emptyShowContent($instanceId): bool
     {
         try {
             $ccShowInstance = CcShowInstancesQuery::create()->findPk($instanceId);

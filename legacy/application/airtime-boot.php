@@ -18,7 +18,7 @@ error_reporting(
         : E_ALL
 );
 
-function exception_error_handler($errno, $errstr, $errfile, $errline)
+function exception_error_handler($errno, $errstr, $errfile, $errline): bool
 {
     // Ignore errors that are not part of the current error_reporting level,
     // this covers errors suppressed using the @ operator, and deprecation

@@ -73,7 +73,7 @@ class Application_Model_User
         return $result;
     }
 
-    public function isSourcefabricAdmin()
+    public function isSourcefabricAdmin(): bool
     {
         $username = $this->getLogin();
         if ($username == 'sourcefabric_admin') {

@@ -192,7 +192,7 @@ final class Application_Model_Scheduler
         }
     }
 
-    private function validateMediaItems($mediaItems)
+    private function validateMediaItems($mediaItems): bool
     {
         foreach ($mediaItems as $mediaItem) {
             $id = $mediaItem['id'];

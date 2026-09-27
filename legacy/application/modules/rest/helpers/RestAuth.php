@@ -2,7 +2,7 @@
 
 class RestAuth
 {
-    public static function verifyAuth($checkApiKey, $checkSession, $action)
+    public static function verifyAuth($checkApiKey, $checkSession, $action): bool
     {
         // Session takes precedence over API key for now:
         if (

@@ -92,7 +92,7 @@ class CcShow extends BaseCcShow
      * with a -1 (non repeating) repeat type we need to check all cc_show_day
      * entries.
      */
-    public function isRepeating()
+    public function isRepeating(): bool
     {
         // get all cc_show_day entries that are repeating
         $ccShowDays = CcShowDaysQuery::create()
