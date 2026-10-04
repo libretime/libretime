@@ -8,6 +8,18 @@ class AutoPlaylistManager
     private static $_AUTOPLAYLIST_POLL_INTERVAL_SECONDS = 60;  // 10 minutes
 
     /**
+     * @var string how far ahead to make sure show instances exist. Must comfortably
+     *             exceed the 1 hour build window; a few days also covers the
+     *             TaskManager being down for a while.
+     */
+    private static $_POPULATE_AHEAD = 'P7D';
+
+    /**
+     * @var string top the horizon up once it is closer than this
+     */
+    private static $_POPULATE_MIN_AHEAD = 'P2D';
+
+    /**
      * Check whether $_AUTOPLAYLIST_POLL_INTERVAL_SECONDS have passed since the last call to
      * buildAutoPlaylist.
      *
@@ -25,6 +37,8 @@ class AutoPlaylistManager
      */
     public static function buildAutoPlaylist(): void
     {
+        static::populateUpcomingShowInstances();
+
         $autoPlaylists = static::_upcomingAutoPlaylistShows();
         foreach ($autoPlaylists as $autoplaylist) {
             // creates a ShowInstance object to build the playlist in from the ShowInstancesQuery Object
@@ -97,6 +111,39 @@ class AutoPlaylistManager
             }
         }
         Application_Model_Preference::setAutoPlaylistPollLock(microtime(true));
+    }
+
+    /**
+     * Make sure repeating shows have instance rows far enough ahead to be built.
+     *
+     * Repeating shows only get cc_show_instances rows up to shows_populated_until.
+     * That horizon is normally advanced by RabbitMqPlugin::dispatchLoopShutdown after
+     * a schedule change, but the API requests that usually drive the TaskManager
+     * (version, update-metadata-on-tunein) end in sendJson(), which exits before that
+     * plugin runs, and playout no longer calls the legacy schedule endpoint. Once the
+     * clock passed the last horizon set from the web UI, upcoming shows had no rows,
+     * so nothing was built and nothing was logged.
+     */
+    protected static function populateUpcomingShowInstances(): void
+    {
+        try {
+            // Only top up when the horizon gets close, so this does real work every
+            // few days rather than regenerating instances on every poll.
+            $horizon = Application_Model_Preference::GetShowsPopulatedUntil();
+            $threshold = new DateTime('now', new DateTimeZone('UTC'));
+            $threshold->add(new DateInterval(self::$_POPULATE_MIN_AHEAD));
+            if (is_null($horizon) || $horizon < $threshold) {
+                $populateUntil = new DateTime('now', new DateTimeZone('UTC'));
+                $populateUntil->add(new DateInterval(self::$_POPULATE_AHEAD));
+                Logging::info('autoplaylist extending show instances from '
+                    . (is_null($horizon) ? 'unset' : $horizon->format('Y-m-d H:i:s'))
+                    . ' to ' . $populateUntil->format('Y-m-d H:i:s') . ' UTC');
+                Application_Model_Show::createAndFillShowInstancesPastPopulatedUntilDate($populateUntil);
+            }
+        } catch (Throwable $e) {
+            // Never let this stop the build for instances that already exist.
+            Logging::error('autoplaylist could not populate show instances: ' . $e->getMessage());
+        }
     }
 
     /**
