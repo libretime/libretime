@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from celery import shared_task
+from celery.exceptions import SoftTimeLimitExceeded
 from celery.utils.log import get_task_logger
 from django.db.models import F
 from django.utils import timezone
@@ -9,8 +10,14 @@ from .models import Schedule
 
 logger = get_task_logger(__name__)
 
+CLEAN_OVERBOOKED_SCHEDULE_SOFT_TIME_LIMIT = timedelta(minutes=28)
+CLEAN_OVERBOOKED_SCHEDULE_TIME_LIMIT = timedelta(minutes=30)
 
-@shared_task()
+
+@shared_task(
+    soft_time_limit=CLEAN_OVERBOOKED_SCHEDULE_SOFT_TIME_LIMIT.seconds,
+    time_limit=CLEAN_OVERBOOKED_SCHEDULE_TIME_LIMIT.seconds,
+)
 def clean_overbooked_schedule(batch_size: int = 10_000) -> int:
     """
     Clean unused overbooked schedule items.
@@ -45,11 +52,18 @@ def clean_overbooked_schedule(batch_size: int = 10_000) -> int:
     )
 
     count = 0
-    while True:
-        batch_count, _ = Schedule.objects.filter(pk__in=items[:batch_size]).delete()
-        count += batch_count
-        if batch_count < batch_size:
-            break
+    try:
+        while True:
+            batch_count, _ = Schedule.objects.filter(pk__in=items[:batch_size]).delete()
+            count += batch_count
+            if batch_count < batch_size:
+                break
+
+    except SoftTimeLimitExceeded:
+        logger.warning(
+            "task soft time limit exceeded (%s), exiting",
+            CLEAN_OVERBOOKED_SCHEDULE_SOFT_TIME_LIMIT,
+        )
 
     logger.info("deleted %d overbooked schedule items", count)
     return count
