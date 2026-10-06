@@ -82,3 +82,14 @@ def test_clean_overbooked_schedule_keeps_items(db) -> None:
     assert clean_overbooked_schedule() == 0
 
     assert Schedule.objects.count() == len(kept)
+
+
+# pylint: disable=invalid-name,unused-argument
+def test_clean_overbooked_schedule_batches(db) -> None:
+    old = make_instance(ends_ago=timedelta(days=100))
+    for _ in range(5):
+        make_schedule(old)
+
+    assert clean_overbooked_schedule(batch_size=2) == 5
+
+    assert not Schedule.objects.exists()
