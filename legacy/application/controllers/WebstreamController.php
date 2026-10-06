@@ -102,7 +102,7 @@ class WebstreamController extends Zend_Controller_Action
 
     /*TODO : make a user object be passed a parameter into this function so
         that it does not have to be fetched multiple times.*/
-    public function isAuthorized($webstream_id)
+    public function isAuthorized($webstream_id): bool
     {
         $user = Application_Model_User::getCurrentUser();
         if ($user->isUserType([UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER])) {

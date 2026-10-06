@@ -114,7 +114,7 @@ function configureDatabase(): void
  *
  * @return true if the RabbitMQ connection can be established
  */
-function checkRMQConnection()
+function checkRMQConnection(): bool
 {
     $config = Config::getConfig();
 

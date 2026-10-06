@@ -566,7 +566,7 @@ SQL;
      * @return bool
      *              true if repeating shows, otherwise false
      */
-    public function isRepeating()
+    public function isRepeating(): bool
     {
         $showDaysRow = CcShowDaysQuery::create()
             ->filterByDbShowId($this->_showId)

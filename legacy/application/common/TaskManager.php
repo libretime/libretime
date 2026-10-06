@@ -131,7 +131,7 @@ final class TaskManager
      * @return bool true if there is a Zend_Auth object in the current session,
      *              otherwise false
      */
-    private function _isUserSessionRequest()
+    private function _isUserSessionRequest(): bool
     {
         if (!Zend_Session::isStarted()) {
             return false;
