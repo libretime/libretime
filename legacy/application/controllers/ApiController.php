@@ -321,7 +321,7 @@ class ApiController extends Zend_Controller_Action
 
             if (isset($result['current'])) {
                 if (
-                    (isset($result['current']['type']) & $result['current']['type'] != 'livestream')
+                    (isset($result['current']['type']) && $result['current']['type'] != 'livestream')
                     && isset($result['current']['metadata'])
                 ) {
                     $currID = $result['current']['metadata']['id'];
@@ -1641,10 +1641,10 @@ class ApiController extends Zend_Controller_Action
 
         $callback = $request->getParam('callback');
         if ($callback) {
-            $response->setHeader('Content-Type', 'application/javascript');
+            $response->setHeader('Content-Type', 'application/javascript', true);
             $body = sprintf('%s(%s)', $callback, $body);
         } else {
-            $response->setHeader('Content-Type', 'application/json');
+            $response->setHeader('Content-Type', 'application/json', true);
         }
         $response->setBody($body);
 
