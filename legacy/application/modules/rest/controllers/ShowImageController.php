@@ -271,7 +271,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
      *
      * @return bool true if the images were successfully deleted, otherwise false
      */
-    public static function deleteShowImagesFromStor($showId)
+    public static function deleteShowImagesFromStor($showId): bool
     {
         $ownerId = RestAuth::getOwnerId();
 

@@ -54,7 +54,7 @@ class Application_Model_Auth
             ->delete();
     }
 
-    public function checkToken($user_id, $token, $action)
+    public function checkToken($user_id, $token, $action): bool
     {
         $salt = md5('pro');
 
