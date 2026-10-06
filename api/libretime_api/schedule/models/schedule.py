@@ -85,10 +85,7 @@ class Schedule(models.Model):
         - When the schedule starts after the end of the show instance,
         return the stored cue_out even if the schedule WILL NOT BE PLAYED.
         """
-        if (
-            self.starts_at < self.instance.ends_at
-            and self.instance.ends_at < self.ends_at
-        ):
+        if self.starts_at < self.instance.ends_at < self.ends_at:
             return self.instance.ends_at - self.starts_at
         return self.cue_out
 
