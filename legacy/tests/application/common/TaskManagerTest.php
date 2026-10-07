@@ -24,7 +24,7 @@ class TaskManagerTestRecorder
 
 class TaskManagerTestOkTask implements AirtimeTask
 {
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         return true;
     }
@@ -37,7 +37,7 @@ class TaskManagerTestOkTask implements AirtimeTask
 
 class TaskManagerTestFailingTask implements AirtimeTask
 {
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         return true;
     }
@@ -52,7 +52,7 @@ class TaskManagerTestFailingTask implements AirtimeTask
 
 class TaskManagerTestUnfinishedTransactionTask implements AirtimeTask
 {
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         return true;
     }
@@ -75,7 +75,7 @@ class TaskManagerTestUnfinishedTransactionTask implements AirtimeTask
 
 class TaskManagerTestLockProbeTask implements AirtimeTask
 {
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         return true;
     }
