@@ -34,6 +34,16 @@ final class TaskManager
     private $_con;
 
     /**
+     * @var bool whether this request holds the TaskManager advisory lock
+     */
+    private $_locked = false;
+
+    /**
+     * @var bool whether unlock() was registered as a shutdown function
+     */
+    private $_unlockRegistered = false;
+
+    /**
      * Private constructor so class is uninstantiable.
      */
     private function __construct()
@@ -80,10 +90,14 @@ final class TaskManager
      * Run all tasks that need to be run.
      *
      * To prevent blocking and making too many requests to the database,
-     * we acquire a non-blocking transaction-level advisory lock before
+     * we acquire a non-blocking session-level advisory lock before
      * checking a timestamp each time the application is bootstrapped,
      * which, assuming enough time has passed, is updated before running
      * the tasks.
+     *
+     * The lock is held until the tasks are done, so that a task taking longer
+     * than TASK_INTERVAL_SECONDS (e.g. a large autoplaylist build) is never run
+     * concurrently by another request.
      */
     public function runTasks(): void
     {
@@ -93,35 +107,71 @@ final class TaskManager
             return;
         }
         $this->_con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
-        $this->_con->beginTransaction();
 
         try {
             if (!$this->_tryLock()) {
                 // Another request is already checking/running the tasks
-                $this->_con->commit();
-
                 return;
             }
-            $lock = $this->_getLock();
-            if ($lock && (microtime(true) < ($lock['valstr'] + self::TASK_INTERVAL_SECONDS))) {
-                // Propel caches the database connection and uses it persistently, so if we don't
-                // use commit() here, we end up blocking other queries made within this request
-                $this->_con->commit();
-
-                return;
-            }
-            $this->_updateLock($lock);
-            $this->_con->commit();
         } catch (PDOException $e) {
-            $this->_con->rollBack();
             Logging::warn($e->getMessage());
 
             return;
         }
-        foreach ($this->_taskList as $task => $hasTaskRun) {
-            if (!$hasTaskRun) {
-                $this->runTask($task);
+
+        try {
+            $this->_con->beginTransaction();
+
+            try {
+                $lock = $this->_getLock();
+                if ($lock && (microtime(true) < ($lock['valstr'] + self::TASK_INTERVAL_SECONDS))) {
+                    // Propel caches the database connection and uses it persistently, so if we don't
+                    // use commit() here, we end up blocking other queries made within this request
+                    $this->_con->commit();
+
+                    return;
+                }
+                $this->_updateLock($lock);
+                $this->_con->commit();
+            } catch (PDOException $e) {
+                $this->_con->rollBack();
+                Logging::warn($e->getMessage());
+
+                return;
             }
+            foreach ($this->_taskList as $task => $hasTaskRun) {
+                if (!$hasTaskRun) {
+                    $this->runTask($task);
+                }
+            }
+        } finally {
+            $this->unlock();
+        }
+    }
+
+    /**
+     * Release the TaskManager advisory lock, if held.
+     *
+     * Public so it can be registered as a shutdown function: Propel uses persistent
+     * connections, so a session-level lock is not released when the request dies
+     * (e.g. max_execution_time) and would block the TaskManager in every other worker.
+     */
+    public function unlock(): void
+    {
+        if (!$this->_locked) {
+            return;
+        }
+
+        try {
+            // A failed task may have left an aborted transaction behind
+            if ($this->_con->isInTransaction()) {
+                $this->_con->forceRollBack();
+            }
+            $st = $this->_con->prepare('SELECT pg_advisory_unlock(:key)');
+            $st->execute([':key' => self::TASK_LOCK_KEY]);
+            $this->_locked = false;
+        } catch (Throwable $e) {
+            Logging::error('could not release the task manager lock: ' . $e->getMessage());
         }
     }
 
@@ -145,18 +195,27 @@ final class TaskManager
     /**
      * Try to acquire the TaskManager advisory lock without blocking.
      *
-     * The lock is released at the end of the transaction. Unlike a row-level
-     * lock with NOWAIT, failing to acquire the lock does not raise an error
+     * The lock is held by the database session until unlock() is called. Unlike a
+     * row-level lock with NOWAIT, failing to acquire the lock does not raise an error
      * (which would abort the transaction and be logged by postgres).
      *
      * @return bool true if the lock was acquired, otherwise false
      */
     private function _tryLock(): bool
     {
-        $st = $this->_con->prepare('SELECT pg_try_advisory_xact_lock(:key)');
+        $st = $this->_con->prepare('SELECT pg_try_advisory_lock(:key)');
         $st->execute([':key' => self::TASK_LOCK_KEY]);
+        if (!$st->fetchColumn()) {
+            return false;
+        }
 
-        return (bool) $st->fetchColumn();
+        $this->_locked = true;
+        if (!$this->_unlockRegistered) {
+            register_shutdown_function([$this, 'unlock']);
+            $this->_unlockRegistered = true;
+        }
+
+        return true;
     }
 
     /**
