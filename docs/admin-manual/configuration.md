@@ -297,7 +297,22 @@ liquidsoap:
   harbor_ssl_private_key:
   # Input harbor tls certificate password.
   harbor_ssl_password:
+
+  hooks:
+    # put path to j2 files here to have them included in the generated
+    # liquidsoap configuration. The files will be included in listed order.
+    # These files need to assume their stream handle is called 's' and also
+    # return the modified s handle.
+    before_outputs: []
 ```
+
+An example file `/var/lib/libretime/before_output/stereotool.liq.j2` could look like this:
+
+```liquidsoap
+s = ladspa.stereotool(s)
+```
+
+Note that the default directory for LADSPA plugins on Debian type distros is `/usr/lib/ladspa`, so you need to put `stereotool_ladspa.so` there. This particular plugin expects a settings.sts file for configuration in the same directory.
 
 ## Stream
 
