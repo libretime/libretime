@@ -13,7 +13,7 @@ setup(
     package_data={"": ["py.typed"]},
     install_requires=[
         "click>=8.0.4,<8.6",
-        "pydantic>=2.5.0,<2.14",
+        "pydantic>=2.5.0,<2.15",
         "pyyaml>=5.3.1,<6.1",
     ],
     extras_require={
