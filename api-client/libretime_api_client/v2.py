@@ -20,6 +20,9 @@ class ApiClient(AbstractApiClient):
     def get_show(self, item_id: int, **kwargs) -> Response:
         return self._request("GET", f"/api/v2/shows/{item_id}", **kwargs)
 
+    def list_show_instances(self, **kwargs) -> Response:
+        return self._request("GET", "/api/v2/show-instances", **kwargs)
+
     def get_show_instance(self, item_id: int, **kwargs) -> Response:
         return self._request("GET", f"/api/v2/show-instances/{item_id}", **kwargs)
 
