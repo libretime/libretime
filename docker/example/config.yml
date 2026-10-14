@@ -143,6 +143,13 @@ liquidsoap:
   # Input harbor tls certificate password.
   harbor_ssl_password:
 
+  hooks:
+    # put path to j2 files here to have them included in the generated
+    # liquidsoap configuration. The files will be included in listed order.
+    # These files need to assume their stream handle is called 's' and also
+    # return the modified s handle.
+    before_outputs: []
+
 stream:
   # Inputs sources.
   inputs:
