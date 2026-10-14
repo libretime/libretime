@@ -89,4 +89,26 @@ class BlockModelData
                 : array_merge($andGroup(0), $orGroup(1))
         );
     }
+
+    /**
+     * Least recently played tracks labeled nada, limited by time without overflow.
+     *
+     * @param int $minutes the block time limit
+     *
+     * @return array<int, array<string, int|string>|array<string, string>>
+     */
+    public static function getCriteriaLeastRecentlyPlayedLabelNada($minutes): array
+    {
+        return [
+            ['name' => 'sp_type', 'value' => 0],
+            ['name' => 'sp_repeat_tracks', 'value' => 0],
+            ['name' => 'sp_sort_options', 'value' => 'leastrecentplay'],
+            ['name' => 'sp_limit_value', 'value' => $minutes],
+            ['name' => 'sp_limit_options', 'value' => 'minutes'],
+            ['name' => 'sp_overflow_tracks', 'value' => 0],
+            ['name' => 'sp_criteria_field_0_0', 'value' => 'label'],
+            ['name' => 'sp_criteria_modifier_0_0', 'value' => 'contains'],
+            ['name' => 'sp_criteria_value_0_0', 'value' => 'nada'],
+        ];
+    }
 }
