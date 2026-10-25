@@ -16,7 +16,10 @@ EQ_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 EQ_API_ROOT="${EQ_API_ROOT:-$EQ_ROOT/api}"
 
 eq_log() { printf '\n=== %s\n' "$*"; }
-eq_die() { printf 'equivalence: %s\n' "$*" >&2; exit 1; }
+eq_die() {
+           printf 'equivalence: %s\n' "$*" >&2
+                                                exit 1
+}
 
 # ------------------------------------------------------------------ database ---
 
@@ -28,7 +31,7 @@ eq_db_create() {
     local dbname="$1"
 
     eq_log "database $dbname"
-    eq_psqladmin -q -c "DROP DATABASE IF EXISTS $dbname" >/dev/null 2>&1
+    eq_psqladmin -q -c "DROP DATABASE IF EXISTS $dbname" > /dev/null 2>&1
     # Owned by the application role, not created by the superuser and left that way:
     # since PostgreSQL 15 the PUBLIC role no longer has CREATE on schema public, so a
     # database owned by postgres is one the application can connect to and not use. The
@@ -50,27 +53,50 @@ eq_db_create() {
 # --run-syncdb because the api's apps deliberately ship no migration files, and it is
 # also the flag the Django test runner passes when it builds a test database — so this
 # is the same build the api's own suite relies on.
-eq_db_migrate() {
-    local dbname="$1" log
+# Runs the api's migrations against the database named by the config file the driver just
+# wrote, from the api directory, and restores the working directory afterwards.
+#
+# Not a `( … ) > file` group: shfmt's -kp pads the opening paren of a grouped redirection
+# with trailing whitespace, `trim trailing whitespace` then takes it away, and the two
+# hooks never agree on the same file. cd-and-restore is the same thing stated plainly.
+_run_migrations() {
+    local log="$1" previous status
 
-    log="${EQ_MIGRATE_LOG:-/tmp/equivalence-migrate-$dbname.log}"
+    previous="$PWD"
+
+    cd "$EQ_API_ROOT" || return 1
+
+    DJANGO_SETTINGS_MODULE=libretime_api.settings.prod \
+        "$EQ_PY" -c "from libretime_api.manage import main; main()" \
+        migrate --run-syncdb > "$log" 2>&1
+
+    status=$?
+
+    cd "$previous" || return 1
+
+    return "$status"
+}
+
+eq_db_migrate() {
+    local dbname="$1" log tables perms prefs
+
+    # The process id is in the name so that a log left behind by somebody else's run —
+    # mine, in a container, as root — cannot make this one fail on the redirect instead
+    # of on the migration.
+    log="${EQ_MIGRATE_LOG:-${TMPDIR:-/tmp}/equivalence-migrate-$$-$dbname.log}"
 
     eq_log "migrating $dbname (api migrations, with syncdb)"
 
     # The database named by the config file the driver wrote a moment ago, which is why
     # this runs after eq_config_write and not before it.
-    (
-        cd "$EQ_API_ROOT" &&
-            DJANGO_SETTINGS_MODULE=libretime_api.settings.prod \
-                "$EQ_PY" -c "from libretime_api.manage import main; main()" \
-                migrate --run-syncdb
-    ) >"$log" 2>&1 || {
-        printf '  last lines of the migration output:\n' >&2
+    if ! _run_migrations "$log"; then
+        # The path is named because a redirect that could not be created looks exactly
+        # like a migration that failed, and that distinction is the whole diagnostic.
+        printf '  migrations failed; last lines of %s:\n' "$log" >&2
         tail -20 "$log" >&2
         return 1
-    }
+  fi
 
-    local tables perms prefs
     tables=$(eq_psql -d "$dbname" -tAc \
         "select count(*) from information_schema.tables where table_schema = 'public'")
     perms=$(eq_psql -d "$dbname" -tAc "select count(*) from auth_permission")
@@ -79,21 +105,22 @@ eq_db_migrate() {
     # A half-built database is the failure worth refusing to run against: the port would
     # write rows into a schema it does not expect, and the comparison would then report
     # agreement about the wrong thing.
-    [ "${tables:-0}" -ge 40 ] || {
+    if [ "${tables:-0}" -lt 40 ]; then
         printf '  expected the full schema, found %s tables\n' "${tables:-0}" >&2
         return 1
-    }
-    [ "${perms:-0}" -gt 0 ] || {
+  fi
+
+    if [ "${perms:-0}" -le 0 ]; then
         printf '  auth_permission is empty: every object permission would deny\n' >&2
         return 1
-    }
+  fi
 
     printf '  %s tables, %s permissions, %s preferences\n' "$tables" "$perms" "$prefs"
 }
 
 eq_db_drop() {
     eq_log "dropping $1"
-    eq_psqladmin -q -c "DROP DATABASE IF EXISTS $1" >/dev/null || true
+    eq_psqladmin -q -c "DROP DATABASE IF EXISTS $1" > /dev/null || true
 }
 
 # psql as the superuser role, for CREATE/DROP DATABASE, and as the application role for
@@ -101,13 +128,13 @@ eq_db_drop() {
 # application and must not be able to create databases.
 eq_psqladmin() {
     PGHOST="${EQ_DB_HOST:-localhost}" PGPORT="${EQ_DB_PORT:-5432}" \
-        PGPASSWORD="${EQ_DB_SUPER_PASSWORD:-}" \
+    PGPASSWORD="${EQ_DB_SUPER_PASSWORD:-}" \
         psql -U "${EQ_DB_SUPER:-postgres}" -d postgres -v ON_ERROR_STOP=1 "$@"
 }
 
 eq_psql() {
     PGHOST="${EQ_DB_HOST:-localhost}" PGPORT="${EQ_DB_PORT:-5432}" \
-        PGPASSWORD="${EQ_DB_PASSWORD:-libretime}" \
+    PGPASSWORD="${EQ_DB_PASSWORD:-libretime}" \
         psql -U "${EQ_DB_USER:-libretime}" "$@"
 }
 
@@ -141,7 +168,7 @@ eq_config_write() {
 
     mkdir -p "$storagedir"
 
-    cat >"$path" <<CONFIG
+    cat > "$path" << CONFIG
 # Generated by tools/equivalence-lib.sh — do not commit, do not edit.
 # Every key here is declared by BOTH config schemas; add one and the legacy side exits.
 general:
@@ -184,7 +211,7 @@ eq_config_verify() {
     # "-" so that python reads the program from stdin and the two arguments land in
     # sys.argv; handing it the config path instead makes python try to *execute* the yaml,
     # which is a confusing way to discover the guard was never running.
-    "$EQ_PY" - "$path" "$dbname" <<'PY'
+    "$EQ_PY" - "$path" "$dbname" << 'PY'
 import sys
 
 import yaml
@@ -212,13 +239,13 @@ PY
 # result to be tabulated, it means the machine is not set up, and discovering that after
 # building a schema wastes the minute that matters in a CI job.
 eq_preflight() {
-    "$EQ_PY" -c "import libretime_api.settings._schema" >/dev/null 2>&1 || {
+    "$EQ_PY" -c "import libretime_api.settings._schema" > /dev/null 2>&1 || {
         printf 'equivalence: %s cannot import the api config schema.\n' "$EQ_PY" >&2
         printf '           Run make -C api install, or point EQ_PY at that virtualenv.\n' >&2
         printf '           The harnesses compare php against python over one database, and\n' >&2
         printf '           without the api importable they cannot prove that they did.\n' >&2
         return 1
-    }
+  }
 }
 
 # ----------------------------------------------------------------- artefacts ---
@@ -231,7 +258,10 @@ eq_artifacts() {
 
     mkdir -p "$dest"
     if [ -d "$harness/out" ]; then
-        cp -r "$harness/out" "$dest/" 2>/dev/null || true
+        # -R, not -r: shellcheck points out that -r's behaviour with symlinks is
+        # implementation-defined, and the dumps directory is exactly where a stray link
+        # would turn a copied artefact into a copied whole filesystem.
+        cp -R "$harness/out" "$dest/" 2> /dev/null || true
         printf '  artefacts: %s\n' "$(ls "$dest/out" | tr '\n' ' ')"
-    fi
+  fi
 }

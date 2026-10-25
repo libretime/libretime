@@ -41,7 +41,7 @@ export EQ_DB_PASSWORD="${EQ_DB_PASSWORD:-libretime}"
 
 list_only=false
 case "${1:-}" in
---list)
+  --list)
     list_only=true
     shift
     ;;
@@ -57,7 +57,7 @@ if [ ${#harnesses[@]} -eq 0 ]; then
     # conflict on rebase or lie about what exists.
     while IFS= read -r dir; do
         harnesses+=("$dir")
-    done < <(find "$ROOT/tools" -maxdepth 1 -type d -name '*-equivalence' | sort)
+  done   < <(find "$ROOT/tools" -maxdepth 1 -type d -name '*-equivalence' | sort)
 fi
 
 # What counts as "a harness that should be wired": one with an ab.sh. A directory named
@@ -74,7 +74,7 @@ if [ "$list_only" = true ]; then
     # an assertion that it works.
     for h in "${harnesses[@]}"; do
         [ -x "$h/run.sh" ] && basename "$h"
-    done
+  done
     exit 0
 fi
 
@@ -115,7 +115,7 @@ for harness in "${harnesses[@]}"; do
             printf '  skip no ab.sh and no run.sh — authoring tooling, not a CI harness\n'
             [ "$discovered" = true ] && results["$name"]="skip (not a CI harness)"
             continue
-        fi
+    fi
 
         # A harness that predates this contract can only run inside the development
         # containers. Finding one while sweeping the tree is reported and left alone, so
@@ -125,12 +125,12 @@ for harness in "${harnesses[@]}"; do
             printf '  skip no run.sh (not wired for CI yet; see tools/EQUIVALENCE.md)\n'
             results["$name"]="skip (not wired)"
             continue
-        fi
+    fi
         printf '  FAIL no executable run.sh — not wired for CI yet; see tools/EQUIVALENCE.md\n'
         results["$name"]="fail (no run.sh)"
         failed=1
         continue
-    fi
+  fi
 
     rm -rf "$out"
     mkdir -p "$out"
@@ -140,9 +140,9 @@ for harness in "${harnesses[@]}"; do
             printf '  FAIL the api environment is not importable; nothing can be proved\n'
             failed=1
             break
-        }
+    }
         preflight_done=true
-    fi
+  fi
 
     CURRENT_DB="$dbname"
 
@@ -160,7 +160,7 @@ for harness in "${harnesses[@]}"; do
         results["$name"]="fail (database)"
         failed=1
         continue
-    fi
+  fi
 
     # run.sh sees the environment it needs and nothing else; it is responsible for
     # running the legacy service and the python port over the same rows and comparing
@@ -168,17 +168,17 @@ for harness in "${harnesses[@]}"; do
     if (
         cd "$harness" &&
             EQ_MODE="$MODE" \
-                EQ_OUT="$out" \
-                EQ_DB_NAME="$dbname" \
-                EQ_LEGACY_ROOT="$LEGACY_ROOT" \
-                EQ_PY="$PYTHON" \
+        EQ_OUT="$out" \
+        EQ_DB_NAME="$dbname" \
+        EQ_LEGACY_ROOT="$LEGACY_ROOT" \
+        EQ_PY="$PYTHON" \
                 ./run.sh
-    ); then
+  ); then
         results["$name"]="pass"
-    else
+  else
         results["$name"]="fail (divergence or error)"
         failed=1
-    fi
+  fi
 
     eq_artifacts "$out" "$harness"
     eq_db_drop "$dbname"
