@@ -30,6 +30,33 @@ class TestFileViewSet(APITestCase):
         response = self.client.get(f"/api/v2/files/{file.id}/download")
         self.assertEqual(response.status_code, 200)
 
+    def test_patch_size_and_md5(self):
+        """
+        What playout patches onto a file after recording a show.
+
+        The field is "size", not the column's "filesize": an unrecognised key is
+        dropped in silence, so the name is asserted here as well as in
+        playout/tests/player/file_test.py.
+        """
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
+        file: File = baker.make(
+            "storage.File",
+            mime="audio/mpeg",
+            filepath=AUDIO_FILENAME,
+        )
+
+        response = self.client.patch(
+            f"/api/v2/files/{file.id}",
+            {"size": 4711, "md5": "5a11ffe0e6c6d70fcdbad1b734be6482"},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 200, response.data)
+
+        file.refresh_from_db()
+        self.assertEqual(file.size, 4711)
+        self.assertEqual(file.md5, "5a11ffe0e6c6d70fcdbad1b734be6482")
+
     def test_destroy(self):
         self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         file: File = baker.make(

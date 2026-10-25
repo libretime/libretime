@@ -100,12 +100,17 @@ class PypoFile(Thread):
                 exception,
             )
 
-        # Make PUT request to LibreTime to update the file size and hash
+        # Patch the file row with the recording's size and checksum.
+        #
+        # The field is called "size" in the API - "filesize" is only the name of the
+        # column behind it - and Django REST Framework ignores keys it does not
+        # recognise, so sending "filesize" answers 200 without writing anything. The
+        # name was changed in f2e947f05, which did not touch this call site.
         error_msg = f"Could not update media file {file_id} with file size and md5 hash"
         try:
             self.api_client.update_file(
                 file_id,
-                json={"filesize": file_size, "md5": md5_hash},
+                json={"size": file_size, "md5": md5_hash},
             )
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             logger.exception(error_msg)
