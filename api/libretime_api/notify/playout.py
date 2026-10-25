@@ -7,8 +7,9 @@ payload fields are the ones of the legacy service, and playout ignores every
 event it does not know, so both producers can run side by side.
 """
 
+from collections.abc import Mapping
 from enum import StrEnum
-from typing import Any, Literal, Mapping
+from typing import Any, Literal
 
 from ._amqp import ExchangeSpec, publish
 

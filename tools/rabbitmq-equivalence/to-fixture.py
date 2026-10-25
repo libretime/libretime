@@ -35,7 +35,9 @@ def case_of(message: dict[str, Any]) -> str | None:
         return event
 
     if "event_type" in payload:
-        raise ValueError(f"unexpected event on {message['exchange']}: {payload['event_type']}")
+        raise ValueError(
+            f"unexpected event on {message['exchange']}: {payload['event_type']}"
+        )
 
     if not payload["options"]:
         return "analyze_file_without_track_type"
@@ -73,7 +75,9 @@ def build(capture: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--capture", required=True, help="jsonl file written by capture.py")
+    parser.add_argument(
+        "--capture", required=True, help="jsonl file written by capture.py"
+    )
     parser.add_argument("--output", required=True, help="fixture directory to write")
     args = parser.parse_args()
 

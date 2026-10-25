@@ -76,7 +76,9 @@ def exchange_info(name: str) -> dict[str, Any]:
         f"{quote(VHOST, safe='')}/{quote(name, safe='')}"
     )
     credentials = base64.b64encode(f"{USER}:{PASSWORD}".encode())
-    request = urllib.request.Request(url, headers={"Authorization": f"Basic {credentials.decode()}"})
+    request = urllib.request.Request(
+        url, headers={"Authorization": f"Basic {credentials.decode()}"}
+    )
 
     try:
         with urllib.request.urlopen(request, timeout=5) as response:
@@ -107,7 +109,8 @@ def message_record(message: Any) -> dict[str, Any]:
             key: value
             for key, value in message.properties.items()
             # Delivery information belongs to the delivery, not to the message.
-            if key not in ("delivery_tag", "delivery_info", "redelivered", "consumer_tag")
+            if key
+            not in ("delivery_tag", "delivery_info", "redelivered", "consumer_tag")
         },
         "exchange": message.delivery_info.get("exchange"),
         "routing_key": message.delivery_info.get("routing_key"),
@@ -143,7 +146,9 @@ def main() -> None:
         # dropped by the broker.
         with ExitStack() as stack:
             for name, (exchange_type, routing_key, auto_delete) in EXCHANGES.items():
-                exchange = Exchange(name, exchange_type, durable=True, auto_delete=auto_delete)
+                exchange = Exchange(
+                    name, exchange_type, durable=True, auto_delete=auto_delete
+                )
 
                 # Expiring and unnamed like the queues of the analyzer and
                 # playout consumers, so an interrupted capture leaves nothing
@@ -159,7 +164,9 @@ def main() -> None:
                 )
 
                 stack.enter_context(
-                    Consumer(connection, queue, callbacks=[on_message], accept=["text/plain"]),
+                    Consumer(
+                        connection, queue, callbacks=[on_message], accept=["text/plain"]
+                    ),
                 )
 
             remaining = args.duration

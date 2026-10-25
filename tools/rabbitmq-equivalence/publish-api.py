@@ -19,7 +19,7 @@ django.setup()
 
 from libretime_api import notify  # noqa: E402
 
-STATION_NAME = "Radio Zürich — \"quote\" \\ <>& / \U0001f600"
+STATION_NAME = 'Radio Zürich — "quote" \\ <>& / \U0001f600'
 
 
 def cases() -> dict:
@@ -35,7 +35,9 @@ def cases() -> dict:
         "update_station_name": lambda: notify.update_station_name(STATION_NAME),
         "update_transition_fade": lambda: notify.update_transition_fade("1.500"),
         "update_stream_format": lambda: notify.update_stream_format("1"),
-        "update_message_offline": lambda: notify.update_message_offline("LibreTime - offline"),
+        "update_message_offline": lambda: notify.update_message_offline(
+            "LibreTime - offline"
+        ),
         # Analyzer notifications, one per track type option.
         "analyze_file_cue_points_true": lambda: notify.send_message_to_analyzer(
             "/tmp/libretime-equivalence.mp3",

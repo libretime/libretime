@@ -80,7 +80,9 @@ def compare(legacy_path: str, api_path: str) -> int:
             print(f"EXTRA     {message['exchange']} {message['body']}")
             failures += 1
 
-    print(f"\n{len(legacy)} legacy message(s), {len(api)} api message(s), {failures} missing")
+    print(
+        f"\n{len(legacy)} legacy message(s), {len(api)} api message(s), {failures} missing"
+    )
 
     return failures
 
