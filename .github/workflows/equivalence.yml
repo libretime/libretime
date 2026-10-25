@@ -1,0 +1,170 @@
+name: Equivalence
+
+# The harnesses under tools/*-equivalence run the same fixture through the legacy php
+# service and through its python port, then compare the resulting rows. They are the
+# only thing standing between "the api looks right" and "the api writes what the
+# scheduler and playout expect", so they belong in CI rather than on one laptop: a
+# comparison nobody re-runs is a snapshot, not a guarantee.
+#
+# The schedule matters even when nothing changes. Instance generation is date
+# arithmetic performed against the host's tzdata and PHP's date library, so a tzdata
+# bump can move a show across a DST boundary with no code change anywhere. A periodic
+# run turns that into a red job instead of a station with an empty night.
+#
+# Scheduled workflows do not run on forks, so the drift detection only exists once this
+# is on the upstream repository; everything else works from a fork unchanged.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, stable-*]
+    paths:
+      - .github/workflows/equivalence.yml
+      - tools/equivalence-lib.sh
+      - tools/equivalence-run.sh
+      - tools/*-equivalence/**
+      - api/**
+      - legacy/**
+
+  pull_request:
+    branches: [main, stable-*]
+    paths:
+      - .github/workflows/equivalence.yml
+      - tools/equivalence-lib.sh
+      - tools/equivalence-run.sh
+      - tools/*-equivalence/**
+      - api/**
+      - legacy/**
+
+  schedule:
+    - cron: 0 1 * * 1
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # One job per harness, discovered in the checkout. A hand-written matrix would be a
+  # file every branch touching a harness has to edit — and these branches are stacked,
+  # so it would either conflict on every rebase or claim to run harnesses that commit
+  # does not contain. Discovery means adding a directory is the whole integration, and a
+  # branch carrying several harnesses runs all of them, which is correct: it can break
+  # all of them.
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      harnesses: ${{ steps.find.outputs.harnesses }}
+      count: ${{ steps.find.outputs.count }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Find harnesses
+        id: find
+        run: |
+          mapping=$(tools/equivalence-run.sh --list | jq -R 'select(. != "")' | jq -s .)
+          echo "harnesses=$mapping" >> "$GITHUB_OUTPUT"
+          echo "count=$(echo "$mapping" | jq 'length')" >> "$GITHUB_OUTPUT"
+
+          # Directories that predate the contract are announced rather than run, so an
+          # open branch carrying one shows a line saying what is missing instead of a
+          # green tick that quietly left the comparison out.
+          for dir in tools/*-equivalence; do
+            [ -d "$dir" ] || continue
+            if [ ! -x "$dir/run.sh" ]; then
+              echo "::warning title=Harness not wired for CI::$(basename "$dir") has no executable run.sh — its comparison is not being run. See tools/EQUIVALENCE.md."
+            fi
+          done
+
+  equivalence:
+    needs: discover
+    if: needs.discover.outputs.count != '0'
+
+    runs-on: ubuntu-latest
+    strategy:
+      # Every harness reports, not just the first to fail: when php and the port
+      # disagree in two places, seeing one of them leaves the next one for the station
+      # to find.
+      fail-fast: false
+      matrix:
+        harness: ${{ fromJSON(needs.discover.outputs.harnesses) }}
+
+    env:
+      LIBRETIME_DATABASE_HOST: localhost
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      # The application role, not just the superuser: the harnesses connect as the same
+      # user a station does, because the grants on the legacy tables are part of what is
+      # being proved. CREATEDB is not needed by the harness itself — the driver creates
+      # databases as the superuser — but the legacy installer path checks for it.
+      - name: Setup database roles
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -v ON_ERROR_STOP=1 <<SQL
+          CREATE USER libretime WITH PASSWORD 'libretime' CREATEDB;
+          SQL
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('legacy/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      # The php side of a harness calls the real legacy service classes, which reach
+      # Propel and the generated Peer classes. Those are committed, but the vendor
+      # directory is not.
+      - name: Install legacy dependencies
+        run: make vendor
+        working-directory: legacy
+
+      - name: Install api dependencies
+        run: make install
+        working-directory: api
+
+      - name: Run harness
+        run: tools/equivalence-run.sh tools/${{ matrix.harness }}
+        env:
+          EQ_DB_SUPER_PASSWORD: postgres
+
+      # The dumps are the readable half of a failure. "test_weekly differs" is not an
+      # actionable sentence; the row-by-row diff, without re-running anything, is.
+      - name: Upload harness output
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.harness }}
+          path: tools/equivalence-out/${{ matrix.harness }}
+          if-no-files-found: ignore
