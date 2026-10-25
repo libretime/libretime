@@ -60,6 +60,11 @@ if [ ${#harnesses[@]} -eq 0 ]; then
     done < <(find "$ROOT/tools" -maxdepth 1 -type d -name '*-equivalence' | sort)
 fi
 
+# What counts as "a harness that should be wired": one with an ab.sh. A directory named
+# *-equivalence may instead be authoring tooling that captures something once and commits
+# the result as a fixture — tools/rabbitmq-equivalence does exactly that, and its
+# comparison then runs as ordinary tests — so warning about it every run would teach
+# everyone to ignore the warning.
 if [ "$list_only" = true ]; then
     # Only harnesses that are actually runnable. A directory that predates this contract
     # has an ab.sh that shells into development containers and no way to run on a CI
@@ -100,6 +105,18 @@ for harness in "${harnesses[@]}"; do
     eq_log "$name ($MODE mode)"
 
     if [ ! -x "$harness/run.sh" ]; then
+        # A directory named *-equivalence is not necessarily a comparison to run per
+        # commit: tools/rabbitmq-equivalence captures live broker traffic once and
+        # commits the result as a fixture, which then runs as ordinary tests. That is not
+        # "unwired", and warning about it every run would train everyone to ignore the
+        # warning — so the signal is reserved for a container-mode harness (it has an
+        # ab.sh) that has not been given a run.sh yet.
+        if [ ! -f "$harness/ab.sh" ]; then
+            printf '  skip no ab.sh and no run.sh — authoring tooling, not a CI harness\n'
+            [ "$discovered" = true ] && results["$name"]="skip (not a CI harness)"
+            continue
+        fi
+
         # A harness that predates this contract can only run inside the development
         # containers. Finding one while sweeping the tree is reported and left alone, so
         # that "run everything" works on a branch mid-migration; naming one explicitly is
@@ -128,16 +145,22 @@ for harness in "${harnesses[@]}"; do
     fi
 
     CURRENT_DB="$dbname"
-    if ! eq_db_prepare "$dbname"; then
+
+    # Create it, point the shared config at it, prove the api reads that config, then
+    # build the schema into it with the api's migrations. That order is not arbitrary:
+    # migrating connects through the same config file both legs will use, so a database
+    # name neither side can reach fails here instead of half way through a comparison.
+    if ! eq_db_create "$dbname" ||
+        ! eq_config_write "$out/config.yml" "$dbname" "$out/storage" ||
+        ! eq_config_verify "$out/config.yml" "$dbname" ||
+        ! eq_db_migrate "$dbname"; then
         printf '  FAIL could not build the harness database\n'
         eq_db_drop "$dbname"
+        CURRENT_DB=""
         results["$name"]="fail (database)"
         failed=1
         continue
     fi
-
-    eq_config_write "$out/config.yml" "$dbname" "$out/storage"
-    eq_config_verify "$out/config.yml" "$dbname"
 
     # run.sh sees the environment it needs and nothing else; it is responsible for
     # running the legacy service and the python port over the same rows and comparing

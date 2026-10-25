@@ -71,9 +71,11 @@ jobs:
           # Directories that predate the contract are announced rather than run, so an
           # open branch carrying one shows a line saying what is missing instead of a
           # green tick that quietly left the comparison out.
+          # Only container-mode harnesses are worth nagging about: a directory may be
+          # authoring tooling whose result was committed as a fixture instead.
           for dir in tools/*-equivalence; do
             [ -d "$dir" ] || continue
-            if [ ! -x "$dir/run.sh" ]; then
+            if [ -f "$dir/ab.sh" ] && [ ! -x "$dir/run.sh" ]; then
               echo "::warning title=Harness not wired for CI::$(basename "$dir") has no executable run.sh — its comparison is not being run. See tools/EQUIVALENCE.md."
             fi
           done
@@ -95,6 +97,24 @@ jobs:
       LIBRETIME_DATABASE_HOST: localhost
 
     services:
+      # The port publishes to RabbitMQ on the same paths a station does — a show edit
+      # tells playout to rebuild, and the code under test is the code that publishes.
+      # Refusing to give it a broker would mean either a harness that fails for an
+      # environmental reason or a stub that quietly stops testing the behaviour.
+      rabbitmq:
+        image: rabbitmq:3.13-alpine
+        env:
+          RABBITMQ_DEFAULT_USER: libretime
+          RABBITMQ_DEFAULT_PASS: libretime
+          RABBITMQ_DEFAULT_VHOST: /libretime
+        ports:
+          - 5672:5672
+        options: >-
+          --health-cmd "rabbitmq-diagnostics check_port_connectivity"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
       postgres:
         image: postgres:15
         env:
@@ -116,6 +136,12 @@ jobs:
         with:
           php-version: "8.2"
           coverage: none
+          # Named rather than left to the defaults, because these are what the legacy
+          # services under test actually call: bcmath (SchedulerService::findEndTime uses
+          # bcadd), yaml (Config::load parses the config with yaml_parse_file),
+          # pdo_pgsql, and the usual dom/xml/mbstring/curl. A harness that dies on a
+          # missing extension in a nightly run is a harness nobody reads the log of.
+          extensions: bcmath, curl, dom, intl, mbstring, pdo_pgsql, simplexml, xml, yaml
 
       - name: Setup Python
         uses: actions/setup-python@v6

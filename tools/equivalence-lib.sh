@@ -13,8 +13,7 @@
 # Sourcing this file does nothing on its own; see equivalence-run.sh for the driver.
 
 EQ_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-EQ_SCHEMA_SQL="$EQ_ROOT/api/libretime_api/legacy/migrations/sql/schema.sql"
-EQ_DATA_SQL="$EQ_ROOT/api/libretime_api/legacy/migrations/sql/data.sql"
+EQ_API_ROOT="${EQ_API_ROOT:-$EQ_ROOT/api}"
 
 eq_log() { printf '\n=== %s\n' "$*"; }
 eq_die() { printf 'equivalence: %s\n' "$*" >&2; exit 1; }
@@ -25,12 +24,10 @@ eq_die() { printf 'equivalence: %s\n' "$*" >&2; exit 1; }
 # global shows_populated_until preference, and a station — or a shared CI database —
 # that woke up believing its calendar was already built to 2044 would stop populating
 # shows. That is a self-inflicted outage, not a test.
-eq_db_prepare() {
+eq_db_create() {
     local dbname="$1"
 
-    [ -f "$EQ_SCHEMA_SQL" ] || eq_die "no schema at $EQ_SCHEMA_SQL"
-
-    eq_log "database $dbname (installer schema, as the legacy suite installs it)"
+    eq_log "database $dbname"
     eq_psqladmin -q -c "DROP DATABASE IF EXISTS $dbname" >/dev/null 2>&1
     # Owned by the application role, not created by the superuser and left that way:
     # since PostgreSQL 15 the PUBLIC role no longer has CREATE on schema public, so a
@@ -38,10 +35,60 @@ eq_db_prepare() {
     # legacy CI setup hits the same thing and fixes it with ALTER DATABASE ... OWNER TO;
     # creating it owned is the same fact stated once, earlier.
     eq_psqladmin -q -c "CREATE DATABASE $dbname OWNER ${EQ_DB_USER:-libretime}"
-    eq_psql -d "$dbname" -q -v ON_ERROR_STOP=1 <"$EQ_SCHEMA_SQL"
-    # data.sql holds the seed rows the legacy tests assume (the admin account and the
-    # default preferences). Without it the services refuse to run at all.
-    [ -f "$EQ_DATA_SQL" ] && eq_psql -d "$dbname" -q -v ON_ERROR_STOP=1 <"$EQ_DATA_SQL"
+}
+
+# Built with the api's own migrations rather than by loading the installer SQL directly.
+#
+# The difference matters, and the permission harness is what found it:
+# legacy/migrations/0001 installs sql/schema.sql and sql/data.sql, and the migrations
+# after it replay every schema change a station has been through since — so migrating
+# produces the schema a running station actually has, not the one a first install had.
+# More importantly, the api's own tables (django_content_type, auth_permission,
+# core_user, sessions) exist only as Django models: load the legacy SQL alone and every
+# permission check in the api raises `relation "auth_permission" does not exist`.
+#
+# --run-syncdb because the api's apps deliberately ship no migration files, and it is
+# also the flag the Django test runner passes when it builds a test database — so this
+# is the same build the api's own suite relies on.
+eq_db_migrate() {
+    local dbname="$1" log
+
+    log="${EQ_MIGRATE_LOG:-/tmp/equivalence-migrate-$dbname.log}"
+
+    eq_log "migrating $dbname (api migrations, with syncdb)"
+
+    # The database named by the config file the driver wrote a moment ago, which is why
+    # this runs after eq_config_write and not before it.
+    (
+        cd "$EQ_API_ROOT" &&
+            DJANGO_SETTINGS_MODULE=libretime_api.settings.prod \
+                "$EQ_PY" -c "from libretime_api.manage import main; main()" \
+                migrate --run-syncdb
+    ) >"$log" 2>&1 || {
+        printf '  last lines of the migration output:\n' >&2
+        tail -20 "$log" >&2
+        return 1
+    }
+
+    local tables perms prefs
+    tables=$(eq_psql -d "$dbname" -tAc \
+        "select count(*) from information_schema.tables where table_schema = 'public'")
+    perms=$(eq_psql -d "$dbname" -tAc "select count(*) from auth_permission")
+    prefs=$(eq_psql -d "$dbname" -tAc "select count(*) from cc_pref")
+
+    # A half-built database is the failure worth refusing to run against: the port would
+    # write rows into a schema it does not expect, and the comparison would then report
+    # agreement about the wrong thing.
+    [ "${tables:-0}" -ge 40 ] || {
+        printf '  expected the full schema, found %s tables\n' "${tables:-0}" >&2
+        return 1
+    }
+    [ "${perms:-0}" -gt 0 ] || {
+        printf '  auth_permission is empty: every object permission would deny\n' >&2
+        return 1
+    }
+
+    printf '  %s tables, %s permissions, %s preferences\n' "$tables" "$perms" "$prefs"
 }
 
 eq_db_drop() {
