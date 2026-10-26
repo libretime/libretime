@@ -29,7 +29,7 @@ setup(
         "kombu>=5.5.0,<5.7",
         "lxml>=4.5.0,<7.0.0",
         "mutagen>=1.45.1,<1.49",
-        "python-dateutil>=2.8.1,<2.10",
+        "python-dateutil>=2.8.1,<3.1",
         "requests>=2.32.2,<2.35",
         "typing-extensions",
     ],
