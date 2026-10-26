@@ -25,8 +25,8 @@ class ErrorController extends Zend_Controller_Action
 
         if ($errors) {
             // Requests for unknown routes, controllers, or actions are usually just bots and
-            // scanners probing for pages, not application bugs, so we log them as warnings
-            // instead of errors to keep them out of error-level alerting and reporting.
+            // scanners probing for pages, not application bugs, so we only log them in
+            // development to keep them out of the production logs.
             $isClientError = in_array($errors->type, [
                 Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ROUTE,
                 Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER,
@@ -73,7 +73,7 @@ class ErrorController extends Zend_Controller_Action
         }*/
         // Logging that actually works: -- Albert
         if ($isClientError) {
-            Logging::warn($this->view->message . ': ' . $errors->exception);
+            Logging::debug($this->view->message . ': ' . $errors->exception);
         } else {
             Logging::error($this->view->message . ': ' . $errors->exception);
         }
