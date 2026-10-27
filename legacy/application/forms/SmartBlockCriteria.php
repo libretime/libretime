@@ -600,7 +600,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         if ($data['etc']['sp_limit_options'] == 'hours') {
             $multiplier = 60;
         }
-        if ($data['etc']['sp_limit_options'] == 'hours' || $data['etc']['sp_limit_options'] == 'mins') {
+        if ($data['etc']['sp_limit_options'] == 'hours' || $data['etc']['sp_limit_options'] == 'minutes') {
             $element = $this->getElement('sp_limit_value');
             if ($data['etc']['sp_limit_value'] == '' || floatval($data['etc']['sp_limit_value']) <= 0) {
                 $element->addError(_('Limit cannot be empty or smaller than 0'));

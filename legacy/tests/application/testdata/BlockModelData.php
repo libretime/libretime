@@ -3,6 +3,27 @@
 class BlockModelData
 {
     /**
+     * Criteria of a smart block matching every file of album1, limited by the
+     * given modifier and value, exactly like the smart block builder posts them.
+     *
+     * @return array<int, array<string, int|string>|array<string, string>>
+     */
+    public static function getLimitCriteria(string $modifier, string $value): array
+    {
+        return [
+            ['name' => 'sp_type', 'value' => 0],
+            ['name' => 'sp_repeat_tracks', 'value' => 0],
+            ['name' => 'sp_sort_options', 'value' => 'random'],
+            ['name' => 'sp_limit_options', 'value' => $modifier],
+            ['name' => 'sp_limit_value', 'value' => $value],
+            ['name' => 'sp_overflow_tracks', 'value' => 0],
+            ['name' => 'sp_criteria_field_0_0', 'value' => 'album_title'],
+            ['name' => 'sp_criteria_modifier_0_0', 'value' => 'is'],
+            ['name' => 'sp_criteria_value_0_0', 'value' => 'album1'],
+        ];
+    }
+
+    /**
      * @return array<int, array<string, int|string>|array<string, string>>
      */
     public static function getCriteriaSingleNewestLabelNada(): array
