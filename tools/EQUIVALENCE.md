@@ -1,117 +1,73 @@
 # Equivalence harnesses
 
-A harness proves that a python port leaves the **same database rows** as the legacy php
-code it replaces. Not the same JSON, not the same intent — the same rows, column by
-column, including the ones nothing reads. `tools/<area>-equivalence/`.
+A harness proves one thing: **the python port leaves the same database rows as the legacy php
+service.** It runs a fixture through both and diffs the dumps. Response bodies are not the
+evidence — "the endpoint returns 201" says nothing about whether playout finds what it expects in
+`cc_schedule` in an hour.
 
-They exist because "the endpoint returns 201" says nothing about whether the scheduler,
-the populator and playout will find what they expect in the tables an hour later. Each
-harness is the gate that turns that from a review question into a command.
-
-## Running them
+## Run one
 
 ```bash
-tools/equivalence-run.sh                    # every harness in this checkout
-tools/equivalence-run.sh tools/show-editor-equivalence
-tools/equivalence-run.sh --list             # what would run, one per line
+make -C api install                              # the venv the driver compares against
+make -C legacy vendor                            # Propel classes for the php leg
+python3 tools/equivalence.py tools/criteria-equivalence
 ```
 
-`.github/workflows/equivalence.yml` runs the same command — one matrix job per harness
-directory it finds, on pull requests, on pushes to `main`, and weekly.
+With no argument it runs every harness in the checkout that is wired for CI.
+`--list` prints what would run. `--help` explains the environment variables.
 
-## The contract
+Locally it needs a PostgreSQL and, for harnesses whose ported code publishes, a RabbitMQ. The
+variables below point at them; in CI both are provided by the workflow.
 
-A harness is a directory `tools/<name>-equivalence/` containing an executable `run.sh`.
-That is all the driver knows about it, and all it needs to know.
+## Write one
 
-The pattern that has worked is one scenario in two addressing modes: `ab.sh` holds the
-scenario and speaks to postgres, php and python either through the development containers
-(`AB_MODE=container`, what it always did) or on this host (`AB_MODE=local`), and `run.sh`
-is the two-line CI entry that selects the second. One scenario rather than two copies,
-because a comparison CI runs that drifted from the one developers run is not the same
-comparison.
+A harness is a directory `tools/<name>-equivalence/` containing:
 
-The driver prepares the world, so that the parts that are easy to get wrong happen once,
-identically, for every harness:
+| file         | purpose                                                                                                                                                                                                       |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `seed.sql`   | the fixture: identical starting rows for both legs                                                                                                                                                            |
+| `ab.sh`      | the scenario. `AB_MODE=local` (CI, or the driver) uses the environment it is given; `AB_MODE=container` shells into development containers, which is how these were written first and still works for a human |
+| `dump.sh`    | dumps the affected tables to CSV in `$EQ_OUT/php` and `$EQ_OUT/python`, re-seeding between the legs                                                                                                           |
+| `compare.py` | diffs them; exits non-zero on any difference that is not in the ledger                                                                                                                                        |
+| `run.sh`     | the two-line CI entry: `AB_MODE=local ./ab.sh && ./dump.sh && python3 compare.py`                                                                                                                             |
 
-| provided                                            | what it is                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `EQ_DB_NAME`                                        | a database created for this harness and dropped afterwards, built by running **the api's own migrations** (`migrate --run-syncdb`) against it. Not `schema.sql` on its own: the migrations after `0001` replay every change a station has been through, and the api's tables — `auth_permission`, `django_content_type`, `core_user`, `sessions` — exist only as Django models. Load the legacy SQL alone and every permission check answers `relation "auth_permission" does not exist`. |
-| `LIBRETIME_CONFIG_FILEPATH`, `EQ_OUT/config.yml`    | **one** config file pointing at that database and at the broker, read by both the php side and the python side. Two files would be two chances to compare a service against itself.                                                                                                                                                                                                                                                                                                       |
-| RabbitMQ on `localhost:5672`, vhost `/libretime`    | a real broker, because the ports publish the way php published: a show edit tells playout to rebuild. A harness without one either fails for environmental reasons or has to stub the behaviour it is supposed to be proving.                                                                                                                                                                                                                                                             |
-| `EQ_OUT`                                            | directory for dumps, logs and the api's swallowed warnings. Uploaded as a CI artefact, always.                                                                                                                                                                                                                                                                                                                                                                                            |
-| `EQ_LEGACY_ROOT`, `EQ_API_ROOT`, `EQ_PY`, `EQ_MODE` | where the legacy app is (with `vendor/` installed), where the api is, which python to use, and `local`.                                                                                                                                                                                                                                                                                                                                                                                   |
+`run.sh` is what makes it a CI harness. A directory with an `ab.sh` and no `run.sh` is reported as
+**not wired** — a warning naming it, never a silent skip, because a comparison that quietly omits a
+case reads as a pass.
 
-`run.sh` then, in the harness directory:
+What the harness receives: `EQ_OUT`, `EQ_DB_NAME`, `EQ_MODE`, `EQ_PY`, `EQ_LEGACY_ROOT`, the
+`EQ_DB_*` and `EQ_RABBITMQ_*` connection values, `LIBRETIME_CONFIG_FILEPATH`, and
+`LIBRETIME_LOG_DIR` set inside the artefacts directory (legacy code logs warnings instead of
+failing, and that log is often the only explanation).
 
-1. seed whatever fixture the scenario needs,
-2. run the legacy service over it, dump the rows,
-3. reset to the same starting point, run the python port, dump the rows,
-4. compare, **exit non-zero on any difference it has not explicitly excused**, and write
-   the diff into `$EQ_OUT` so it is readable from a CI log.
+## What the driver guarantees, and the wrong-green each one prevents
 
-A missing `run.sh` is a **failure when named, and a warning when found** — see the driver's
-discovery rules. Fixture files (a scenario list, a cases file) are read from `AB_FIXTURES`,
-defaulting to the `/tools` mount container mode uses, so that both legs provably read the
-same fixture rather than a copy of it.
+| guarantee                                                                                     | the failure it prevents                                                                                   |
+| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| refuses to start unless `EQ_PY` can import the api                                            | a harness "passing" on a machine that cannot run the port at all                                          |
+| one database per harness, named after it                                                      | two parallel matrix jobs dropping each other's rows                                                       |
+| the database is created **owned by the application role**                                     | PostgreSQL 15 removed `PUBLIC`'s `CREATE` on schema `public`: app can connect, cannot use it              |
+| **one** `config.yml`, read by php _and_ python                                                | two files, two databases, one harness comparing a service against itself and reporting agreement          |
+| asks the api's own loader which database it resolved, and requires an answer                  | python silently ignoring a key it does not declare — the same failure, caught before it can produce green |
+| schema built by `migrate --run-syncdb`, not by loading the installer SQL                      | the legacy SQL alone has no `auth_permission`, so every object permission answers with a database error   |
+| asserts the schema exists (≥40 tables, `auth_permission` non-empty)                           | comparing rows in a half-built world                                                                      |
+| drops the database on every exit path, and prints the log path when a step dies on a redirect | leftover databases; an unwritable log reading exactly like a failed migration                             |
+| uploads the dumps and the php log even when the harness fails                                 | "test_weekly differs" being unactionable without re-running                                               |
 
-## Rules that apply to every harness
+## Where and when it runs
 
-- **Own database, always.** The show editor writes the global `shows_populated_until`
-  preference. A harness that ran against a station's database — or a shared CI one —
-  could leave it believing the calendar was built to 2044, and that station would stop
-  populating shows. Self-inflicted outage, not a test.
-- **Name the divergence, in the ledger, with a reason.** Where the port deliberately
-  differs from php, the harness must say so and still pass. Silent tolerance is how a
-  real bug becomes expected behaviour.
-- **Check the php leg against the project's own expectation datasets before writing
-  python.** If those disagree, that is a finding about the repository, not noise in the
-  harness.
-- **IDs are not compared.** Sequences advance differently between the two runs; the
-  parent/child relationships are what carry meaning, and the standard `compare.py`
-  remaps them.
-- **A fixture must load into an empty database.** One harness inserted its `cc_schedule`
-  rows before the `cc_files` rows they reference and passed for weeks, because the files
-  were already in the station's database from another harness's run. A clean database is
-  the better environment precisely because it refuses to hide that.
+`.github/workflows/equivalence.yml`: one job per discovered harness, on pull requests touching
+`api/`, `legacy/` or the harnesses, on push to `main`, and weekly. The php and postgres setup is the
+same shape the `Legacy` job already builds; the api venv is the same `make install` the `API` job
+uses; the only new part is a RabbitMQ service. It is **not** a required check yet — see the comments
+at the top of that file.
 
-## A database built from migrations is not the same as a station's, and that is the point
+## What this does not do
 
-CI cannot clone a station, so it builds a database the way a station's is maintained: the
-api's migrations, from the installer schema through every upgrade since. That is closer to
-a running station than the bare installer SQL is, and it changed what one harness had to
-say.
-
-`show-editor-equivalence` documents three divergences where php leaves rows behind because
-a foreign key never arrived — `cc_show_days.show_id` and `cc_schedule.instance_id` have no
-constraint on databases that were installed years ago and upgraded. On the migrated
-schema, `cc_show_instances.show_id` **does** cascade, so php's own deletes remove the
-children and the divergence disappears: all 20 scenarios come out identical, and 18 of them
-match the datasets committed upstream as well. The port is correct under either schema,
-because it deletes its children explicitly rather than trusting the constraint.
-
-The ledger in that harness is deliberately one-directional — a documented difference that
-does not occur is not a failure — so the same harness passes in both environments and
-nobody is tempted to weaken it to make a run green. When reading a divergence, ask which
-schema built the database before deciding who is wrong.
-
-## Adding a harness
-
-1. `mkdir tools/<area>-equivalence`, add a `README.md` stating what is being proved, the
-   fixture, and the ledger of excused divergences.
-2. Write the scenario in `ab.sh` (or your own entry point) so that postgres, php and
-   python are addressed through a small set of functions, and add `run.sh` selecting
-   `AB_MODE=local`. Reuse the sibling harnesses' shape: `run-php.php` / `run-py.py` /
-   `compare.py` / `seed.sql` / `clean.sql`.
-3. `tools/equivalence-run.sh tools/<area>-equivalence` until it passes, then break one
-   assertion on purpose and watch it fail. A harness that has never failed is not proof
-   of anything.
-4. Nothing else to wire. Discovery picks it up.
-
-The environment CI provides is reproducible on a workstation: php 8.2 with
-`bcmath, curl, dom, intl, mbstring, pdo_pgsql, simplexml, xml, yaml` (bcmath is not
-optional — `SchedulerService::findEndTime` calls `bcadd`), `make -C legacy vendor`,
-`make -C api install`, and postgres and rabbitmq as containers. Two things the harnesses
-need that a laptop usually lacks: `LIBRETIME_LOG_DIR` pointed somewhere writable, because
-the legacy services log through Zend and will not start without it, and `PYTHONPATH` if
-your virtualenv was built at a different path than the checkout it is being used against.
+- It does not compare HTTP responses. It compares rows; the payload vocabulary is a design decision,
+  the rows are a fact.
+- It does not prove the php side is _correct_, only that the port matches it. Where php is wrong and
+  the port deliberately diverges, `compare.py` carries a ledger entry with a reason — and the ledger
+  is one-directional, so an excused difference that did not happen is itself a failure.
+- It does not run in the development containers in CI, and does not touch a station's database. It
+  always creates and drops its own.

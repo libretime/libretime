@@ -12,7 +12,25 @@ disable = [
 
 [tool.mypy]
 allow_redefinition = true
-disallow_incomplete_defs= true
+disallow_incomplete_defs = true
+
+# tools/<name>-equivalence/ scripts run inside an application virtualenv - the api's -
+# and never inside this linting venv, which installs only linters, requests and their
+# types (see the PIP_INSTALL line in Makefile). Their imports of django, kombu and the
+# api package therefore cannot resolve here.
+#
+# Typing those as Any keeps the harness files checked - our own functions, arguments and
+# returns - instead of excluding the directories wholesale, which is what would let a
+# broken harness quietly stop comparing anything.
+[[tool.mypy.overrides]]
+module = [
+  "django.*",
+  "kombu.*",
+  "libretime_api.*",
+  "rest_framework.*",
+  "yaml.*",
+]
+ignore_missing_imports = true
 
 [build-system]
 requires = ["setuptools", "wheel"]
