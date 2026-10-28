@@ -6,7 +6,7 @@ The reference capture is the one published by the legacy service, so that the
 messages the API publishes can be proven to be what the services already
 consume:
 
-    python compare.py --legacy legacy.jsonl --api api.jsonl
+    python compare_rabbitmq.py --legacy legacy.jsonl --api api.jsonl
 
 Bodies have to be byte identical. Message properties are compared too, and
 are reported separately since a producer may add properties the consumers

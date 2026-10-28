@@ -3,7 +3,7 @@
 Publish the same messages as publish-legacy.php, from the API.
 
 Run it with the RabbitMQ host of the platform you captured the legacy messages
-on, then compare the two captures with compare.py:
+on, then compare the two captures with compare_rabbitmq.py:
 
     python publish-api.py
 """

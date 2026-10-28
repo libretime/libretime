@@ -90,7 +90,7 @@ $ docker compose cp api:/tmp/eq/api-capture.jsonl tools/rabbitmq-equivalence/
 ## Compare
 
 ```console
-$ python3 compare.py --legacy legacy-capture.jsonl --api api-capture.jsonl
+$ python3 compare_rabbitmq.py --legacy legacy-capture.jsonl --api api-capture.jsonl
 ```
 
 The report lists the property differences per message and the payload diff of the
