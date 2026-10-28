@@ -23,13 +23,25 @@ variables below point at them; in CI both are provided by the workflow.
 
 A harness is a directory `tools/<name>-equivalence/` containing:
 
-| file         | purpose                                                                                                                                                                                                       |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `seed.sql`   | the fixture: identical starting rows for both legs                                                                                                                                                            |
-| `ab.sh`      | the scenario. `AB_MODE=local` (CI, or the driver) uses the environment it is given; `AB_MODE=container` shells into development containers, which is how these were written first and still works for a human |
-| `dump.sh`    | dumps the affected tables to CSV in `$EQ_OUT/php` and `$EQ_OUT/python`, re-seeding between the legs                                                                                                           |
-| `compare.py` | diffs them; exits non-zero on any difference that is not in the ledger                                                                                                                                        |
-| `run.sh`     | the two-line CI entry: `AB_MODE=local ./ab.sh && ./dump.sh && python3 compare.py`                                                                                                                             |
+| file                   | purpose                                                                                                                                                                                                       |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `seed.sql`             | the fixture: identical starting rows for both legs                                                                                                                                                            |
+| `ab.sh`                | the scenario. `AB_MODE=local` (CI, or the driver) uses the environment it is given; `AB_MODE=container` shells into development containers, which is how these were written first and still works for a human |
+| `dump.sh`              | dumps the affected tables to CSV in `$EQ_OUT/php` and `$EQ_OUT/python`, re-seeding between the legs                                                                                                           |
+| `compare_<name>.py`    | diffs them; exits non-zero on any difference that is not in the ledger                                                                                                                                        |
+| `run_python_<name>.py` | the python leg, when the scenario does not drive a viewset directly                                                                                                                                           |
+| `run.sh`               | the two-line CI entry: `AB_MODE=local ./ab.sh && ./dump.sh && python3 compare_<name>.py`                                                                                                                      |
+
+`<name>` is the harness directory without `-equivalence`, dashes written as underscores: inside
+`tools/criteria-equivalence/` the comparison is `compare_criteria.py`.
+
+The names carry the harness on purpose. `make -C tools all` runs `mypy .`, and mypy names a file
+that is not inside a package after the file itself — so two harnesses each holding a `compare.py`
+are the same module declared twice, and the whole type check is refused with
+`Duplicate module named "compare"`. Harness directories cannot be packages, because their names
+contain dashes, and `explicit_package_bases` does not fix it (checked on a branch carrying two
+harnesses, with and without `MYPYPATH`). So: **every python file name under `tools/` must be
+unique.** One directory per harness, no shared file names, no conflict.
 
 `run.sh` is what makes it a CI harness. A directory with an `ab.sh` and no `run.sh` is reported as
 **not wired** — a warning naming it, never a silent skip, because a comparison that quietly omits a

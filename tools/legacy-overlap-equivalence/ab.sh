@@ -53,7 +53,7 @@ run_php() {
 run_python() {
     # cd into the api directory: the app resolves its own settings package from there.
     timeout 300 sh -c 'cd "$1" && env DJANGO_SETTINGS_MODULE=libretime_api.settings.prod "$2" "$3"' \
-        _ "$api_root" "$py" "$here/run-py.py" > "$out/python.answers"
+        _ "$api_root" "$py" "$here/run_python_legacy_overlap.py" > "$out/python.answers"
     wc -l < "$out/python.answers" | xargs echo "python answered:"
 }
 
@@ -89,9 +89,9 @@ case "$mode" in
 
         step "compare"
         if [ "$mode" = "selftest" ]; then
-            EQ_SELFTEST=1 "$py" "$here/compare.py" "$out/php.answers" "$out/python.answers"
+            EQ_SELFTEST=1 "$py" "$here/compare_legacy_overlap.py" "$out/php.answers" "$out/python.answers"
     else
-            "$py" "$here/compare.py" "$out/php.answers" "$out/python.answers"
+            "$py" "$here/compare_legacy_overlap.py" "$out/php.answers" "$out/python.answers"
     fi
         ;;
     *)
