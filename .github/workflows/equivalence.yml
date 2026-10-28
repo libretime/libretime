@@ -80,9 +80,13 @@ jobs:
       - name: Find harnesses
         id: find
         run: |
-          mapping=$(python3 tools/equivalence.py --list | jq -R 'select(. != "")' | jq -s .)
+          # The driver prints the JSON itself, compact and on one line. Going through
+          # jq's defaults here produced a pretty-printed multi-line array, which is not
+          # a valid "name=value" line for GITHUB_OUTPUT - the workflow cannot even start
+          # the matrix if this output is malformed, so this stays dependency-free.
+          mapping=$(python3 tools/equivalence.py --list-json)
           echo "harnesses=$mapping" >> "$GITHUB_OUTPUT"
-          echo "count=$(echo "$mapping" | jq 'length')" >> "$GITHUB_OUTPUT"
+          echo "count=$(printf '%s' "$mapping" | jq 'length')" >> "$GITHUB_OUTPUT"
 
           # Announced, not run: a branch carrying a harness with no run.sh should show a
           # line saying what is missing, not a green tick that quietly left the

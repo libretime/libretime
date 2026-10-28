@@ -21,6 +21,7 @@ is checking for.
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import shutil
@@ -200,13 +201,13 @@ def migrate(database: str, api_root: Path, python: str) -> bool:
         env_extra={"DJANGO_SETTINGS_MODULE": "libretime_api.settings.prod"},
         capture=True,
     )
-    log_file.write_text((result.stdout or "") + (result.stderr or ""))
+    log_file.write_text((result.stdout or "") + (result.stderr or ""), encoding="utf-8")
 
     if result.returncode != 0:
         # The path is printed because a log that could not be written looks exactly like
         # a migration that failed, and those need different fixes.
         fail(f"migrations failed; log: {log_file}")
-        for line in log_file.read_text().splitlines()[-20:]:
+        for line in log_file.read_text(encoding="utf-8").splitlines()[-20:]:
             print(f"    {line}", file=sys.stderr)
         return False
 
@@ -395,31 +396,42 @@ def prepare_and_run(harness: Path, artifacts: Path, python: str, api_root: Path)
     shutil.rmtree(out, ignore_errors=True)
     out.mkdir(parents=True, exist_ok=True)
 
-    if not create_database(database):
-        return "fail (database)"
-
     try:
-        if not write_config(out / "config.yml", database, out / "storage"):
-            return "fail (config)"
-        if not verify_config(out / "config.yml", database, python):
-            return "fail (config)"
-        if not migrate(database, api_root, python):
-            return "fail (migrations)"
-        if not run_harness(harness, out, database):
-            return "fail (divergence or error)"
-        return "pass"
+        if not create_database(database):
+            return "fail (database)"
+        return build_and_compare(harness, out, database, python, api_root)
     finally:
+        # Not "if the previous step succeeded": a database left behind by a failure is
+        # how the next harness starts reporting a divergence it did not cause.
         copy_artifacts(harness, out)
         psql_admin(f"DROP DATABASE IF EXISTS {database}")
+
+
+def build_and_compare(
+    harness: Path, out: Path, database: str, python: str, api_root: Path
+) -> str:
+    """The steps, in order. Kept apart so the cleanup above has one owner."""
+    if not write_config(out / "config.yml", database, out / "storage"):
+        return "fail (config)"
+    if not verify_config(out / "config.yml", database, python):
+        return "fail (config)"
+    if not migrate(database, api_root, python):
+        return "fail (migrations)"
+    if not run_harness(harness, out, database):
+        return "fail (divergence or error)"
+    return "pass"
 
 
 # ----------------------------------------------------------------------- main --
 
 USAGE = (
-    """usage: tools/equivalence.py [--list] [harness ...]
+    """usage: tools/equivalence.py [--list | --list-json] [harness ...]
 
 Runs equivalence harnesses. With no arguments, every tools/<name>-equivalence
 directory that has an executable run.sh.
+
+  --list        one harness name per line, for humans
+  --list-json   the same names as one compact JSON array, for the CI matrix
 
 what the driver guarantees (and the wrong-green each one prevents):
 """
@@ -443,59 +455,70 @@ failed - a comparison that quietly omits a case reads as a pass.
 )
 
 
-def main(argv: list[str]) -> int:
+# Defaults for everything a harness leg needs. Exported, not merely used here: a
+# harness shells out to psql, php and python in whatever combination its scenario
+# needs, and every one of them must look at the same rows and the same broker. A
+# port of this driver once read these without exporting them, and a harness died on
+# "EQ_DB_PASSWORD: unbound variable".
+ENV_DEFAULTS = {
+    "EQ_PY": "python3",
+    "EQ_API_ROOT": str(ROOT / "api"),
+    "EQ_LEGACY_ROOT": str(ROOT / "legacy"),
+    "EQ_MODE": "local",
+    "EQ_DB_HOST": "localhost",
+    "EQ_DB_PORT": "5432",
+    "EQ_DB_USER": "libretime",
+    "EQ_DB_PASSWORD": "libretime",
+    "EQ_RABBITMQ_HOST": "localhost",
+    "EQ_RABBITMQ_PORT": "5672",
+    "EQ_RABBITMQ_VHOST": "/libretime",
+    "EQ_RABBITMQ_USER": "libretime",
+    "EQ_RABBITMQ_PASSWORD": "libretime",
+    "EQ_TIMEZONE": "UTC",
+}
+
+
+def parse_args(argv: list[str]) -> tuple[str, list[str]]:
+    """One of "help" | "list" | "list-json" | "run", plus the remaining arguments."""
     args = argv[1:]
+    if not args:
+        return "run", []
+    first = args[0]
+    if first in ("--help", "-h"):
+        return "help", []
+    if first == "--list":
+        return "list", args[1:]
+    if first == "--list-json":
+        return "list-json", args[1:]
+    return "run", args
 
-    if args and args[0] in ("--help", "-h"):
-        print(USAGE)
-        return 0
 
-    list_only = False
-    if args and args[0] == "--list":
-        list_only = True
-        args = args[1:]
-
+def select(args: list[str]) -> tuple[list[Path], bool]:
+    """The requested harnesses, and whether they were discovered rather than named."""
     requested = [Path(a) if Path(a).is_absolute() else ROOT / a for a in args]
-    discovered = not requested
-    harnesses = requested or discover()
+    return (requested or discover()), not requested
 
-    if list_only:
-        for harness in harnesses:
-            if is_runnable(harness):
-                print(harness.name)
-        return 0
 
-    if not harnesses:
-        log("no equivalence harnesses in this checkout")
-        return 0
+def emit_list(harnesses: list[Path], as_json: bool) -> int:
+    found = [harness.name for harness in harnesses if is_runnable(harness)]
+    if as_json:
+        # Compact and on one line: GitHub Actions job outputs are "name=value" lines, so
+        # a pretty-printed array is not a value at all. This is the workflow's matrix
+        # input; the plain form is for humans.
+        print(json.dumps(found, separators=(",", ":")))
+    else:
+        for name in found:
+            print(name)
+    return 0
 
-    # Exported, not merely used here. A harness shells out to psql, php and python in
-    # whatever combination its scenario needs, and every one of them must be looking at
-    # the same rows and the same broker. Leaving each harness to guess at how CI is
-    # configured is how two legs end up on two databases.
-    for name, default in {
-        "EQ_PY": "python3",
-        "EQ_API_ROOT": str(ROOT / "api"),
-        "EQ_LEGACY_ROOT": str(ROOT / "legacy"),
-        "EQ_MODE": "local",
-        "EQ_DB_HOST": "localhost",
-        "EQ_DB_PORT": "5432",
-        "EQ_DB_USER": "libretime",
-        "EQ_DB_PASSWORD": "libretime",
-        "EQ_RABBITMQ_HOST": "localhost",
-        "EQ_RABBITMQ_PORT": "5672",
-        "EQ_RABBITMQ_VHOST": "/libretime",
-        "EQ_RABBITMQ_USER": "libretime",
-        "EQ_RABBITMQ_PASSWORD": "libretime",
-        "EQ_TIMEZONE": "UTC",
-    }.items():
-        os.environ.setdefault(name, default)
 
+def run_selected(harnesses: list[Path], discovered: bool) -> int:
     python = env("EQ_PY", "python3")
     api_root = Path(env("EQ_API_ROOT", str(ROOT / "api")))
     artifacts = Path(env("EQ_ARTIFACTS", str(ROOT / "tools" / "equivalence-out")))
 
     if not preflight(python):
+        # A missing api environment is not a per-harness result: nothing can be proved.
         return 1
 
     results: dict[str, str] = {}
@@ -503,21 +526,43 @@ def main(argv: list[str]) -> int:
         if not harness.is_dir():
             fail(f"{harness} is not a directory")
             results[harness.name] = "fail (missing)"
-            continue
-        if not discovered and not is_runnable(harness) and has_ab_script(harness):
+        elif not discovered and not is_runnable(harness) and has_ab_script(harness):
             # Naming one explicitly is an assertion that it works.
             fail(
                 f"{harness.name} has an ab.sh but no run.sh - it cannot run on a CI runner"
             )
             results[harness.name] = "fail (no run.sh)"
-            continue
-        results[harness.name] = prepare_and_run(harness, artifacts, python, api_root)
+        else:
+            results[harness.name] = prepare_and_run(
+                harness, artifacts, python, api_root
+            )
 
     log("summary")
     for name, outcome in results.items():
         print(f"  {name:<34} {outcome}")
 
     return 1 if any(outcome.startswith("fail") for outcome in results.values()) else 0
+
+
+def main(argv: list[str]) -> int:
+    mode, args = parse_args(argv)
+    if mode == "help":
+        print(USAGE)
+        return 0
+
+    for name, default in ENV_DEFAULTS.items():
+        os.environ.setdefault(name, default)
+
+    harnesses, discovered = select(args)
+
+    if mode in ("list", "list-json"):
+        return emit_list(harnesses, as_json=mode == "list-json")
+
+    if not harnesses:
+        log("no equivalence harnesses in this checkout")
+        return 0
+
+    return run_selected(harnesses, discovered)
 
 
 if __name__ == "__main__":
