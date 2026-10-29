@@ -1401,6 +1401,8 @@ final class Application_Model_Scheduler
      * (streams) — the exclusion targets cc_files.
      *
      * Slot is anchored at $showStart + accumulated duration of $filesBefore.
+     *
+     * @param array<int, array<string, mixed>> $filesBefore
      */
     private function trackInPassPick(int $fileId, DateTime $showStart, array $filesBefore): void
     {
