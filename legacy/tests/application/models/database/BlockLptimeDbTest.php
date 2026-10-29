@@ -14,7 +14,7 @@ class BlockLptimeDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 {
     private $_connectionMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         TestHelper::installTestDatabase();
         TestHelper::setupZendBootstrap();
@@ -43,7 +43,7 @@ class BlockLptimeDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    private function buildBlock(array $criteria)
+    private function buildBlock(array $criteria): Application_Model_Block
     {
         $block = new Application_Model_Block();
         $block->saveSmartBlockCriteria($criteria);
@@ -56,6 +56,9 @@ class BlockLptimeDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         return new DateTime('2024-01-10 12:00:00', new DateTimeZone('UTC'));
     }
 
+    /**
+     * @return int[]
+     */
     private static function extractIds(array $files): array
     {
         $ids = [];
@@ -73,7 +76,7 @@ class BlockLptimeDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      * (lptime 11:30) sits inside the excluded window and must be dropped;
      * the other three (old / NULL / 10:30) must remain eligible.
      */
-    public function testLptimeBeforeAnchorsToShowStartTime()
+    public function testLptimeBeforeAnchorsToShowStartTime(): void
     {
         TestHelper::loginUser();
 
@@ -87,7 +90,7 @@ class BlockLptimeDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      * In-pass picks whose computed slot is inside [threshold, slot) must be
      * filtered out as if they were already in cc_schedule.
      */
-    public function testInPassPicksWithinWindowAreExcluded()
+    public function testInPassPicksWithinWindowAreExcluded(): void
     {
         TestHelper::loginUser();
 
@@ -109,7 +112,7 @@ class BlockLptimeDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      * filtered: too-old picks (before threshold) and picks at/after the slot
      * boundary are out of scope for duplicate prevention against this slot.
      */
-    public function testInPassPicksOutsideWindowAreKept()
+    public function testInPassPicksOutsideWindowAreKept(): void
     {
         TestHelper::loginUser();
 
@@ -137,7 +140,7 @@ class BlockLptimeDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      * playout_status must be excluded from the candidate set, even though
      * they haven't aired yet (and so haven't updated cc_files.lptime).
      */
-    public function testScheduledRowsWithinWindowAreExcluded()
+    public function testScheduledRowsWithinWindowAreExcluded(): void
     {
         TestHelper::loginUser();
 
@@ -164,7 +167,7 @@ class BlockLptimeDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      * cc_schedule rows whose starts fall in the window but whose
      * playout_status is -1 (cancelled / filler) must NOT be excluded.
      */
-    public function testCancelledScheduledRowsAreNotExcluded()
+    public function testCancelledScheduledRowsAreNotExcluded(): void
     {
         TestHelper::loginUser();
 
@@ -192,7 +195,7 @@ class BlockLptimeDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      * suppression must not kick in — the gate is the lptime criterion,
      * not the presence of $inPassPicks.
      */
-    public function testInPassPicksIgnoredWithoutLptimeCriterion()
+    public function testInPassPicksIgnoredWithoutLptimeCriterion(): void
     {
         TestHelper::loginUser();
 
