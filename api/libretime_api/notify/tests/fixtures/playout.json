@@ -1,0 +1,48 @@
+{
+  "auto_delete": true,
+  "durable": true,
+  "exchange": "playout",
+  "messages": [
+    {
+      "body": "{\"sourcename\":\"live_dj\",\"event_type\":\"disconnect_source\"}",
+      "case": "disconnect_source"
+    },
+    {
+      "body": "{\"event_type\":\"reset_liquidsoap_bootstrap\"}",
+      "case": "reset_liquidsoap_bootstrap"
+    },
+    {
+      "body": "{\"sourcename\":\"master_dj\",\"status\":\"off\",\"event_type\":\"switch_source\"}",
+      "case": "switch_source_off"
+    },
+    {
+      "body": "{\"sourcename\":\"live_dj\",\"status\":\"on\",\"event_type\":\"switch_source\"}",
+      "case": "switch_source_on"
+    },
+    {
+      "body": "{\"message_offline\":\"LibreTime - offline\",\"event_type\":\"update_message_offline\"}",
+      "case": "update_message_offline"
+    },
+    {
+      "body": "{\"event_type\":\"update_schedule\"}",
+      "case": "update_schedule"
+    },
+    {
+      "body": "{\"station_name\":\"Radio Z\\u00fcrich \\u2014 \\\"quote\\\" \\\\ <>& \\/ \\ud83d\\ude00\",\"event_type\":\"update_station_name\"}",
+      "case": "update_station_name"
+    },
+    {
+      "body": "{\"stream_format\":\"1\",\"event_type\":\"update_stream_format\"}",
+      "case": "update_stream_format"
+    },
+    {
+      "body": "{\"transition_fade\":\"1.500\",\"event_type\":\"update_transition_fade\"}",
+      "case": "update_transition_fade"
+    }
+  ],
+  "properties": {
+    "content_type": "text/plain"
+  },
+  "routing_key": "",
+  "type": "fanout"
+}

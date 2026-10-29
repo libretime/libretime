@@ -33,6 +33,8 @@ setup(
         "django>=5.2.0,<6",
         "djangorestframework>=3.17.2,<3.19",
         "drf-spectacular>=0.22.1,<0.31",
+        # Notifications
+        "kombu>=5.5.0,<5.7",
         # Worker
         "celery>=5.5.0,<5.7",
         "mutagen>=1.45.1,<1.49",
