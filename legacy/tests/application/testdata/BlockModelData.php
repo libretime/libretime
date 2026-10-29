@@ -109,17 +109,7 @@ class BlockModelData
      */
     public static function getCriteriaLabelOnly(): array
     {
-        return [
-            ['name' => 'sp_type', 'value' => 0],
-            ['name' => 'sp_repeat_tracks', 'value' => 0],
-            ['name' => 'sp_sort_options', 'value' => 'random'],
-            ['name' => 'sp_limit_value', 'value' => 10],
-            ['name' => 'sp_limit_options', 'value' => 'items'],
-            ['name' => 'sp_overflow_tracks', 'value' => 0],
-            ['name' => 'sp_criteria_field_0_0', 'value' => 'label'],
-            ['name' => 'sp_criteria_modifier_0_0', 'value' => 'contains'],
-            ['name' => 'sp_criteria_value_0_0', 'value' => 'nada'],
-        ];
+        return array_slice(self::getCriteriaLptimeBefore1Hour(), 0, 9);
     }
 
     /**

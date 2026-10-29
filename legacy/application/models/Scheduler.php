@@ -301,11 +301,9 @@ final class Application_Model_Scheduler
                         $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
 
                         // block start = overall slot + duration of items already staged
-                        $blockStart = clone $showStart;
-                        $blockStart->modify('+' . (int) round($this->timeLengthOfFiles($files)) . ' seconds');
+                        $blockStart = (clone $showStart)->modify('+' . (int) round($this->timeLengthOfFiles($files)) . ' seconds');
 
                         $dynamicFiles = $bl->getListOfFilesUnderLimit($showLimit, $blockStart, $this->scheduledInPassPicks);
-                        $withinBlockOffset = 0.0;
                         foreach ($dynamicFiles as $f) {
                             $fileId = $f['id'];
                             $file = CcFilesQuery::create()->findPk($fileId);
@@ -323,15 +321,8 @@ final class Application_Model_Scheduler
                                 $data['fadeout'] = $defaultFadeOut;
 
                                 $data['type'] = 0;
+                                $this->trackInPassPick((int) $file->getDbId(), $showStart, $files);
                                 $files[] = $data;
-
-                                $fileSlot = clone $blockStart;
-                                $fileSlot->modify('+' . (int) round($withinBlockOffset) . ' seconds');
-                                $this->scheduledInPassPicks[] = [
-                                    'id' => (int) $file->getDbId(),
-                                    'slot' => $fileSlot,
-                                ];
-                                $withinBlockOffset += isset($f['length']) ? (float) $f['length'] : 0.0;
                             }
                         }
                     }
@@ -376,7 +367,6 @@ final class Application_Model_Scheduler
                 $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
                 $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
                 $dynamicFiles = $bl->getListOfFilesUnderLimit($showLimit, $showStart, $this->scheduledInPassPicks);
-                $withinBlockOffset = 0.0;
                 foreach ($dynamicFiles as $f) {
                     $fileId = $f['id'];
                     $file = CcFilesQuery::create()->findPk($fileId);
@@ -394,15 +384,8 @@ final class Application_Model_Scheduler
                         $data['fadeout'] = $defaultFadeOut;
 
                         $data['type'] = 0;
+                        $this->trackInPassPick((int) $file->getDbId(), $showStart, $files);
                         $files[] = $data;
-
-                        $fileSlot = clone $showStart;
-                        $fileSlot->modify('+' . (int) round($withinBlockOffset) . ' seconds');
-                        $this->scheduledInPassPicks[] = [
-                            'id' => (int) $file->getDbId(),
-                            'slot' => $fileSlot,
-                        ];
-                        $withinBlockOffset += isset($f['length']) ? (float) $f['length'] : 0.0;
                     }
                 }
             }
@@ -867,8 +850,7 @@ final class Application_Model_Scheduler
                     if (is_null($filesToInsert)) {
                         $filesToInsert = [];
                         foreach ($mediaItems as $media) {
-                            $slotCursor = clone $nextStartDT;
-                            $slotCursor->modify('+' . (int) round($this->timeLengthOfFiles($filesToInsert)) . ' seconds');
+                            $slotCursor = (clone $nextStartDT)->modify('+' . (int) round($this->timeLengthOfFiles($filesToInsert)) . ' seconds');
                             $filesToInsert = array_merge(
                                 $filesToInsert,
                                 $this->retrieveMediaFiles($media['id'], $media['type'], $schedule['instance'], $slotCursor)
@@ -1396,21 +1378,16 @@ final class Application_Model_Scheduler
     }
 
     /**
-     * Record a non-dynamic-block pick so later smart blocks in the same
-     * pass see it via their lptime exclusion window. Skip non-file ids
-     * (streams) — the exclusion targets cc_files.
-     *
-     * Slot is anchored at $showStart + accumulated duration of $filesBefore.
+     * Record a pick so later smart blocks in the same pass see it via their
+     * lptime exclusion window. Slot is $showStart + duration of $filesBefore.
      *
      * @param array<int, array<string, mixed>> $filesBefore
      */
     private function trackInPassPick(int $fileId, DateTime $showStart, array $filesBefore): void
     {
-        $slot = clone $showStart;
-        $slot->modify('+' . (int) round($this->timeLengthOfFiles($filesBefore)) . ' seconds');
         $this->scheduledInPassPicks[] = [
             'id' => $fileId,
-            'slot' => $slot,
+            'slot' => (clone $showStart)->modify('+' . (int) round($this->timeLengthOfFiles($filesBefore)) . ' seconds'),
         ];
     }
 
