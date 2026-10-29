@@ -12,7 +12,7 @@ class Application_Model_Schedule
      *
      * @param string $p_fileId
      */
-    public static function IsFileScheduledInTheFuture($p_fileId)
+    public static function IsFileScheduledInTheFuture($p_fileId): bool
     {
         $sql = <<<'SQL'
 SELECT COUNT(*)
@@ -27,7 +27,12 @@ SQL;
         return is_numeric($count) && ($count != '0');
     }
 
-    public static function getAllFutureScheduledFiles($instanceId = null)
+    /**
+     * @param null|mixed $instanceId
+     *
+     * @return mixed[]
+     */
+    public static function getAllFutureScheduledFiles($instanceId = null): array
     {
         $sql = <<<'SQL'
 SELECT distinct(file_id)
@@ -46,7 +51,10 @@ SQL;
         return $real_files;
     }
 
-    public static function getAllFutureScheduledWebstreams()
+    /**
+     * @return mixed[]
+     */
+    public static function getAllFutureScheduledWebstreams(): array
     {
         $sql = <<<'SQL'
 SELECT distinct(stream_id)
@@ -72,7 +80,7 @@ SQL;
      *
      * Data is based on GetPlayOrderRange() in this class.
      */
-    public static function getCurrentPlayingTrack()
+    public static function getCurrentPlayingTrack(): ?array
     {
         $currentScheduleInfo = self::GetPlayOrderRange();
         if (empty($currentScheduleInfo['tracks']['current'])) {
@@ -92,8 +100,10 @@ SQL;
      *
      * @param null|mixed $utcTimeEnd
      * @param mixed      $showsToRetrieve
+     *
+     * @return array<string, array<string, mixed>>
      */
-    public static function GetPlayOrderRange($utcTimeEnd = null, $showsToRetrieve = 5)
+    public static function GetPlayOrderRange($utcTimeEnd = null, $showsToRetrieve = 5): array
     {
         // Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
 
@@ -140,8 +150,10 @@ SQL;
      * Old version of the function for backwards compatibility.
      *
      * @deprecated
+     *
+     * @return array<string, mixed>
      */
-    public static function GetPlayOrderRangeOld()
+    public static function GetPlayOrderRangeOld(): array
     {
         // Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
 
@@ -342,7 +354,7 @@ SQL;
      *
      * @return string the source name
      */
-    private static function _getSource()
+    private static function _getSource(): string
     {
         $live_dj = Application_Model_Preference::GetSourceStatus('live_dj');
         $master_dj = Application_Model_Preference::GetSourceStatus('master_dj');
@@ -593,7 +605,7 @@ SQL;
         );
     }
 
-    public static function UpdateMediaPlayedStatus($p_id)
+    public static function UpdateMediaPlayedStatus($p_id): void
     {
         $sql = 'UPDATE cc_schedule'
             . ' SET media_item_played=TRUE';
@@ -651,10 +663,8 @@ SQL;
      * to "YYYY-MM-DD-HH-mm-SS".
      *
      * @param string $p_time
-     *
-     * @return string
      */
-    private static function AirtimeTimeToPypoTime($p_time)
+    private static function AirtimeTimeToPypoTime($p_time): string
     {
         $p_time = substr($p_time, 0, 19);
         $p_time = str_replace(' ', '-', $p_time);
@@ -667,10 +677,8 @@ SQL;
      * "YYYY-MM-DD HH:mm:SS".
      *
      * @param string $p_time
-     *
-     * @return string
      */
-    private static function PypoTimeToAirtimeTime($p_time)
+    private static function PypoTimeToAirtimeTime($p_time): string
     {
         $t = explode('-', $p_time);
 
@@ -681,10 +689,8 @@ SQL;
      * Return true if the input string is in the format YYYY-MM-DD-HH-mm.
      *
      * @param string $p_time
-     *
-     * @return bool
      */
-    public static function ValidPypoTimeFormat($p_time)
+    public static function ValidPypoTimeFormat($p_time): bool
     {
         $t = explode('-', $p_time);
         if (count($t) != 5) {
@@ -819,7 +825,7 @@ SQL;
      * @param mixed $time
      * @param mixed $item
      */
-    private static function appendScheduleItem(&$data, $time, $item)
+    private static function appendScheduleItem(&$data, $time, $item): void
     {
         $key = $time;
         $i = 0;
@@ -832,7 +838,7 @@ SQL;
         $data['media'][$key] = $item;
     }
 
-    private static function createInputHarborKickTimes(&$data, $range_start, $range_end)
+    private static function createInputHarborKickTimes(&$data, $range_start, $range_end): void
     {
         $utcTimeZone = new DateTimeZone('UTC');
         $kick_times = Application_Model_ShowInstance::GetEndTimeOfNextShowWithLiveDJ($range_start, $range_end);
@@ -873,7 +879,7 @@ SQL;
      * @param string $uri      path to the scheduled item's physical location
      * @param mixed  $filesize
      */
-    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $filesize)
+    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $filesize): void
     {
         $start = self::AirtimeTimeToPypoTime($item['start']);
         $end = self::AirtimeTimeToPypoTime($item['end']);
@@ -912,7 +918,7 @@ SQL;
         self::appendScheduleItem($data, $start, $schedule_item);
     }
 
-    private static function createStreamScheduleEvent(&$data, $item, $media_id, $uri)
+    private static function createStreamScheduleEvent(&$data, $item, $media_id, $uri): void
     {
         $start = self::AirtimeTimeToPypoTime($item['start']);
         $end = self::AirtimeTimeToPypoTime($item['end']);
@@ -967,7 +973,13 @@ SQL;
         self::appendScheduleItem($data, $stream_end, $schedule_item);
     }
 
-    private static function getRangeStartAndEnd($p_fromDateTime, $p_toDateTime)
+    /**
+     * @param mixed $p_fromDateTime
+     * @param mixed $p_toDateTime
+     *
+     * @return array<int, string>
+     */
+    private static function getRangeStartAndEnd($p_fromDateTime, $p_toDateTime): array
     {
         $CC_CONFIG = Config::getConfig();
 
@@ -1002,7 +1014,7 @@ SQL;
         return [$range_start, $range_end];
     }
 
-    private static function createScheduledEvents(&$data, $range_start, $range_end)
+    private static function createScheduledEvents(&$data, $range_start, $range_end): void
     {
         $utcTimeZone = new DateTimeZone('UTC');
         $items = self::getItems($range_start, $range_end);
@@ -1053,7 +1065,7 @@ SQL;
     }
 
     // Check if two events are less than or equal to 1 second apart
-    public static function areEventsLinked($event1, $event2)
+    public static function areEventsLinked($event1, $event2): bool
     {
         $dt1 = DateTime::createFromFormat('Y-m-d-H-i-s', $event1['start']);
         $dt2 = DateTime::createFromFormat('Y-m-d-H-i-s', $event2['start']);
@@ -1081,7 +1093,7 @@ SQL;
      *
      * @param mixed $data
      */
-    private static function foldData(&$data)
+    private static function foldData(&$data): void
     {
         $previous_key = null;
         $previous_val = null;
@@ -1136,7 +1148,7 @@ SQL;
         return $data;
     }
 
-    public static function deleteAll()
+    public static function deleteAll(): void
     {
         $sql = 'TRUNCATE TABLE cc_schedule';
         Application_Common_Database::prepareAndExecute(
@@ -1146,7 +1158,7 @@ SQL;
         );
     }
 
-    public static function deleteWithFileId($fileId)
+    public static function deleteWithFileId($fileId): void
     {
         $sql = 'DELETE FROM cc_schedule WHERE file_id=:file_id';
         Application_Common_Database::prepareAndExecute($sql, [':file_id' => $fileId], 'execute');
@@ -1248,7 +1260,7 @@ SQL;
         return $overlapping;
     }
 
-    public static function GetType($p_scheduleId)
+    public static function GetType($p_scheduleId): string
     {
         $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
         if ($scheduledItem->getDbFileId() == null) {

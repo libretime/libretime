@@ -31,8 +31,8 @@ DEFAULT_RETRY_QUEUE_FILEPATH = Path("retry_queue")
 )
 def cli(
     log_level: str,
-    log_filepath: Optional[Path],
-    config_filepath: Optional[Path],
+    log_filepath: Path | None,
+    config_filepath: Path | None,
     retry_queue_filepath: Path,
 ):
     """

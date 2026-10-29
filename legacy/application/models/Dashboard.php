@@ -2,7 +2,7 @@
 
 class Application_Model_Dashboard
 {
-    public static function GetPreviousItem($p_timeNow)
+    public static function GetPreviousItem($p_timeNow): ?array
     {
         // get previous show and previous item in the schedule table.
         // Compare the two and if the last show was recorded and started
@@ -51,7 +51,7 @@ class Application_Model_Dashboard
         ];
     }
 
-    public static function GetCurrentItem($p_timeNow)
+    public static function GetCurrentItem($p_timeNow): ?array
     {
         // get previous show and previous item in the schedule table.
         // Compare the two and if the last show was recorded and started
@@ -105,7 +105,7 @@ class Application_Model_Dashboard
         ];
     }
 
-    public static function GetNextItem($p_timeNow)
+    public static function GetNextItem($p_timeNow): ?array
     {
         // get previous show and previous item in the schedule table.
         // Compare the two and if the last show was recorded and started

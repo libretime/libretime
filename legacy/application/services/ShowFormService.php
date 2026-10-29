@@ -15,9 +15,9 @@ class Application_Service_ShowFormService
     }
 
     /**
-     * @return array of show forms
+     * @return array<string, Zend_Form_SubForm> of show forms
      */
-    public function createShowForms()
+    public function createShowForms(): array
     {
         $formWhat = new Application_Form_AddShowWhat();
         $formAutoPlaylist = new Application_Form_AddShowAutoPlaylist();
@@ -64,7 +64,7 @@ class Application_Service_ShowFormService
      * @param mixed $formWhen
      * @param mixed $formRepeats
      */
-    public function populateNewShowForms($formWhat, $formWhen, $formRepeats)
+    public function populateNewShowForms($formWhat, $formWhen, $formRepeats): void
     {
         $formWhat->populate(
             [
@@ -86,7 +86,7 @@ class Application_Service_ShowFormService
         $formRepeats->populate(['add_show_end_date' => date('Y-m-d')]);
     }
 
-    public function delegateShowInstanceFormPopulation($forms)
+    public function delegateShowInstanceFormPopulation($forms): void
     {
         $this->populateFormWhat($forms['what']);
         $this->populateInstanceFormWhen($forms['when']);
@@ -123,7 +123,7 @@ class Application_Service_ShowFormService
      *
      * @param mixed $forms
      */
-    public function delegateShowFormPopulation($forms)
+    public function delegateShowFormPopulation($forms): void
     {
         $this->populateFormWhat($forms['what']);
         // local show start DT
@@ -138,7 +138,7 @@ class Application_Service_ShowFormService
         $this->populateFormRebroadcastAbsolute($forms['abs_rebroadcast']);
     }
 
-    private function populateFormWhat($form)
+    private function populateFormWhat($form): void
     {
         $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
 
@@ -155,7 +155,7 @@ class Application_Service_ShowFormService
         );
     }
 
-    private function populateFormAutoPlaylist($form)
+    private function populateFormAutoPlaylist($form): void
     {
         $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
 
@@ -217,7 +217,7 @@ class Application_Service_ShowFormService
         return $showStart;
     }
 
-    public function getNextFutureRepeatShowTime()
+    public function getNextFutureRepeatShowTime(): ?array
     {
         $ccShowInstance = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->ccShow->getDbId())
@@ -240,7 +240,7 @@ class Application_Service_ShowFormService
         return ['starts' => $starts, 'ends' => $ends];
     }
 
-    private function populateInstanceFormWhen($form)
+    private function populateInstanceFormWhen($form): void
     {
         $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
 
@@ -289,7 +289,7 @@ class Application_Service_ShowFormService
      * @param DateTime $nextFutureShowStart user's local timezone
      * @param mixed    $form
      */
-    private function populateFormRepeats($form, $nextFutureShowStart)
+    private function populateFormRepeats($form, $nextFutureShowStart): void
     {
         if ($this->ccShow->isRepeating()) {
             $ccShowDays = $this->ccShow->getRepeatingCcShowDays();
@@ -350,7 +350,7 @@ class Application_Service_ShowFormService
         }
     }
 
-    private function populateFormWho($form)
+    private function populateFormWho($form): void
     {
         $ccShowHosts = $this->ccShow->getCcShowHostss();
 
@@ -362,7 +362,7 @@ class Application_Service_ShowFormService
         $form->populate(['add_show_hosts' => $hosts]);
     }
 
-    private function populateFormStyle($form)
+    private function populateFormStyle($form): void
     {
         $src = $this->ccShow->getDbImagePath()
             ? $this->imagePathToDataUri($this->ccShow->getDbImagePath()) : '';
@@ -385,7 +385,7 @@ class Application_Service_ShowFormService
      * @return string
      *                - the data URI representation of the image
      */
-    private function imagePathToDataUri($path)
+    private function imagePathToDataUri($path): string
     {
         $imageData = null;
         $bytesRead = 0;
@@ -409,7 +409,7 @@ class Application_Service_ShowFormService
             ? '' : 'data: ' . mime_content_type($path) . ';base64,' . $imageData;
     }
 
-    private function populateFormLive($form)
+    private function populateFormLive($form): void
     {
         $form->populate(
             [
@@ -421,7 +421,7 @@ class Application_Service_ShowFormService
         );
     }
 
-    private function populateFormRecord($form)
+    private function populateFormRecord($form): void
     {
         $form->populate(
             [
@@ -433,7 +433,7 @@ class Application_Service_ShowFormService
         $form->getElement('add_show_record')->setOptions(['disabled' => true]);
     }
 
-    private function populateFormRebroadcastRelative($form)
+    private function populateFormRebroadcastRelative($form): void
     {
         $relativeRebroadcasts = $this->ccShow->getRebroadcastsRelative();
 
@@ -450,7 +450,7 @@ class Application_Service_ShowFormService
         $form->populate($formValues);
     }
 
-    private function populateFormRebroadcastAbsolute($form)
+    private function populateFormRebroadcastAbsolute($form): void
     {
         $absolutRebroadcasts = $this->ccShow->getRebroadcastsAbsolute();
         $timezone = $this->ccShow->getFirstCcShowDay()->getDbTimezone();
@@ -474,7 +474,7 @@ class Application_Service_ShowFormService
      *
      * @param mixed $p_showStart
      */
-    private function hasShowStarted($p_showStart)
+    private function hasShowStarted($p_showStart): bool
     {
         $showStart = clone $p_showStart;
         $showStart->setTimeZone(new DateTimeZone('UTC'));
@@ -491,8 +491,10 @@ class Application_Service_ShowFormService
      * are a few fields we may need to adjust first.
      *
      * @param mixed $formData
+     *
+     * @return array<int, mixed>
      */
-    public function preEditShowValidationCheck($formData)
+    public function preEditShowValidationCheck($formData): array
     {
         // If the start date or time were disabled, don't validate them
         $validateStartDate = $formData['start_date_disabled'] === 'false';
@@ -521,7 +523,7 @@ class Application_Service_ShowFormService
      *
      * Returns null if there is no next future repeating show instance
      */
-    public function getCurrentOrNextInstanceStartTime()
+    public function getCurrentOrNextInstanceStartTime(): ?DateTime
     {
         $ccShowInstance = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->ccShow->getDbId())
@@ -551,8 +553,6 @@ class Application_Service_ShowFormService
      * @param null|mixed $originalStartDate
      * @param mixed      $editShow
      * @param null|mixed $instanceId
-     *
-     * @return bool
      */
     public function validateShowForms(
         $forms,
@@ -561,7 +561,7 @@ class Application_Service_ShowFormService
         $originalStartDate = null,
         $editShow = false,
         $instanceId = null
-    ) {
+    ): bool {
         $what = $forms['what']->isValid($formData);
         $autoplaylist = $forms['autoplaylist']->isValid($formData);
         $live = $forms['live']->isValid($formData);
@@ -664,8 +664,10 @@ class Application_Service_ShowFormService
      * @param       $time        String
      * @param mixed $newTimezone
      * @param mixed $oldTimezone
+     *
+     * @return array<string, string>
      */
-    public static function localizeDateTime($date, $time, $newTimezone, $oldTimezone)
+    public static function localizeDateTime($date, $time, $newTimezone, $oldTimezone): array
     {
         $dt = new DateTime($date . ' ' . $time, new DateTimeZone($oldTimezone));
 

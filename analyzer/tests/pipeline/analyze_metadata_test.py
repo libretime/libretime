@@ -9,7 +9,7 @@ from ..fixtures import FILE_INVALID_DRM, FILE_INVALID_TXT, FILES_TAGGED
 
 @pytest.mark.parametrize(
     "filepath,metadata",
-    map(lambda i: (i.path, i.metadata), FILES_TAGGED),
+    [(i.path, i.metadata) for i in FILES_TAGGED],
 )
 def test_analyze_metadata(filepath: Path, metadata: dict):
     found = analyze_metadata(str(filepath), {})

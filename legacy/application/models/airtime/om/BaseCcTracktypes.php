@@ -45,7 +45,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     /**
      * The value for the visibility field.
      * Note: this column has a database default value of: true
-     * @var        boolean
+     * @var        bool
      */
     protected $visibility;
 
@@ -66,7 +66,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     /**
      * The value for the analyze_cue_points field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $analyze_cue_points;
 
@@ -152,7 +152,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     /**
      * Get the [visibility] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbVisibility()
     {
@@ -185,7 +185,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     /**
      * Get the [analyze_cue_points] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbAnalyzeCuePoints()
     {
@@ -251,7 +251,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -322,7 +322,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -389,10 +389,10 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->code = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->visibility = ($row[$startcol + 2] !== null) ? (boolean) $row[$startcol + 2] : null;
+            $this->visibility = ($row[$startcol + 2] !== null) ? (bool) $row[$startcol + 2] : null;
             $this->type_name = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->analyze_cue_points = ($row[$startcol + 5] !== null) ? (boolean) $row[$startcol + 5] : null;
+            $this->analyze_cue_points = ($row[$startcol + 5] !== null) ? (bool) $row[$startcol + 5] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -437,7 +437,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -479,7 +479,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -522,7 +522,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1198,7 +1198,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcFiles[] List of CcFiles objects
      * @throws PropelException
      */
-    public function getCcFiless($criteria = null, PropelPDO $con = null)
+    public function getCcFiless($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcFilessPartial && !$this->isNew();
         if (null === $this->collCcFiless || null !== $criteria  || $partial) {
@@ -1253,7 +1253,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcTracktypes The current object (for fluent API support)
      */
-    public function setCcFiless(PropelCollection $ccFiless, PropelPDO $con = null)
+    public function setCcFiless(PropelCollection $ccFiless, ?PropelPDO $con = null)
     {
         $ccFilessToDelete = $this->getCcFiless(new Criteria(), $con)->diff($ccFiless);
 
@@ -1284,7 +1284,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @return int             Count of related CcFiles objects.
      * @throws PropelException
      */
-    public function countCcFiless(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcFiless(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcFilessPartial && !$this->isNew();
         if (null === $this->collCcFiless || null !== $criteria || $partial) {

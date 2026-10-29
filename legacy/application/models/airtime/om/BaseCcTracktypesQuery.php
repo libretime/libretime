@@ -28,24 +28,25 @@
  * @method CcTracktypesQuery rightJoinCcFiles($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcFiles relation
  * @method CcTracktypesQuery innerJoinCcFiles($relationAlias = null) Adds a INNER JOIN clause to the query using the CcFiles relation
  *
- * @method CcTracktypes findOne(PropelPDO $con = null) Return the first CcTracktypes matching the query
- * @method CcTracktypes findOneOrCreate(PropelPDO $con = null) Return the first CcTracktypes matching the query, or a new CcTracktypes object populated from the query conditions when no match is found
+ * @method CcTracktypes findOne(?PropelPDO $con = null) Return the first CcTracktypes matching the query
+ * @method CcTracktypes findOneOrCreate(?PropelPDO $con = null) Return the first CcTracktypes matching the query, or a new CcTracktypes object populated from the query conditions when no match is found
  *
  * @method CcTracktypes findOneByDbCode(string $code) Return the first CcTracktypes filtered by the code column
- * @method CcTracktypes findOneByDbVisibility(boolean $visibility) Return the first CcTracktypes filtered by the visibility column
+ * @method CcTracktypes findOneByDbVisibility(bool $visibility) Return the first CcTracktypes filtered by the visibility column
  * @method CcTracktypes findOneByDbTypeName(string $type_name) Return the first CcTracktypes filtered by the type_name column
  * @method CcTracktypes findOneByDbDescription(string $description) Return the first CcTracktypes filtered by the description column
- * @method CcTracktypes findOneByDbAnalyzeCuePoints(boolean $analyze_cue_points) Return the first CcTracktypes filtered by the analyze_cue_points column
+ * @method CcTracktypes findOneByDbAnalyzeCuePoints(bool $analyze_cue_points) Return the first CcTracktypes filtered by the analyze_cue_points column
  *
  * @method array findByDbId(int $id) Return CcTracktypes objects filtered by the id column
  * @method array findByDbCode(string $code) Return CcTracktypes objects filtered by the code column
- * @method array findByDbVisibility(boolean $visibility) Return CcTracktypes objects filtered by the visibility column
+ * @method array findByDbVisibility(bool $visibility) Return CcTracktypes objects filtered by the visibility column
  * @method array findByDbTypeName(string $type_name) Return CcTracktypes objects filtered by the type_name column
  * @method array findByDbDescription(string $description) Return CcTracktypes objects filtered by the description column
- * @method array findByDbAnalyzeCuePoints(boolean $analyze_cue_points) Return CcTracktypes objects filtered by the analyze_cue_points column
+ * @method array findByDbAnalyzeCuePoints(bool $analyze_cue_points) Return CcTracktypes objects filtered by the analyze_cue_points column
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcTracktypesQuery extends ModelCriteria
 {
     /**

@@ -15,7 +15,7 @@ Main case:
 
 import logging
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal
 
 import click
 from libretime_api_client.v1 import ApiClient as LegacyClient
@@ -51,8 +51,8 @@ pass_app = click.make_pass_decorator(App)
 def cli(
     ctx: click.Context,
     log_level: str,
-    log_filepath: Optional[Path],
-    config_filepath: Optional[Path],
+    log_filepath: Path | None,
+    config_filepath: Path | None,
 ):
     """
     A gateway between Liquidsoap and the API.

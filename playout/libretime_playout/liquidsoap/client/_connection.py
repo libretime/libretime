@@ -1,7 +1,6 @@
 import logging
 import socket
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -15,17 +14,17 @@ class InvalidConnection(Exception):
 class LiquidsoapConnection:
     _host: str
     _port: int
-    _path: Optional[Path] = None
+    _path: Path | None = None
     _timeout: int
 
-    _sock: Optional[socket.socket] = None
+    _sock: socket.socket | None = None
     _eof = b"END"
 
     def __init__(
         self,
         host: str = "localhost",
         port: int = 0,
-        path: Optional[Path] = None,
+        path: Path | None = None,
         timeout: int = 5,
     ):
         """
@@ -72,18 +71,23 @@ class LiquidsoapConnection:
             raise
 
     def close(self):
-        if self._sock is not None:
-            logger.debug("closing connection to %s", self.address())
-
+        sock = self._sock
+        if sock is None:
+            return
+        self._sock = None
+        logger.debug("closing connection to %s", self.address())
+        try:
             try:
-                self.write("exit")
-                # Reading for clean exit
-                while self._sock.recv(1024):
+                sock.sendall(b"exit\n")
+                while sock.recv(1024):
                     continue
-
-            finally:
-                self._sock.close()
-                self._sock = None
+            except OSError:
+                pass  # FD already broken; we still need to release it below.
+        finally:
+            try:
+                sock.close()
+            except OSError:
+                pass
 
     def write(self, *messages: str):
         if self._sock is None:

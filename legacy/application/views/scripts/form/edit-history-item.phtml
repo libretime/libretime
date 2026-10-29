@@ -17,7 +17,7 @@
       <?php echo $form->getElement($name); ?>
     </dd>
 
-    <?php foreach (array("his_item_starts", "his_item_ends") as $name) : ?>
+    <?php foreach (["his_item_starts", "his_item_ends"] as $name) : ?>
       <dt id="<?php echo $name; ?>-label">
         <label for="<?php echo $name; ?>"><?php echo $form->getElement($name)->getLabel() ?></label>
       </dt>
@@ -57,7 +57,7 @@
       </div>
     </dd>
 
-    <?php foreach ($form->getSubForm('his_item_template') as $index => $el) : ?>
+    <?php foreach ($form->getSubForm('his_item_template') as $el) : ?>
       <?php $name = $el->getName(); ?>
 
       <dt id="<?php echo $name; ?>-label">
@@ -76,7 +76,7 @@
     <?php endforeach; ?>
 
     <dd id="submitButtons-element">
-      <?php foreach (array("his_item_save", "his_item_cancel") as $name) : ?>
+      <?php foreach (["his_item_save", "his_item_cancel"] as $name) : ?>
         <?php echo $form->getElement($name); ?>
       <?php endforeach; ?>
     </dd>

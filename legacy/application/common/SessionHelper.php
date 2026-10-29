@@ -2,7 +2,7 @@
 
 class SessionHelper
 {
-    public static function reopenSessionForWriting()
+    public static function reopenSessionForWriting(): void
     {
         // PHP will send double Set-Cookie headers if we reopen the
         // session for writing, and this breaks IE8 and some other browsers.

@@ -40,13 +40,13 @@
  * @method CcBlockcontentsQuery rightJoinCcBlock($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcBlock relation
  * @method CcBlockcontentsQuery innerJoinCcBlock($relationAlias = null) Adds a INNER JOIN clause to the query using the CcBlock relation
  *
- * @method CcBlockcontents findOne(PropelPDO $con = null) Return the first CcBlockcontents matching the query
- * @method CcBlockcontents findOneOrCreate(PropelPDO $con = null) Return the first CcBlockcontents matching the query, or a new CcBlockcontents object populated from the query conditions when no match is found
+ * @method CcBlockcontents findOne(?PropelPDO $con = null) Return the first CcBlockcontents matching the query
+ * @method CcBlockcontents findOneOrCreate(?PropelPDO $con = null) Return the first CcBlockcontents matching the query, or a new CcBlockcontents object populated from the query conditions when no match is found
  *
  * @method CcBlockcontents findOneByDbBlockId(int $block_id) Return the first CcBlockcontents filtered by the block_id column
  * @method CcBlockcontents findOneByDbFileId(int $file_id) Return the first CcBlockcontents filtered by the file_id column
  * @method CcBlockcontents findOneByDbPosition(int $position) Return the first CcBlockcontents filtered by the position column
- * @method CcBlockcontents findOneByDbTrackOffset(double $trackoffset) Return the first CcBlockcontents filtered by the trackoffset column
+ * @method CcBlockcontents findOneByDbTrackOffset(float $trackoffset) Return the first CcBlockcontents filtered by the trackoffset column
  * @method CcBlockcontents findOneByDbCliplength(string $cliplength) Return the first CcBlockcontents filtered by the cliplength column
  * @method CcBlockcontents findOneByDbCuein(string $cuein) Return the first CcBlockcontents filtered by the cuein column
  * @method CcBlockcontents findOneByDbCueout(string $cueout) Return the first CcBlockcontents filtered by the cueout column
@@ -57,7 +57,7 @@
  * @method array findByDbBlockId(int $block_id) Return CcBlockcontents objects filtered by the block_id column
  * @method array findByDbFileId(int $file_id) Return CcBlockcontents objects filtered by the file_id column
  * @method array findByDbPosition(int $position) Return CcBlockcontents objects filtered by the position column
- * @method array findByDbTrackOffset(double $trackoffset) Return CcBlockcontents objects filtered by the trackoffset column
+ * @method array findByDbTrackOffset(float $trackoffset) Return CcBlockcontents objects filtered by the trackoffset column
  * @method array findByDbCliplength(string $cliplength) Return CcBlockcontents objects filtered by the cliplength column
  * @method array findByDbCuein(string $cuein) Return CcBlockcontents objects filtered by the cuein column
  * @method array findByDbCueout(string $cueout) Return CcBlockcontents objects filtered by the cueout column
@@ -66,9 +66,9 @@
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcBlockcontentsQuery extends ModelCriteria
 {
-    protected $ccBlocks;
     /**
      * Initializes internal state of BaseCcBlockcontentsQuery object.
      *

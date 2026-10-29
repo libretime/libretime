@@ -11,28 +11,23 @@ DOWN = None
 
 def promote_admin_to_superadmin(cursor):
     # Ensure there are no superadmins already
-    super_admin_count = cursor.execute(
-        """
+    super_admin_count = cursor.execute("""
         SELECT COUNT(id)
         FROM cc_subjs
         WHERE type = 'S'
         AND login != 'sourcefabric_admin';
-        """
-    ).fetchone()
+    """).fetchone()
     if super_admin_count != 0:
         return
 
     # Promote the "admin" user to superadmin
-    cursor.execute(
-        """
+    cursor.execute("""
         UPDATE cc_subjs SET type = 'S'
         WHERE login = 'admin';
-        """
-    )
+    """)
     if cursor.rowcount == 0:
         # Otherwise promote the administrator with the lowest ID
-        cursor.execute(
-            """
+        cursor.execute("""
             UPDATE cc_subjs SET type = 'S'
             WHERE id = (
                 SELECT id
@@ -41,8 +36,7 @@ def promote_admin_to_superadmin(cursor):
                 ORDER BY id
                 LIMIT 1
             );
-            """
-        )
+        """)
         if cursor.rowcount == 0:
             raise RuntimeError("Failed to find any users of type 'admin' ('A')")
 

@@ -2,7 +2,7 @@
 
 class Application_Form_PodcastPreferences extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         $isPrivate = Application_Model_Preference::getStationPodcastPrivacy();
         $stationPodcastPrivacy = new Zend_Form_Element_Radio('stationPodcastPrivacy');

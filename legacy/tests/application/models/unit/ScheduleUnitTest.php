@@ -7,7 +7,7 @@
  */
 class ScheduleUnitTest extends Zend_Test_PHPUnit_ControllerTestCase // PHPUnit_Framework_TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         TestHelper::installTestDatabase();
         TestHelper::setupZendBootstrap();
@@ -15,9 +15,9 @@ class ScheduleUnitTest extends Zend_Test_PHPUnit_ControllerTestCase // PHPUnit_F
         parent::setUp();
     }
 
-    public function testCheckOverlappingShows() {}
+    public function testCheckOverlappingShows(): void {}
 
-    public function testIsFileScheduledInTheFuture()
+    public function testIsFileScheduledInTheFuture(): void
     {
         TestHelper::loginUser();
         $CC_CONFIG = Config::getConfig();

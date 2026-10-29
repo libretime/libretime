@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 
 from argparse import ArgumentParser
+from collections.abc import Iterator
 from configparser import ConfigParser
 from os import PathLike
 from pathlib import Path
-from typing import Iterator, List, Optional, Set
 
 DEFAULT_PACKAGES_FILENAME = "packages.ini"
 FORMATS = ("list", "line")
-DISTRIBUTIONS = ("focal", "bullseye", "jammy", "bookworm")
+DISTRIBUTIONS = (
+    "bookworm",
+    "noble",
+    "trixie",
+    "resolute",
+)
 
 SETTINGS_SECTION = "=settings"
 DEVELOPMENT_SECTION = "=development"
@@ -18,8 +23,8 @@ def load_packages(
     raw: str,
     distribution: str,
     development: bool = False,
-    exclude: Optional[List[str]] = None,
-) -> Set[str]:
+    exclude: list[str] | None = None,
+) -> set[str]:
     if distribution not in DISTRIBUTIONS:
         raise ValueError(f"Invalid distribution '{distribution}'")
 
@@ -40,7 +45,7 @@ def load_packages(
 
 
 def list_packages_files(
-    paths: List[PathLike],
+    paths: list[PathLike],
 ) -> Iterator[Path]:
     for path_like in paths:
         path = Path(path_like)
@@ -55,11 +60,11 @@ def list_packages_files(
 
 
 def list_packages(
-    paths: List[PathLike],
+    paths: list[PathLike],
     distribution: str,
     development: bool = False,
-    exclude: Optional[List[str]] = None,
-) -> Set[str]:
+    exclude: list[str] | None = None,
+) -> set[str]:
     packages = set()
     for package_file in list_packages_files(paths):
         raw = package_file.read_text()

@@ -13,7 +13,7 @@ class BitrateFormatter
         $this->_bitrate = $bitrate;
     }
 
-    public function format()
+    public function format(): string
     {
         $kbps = bcdiv($this->_bitrate, 1000, 0);
 

@@ -92,7 +92,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
      *
      * @param string $p_newname
      */
-    public function setName($p_newname)
+    public function setName($p_newname): void
     {
         $this->block->setDbName($p_newname);
         $this->block->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
@@ -109,7 +109,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
         return $this->block->getDbName();
     }
 
-    public function setDescription($p_description)
+    public function setDescription($p_description): void
     {
         $this->block->setDbDescription($p_description);
         $this->block->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
@@ -131,7 +131,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
         return $this->block->getCcSubjs()->getDbId();
     }
 
-    public function setCreator($p_id)
+    public function setCreator($p_id): void
     {
         $this->block->setDbCreatorId($p_id);
         $this->block->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
@@ -249,7 +249,7 @@ SQL;
      *
      * @param mixed $fade
      */
-    public function normalizeFade($fade)
+    public function normalizeFade($fade): string
     {
         // First get rid of the first six characters 00:00: which will be added back later for db update
         $fade = substr($fade, 6);
@@ -280,7 +280,7 @@ SQL;
         return $length;
     }
 
-    public function getLength()
+    public function getLength(): string
     {
         $this->block->reload();
         $prepend = '';
@@ -297,7 +297,7 @@ SQL;
         return $prepend . $formatter->format();
     }
 
-    public function getDynamicBlockLength()
+    public function getDynamicBlockLength(): string
     {
         [$value, $modifier] = $this->getLimitValueAndModifier();
         if ($modifier == 'items') {
@@ -354,7 +354,7 @@ SQL;
         return $result[0][0];
     }
 
-    private function insertBlockElement($info)
+    private function insertBlockElement($info): void
     {
         $row = new CcBlockcontents();
         $row->setDbBlockId($this->id);
@@ -395,7 +395,7 @@ SQL;
         throw new Exception('trying to add a file that does not exist.');
     }
 
-    public function isStatic()
+    public function isStatic(): bool
     {
         return $this->block->getDbType() == 'static';
     }
@@ -408,7 +408,7 @@ SQL;
     * @param string (before|after) $addAfter
     *      whether to add the clips before or after the selected item.
     */
-    public function addAudioClips($p_items, $p_afterItem = null, $addType = 'after')
+    public function addAudioClips($p_items, $p_afterItem = null, $addType = 'after'): void
     {
         $this->con->beginTransaction();
         $contentsToUpdate = [];
@@ -507,7 +507,7 @@ SQL;
      * @param int   $p_afterItem
      *                           unique id of the item to move the clip after
      */
-    public function moveAudioClips($p_items, $p_afterItem = null)
+    public function moveAudioClips($p_items, $p_afterItem = null): void
     {
         $this->con->beginTransaction();
 
@@ -578,7 +578,7 @@ SQL;
      * @param array $p_items
      *                       array of unique item ids to remove from the block..
      */
-    public function delAudioClips($p_items)
+    public function delAudioClips($p_items): void
     {
         $this->con->beginTransaction();
 
@@ -622,7 +622,12 @@ SQL;
         }
     }
 
-    public function getFadeInfo($pos)
+    /**
+     * @param mixed $pos
+     *
+     * @return array<int, string>
+     */
+    public function getFadeInfo($pos): array
     {
         // Logging::info("Getting fade info for pos {$pos}");
 
@@ -647,7 +652,7 @@ SQL;
     * $fadeIn length of fade in in seconds of $id2
     * $offset time in seconds from end of $id1 that $id2 will begin to play.
     */
-    public function createCrossfade($id1, $fadeOut, $id2, $fadeIn, $offset)
+    public function createCrossfade($id1, $fadeOut, $id2, $fadeIn, $offset): void
     {
         $this->con->beginTransaction();
 
@@ -683,7 +688,7 @@ SQL;
      *
      * @return bool
      */
-    public function changeFadeInfo($id, $fadeIn, $fadeOut, $offset = null)
+    public function changeFadeInfo($id, $fadeIn, $fadeOut, $offset = null): array
     {
         // See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
         // For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
@@ -751,7 +756,7 @@ SQL;
         return ['fadeIn' => $fadeIn, 'fadeOut' => $fadeOut];
     }
 
-    public function setfades($fadein, $fadeout)
+    public function setfades($fadein, $fadeout): void
     {
         if (isset($fadein)) {
             Logging::info("Setting block fade in {$fadein}");
@@ -785,7 +790,7 @@ SQL;
      *
      * @return bool or pear error object
      */
-    public function changeClipLength($id, $cueIn, $cueOut)
+    public function changeClipLength($id, $cueIn, $cueOut): array
     {
         $this->con->beginTransaction();
 
@@ -948,7 +953,10 @@ SQL;
         ];
     }
 
-    public function getAllPLMetaData()
+    /**
+     * @return mixed[]
+     */
+    public function getAllPLMetaData(): array
     {
         $categories = $this->categories;
         $md = [];
@@ -969,7 +977,7 @@ SQL;
         return $this->{$method}();
     }
 
-    public function setMetadata($category, $value)
+    public function setMetadata($category, $value): void
     {
         $cat = $this->categories[$category];
 
@@ -993,7 +1001,7 @@ SQL;
      *
      * @param string $p_fileId
      */
-    public static function DeleteFileFromAllBlocks($p_fileId)
+    public static function DeleteFileFromAllBlocks($p_fileId): void
     {
         CcBlockcontentsQuery::create()->filterByDbFileId($p_fileId)->delete();
     }
@@ -1004,7 +1012,7 @@ SQL;
      * @param array $p_ids
      * @param mixed $p_userId
      */
-    public static function deleteBlocks($p_ids, $p_userId)
+    public static function deleteBlocks($p_ids, $p_userId): void
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -1061,7 +1069,7 @@ SQL;
     /**
      * Delete all files from block.
      */
-    public function deleteAllFilesFromBlock()
+    public function deleteAllFilesFromBlock(): void
     {
         // get only the files from the playlist
         // we are about to clear out
@@ -1086,7 +1094,10 @@ SQL;
     }
 
     // smart block functions start
-    public function shuffleSmartBlock()
+    /**
+     * @return array<string, int>
+     */
+    public function shuffleSmartBlock(): array
     {
         // if it here that means it's static pl
         $this->saveType('static');
@@ -1104,13 +1115,13 @@ SQL;
         return ['result' => 0];
     }
 
-    public function saveType($p_blockType)
+    public function saveType($p_blockType): void
     {
         // saving dynamic/static flag
         CcBlockQuery::create()->findPk($this->id)->setDbType($p_blockType)->save();
     }
 
-    public function setLength($value)
+    public function setLength($value): void
     {
         $this->block->setDbLength($value);
         $this->block->save($this->con);
@@ -1122,7 +1133,7 @@ SQL;
      *
      * @param array $p_criteria
      */
-    public function saveSmartBlockCriteria($p_criteria)
+    public function saveSmartBlockCriteria($p_criteria): void
     {
         $data = $this->organizeSmartPlaylistCriteria($p_criteria);
 
@@ -1150,14 +1161,14 @@ SQL;
         $this->updateBlockLengthInAllPlaylist();
     }
 
-    public function hasItemLimit()
+    public function hasItemLimit(): bool
     {
         [$value, $modifier] = $this->getLimitValueAndModifier();
 
         return $modifier == 'items';
     }
 
-    public function storeCriteriaIntoDb($p_criteriaData)
+    public function storeCriteriaIntoDb($p_criteriaData): void
     {
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
@@ -1183,7 +1194,7 @@ SQL;
                         $extradatetimeunit = $d['sp_criteria_extra_datetime_select'];
                     }
 
-                    if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
+                    if (in_array($field, ['utime', 'mtime', 'lptime'])) {
                         // if the date isn't relative we  want to convert the value to a specific UTC date
                         if (!in_array($modifier, ['before', 'after', 'between'])) {
                             $value = Application_Common_DateHelper::UserTimezoneStringToUTCString($value);
@@ -1200,7 +1211,7 @@ SQL;
                         ->setDbBlockId($this->id);
 
                     if (isset($d['sp_criteria_extra'])) {
-                        if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
+                        if (in_array($field, ['utime', 'mtime', 'lptime'])) {
                             // if the date isn't relative we  want to convert the value to a specific UTC date
                             if (!in_array($modifier, ['before', 'after', 'between'])) {
                                 $extra = Application_Common_DateHelper::UserTimezoneStringToUTCString($extra);
@@ -1260,8 +1271,10 @@ SQL;
      *
      * @param array $p_criteria
      * @param mixed $returnList
+     *
+     * @return array<string, int>
      */
-    public function generateSmartBlock($p_criteria, $returnList = false)
+    public function generateSmartBlock($p_criteria, $returnList = false): array
     {
         $this->saveSmartBlockCriteria($p_criteria);
         $insertList = $this->getListOfFilesUnderLimit();
@@ -1278,7 +1291,7 @@ SQL;
         return ['result' => 0];
     }
 
-    public function updateBlockLengthInAllPlaylist()
+    public function updateBlockLengthInAllPlaylist(): void
     {
         $blocks = CcPlaylistcontentsQuery::create()->filterByDbBlockId($this->id)->find();
         $blocks->getFirst();
@@ -1295,7 +1308,7 @@ SQL;
         }
     }
 
-    public function getListOfFilesUnderLimit($show = null, $showStartTime = null)
+    public function getListOfFilesUnderLimit($show = null, $showStartTime = null): array
     {
         $info = $this->getListofFilesMeetCriteria($show, $showStartTime);
         $files = $info['files'];
@@ -1335,7 +1348,7 @@ SQL;
         $insertList = [];
         $totalTime = 0;
         if ($isRandomSort && !$overflow && $blockItems === null) {
-            $minTrackLength = min(array_map(fn (Track $item) => $item->length, $tracks));
+            $minTrackLength = min(array_map(fn (Track $item): float => $item->length, $tracks));
             do {
                 $solution = SSPSolution::solve($tracks, $blockTime - $totalTime);
                 $insertList = array_merge($insertList, $solution->tracks);
@@ -1347,7 +1360,7 @@ SQL;
                 return $blockItems !== null && count($insertList) >= $blockItems || $totalTime > $blockTime;
             };
 
-            $addTrack = function (Track $track) use ($overflow, $blockTime, &$insertList, &$totalTime) {
+            $addTrack = function (Track $track) use ($overflow, $blockTime, &$insertList, &$totalTime): void {
                 if ($overflow) {
                     $insertList[] = $track;
                     $totalTime += $track->length;
@@ -1380,14 +1393,16 @@ SQL;
             }
         }
 
-        return array_map(fn (Track $track) => ['id' => $track->id, 'length' => $track->length], $insertList);
+        return array_map(fn (Track $track): array => ['id' => $track->id, 'length' => $track->length], $insertList);
     }
 
     /**
      * Parses each row in the database for the criteria associated with this block and renders human readable labels.
      * Returns it as an array with each criteria_name and modifier_name added based upon options array lookup.
+     *
+     * @return array<'crit'|'limit'|'overflow_tracks'|'repeat_tracks'|'sort', non-empty-array>
      */
-    public function getCriteria()
+    public function getCriteria(): array
     {
         $allCriteria = BlockCriteria::criteriaMap();
         $allOptions = CriteriaModifier::mapToDisplay();
@@ -1436,8 +1451,10 @@ SQL;
      * Parses each row in the database for the criteria associated with this block and renders human readable labels.
      * Returns it as an array with each criteria_name and modifier_name added based upon options array lookup.
      * Maintains original separation of similar criteria that were separated by and statements.
+     *
+     * @return array<'crit'|'limit'|'overflow_tracks'|'repeat_tracks'|'sort', non-empty-array<string, mixed>>
      */
-    public function getCriteriaGrouped()
+    public function getCriteriaGrouped(): array
     {
         $criteriaOptions = BlockCriteria::displayCriteria();
         $modifierOptions = CriteriaModifier::mapToDisplay();
@@ -1491,7 +1508,7 @@ SQL;
 
         return preg_replace_callback(
             '/now{(.*?)}/',
-            fn ($matches) => $dt->format($matches[1]),
+            fn ($matches): string => $dt->format($matches[1]),
             $value
         );
     }
@@ -1513,6 +1530,8 @@ SQL;
                 $i = 0;
                 $prevgroup = null;
                 $group = null;
+                $fieldCriterion = null;
+                $groupCriterion = null;
                 // now we need to sort based upon extra which contains the and grouping from the form
                 usort($crit, function ($a, $b) {
                     return $a['criteria_group'] - $b['criteria_group'];
@@ -1603,15 +1622,24 @@ SQL;
                             $spCriteria = "reverse(split_part(reverse(filepath), '/', 1))";
                         }
 
-                        if ($i > 0 && $prevgroup == $group) {
-                            $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                        // build each group as its own criterion so the groups are
+                        // AND-ed together as (a OR b) AND (c OR d), instead of
+                        // letting propel chain them left to right as ((a OR b) AND c) OR d
+                        $criterion = $qry->getNewCriterion($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                        if ($i > 0 && $prevgroup == $group && $groupCriterion !== null) {
+                            $groupCriterion->addOr($criterion);
                         } else {
-                            $qry->addAnd($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                            $groupCriterion = $criterion;
+                            if ($fieldCriterion === null) {
+                                $fieldCriterion = $groupCriterion;
+                            } else {
+                                $fieldCriterion->addAnd($groupCriterion);
+                            }
                         }
                         // only add this NOT LIKE null if you aren't also matching on another criteria
                         if ($i == 0) {
                             if ($spCriteriaModifier == Criteria::NOT_ILIKE || $spCriteriaModifier == Criteria::NOT_EQUAL) {
-                                $qry->addOr($spCriteria, null, Criteria::ISNULL);
+                                $groupCriterion->addOr($qry->getNewCriterion($spCriteria, null, Criteria::ISNULL));
                             }
                         }
                     } catch (Exception $e) {
@@ -1619,6 +1647,10 @@ SQL;
                     }
                     $prevgroup = $group;
                     ++$i;
+                }
+
+                if ($fieldCriterion !== null) {
+                    $qry->addAnd($fieldCriterion);
                 }
             }
         }
@@ -1688,7 +1720,12 @@ SQL;
         }
     }
 
-    public static function organizeSmartPlaylistCriteria($p_criteria)
+    /**
+     * @param mixed $p_criteria
+     *
+     * @return array<'criteria'|'etc', non-empty-array>
+     */
+    public static function organizeSmartPlaylistCriteria($p_criteria): array
     {
         $fieldNames = ['sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra', 'sp_criteria_datetime_select', 'sp_criteria_extra_datetime_select'];
         $output = [];
@@ -1731,7 +1768,10 @@ SQL;
         return $output;
     }
 
-    public static function getAllBlockFiles()
+    /**
+     * @return mixed[]
+     */
+    public static function getAllBlockFiles(): array
     {
         $sql = <<<'SQL'
 SELECT distinct(file_id)
@@ -1804,7 +1844,7 @@ class SSPSolution
 
     public function replace(Track $old, Track $new): SSPSolution
     {
-        return new SSPSolution(array_map(fn (Track $it) => $it === $old ? $new : $it, $this->tracks));
+        return new SSPSolution(array_map(fn (Track $it): Track => $it === $old ? $new : $it, $this->tracks));
     }
 
     public static function isCloseEnough(float $delta): bool
@@ -1860,9 +1900,9 @@ class SSPSolution
                 $replacement = self::maxByOrNull(
                     array_filter(
                         array_diff($tracks, $solution->tracks),
-                        fn (Track $it) => $it->length > $track->length && $it->length - $track->length <= $delta,
+                        fn (Track $it): bool => $it->length > $track->length && $it->length - $track->length <= $delta,
                     ),
-                    fn (Track $it) => $it->length,
+                    fn (Track $it): float => $it->length,
                 );
 
                 if ($replacement === null) {

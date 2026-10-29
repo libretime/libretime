@@ -15,7 +15,7 @@
     <div id="schedule-show-when" class="collapsible-content">
         <?php
         if (!$this->addNewShow) {
-            $this->when->getElement('add_show_timezone')->setOptions(array('disabled' => true));
+            $this->when->getElement('add_show_timezone')->setOptions(['disabled' => true]);
         ?>
             <input type="hidden" name="add_show_timezone" id="add_show_timezone" value=<?php echo $this->when->getElement('add_show_timezone')->getValue() ?>>
         <?php

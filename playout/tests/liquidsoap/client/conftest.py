@@ -1,10 +1,12 @@
 import logging
+import socket
+from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
 from random import randint
 from subprocess import PIPE, STDOUT, Popen
-from time import sleep
-from typing import Generator, Protocol
+from time import monotonic, sleep
+from typing import Protocol
 
 import pytest
 from libretime_shared.logging import setup_logger
@@ -17,7 +19,7 @@ setup_logger("debug")
 
 
 LIQ_SCRIPT = """
-set("log.file", false)
+settings.log.file.set(false)
 {settings}
 
 var1 = interactive.string("var1", "default")
@@ -26,13 +28,13 @@ output.dummy(blank(id="safe_blank"))
 """
 
 LIQ_TELNET_SETTINGS = """
-set("server.telnet", true)
-set("server.telnet.port", {telnet_port})
+settings.server.telnet.set(true)
+settings.server.telnet.port.set({telnet_port})
 """
 
 LIQ_SOCKET_SETTINGS = """
-set("server.socket", true)
-set("server.socket.path", "{socket_path}")
+settings.server.socket.set(true)
+settings.server.socket.path.set("{socket_path}")
 """
 
 
@@ -59,9 +61,17 @@ class LiquidsoapManagerTelnet:
         liq_script = LIQ_SCRIPT.format(settings=liq_settings.strip())
         return liq_script
 
-    # pylint: disable=unused-argument
-    def wait_start(self, process: Popen) -> None:
-        sleep(2)
+    def wait_start(self, process: Popen, timeout: float = 15) -> None:
+        deadline = monotonic() + timeout
+        while process.poll() is None and monotonic() < deadline:
+            try:
+                with socket.create_connection(
+                    ("localhost", self.telnet_port),
+                    timeout=0.1,
+                ):
+                    return
+            except OSError:
+                sleep(0.1)
 
     def make_connection(self) -> LiquidsoapConnection:
         return LiquidsoapConnection(host="localhost", port=self.telnet_port)
@@ -125,12 +135,13 @@ def run_liq_server(
             process.terminate()
 
 
+# pylint: disable=unused-argument
 @pytest.fixture(
     name="liq_conn",
     scope="session",
     params=["telnet", "socket"],
 )
-def liq_conn_fixture(request, tmp_path_factory):
+def liq_conn_fixture(request, tmp_path_factory, liq_version):
     tmp_path: Path = tmp_path_factory.mktemp(__name__)
 
     with run_liq_server(request.param, tmp_path) as manager:
@@ -139,12 +150,13 @@ def liq_conn_fixture(request, tmp_path_factory):
             yield conn
 
 
+# pylint: disable=unused-argument
 @pytest.fixture(
     name="liq_client",
     scope="session",
     params=["telnet", "socket"],
 )
-def liq_client_fixture(request, tmp_path_factory):
+def liq_client_fixture(request, tmp_path_factory, liq_version):
     tmp_path: Path = tmp_path_factory.mktemp(__name__)
 
     with run_liq_server(request.param, tmp_path) as manager:

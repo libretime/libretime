@@ -652,7 +652,7 @@ abstract class BaseCcWebstream extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -694,7 +694,7 @@ abstract class BaseCcWebstream extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -737,7 +737,7 @@ abstract class BaseCcWebstream extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1476,7 +1476,7 @@ abstract class BaseCcWebstream extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcSchedule[] List of CcSchedule objects
      * @throws PropelException
      */
-    public function getCcSchedules($criteria = null, PropelPDO $con = null)
+    public function getCcSchedules($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcSchedulesPartial && !$this->isNew();
         if (null === $this->collCcSchedules || null !== $criteria  || $partial) {
@@ -1531,7 +1531,7 @@ abstract class BaseCcWebstream extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcWebstream The current object (for fluent API support)
      */
-    public function setCcSchedules(PropelCollection $ccSchedules, PropelPDO $con = null)
+    public function setCcSchedules(PropelCollection $ccSchedules, ?PropelPDO $con = null)
     {
         $ccSchedulesToDelete = $this->getCcSchedules(new Criteria(), $con)->diff($ccSchedules);
 
@@ -1562,7 +1562,7 @@ abstract class BaseCcWebstream extends BaseObject implements Persistent
      * @return int             Count of related CcSchedule objects.
      * @throws PropelException
      */
-    public function countCcSchedules(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcSchedules(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcSchedulesPartial && !$this->isNew();
         if (null === $this->collCcSchedules || null !== $criteria || $partial) {

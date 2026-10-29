@@ -1,11 +1,10 @@
 from os import environ
 from pathlib import Path
-from typing import List, Union
+from typing import Annotated, Union
 from unittest import mock
 
 from pydantic import BaseModel, Field
 from pytest import mark, raises
-from typing_extensions import Annotated
 
 from libretime_shared.config import (
     AnyHttpUrlStr,
@@ -26,10 +25,10 @@ AnyOutput = Annotated[
 class FixtureConfig(BaseConfig):
     public_url: AnyHttpUrlStr
     api_key: str
-    allowed_hosts: List[str] = []
+    allowed_hosts: list[str] = []
     database: DatabaseConfig
     rabbitmq: RabbitMQConfig = RabbitMQConfig()
-    outputs: List[AnyOutput]
+    outputs: list[AnyOutput]
 
 
 FIXTURE_CONFIG_JSON_SCHEMA = {

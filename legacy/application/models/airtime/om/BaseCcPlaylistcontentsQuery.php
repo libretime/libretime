@@ -50,8 +50,8 @@
  * @method CcPlaylistcontentsQuery rightJoinCcPlaylist($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPlaylist relation
  * @method CcPlaylistcontentsQuery innerJoinCcPlaylist($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPlaylist relation
  *
- * @method CcPlaylistcontents findOne(PropelPDO $con = null) Return the first CcPlaylistcontents matching the query
- * @method CcPlaylistcontents findOneOrCreate(PropelPDO $con = null) Return the first CcPlaylistcontents matching the query, or a new CcPlaylistcontents object populated from the query conditions when no match is found
+ * @method CcPlaylistcontents findOne(?PropelPDO $con = null) Return the first CcPlaylistcontents matching the query
+ * @method CcPlaylistcontents findOneOrCreate(?PropelPDO $con = null) Return the first CcPlaylistcontents matching the query, or a new CcPlaylistcontents object populated from the query conditions when no match is found
  *
  * @method CcPlaylistcontents findOneByDbPlaylistId(int $playlist_id) Return the first CcPlaylistcontents filtered by the playlist_id column
  * @method CcPlaylistcontents findOneByDbFileId(int $file_id) Return the first CcPlaylistcontents filtered by the file_id column
@@ -59,7 +59,7 @@
  * @method CcPlaylistcontents findOneByDbStreamId(int $stream_id) Return the first CcPlaylistcontents filtered by the stream_id column
  * @method CcPlaylistcontents findOneByDbType(int $type) Return the first CcPlaylistcontents filtered by the type column
  * @method CcPlaylistcontents findOneByDbPosition(int $position) Return the first CcPlaylistcontents filtered by the position column
- * @method CcPlaylistcontents findOneByDbTrackOffset(double $trackoffset) Return the first CcPlaylistcontents filtered by the trackoffset column
+ * @method CcPlaylistcontents findOneByDbTrackOffset(float $trackoffset) Return the first CcPlaylistcontents filtered by the trackoffset column
  * @method CcPlaylistcontents findOneByDbCliplength(string $cliplength) Return the first CcPlaylistcontents filtered by the cliplength column
  * @method CcPlaylistcontents findOneByDbCuein(string $cuein) Return the first CcPlaylistcontents filtered by the cuein column
  * @method CcPlaylistcontents findOneByDbCueout(string $cueout) Return the first CcPlaylistcontents filtered by the cueout column
@@ -73,7 +73,7 @@
  * @method array findByDbStreamId(int $stream_id) Return CcPlaylistcontents objects filtered by the stream_id column
  * @method array findByDbType(int $type) Return CcPlaylistcontents objects filtered by the type column
  * @method array findByDbPosition(int $position) Return CcPlaylistcontents objects filtered by the position column
- * @method array findByDbTrackOffset(double $trackoffset) Return CcPlaylistcontents objects filtered by the trackoffset column
+ * @method array findByDbTrackOffset(float $trackoffset) Return CcPlaylistcontents objects filtered by the trackoffset column
  * @method array findByDbCliplength(string $cliplength) Return CcPlaylistcontents objects filtered by the cliplength column
  * @method array findByDbCuein(string $cuein) Return CcPlaylistcontents objects filtered by the cuein column
  * @method array findByDbCueout(string $cueout) Return CcPlaylistcontents objects filtered by the cueout column
@@ -82,9 +82,9 @@
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 {
-    protected $ccPlaylists;
     /**
      * Initializes internal state of BaseCcPlaylistcontentsQuery object.
      *

@@ -180,16 +180,12 @@
  * @method CcFilesQuery rightJoinCcPlayoutHistory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPlayoutHistory relation
  * @method CcFilesQuery innerJoinCcPlayoutHistory($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPlayoutHistory relation
  *
- * @method CcFilesQuery leftJoinThirdPartyTrackReferences($relationAlias = null) Adds a LEFT JOIN clause to the query using the ThirdPartyTrackReferences relation
- * @method CcFilesQuery rightJoinThirdPartyTrackReferences($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ThirdPartyTrackReferences relation
- * @method CcFilesQuery innerJoinThirdPartyTrackReferences($relationAlias = null) Adds a INNER JOIN clause to the query using the ThirdPartyTrackReferences relation
- *
  * @method CcFilesQuery leftJoinPodcastEpisodes($relationAlias = null) Adds a LEFT JOIN clause to the query using the PodcastEpisodes relation
  * @method CcFilesQuery rightJoinPodcastEpisodes($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PodcastEpisodes relation
  * @method CcFilesQuery innerJoinPodcastEpisodes($relationAlias = null) Adds a INNER JOIN clause to the query using the PodcastEpisodes relation
  *
- * @method CcFiles findOne(PropelPDO $con = null) Return the first CcFiles matching the query
- * @method CcFiles findOneOrCreate(PropelPDO $con = null) Return the first CcFiles matching the query, or a new CcFiles object populated from the query conditions when no match is found
+ * @method CcFiles findOne(?PropelPDO $con = null) Return the first CcFiles matching the query
+ * @method CcFiles findOneOrCreate(?PropelPDO $con = null) Return the first CcFiles matching the query, or a new CcFiles object populated from the query conditions when no match is found
  *
  * @method CcFiles findOneByDbName(string $name) Return the first CcFiles filtered by the name column
  * @method CcFiles findOneByDbMime(string $mime) Return the first CcFiles filtered by the mime column
@@ -245,15 +241,15 @@
  * @method CcFiles findOneByDbSubject(string $subject) Return the first CcFiles filtered by the subject column
  * @method CcFiles findOneByDbContributor(string $contributor) Return the first CcFiles filtered by the contributor column
  * @method CcFiles findOneByDbLanguage(string $language) Return the first CcFiles filtered by the language column
- * @method CcFiles findOneByDbFileExists(boolean $file_exists) Return the first CcFiles filtered by the file_exists column
+ * @method CcFiles findOneByDbFileExists(bool $file_exists) Return the first CcFiles filtered by the file_exists column
  * @method CcFiles findOneByDbReplayGain(string $replay_gain) Return the first CcFiles filtered by the replay_gain column
  * @method CcFiles findOneByDbOwnerId(int $owner_id) Return the first CcFiles filtered by the owner_id column
  * @method CcFiles findOneByDbCuein(string $cuein) Return the first CcFiles filtered by the cuein column
  * @method CcFiles findOneByDbCueout(string $cueout) Return the first CcFiles filtered by the cueout column
- * @method CcFiles findOneByDbSilanCheck(boolean $silan_check) Return the first CcFiles filtered by the silan_check column
- * @method CcFiles findOneByDbHidden(boolean $hidden) Return the first CcFiles filtered by the hidden column
- * @method CcFiles findOneByDbIsScheduled(boolean $is_scheduled) Return the first CcFiles filtered by the is_scheduled column
- * @method CcFiles findOneByDbIsPlaylist(boolean $is_playlist) Return the first CcFiles filtered by the is_playlist column
+ * @method CcFiles findOneByDbSilanCheck(bool $silan_check) Return the first CcFiles filtered by the silan_check column
+ * @method CcFiles findOneByDbHidden(bool $hidden) Return the first CcFiles filtered by the hidden column
+ * @method CcFiles findOneByDbIsScheduled(bool $is_scheduled) Return the first CcFiles filtered by the is_scheduled column
+ * @method CcFiles findOneByDbIsPlaylist(bool $is_playlist) Return the first CcFiles filtered by the is_playlist column
  * @method CcFiles findOneByDbFilesize(int $filesize) Return the first CcFiles filtered by the filesize column
  * @method CcFiles findOneByDbDescription(string $description) Return the first CcFiles filtered by the description column
  * @method CcFiles findOneByDbArtwork(string $artwork) Return the first CcFiles filtered by the artwork column
@@ -314,15 +310,15 @@
  * @method array findByDbSubject(string $subject) Return CcFiles objects filtered by the subject column
  * @method array findByDbContributor(string $contributor) Return CcFiles objects filtered by the contributor column
  * @method array findByDbLanguage(string $language) Return CcFiles objects filtered by the language column
- * @method array findByDbFileExists(boolean $file_exists) Return CcFiles objects filtered by the file_exists column
+ * @method array findByDbFileExists(bool $file_exists) Return CcFiles objects filtered by the file_exists column
  * @method array findByDbReplayGain(string $replay_gain) Return CcFiles objects filtered by the replay_gain column
  * @method array findByDbOwnerId(int $owner_id) Return CcFiles objects filtered by the owner_id column
  * @method array findByDbCuein(string $cuein) Return CcFiles objects filtered by the cuein column
  * @method array findByDbCueout(string $cueout) Return CcFiles objects filtered by the cueout column
- * @method array findByDbSilanCheck(boolean $silan_check) Return CcFiles objects filtered by the silan_check column
- * @method array findByDbHidden(boolean $hidden) Return CcFiles objects filtered by the hidden column
- * @method array findByDbIsScheduled(boolean $is_scheduled) Return CcFiles objects filtered by the is_scheduled column
- * @method array findByDbIsPlaylist(boolean $is_playlist) Return CcFiles objects filtered by the is_playlist column
+ * @method array findByDbSilanCheck(bool $silan_check) Return CcFiles objects filtered by the silan_check column
+ * @method array findByDbHidden(bool $hidden) Return CcFiles objects filtered by the hidden column
+ * @method array findByDbIsScheduled(bool $is_scheduled) Return CcFiles objects filtered by the is_scheduled column
+ * @method array findByDbIsPlaylist(bool $is_playlist) Return CcFiles objects filtered by the is_playlist column
  * @method array findByDbFilesize(int $filesize) Return CcFiles objects filtered by the filesize column
  * @method array findByDbDescription(string $description) Return CcFiles objects filtered by the description column
  * @method array findByDbArtwork(string $artwork) Return CcFiles objects filtered by the artwork column
@@ -330,6 +326,7 @@
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcFilesQuery extends ModelCriteria
 {
     /**
@@ -3298,80 +3295,6 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         return $this
             ->joinCcPlayoutHistory($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcPlayoutHistory', 'CcPlayoutHistoryQuery');
-    }
-
-    /**
-     * Filter the query by a related ThirdPartyTrackReferences object
-     *
-     * @param   ThirdPartyTrackReferences|PropelObjectCollection $thirdPartyTrackReferences  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 CcFilesQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterByThirdPartyTrackReferences($thirdPartyTrackReferences, $comparison = null)
-    {
-        if ($thirdPartyTrackReferences instanceof ThirdPartyTrackReferences) {
-            return $this
-                ->addUsingAlias(CcFilesPeer::ID, $thirdPartyTrackReferences->getDbFileId(), $comparison);
-        } elseif ($thirdPartyTrackReferences instanceof PropelObjectCollection) {
-            return $this
-                ->useThirdPartyTrackReferencesQuery()
-                ->filterByPrimaryKeys($thirdPartyTrackReferences->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByThirdPartyTrackReferences() only accepts arguments of type ThirdPartyTrackReferences or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the ThirdPartyTrackReferences relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return CcFilesQuery The current query, for fluid interface
-     */
-    public function joinThirdPartyTrackReferences($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('ThirdPartyTrackReferences');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'ThirdPartyTrackReferences');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the ThirdPartyTrackReferences relation ThirdPartyTrackReferences object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   ThirdPartyTrackReferencesQuery A secondary query class using the current class as primary query
-     */
-    public function useThirdPartyTrackReferencesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinThirdPartyTrackReferences($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'ThirdPartyTrackReferences', 'ThirdPartyTrackReferencesQuery');
     }
 
     /**

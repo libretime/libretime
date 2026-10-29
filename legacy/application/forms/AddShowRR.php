@@ -2,7 +2,7 @@
 
 class Application_Form_AddShowRR extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         // Add record element
         $this->addElement('checkbox', 'add_show_record', [
@@ -17,7 +17,7 @@ class Application_Form_AddShowRR extends Zend_Form_SubForm
         ]);
     }
 
-    public function disable()
+    public function disable(): void
     {
         $elements = $this->getElements();
         foreach ($elements as $element) {

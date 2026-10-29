@@ -2,7 +2,7 @@
 
 class Application_Model_Library
 {
-    public static function getObjInfo($p_type)
+    public static function getObjInfo($p_type): array
     {
         $info = [];
 
@@ -19,7 +19,7 @@ class Application_Model_Library
         return $info;
     }
 
-    public static function changePlaylist($p_id, $p_type)
+    public static function changePlaylist($p_id, $p_type): void
     {
         $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
 
@@ -31,7 +31,12 @@ class Application_Model_Library
         }
     }
 
-    public static function getPlaylistNames($alphasort = false)
+    /**
+     * @param mixed $alphasort
+     *
+     * @return mixed[]
+     */
+    public static function getPlaylistNames($alphasort = false): array
     {
         $playlistNames = [null => _('None')];
         // if we want to return the playlists sorted alphabetically by name
@@ -52,7 +57,10 @@ class Application_Model_Library
         return $playlistNames;
     }
 
-    public static function getTracktypes()
+    /**
+     * @return mixed[]
+     */
+    public static function getTracktypes(): array
     {
         $track_type_options = [null => _('None')];
         $track_types = Application_Model_Tracktype::getTracktypes();
@@ -61,7 +69,7 @@ class Application_Model_Library
             return $element['type_name'];
         }, $track_types), SORT_ASC, $track_types);
 
-        foreach ($track_types as $key => $tt) {
+        foreach ($track_types as $tt) {
             $track_type_options[$tt['id']] = $tt['type_name'];
         }
 

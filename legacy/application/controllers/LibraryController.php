@@ -2,7 +2,7 @@
 
 class LibraryController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('contents-feed', 'json')
@@ -18,7 +18,7 @@ class LibraryController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         $this->_redirect('showbuilder');
     }
@@ -74,7 +74,7 @@ class LibraryController extends Zend_Controller_Action
         }
     }
 
-    public function contextMenuAction()
+    public function contextMenuAction(): void
     {
         $baseUrl = Config::getBasePath();
         $id = $this->_getParam('id');
@@ -178,7 +178,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->items = $menu;
     }
 
-    public function deleteAction()
+    public function deleteAction(): void
     {
         // array containing id and type of media to delete.
         $mediaItems = $this->_getParam('media', null);
@@ -252,7 +252,7 @@ class LibraryController extends Zend_Controller_Action
     }
 
     // duplicate playlist
-    public function duplicateAction()
+    public function duplicateAction(): void
     {
         $params = $this->getRequest()->getParams();
         $id = $params['id'];
@@ -286,7 +286,7 @@ class LibraryController extends Zend_Controller_Action
     }
 
     // duplicate smartblock
-    public function duplicateBlockAction()
+    public function duplicateBlockAction(): void
     {
         Logging::info('duplicate smartblock functionality not yet implemented');
         $params = $this->getRequest()->getParams();
@@ -320,7 +320,7 @@ class LibraryController extends Zend_Controller_Action
         $newBl->setName(sprintf(_('Copy of %s'), $originalBl->getName()));
     }
 
-    public function contentsFeedAction()
+    public function contentsFeedAction(): void
     {
         $params = $this->getRequest()->getParams();
 
@@ -333,7 +333,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->files = SecurityHelper::htmlescape_recursive($r['aaData']);
     }
 
-    public function editFileMdAction()
+    public function editFileMdAction(): void
     {
         $user = Application_Model_User::getCurrentUser();
         $isAdminOrPM = $user->isUserType([UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER]);
@@ -430,7 +430,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->html = $this->view->render('library/edit-file-md.phtml');
     }
 
-    public function getFileMetadataAction()
+    public function getFileMetadataAction(): void
     {
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
@@ -499,7 +499,7 @@ class LibraryController extends Zend_Controller_Action
         }
     }
 
-    public function publishDialogAction()
+    public function publishDialogAction(): void
     {
         $this->_helper->layout->disableLayout();
         // This just spits out publish-dialog.phtml!

@@ -352,13 +352,15 @@ check_distribution()  {
 
   # shellcheck disable=SC2034
   case "$ID-$VERSION_ID" in
-    ubuntu-20.04) is_ubuntu=true && distro="focal" ;;
-    debian-11)    is_debian=true && distro="bullseye" ;;
+    debian-12)    is_debian=true && distro="bookworm" ;;
     *)
       error "could not determine supported distribution '$ID-$VERSION_ID'
 
 Please check the documentation to find the supported distributions.
 
+Support for installing LibreTime on Jammy has dropped since 5.0.0.
+Support for installing LibreTime on Bullseye has dropped since 5.0.0.
+Support for installing LibreTime on Focal has dropped since 5.0.0.
 Support for installing LibreTime on Buster has dropped since 3.1.0.
 Support for installing LibreTime on Bionic has dropped since 3.1.0.
 Support for installing LibreTime on Xenial has dropped since 3.0.0-alpha.10.
@@ -605,7 +607,7 @@ info "creating python3 venv"
 python3 -m venv "$VENV_DIR"
 
 info "upgrading python3 tools"
-$VENV_DIR/bin/pip install --upgrade "pip<24.1" setuptools wheel
+$VENV_DIR/bin/pip install --upgrade pip setuptools wheel
 
 # Install Shared and API client
 ########################################################################################
@@ -630,9 +632,14 @@ install_packages $(list_packages "$SCRIPT_DIR/api")
 
 install_python_app "$SCRIPT_DIR/api[prod]"
 link_python_app libretime-api
+link_python_app libretime-worker
 
 install_service "libretime-api.service" "$SCRIPT_DIR/api/install/systemd/libretime-api.service"
 install_service "libretime-api.socket" "$SCRIPT_DIR/api/install/systemd/libretime-api.socket"
+install_service "libretime-worker.service" "$SCRIPT_DIR/api/install/systemd/libretime-worker.service"
+
+info "creating libretime-worker working directory"
+mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/worker"
 
 # Install Playout
 ########################################################################################
@@ -646,12 +653,6 @@ install_python_app "$SCRIPT_DIR/playout"
 link_python_app libretime-liquidsoap
 link_python_app libretime-playout
 link_python_app libretime-playout-notify
-
-if [[ -f "$SCRIPT_DIR/playout/vine-python311.patch" ]]; then
-  info "applying vine Python 3.11 compatibility patch"
-  _vine_site=$(find "$VENV_DIR/lib" -maxdepth 2 -name "site-packages" -type d | head -1)
-  patch -p1 --forward --reject-file=- -d "$_vine_site" < "$SCRIPT_DIR/playout/vine-python311.patch" || true
-fi
 
 info "creating libretime-playout working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/playout"
@@ -682,19 +683,6 @@ info "creating libretime-analyzer working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/analyzer"
 
 install_service "libretime-analyzer.service" "$SCRIPT_DIR/analyzer/install/systemd/libretime-analyzer.service"
-
-# Install Worker
-########################################################################################
-
-section "Worker"
-
-install_python_app "$SCRIPT_DIR/worker"
-link_python_app libretime-worker
-
-info "creating libretime-worker working directory"
-mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/worker"
-
-install_service "libretime-worker.service" "$SCRIPT_DIR/worker/install/systemd/libretime-worker.service"
 
 # Install Legacy
 ########################################################################################

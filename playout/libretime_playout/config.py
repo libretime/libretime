@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Literal, Optional
+from typing import Literal
 
 from libretime_shared.config import (
     BaseConfig,
@@ -31,11 +31,11 @@ class LiquidsoapConfig(BaseModel):
     server_listen_address: str = "127.0.0.1"
     server_listen_port: int = 1234
 
-    harbor_listen_address: List[str] = ["0.0.0.0"]
+    harbor_listen_address: list[str] = ["0.0.0.0"]
 
-    harbor_ssl_certificate: Optional[str] = None
-    harbor_ssl_private_key: Optional[str] = None
-    harbor_ssl_password: Optional[str] = None
+    harbor_ssl_certificate: str | None = None
+    harbor_ssl_private_key: str | None = None
+    harbor_ssl_password: str | None = None
 
     @model_validator(mode="after")
     def _validate_harbor_ssl(self):

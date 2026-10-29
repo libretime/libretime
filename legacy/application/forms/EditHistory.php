@@ -112,7 +112,7 @@ class Application_Form_EditHistory extends Zend_Form
         ],
     ];
 
-    public function init()
+    public function init(): void
     {
         $history_id = new Zend_Form_Element_Hidden($this::ID_PREFIX . 'id');
         $history_id->setValidators([
@@ -145,7 +145,7 @@ class Application_Form_EditHistory extends Zend_Form
         ]);
     }
 
-    public function createFromTemplate($template, $required)
+    public function createFromTemplate($template, $required): void
     {
         $templateSubForm = $this->getSubForm($this::ID_PREFIX . 'template');
 
@@ -183,7 +183,7 @@ class Application_Form_EditHistory extends Zend_Form
             if (isset($formElType['validators'])) {
                 $validators = $formElType['validators'];
 
-                foreach ($validators as $index => $arr) {
+                foreach ($validators as $arr) {
                     $options = isset($arr[self::ITEM_OPTIONS]) ? $arr[self::ITEM_OPTIONS] : null;
                     $validator = new $arr[self::ITEM_CLASS]($options);
 

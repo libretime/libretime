@@ -4,7 +4,7 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
 {
     public const ID_PREFIX = 'his_item_';
 
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -47,12 +47,12 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
         $this->addElement($ends);
     }
 
-    public function createFromTemplate($template, $required)
+    public function createFromTemplate($template, $required): void
     {
         parent::createFromTemplate($template, $required);
     }
 
-    public function populateShowInstances($possibleInstances, $default)
+    public function populateShowInstances($possibleInstances, $default): void
     {
         $possibleInstances['0'] = _('No Show');
 

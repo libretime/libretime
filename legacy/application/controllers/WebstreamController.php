@@ -2,7 +2,7 @@
 
 class WebstreamController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('new', 'json')
@@ -12,7 +12,7 @@ class WebstreamController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function newAction()
+    public function newAction(): void
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         if (!$this->isAuthorized(-1)) {
@@ -43,7 +43,7 @@ class WebstreamController extends Zend_Controller_Action
         $this->view->html = $this->view->render('webstream/webstream.phtml');
     }
 
-    public function editAction()
+    public function editAction(): void
     {
         $request = $this->getRequest();
 
@@ -79,7 +79,7 @@ class WebstreamController extends Zend_Controller_Action
         $this->view->html = $this->view->render('webstream/webstream.phtml');
     }
 
-    public function deleteAction()
+    public function deleteAction(): void
     {
         $request = $this->getRequest();
         $id = $request->getParam('ids');
@@ -102,7 +102,7 @@ class WebstreamController extends Zend_Controller_Action
 
     /*TODO : make a user object be passed a parameter into this function so
         that it does not have to be fetched multiple times.*/
-    public function isAuthorized($webstream_id)
+    public function isAuthorized($webstream_id): bool
     {
         $user = Application_Model_User::getCurrentUser();
         if ($user->isUserType([UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER])) {
@@ -130,7 +130,7 @@ class WebstreamController extends Zend_Controller_Action
         return false;
     }
 
-    public function saveAction()
+    public function saveAction(): void
     {
         $request = $this->getRequest();
 

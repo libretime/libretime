@@ -2,7 +2,7 @@
 
 class Application_Common_Storage
 {
-    public static function splitFilePath($p_filepath)
+    public static function splitFilePath($p_filepath): ?array
     {
         $storage_path = Config::getStoragePath();
 

@@ -64,8 +64,8 @@
  * @method CcShowInstancesQuery rightJoinCcPlayoutHistory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPlayoutHistory relation
  * @method CcShowInstancesQuery innerJoinCcPlayoutHistory($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPlayoutHistory relation
  *
- * @method CcShowInstances findOne(PropelPDO $con = null) Return the first CcShowInstances matching the query
- * @method CcShowInstances findOneOrCreate(PropelPDO $con = null) Return the first CcShowInstances matching the query, or a new CcShowInstances object populated from the query conditions when no match is found
+ * @method CcShowInstances findOne(?PropelPDO $con = null) Return the first CcShowInstances matching the query
+ * @method CcShowInstances findOneOrCreate(?PropelPDO $con = null) Return the first CcShowInstances matching the query, or a new CcShowInstances object populated from the query conditions when no match is found
  *
  * @method CcShowInstances findOneByDbDescription(string $description) Return the first CcShowInstances filtered by the description column
  * @method CcShowInstances findOneByDbStarts(string $starts) Return the first CcShowInstances filtered by the starts column
@@ -78,8 +78,8 @@
  * @method CcShowInstances findOneByDbTimeFilled(string $time_filled) Return the first CcShowInstances filtered by the time_filled column
  * @method CcShowInstances findOneByDbCreated(string $created) Return the first CcShowInstances filtered by the created column
  * @method CcShowInstances findOneByDbLastScheduled(string $last_scheduled) Return the first CcShowInstances filtered by the last_scheduled column
- * @method CcShowInstances findOneByDbModifiedInstance(boolean $modified_instance) Return the first CcShowInstances filtered by the modified_instance column
- * @method CcShowInstances findOneByDbAutoPlaylistBuilt(boolean $autoplaylist_built) Return the first CcShowInstances filtered by the autoplaylist_built column
+ * @method CcShowInstances findOneByDbModifiedInstance(bool $modified_instance) Return the first CcShowInstances filtered by the modified_instance column
+ * @method CcShowInstances findOneByDbAutoPlaylistBuilt(bool $autoplaylist_built) Return the first CcShowInstances filtered by the autoplaylist_built column
  *
  * @method array findByDbId(int $id) Return CcShowInstances objects filtered by the id column
  * @method array findByDbDescription(string $description) Return CcShowInstances objects filtered by the description column
@@ -93,11 +93,12 @@
  * @method array findByDbTimeFilled(string $time_filled) Return CcShowInstances objects filtered by the time_filled column
  * @method array findByDbCreated(string $created) Return CcShowInstances objects filtered by the created column
  * @method array findByDbLastScheduled(string $last_scheduled) Return CcShowInstances objects filtered by the last_scheduled column
- * @method array findByDbModifiedInstance(boolean $modified_instance) Return CcShowInstances objects filtered by the modified_instance column
- * @method array findByDbAutoPlaylistBuilt(boolean $autoplaylist_built) Return CcShowInstances objects filtered by the autoplaylist_built column
+ * @method array findByDbModifiedInstance(bool $modified_instance) Return CcShowInstances objects filtered by the modified_instance column
+ * @method array findByDbAutoPlaylistBuilt(bool $autoplaylist_built) Return CcShowInstances objects filtered by the autoplaylist_built column
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcShowInstancesQuery extends ModelCriteria
 {
     /**

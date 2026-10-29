@@ -18,8 +18,9 @@ To configure Sentry in LibreTime, you need to:
   sudo pip install ./analyzer[sentry]
   sudo pip install ./api[prod,sentry]
   sudo pip install ./playout[sentry]
-  sudo pip install ./worker[sentry]
   ```
+
+  The worker is part of the `api` package, and is installed along with it.
 
 - set the [`SENTRY_DSN`](https://docs.sentry.io/product/sentry-basics/dsn-explainer/) environment variable on each of the LibreTime services you want to monitor.
 

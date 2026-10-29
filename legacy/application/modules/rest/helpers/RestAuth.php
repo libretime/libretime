@@ -2,7 +2,7 @@
 
 class RestAuth
 {
-    public static function verifyAuth($checkApiKey, $checkSession, $action)
+    public static function verifyAuth($checkApiKey, $checkSession, $action): bool
     {
         // Session takes precedence over API key for now:
         if (
@@ -50,7 +50,7 @@ class RestAuth
         return $auth->hasIdentity();
     }
 
-    private static function verifyAPIKey($action)
+    private static function verifyAPIKey($action): bool
     {
         // The API key is passed in via HTTP "basic authentication":
         // https://en.wikipedia.org/wiki/Basic_access_authentication

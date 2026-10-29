@@ -28,13 +28,13 @@ class File(models.Model):
     )
 
     filepath = models.TextField(blank=True, null=True)
-    size = models.IntegerField(db_column="filesize")
+    size = models.IntegerField(default=0, db_column="filesize")
     exists = models.BooleanField(blank=True, null=True, db_column="file_exists")
     mime = models.CharField(max_length=255)
     md5 = models.CharField(max_length=32, blank=True, null=True)
 
     hidden = models.BooleanField(blank=True, null=True)
-    accessed = models.IntegerField(db_column="currentlyaccessing")
+    accessed = models.IntegerField(default=0, db_column="currentlyaccessing")
     scheduled = models.BooleanField(blank=True, null=True, db_column="is_scheduled")
     part_of_list = models.BooleanField(blank=True, null=True, db_column="is_playlist")
 

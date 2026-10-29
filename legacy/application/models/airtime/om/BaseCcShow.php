@@ -77,14 +77,14 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * The value for the live_stream_using_airtime_auth field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $live_stream_using_airtime_auth;
 
     /**
      * The value for the live_stream_using_custom_auth field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $live_stream_using_custom_auth;
 
@@ -103,14 +103,14 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * The value for the linked field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $linked;
 
     /**
      * The value for the is_linkable field.
      * Note: this column has a database default value of: true
-     * @var        boolean
+     * @var        bool
      */
     protected $is_linkable;
 
@@ -124,7 +124,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * The value for the has_autoplaylist field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $has_autoplaylist;
 
@@ -137,14 +137,14 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * The value for the autoplaylist_repeat field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $autoplaylist_repeat;
 
     /**
      * The value for the override_intro_playlist field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $override_intro_playlist;
 
@@ -157,7 +157,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * The value for the override_outro_playlist field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $override_outro_playlist;
 
@@ -362,7 +362,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * Get the [live_stream_using_airtime_auth] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbLiveStreamUsingAirtimeAuth()
     {
@@ -373,7 +373,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * Get the [live_stream_using_custom_auth] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbLiveStreamUsingCustomAuth()
     {
@@ -406,7 +406,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * Get the [linked] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbLinked()
     {
@@ -417,7 +417,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * Get the [is_linkable] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbIsLinkable()
     {
@@ -439,7 +439,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * Get the [has_autoplaylist] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbHasAutoPlaylist()
     {
@@ -461,7 +461,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * Get the [autoplaylist_repeat] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbAutoPlaylistRepeat()
     {
@@ -472,7 +472,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * Get the [override_intro_playlist] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbOverrideIntroPlaylist()
     {
@@ -494,7 +494,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     /**
      * Get the [override_outro_playlist] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbOverrideOutroPlaylist()
     {
@@ -676,7 +676,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -705,7 +705,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -776,7 +776,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -805,7 +805,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -855,7 +855,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -909,7 +909,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -938,7 +938,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -992,7 +992,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -1117,19 +1117,19 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->color = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->background_color = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->live_stream_using_airtime_auth = ($row[$startcol + 7] !== null) ? (boolean) $row[$startcol + 7] : null;
-            $this->live_stream_using_custom_auth = ($row[$startcol + 8] !== null) ? (boolean) $row[$startcol + 8] : null;
+            $this->live_stream_using_airtime_auth = ($row[$startcol + 7] !== null) ? (bool) $row[$startcol + 7] : null;
+            $this->live_stream_using_custom_auth = ($row[$startcol + 8] !== null) ? (bool) $row[$startcol + 8] : null;
             $this->live_stream_user = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
             $this->live_stream_pass = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-            $this->linked = ($row[$startcol + 11] !== null) ? (boolean) $row[$startcol + 11] : null;
-            $this->is_linkable = ($row[$startcol + 12] !== null) ? (boolean) $row[$startcol + 12] : null;
+            $this->linked = ($row[$startcol + 11] !== null) ? (bool) $row[$startcol + 11] : null;
+            $this->is_linkable = ($row[$startcol + 12] !== null) ? (bool) $row[$startcol + 12] : null;
             $this->image_path = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
-            $this->has_autoplaylist = ($row[$startcol + 14] !== null) ? (boolean) $row[$startcol + 14] : null;
+            $this->has_autoplaylist = ($row[$startcol + 14] !== null) ? (bool) $row[$startcol + 14] : null;
             $this->autoplaylist_id = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
-            $this->autoplaylist_repeat = ($row[$startcol + 16] !== null) ? (boolean) $row[$startcol + 16] : null;
-            $this->override_intro_playlist = ($row[$startcol + 17] !== null) ? (boolean) $row[$startcol + 17] : null;
+            $this->autoplaylist_repeat = ($row[$startcol + 16] !== null) ? (bool) $row[$startcol + 16] : null;
+            $this->override_intro_playlist = ($row[$startcol + 17] !== null) ? (bool) $row[$startcol + 17] : null;
             $this->intro_playlist_id = ($row[$startcol + 18] !== null) ? (int) $row[$startcol + 18] : null;
-            $this->override_outro_playlist = ($row[$startcol + 19] !== null) ? (boolean) $row[$startcol + 19] : null;
+            $this->override_outro_playlist = ($row[$startcol + 19] !== null) ? (bool) $row[$startcol + 19] : null;
             $this->outro_playlist_id = ($row[$startcol + 20] !== null) ? (int) $row[$startcol + 20] : null;
             $this->resetModified();
 
@@ -1184,7 +1184,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -1235,7 +1235,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -1278,7 +1278,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -2283,7 +2283,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return CcShow The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcPlaylistRelatedByDbAutoPlaylistId(CcPlaylist $v = null)
+    public function setCcPlaylistRelatedByDbAutoPlaylistId(?CcPlaylist $v = null)
     {
         if ($v === null) {
             $this->setDbAutoPlaylistId(NULL);
@@ -2312,7 +2312,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return CcPlaylist The associated CcPlaylist object.
      * @throws PropelException
      */
-    public function getCcPlaylistRelatedByDbAutoPlaylistId(PropelPDO $con = null, $doQuery = true)
+    public function getCcPlaylistRelatedByDbAutoPlaylistId(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcPlaylistRelatedByDbAutoPlaylistId === null && ($this->autoplaylist_id !== null) && $doQuery) {
             $this->aCcPlaylistRelatedByDbAutoPlaylistId = CcPlaylistQuery::create()->findPk($this->autoplaylist_id, $con);
@@ -2335,7 +2335,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return CcShow The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcPlaylistRelatedByDbIntroPlaylistId(CcPlaylist $v = null)
+    public function setCcPlaylistRelatedByDbIntroPlaylistId(?CcPlaylist $v = null)
     {
         if ($v === null) {
             $this->setDbIntroPlaylistId(NULL);
@@ -2364,7 +2364,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return CcPlaylist The associated CcPlaylist object.
      * @throws PropelException
      */
-    public function getCcPlaylistRelatedByDbIntroPlaylistId(PropelPDO $con = null, $doQuery = true)
+    public function getCcPlaylistRelatedByDbIntroPlaylistId(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcPlaylistRelatedByDbIntroPlaylistId === null && ($this->intro_playlist_id !== null) && $doQuery) {
             $this->aCcPlaylistRelatedByDbIntroPlaylistId = CcPlaylistQuery::create()->findPk($this->intro_playlist_id, $con);
@@ -2387,7 +2387,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return CcShow The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcPlaylistRelatedByDbOutroPlaylistId(CcPlaylist $v = null)
+    public function setCcPlaylistRelatedByDbOutroPlaylistId(?CcPlaylist $v = null)
     {
         if ($v === null) {
             $this->setDbOutroPlaylistId(NULL);
@@ -2416,7 +2416,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return CcPlaylist The associated CcPlaylist object.
      * @throws PropelException
      */
-    public function getCcPlaylistRelatedByDbOutroPlaylistId(PropelPDO $con = null, $doQuery = true)
+    public function getCcPlaylistRelatedByDbOutroPlaylistId(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcPlaylistRelatedByDbOutroPlaylistId === null && ($this->outro_playlist_id !== null) && $doQuery) {
             $this->aCcPlaylistRelatedByDbOutroPlaylistId = CcPlaylistQuery::create()->findPk($this->outro_playlist_id, $con);
@@ -2519,7 +2519,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcShowInstances[] List of CcShowInstances objects
      * @throws PropelException
      */
-    public function getCcShowInstancess($criteria = null, PropelPDO $con = null)
+    public function getCcShowInstancess($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcShowInstancessPartial && !$this->isNew();
         if (null === $this->collCcShowInstancess || null !== $criteria  || $partial) {
@@ -2574,7 +2574,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcShow The current object (for fluent API support)
      */
-    public function setCcShowInstancess(PropelCollection $ccShowInstancess, PropelPDO $con = null)
+    public function setCcShowInstancess(PropelCollection $ccShowInstancess, ?PropelPDO $con = null)
     {
         $ccShowInstancessToDelete = $this->getCcShowInstancess(new Criteria(), $con)->diff($ccShowInstancess);
 
@@ -2605,7 +2605,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return int             Count of related CcShowInstances objects.
      * @throws PropelException
      */
-    public function countCcShowInstancess(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcShowInstancess(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcShowInstancessPartial && !$this->isNew();
         if (null === $this->collCcShowInstancess || null !== $criteria || $partial) {
@@ -2794,7 +2794,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcShowDays[] List of CcShowDays objects
      * @throws PropelException
      */
-    public function getCcShowDayss($criteria = null, PropelPDO $con = null)
+    public function getCcShowDayss($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcShowDayssPartial && !$this->isNew();
         if (null === $this->collCcShowDayss || null !== $criteria  || $partial) {
@@ -2849,7 +2849,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcShow The current object (for fluent API support)
      */
-    public function setCcShowDayss(PropelCollection $ccShowDayss, PropelPDO $con = null)
+    public function setCcShowDayss(PropelCollection $ccShowDayss, ?PropelPDO $con = null)
     {
         $ccShowDayssToDelete = $this->getCcShowDayss(new Criteria(), $con)->diff($ccShowDayss);
 
@@ -2880,7 +2880,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return int             Count of related CcShowDays objects.
      * @throws PropelException
      */
-    public function countCcShowDayss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcShowDayss(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcShowDayssPartial && !$this->isNew();
         if (null === $this->collCcShowDayss || null !== $criteria || $partial) {
@@ -3019,7 +3019,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcShowRebroadcast[] List of CcShowRebroadcast objects
      * @throws PropelException
      */
-    public function getCcShowRebroadcasts($criteria = null, PropelPDO $con = null)
+    public function getCcShowRebroadcasts($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcShowRebroadcastsPartial && !$this->isNew();
         if (null === $this->collCcShowRebroadcasts || null !== $criteria  || $partial) {
@@ -3074,7 +3074,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcShow The current object (for fluent API support)
      */
-    public function setCcShowRebroadcasts(PropelCollection $ccShowRebroadcasts, PropelPDO $con = null)
+    public function setCcShowRebroadcasts(PropelCollection $ccShowRebroadcasts, ?PropelPDO $con = null)
     {
         $ccShowRebroadcastsToDelete = $this->getCcShowRebroadcasts(new Criteria(), $con)->diff($ccShowRebroadcasts);
 
@@ -3105,7 +3105,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return int             Count of related CcShowRebroadcast objects.
      * @throws PropelException
      */
-    public function countCcShowRebroadcasts(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcShowRebroadcasts(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcShowRebroadcastsPartial && !$this->isNew();
         if (null === $this->collCcShowRebroadcasts || null !== $criteria || $partial) {
@@ -3244,7 +3244,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcShowHosts[] List of CcShowHosts objects
      * @throws PropelException
      */
-    public function getCcShowHostss($criteria = null, PropelPDO $con = null)
+    public function getCcShowHostss($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcShowHostssPartial && !$this->isNew();
         if (null === $this->collCcShowHostss || null !== $criteria  || $partial) {
@@ -3299,7 +3299,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcShow The current object (for fluent API support)
      */
-    public function setCcShowHostss(PropelCollection $ccShowHostss, PropelPDO $con = null)
+    public function setCcShowHostss(PropelCollection $ccShowHostss, ?PropelPDO $con = null)
     {
         $ccShowHostssToDelete = $this->getCcShowHostss(new Criteria(), $con)->diff($ccShowHostss);
 
@@ -3330,7 +3330,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      * @return int             Count of related CcShowHosts objects.
      * @throws PropelException
      */
-    public function countCcShowHostss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcShowHostss(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcShowHostssPartial && !$this->isNew();
         if (null === $this->collCcShowHostss || null !== $criteria || $partial) {

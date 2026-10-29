@@ -4,7 +4,7 @@ class Application_Form_EditAudioMD extends Zend_Form
 {
     public function init() {}
 
-    public function startForm($p_id)
+    public function startForm($p_id): void
     {
         // Set the method for the display form to POST
         $this->setMethod('post');
@@ -99,7 +99,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         }, $track_types), SORT_ASC, $track_types);
 
         $track_type_options[''] = _('Select a Type');
-        foreach ($track_types as $key => $tt) {
+        foreach ($track_types as $tt) {
             $track_type_options[$tt['id']] = $tt['type_name'];
         }
 
@@ -301,19 +301,19 @@ class Application_Form_EditAudioMD extends Zend_Form
         ]);
     }
 
-    public function makeReadOnly()
+    public function makeReadOnly(): void
     {
         foreach ($this as $element) {
             $element->setAttrib('readonly', 'readonly');
         }
     }
 
-    public function removeOwnerEdit()
+    public function removeOwnerEdit(): void
     {
         $this->removeElement('owner_id');
     }
 
-    public function removeActionButtons()
+    public function removeActionButtons(): void
     {
         $this->removeElement('editmdsave');
         $this->removeElement('editmdcancel');

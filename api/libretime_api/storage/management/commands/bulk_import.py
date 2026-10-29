@@ -1,6 +1,5 @@
 import logging
 from pathlib import Path
-from typing import List, Optional
 
 import requests
 from django.conf import settings
@@ -85,7 +84,7 @@ class Importer:
 
         return File.objects.filter(md5=file_md5).exists()
 
-    def _upload_file(self, filepath: Path, library_id: Optional[int]) -> None:
+    def _upload_file(self, filepath: Path, library_id: int | None) -> None:
         try:
             resp = requests.post(
                 f"{self.url}/rest/media",
@@ -107,7 +106,7 @@ class Importer:
         logger.info("deleting %s", filepath)
         filepath.unlink()
 
-    def _handle_file(self, filepath: Path, library_id: Optional[int]) -> None:
+    def _handle_file(self, filepath: Path, library_id: int | None) -> None:
         logger.debug("handling file %s", filepath)
 
         if not filepath.is_file():
@@ -127,8 +126,8 @@ class Importer:
     def _walk_dir(
         self,
         path: Path,
-        library_id: Optional[int],
-        allowed_extensions: List[str],
+        library_id: int | None,
+        allowed_extensions: list[str],
     ) -> None:
         if not path.is_dir():
             raise ValueError(f"provided path {path} is not a directory")
@@ -146,8 +145,8 @@ class Importer:
     def import_dir(
         self,
         path: Path,
-        library: Optional[str],
-        allowed_extensions: List[str],
+        library: str | None,
+        allowed_extensions: list[str],
     ) -> None:
         if library is not None:
             try:

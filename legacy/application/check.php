@@ -3,7 +3,7 @@
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Exception\AMQPRuntimeException;
 
-function booleanReduce($a, $b)
+function booleanReduce($a, $b): bool
 {
     return $a && $b;
 }
@@ -14,7 +14,7 @@ function booleanReduce($a, $b)
  * @return bool true if all Airtime dependencies and services are
  *              properly configured and running
  */
-function checkConfiguration()
+function checkConfiguration(): bool
 {
     $r1 = array_reduce(checkPhpDependencies(), 'booleanReduce', true);
     $r2 = array_reduce(checkExternalServices(), 'booleanReduce', true);
@@ -26,9 +26,9 @@ function checkConfiguration()
  * Check for Airtime's PHP dependencies and return an associative
  * array with the results.
  *
- * @return array associative array of dependency check results
+ * @return array<string, bool> associative array of dependency check results
  */
-function checkPhpDependencies()
+function checkPhpDependencies(): array
 {
     return [
         'postgres' => checkDatabaseDependencies(),
@@ -40,7 +40,7 @@ function checkPhpDependencies()
  *
  * @return bool true if the database dependencies exist
  */
-function checkDatabaseDependencies()
+function checkDatabaseDependencies(): bool
 {
     global $extensions;
 
@@ -49,7 +49,7 @@ function checkDatabaseDependencies()
         && in_array('pgsql', $extensions);
 }
 
-function with_systemd()
+function with_systemd(): bool
 {
     return !empty(shell_exec('which systemctl'));
 }
@@ -60,7 +60,7 @@ function with_systemd()
  *
  * @return array associative array of external service check results
  */
-function checkExternalServices()
+function checkExternalServices(): array
 {
     $result = [
         'database' => checkDatabaseConfiguration(),
@@ -83,7 +83,7 @@ function checkExternalServices()
  *
  * @return bool true if a connection is made to the database
  */
-function checkDatabaseConfiguration()
+function checkDatabaseConfiguration(): bool
 {
     configureDatabase();
 
@@ -104,7 +104,7 @@ function checkDatabaseConfiguration()
 /**
  * Initialize Propel to configure the Airtime database.
  */
-function configureDatabase()
+function configureDatabase(): void
 {
     Propel::init(PROPEL_CONFIG_FILEPATH);
 }
@@ -114,7 +114,7 @@ function configureDatabase()
  *
  * @return true if the RabbitMQ connection can be established
  */
-function checkRMQConnection()
+function checkRMQConnection(): bool
 {
     $config = Config::getConfig();
 
@@ -140,7 +140,7 @@ function checkRMQConnection()
  *
  * @return bool true if airtime-analyzer is running
  */
-function checkAnalyzerService()
+function checkAnalyzerService(): bool
 {
     exec('systemctl is-active libretime-analyzer --quiet', $out, $status);
 
@@ -152,7 +152,7 @@ function checkAnalyzerService()
  *
  * @return bool true if libretime-playout is running
  */
-function checkPlayoutService()
+function checkPlayoutService(): bool
 {
     exec('systemctl is-active libretime-playout --quiet', $out, $status);
 
@@ -164,7 +164,7 @@ function checkPlayoutService()
  *
  * @return bool true if libretime-liquidsoap is running
  */
-function checkLiquidsoapService()
+function checkLiquidsoapService(): bool
 {
     exec('systemctl is-active libretime-liquidsoap --quiet', $out, $status);
 
@@ -176,7 +176,7 @@ function checkLiquidsoapService()
  *
  * @return bool true if libretime-worker is running
  */
-function checkCeleryService()
+function checkCeleryService(): bool
 {
     exec('systemctl is-active libretime-worker --quiet', $out, $status);
 
@@ -188,7 +188,7 @@ function checkCeleryService()
  *
  * @return bool true if libretime-api is running
  */
-function checkApiService()
+function checkApiService(): bool
 {
     exec('systemctl status libretime-api --quiet', $out, $status);
 

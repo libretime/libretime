@@ -2,7 +2,7 @@
 
 class TracktypeController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('get-tracktype-data-table-info', 'json')
@@ -11,7 +11,7 @@ class TracktypeController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function addTracktypeAction()
+    public function addTracktypeAction(): void
     {
         // Start the session to re-open write permission to the session so we can
         // create the namespace for our csrf token verification
@@ -39,7 +39,7 @@ class TracktypeController extends Zend_Controller_Action
             $params = $request->getPost();
             $postData = explode('&', $params['data']);
             $formData = [];
-            foreach ($postData as $k => $v) {
+            foreach ($postData as $v) {
                 $v = explode('=', $v);
                 $formData[$v[0]] = urldecode($v[1]);
             }
@@ -72,7 +72,7 @@ class TracktypeController extends Zend_Controller_Action
         $this->view->form = $form;
     }
 
-    public function getTracktypeDataTableInfoAction()
+    public function getTracktypeDataTableInfoAction(): void
     {
         $post = $this->getRequest()->getPost();
         $tracktypes = Application_Model_Tracktype::getTracktypesDataTablesInfo($post);
@@ -80,13 +80,13 @@ class TracktypeController extends Zend_Controller_Action
         $this->_helper->json->sendJson($tracktypes);
     }
 
-    public function getTracktypeDataAction()
+    public function getTracktypeDataAction(): void
     {
         $id = $this->_getParam('id');
         $this->view->entries = Application_Model_Tracktype::GetTracktypeData($id);
     }
 
-    public function removeTracktypeAction()
+    public function removeTracktypeAction(): void
     {
         // action body
         $delId = $this->_getParam('id');

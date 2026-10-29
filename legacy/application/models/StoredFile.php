@@ -81,7 +81,7 @@ class Application_Model_StoredFile
         return $this->_file;
     }
 
-    public function setFormat($p_format)
+    public function setFormat($p_format): void
     {
         $this->_file->setDbFtype($p_format);
     }
@@ -89,7 +89,7 @@ class Application_Model_StoredFile
     /* This function is only called after liquidsoap
      * has notified that a track has started playing.
      */
-    public function setLastPlayedTime($p_now)
+    public function setLastPlayedTime($p_now): void
     {
         $this->_file->setDbLPtime($p_now);
         /* Normally we would only call save after all columns have been set
@@ -99,7 +99,7 @@ class Application_Model_StoredFile
         $this->_file->save();
     }
 
-    public static function createWithFile($f, $con)
+    public static function createWithFile($f, $con): Application_Model_StoredFile
     {
         return new Application_Model_StoredFile($f, $con);
     }
@@ -110,7 +110,7 @@ class Application_Model_StoredFile
      * @param array $p_md
      *                    example: $p_md['MDATA_KEY_URL'] = 'https://example.org'
      */
-    public function setMetadata($p_md = null)
+    public function setMetadata($p_md = null): void
     {
         if (is_null($p_md)) {
             $this->setDbColMetadata();
@@ -165,10 +165,10 @@ class Application_Model_StoredFile
      * @param array $p_md
      *                    example: $p_md['url'] = 'https://www.example.com'
      */
-    public function setDbColMetadata($p_md = null)
+    public function setDbColMetadata($p_md = null): void
     {
         if (is_null($p_md)) {
-            foreach ($this->_dbMD as $dbColumn => $propelColumn) {
+            foreach ($this->_dbMD as $propelColumn) {
                 $method = "set{$propelColumn}";
                 $this->_file->{$method}(null);
             }
@@ -250,7 +250,7 @@ class Application_Model_StoredFile
      * @param mixed $p_category
      * @param mixed $p_value
      */
-    public function setMetadataValue($p_category, $p_value)
+    public function setMetadataValue($p_category, $p_value): void
     {
         // constant() was used because it gets quoted constant name value from
         // api_client.py. This is the wrapper funtion
@@ -263,7 +263,7 @@ class Application_Model_StoredFile
      * @param mixed $p_category
      * @param mixed $p_value
      */
-    public function setDbColMetadataValue($p_category, $p_value)
+    public function setDbColMetadataValue($p_category, $p_value): void
     {
         // don't blank out name, defaults to original filename on first insertion to database.
         if ($p_category == 'track_title' && (is_null($p_value) || $p_value == '')) {
@@ -280,10 +280,8 @@ class Application_Model_StoredFile
 
     /**
      * Get metadata as array, indexed by the column names in the database.
-     *
-     * @return array
      */
-    public function getDbColMetadata()
+    public function getDbColMetadata(): array
     {
         $md = [];
         foreach ($this->_dbMD as $dbColumn => $propelColumn) {
@@ -296,10 +294,8 @@ class Application_Model_StoredFile
 
     /**
      * Get metadata as array, indexed by the constant names.
-     *
-     * @return array
      */
-    public function getMetadata()
+    public function getMetadata(): array
     {
         $c = get_defined_constants(true);
         $md = [];
@@ -387,7 +383,7 @@ SQL;
      *
      * @param mixed $quiet
      */
-    public function delete($quiet = false)
+    public function delete($quiet = false): void
     {
         // Check if the file is scheduled to be played in the future
         if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->_file->getCcFileId())) {
@@ -443,7 +439,7 @@ SQL;
      * deleted from the library. It re-calculates the length of
      * all blocks and playlists that contained the deleted file.
      */
-    private static function updateBlockAndPlaylistLength($fileId)
+    private static function updateBlockAndPlaylistLength($fileId): void
     {
         $plRows = CcPlaylistcontentsQuery::create()->filterByDbFileId($fileId)->find();
         foreach ($plRows as $row) {
@@ -466,7 +462,7 @@ SQL;
      *
      * @param mixed $deleteFromPlaylist
      */
-    public function deleteByMediaMonitor($deleteFromPlaylist = false)
+    public function deleteByMediaMonitor($deleteFromPlaylist = false): void
     {
         if ($deleteFromPlaylist) {
             Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
@@ -509,7 +505,7 @@ SQL;
     /**
      * Get the URL to access this file.
      */
-    public function getFileUrl()
+    public function getFileUrl(): string
     {
         return $this->getRelativeFileUrl(Config::getPublicUrl());
     }
@@ -520,7 +516,7 @@ SQL;
      *
      * @param mixed $baseUrl
      */
-    public function getRelativeFileUrl($baseUrl)
+    public function getRelativeFileUrl($baseUrl): string
     {
         return $baseUrl . 'api/get-media/file/' . $this->getId();
     }
@@ -543,7 +539,7 @@ SQL;
         return $filesize;
     }
 
-    public static function Insert($md, $con)
+    public static function Insert($md, $con): ?Application_Model_StoredFile
     {
         // save some work by checking if filepath is given right away
         if (!isset($md['MDATA_KEY_FILEPATH'])) {
@@ -614,10 +610,8 @@ SQL;
      *
      * @param string $p_filepath path of file stored in Airtime
      * @param mixed  $con
-     *
-     * @return null|Application_Model_StoredFile
      */
-    public static function RecallByFilepath($p_filepath, $con)
+    public static function RecallByFilepath($p_filepath, $con): ?Application_Model_StoredFile
     {
         $path_info = Application_Common_Storage::splitFilePath($p_filepath);
 
@@ -632,7 +626,7 @@ SQL;
         return is_null($file) ? null : self::createWithFile($file, $con);
     }
 
-    public static function RecallByPartialFilepath($partial_path, $con)
+    public static function RecallByPartialFilepath($partial_path, $con): ?array
     {
         $path_info = Application_Common_Storage::splitFilePath($partial_path);
 
@@ -652,7 +646,10 @@ SQL;
         return $res;
     }
 
-    public static function getLibraryColumns()
+    /**
+     * @return array<int, string>
+     */
+    public static function getLibraryColumns(): array
     {
         return [
             'id', 'track_title', 'artist_name', 'album_title',
@@ -665,7 +662,12 @@ SQL;
         ];
     }
 
-    public static function searchLibraryFiles($datatables)
+    /**
+     * @param mixed $datatables
+     *
+     * @return mixed[]
+     */
+    public static function searchLibraryFiles($datatables): array
     {
         $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
 
@@ -936,7 +938,7 @@ SQL;
         );
         // if the uploaded file is not UTF-8 encoded, let's encode it. Assuming source
         // encoding is ISO-8859-1
-        $audio_stor = mb_detect_encoding($audio_stor, 'UTF-8') == 'UTF-8' ? $audio_stor : utf8_encode($audio_stor);
+        $audio_stor = mb_detect_encoding($audio_stor, 'UTF-8') == 'UTF-8' ? $audio_stor : mb_convert_encoding($audio_stor, 'UTF-8', 'ISO-8859-1');
         if ($copyFile) {
             Logging::info("Copying file {$audio_file} to {$audio_stor}");
             if (@copy($audio_file, $audio_stor) === false) {
@@ -969,7 +971,7 @@ SQL;
     }
 
     // Pass the file through Liquidsoap and test if it is readable. Return True if readable, and False otherwise.
-    public static function liquidsoapFilePlayabilityTest($audio_file)
+    public static function liquidsoapFilePlayabilityTest($audio_file): bool
     {
         $LIQUIDSOAP_ERRORS = ['TagLib: MPEG::Properties::read() -- Could not find a valid last MPEG frame in the stream.'];
 
@@ -1007,8 +1009,10 @@ SQL;
      * @param       $dir_id - if this is not provided, it returns all files with full
      *                     path constructed
      * @param mixed $all
+     *
+     * @return mixed[]
      */
-    public static function listAllFiles($dir_id = null, $all = true)
+    public static function listAllFiles($dir_id = null, $all = true): array
     {
         $con = Propel::getConnection();
 
@@ -1095,13 +1099,13 @@ SQL;
         return $rows;
     }
 
-    public function setFileExistsFlag($flag)
+    public function setFileExistsFlag($flag): void
     {
         $this->_file->setDbFileExists($flag)
             ->save();
     }
 
-    public function setFileHiddenFlag($flag)
+    public function setFileHiddenFlag($flag): void
     {
         $this->_file->setDbHidden($flag)
             ->save();
@@ -1120,7 +1124,7 @@ SQL;
         return $this->_file->getDbOwnerId();
     }
 
-    public static function setIsPlaylist($p_playlistItems, $p_type, $p_status)
+    public static function setIsPlaylist($p_playlistItems, $p_type, $p_status): void
     {
         foreach ($p_playlistItems as $item) {
             $file = self::RecallById($item->getDbFileId());
@@ -1161,7 +1165,7 @@ SQL;
      * all files scheduled in the future and all files with is_scheduled = true.
      * The difference of the two result sets is what we need to update.
      */
-    public static function updatePastFilesIsScheduled()
+    public static function updatePastFilesIsScheduled(): void
     {
         $futureScheduledFilesSelectCriteria = new Criteria();
         $futureScheduledFilesSelectCriteria->addSelectColumn(CcSchedulePeer::FILE_ID);

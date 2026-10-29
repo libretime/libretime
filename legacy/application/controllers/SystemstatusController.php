@@ -4,14 +4,14 @@ class SystemstatusController extends Zend_Controller_Action
 {
     private $version;
 
-    public function init()
+    public function init(): void
     {
         $config = Config::getConfig();
         $this->view->headScript()->appendFile(Assets::url('js/airtime/status/status.js'), 'text/javascript');
         $this->version = $config['airtime_version'];
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 

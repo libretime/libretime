@@ -55,7 +55,7 @@ echo "Created playlist ".$playlist->getName()." with ID ".$playlist->getId()."\n
 */
 // Create the shows
 
-function createTestShow($showNumber, $showTime, $duration = '1:00')
+function createTestShow($showNumber, $showTime, $duration = '1:00'): void
 {
     $data = [];
     $strTime = $showTime->format('Y-m-d H:i');

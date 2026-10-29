@@ -4,7 +4,7 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
 {
     public function init() {}
 
-    public function playerAction()
+    public function playerAction(): void
     {
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Widgets');
 
@@ -25,7 +25,7 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
         }
     }
 
-    public function scheduleAction()
+    public function scheduleAction(): void
     {
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Widgets');
 
@@ -38,7 +38,7 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
     }
 
     // The Facebook widget is untested & unsupported, the widget has been removed from the navigation in navigation.php
-    public function facebookAction()
+    public function facebookAction(): void
     {
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Widgets');
 
@@ -58,7 +58,7 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
     }
 
     /** Airtime makes an AJAX POST here after it successfully adds a tab to your Facebook page. */
-    public function facebookTabSuccessAction()
+    public function facebookTabSuccessAction(): void
     {
         // disable the view and the layout
         $this->view->layout()->disableLayout();

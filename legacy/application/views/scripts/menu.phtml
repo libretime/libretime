@@ -6,7 +6,7 @@
         // to point to the first allowed item in the Preferences
         // which is 'My Profile' page
         $user = Application_Model_User::getCurrentUser();
-        $isHost = $user->isUserType(array(UTYPE_HOST));
+        $isHost = $user->isUserType([UTYPE_HOST]);
         if ($isHost && $page->getTitle() === 'Settings') {
             $page->set('resource', 'usersettings');
             $page->set('controller', 'user');

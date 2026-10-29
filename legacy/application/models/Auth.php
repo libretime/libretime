@@ -4,7 +4,7 @@ class Application_Model_Auth
 {
     public const TOKEN_LIFETIME = 'P2D'; // DateInterval syntax
 
-    private function generateToken($action, $user_id)
+    private function generateToken($action, $user_id): string
     {
         $salt = md5('pro');
         $token = self::generateRandomString();
@@ -21,24 +21,32 @@ class Application_Model_Auth
         return $token;
     }
 
-    public function sendPasswordRestoreLink($user, $view)
+    public function sendPasswordRestoreLink($user, $view): string
     {
         $public_url = Config::getPublicUrl();
 
+        $station_name = Application_Model_Preference::GetStationName();
+        if ($station_name === '') {
+            $station_name = SAAS_PRODUCT_BRANDING_NAME;
+        }
+
         $token = $this->generateToken('password.restore', $user->getDbId());
         $link_path = $view->url(['user_id' => $user->getDbId(), 'token' => $token], 'password-change');
+        $login = $user->getDbLogin();
 
-        $message = sprintf(_("Hi %s, \n\nPlease click this link to reset your password: "), $user->getDbLogin());
-        $message .= "{$public_url}{$link_path}";
-        $message .= sprintf(_("\n\nIf you have any problems, please contact our support team: %s"), SUPPORT_ADDRESS);
-        $message .= sprintf(_("\n\nThank you,\nThe %s Team"), SAAS_PRODUCT_BRANDING_NAME);
+        $message = sprintf(
+            _("Hi %s,\n\nPlease click this link to reset your password: %s\n\nThank you,\n%s\n"),
+            $login,
+            $public_url . ltrim($link_path, '/'),
+            $station_name
+        );
 
-        $str = sprintf(_('%s Password Reset'), SAAS_PRODUCT_BRANDING_NAME);
+        $subject = sprintf(_('%s Password Reset'), $station_name);
 
-        return Application_Model_Email::send($str, $message, $user->getDbEmail());
+        return Application_Model_Email::send($subject, $message, $user->getDbEmail());
     }
 
-    public function invalidateTokens($user, $action)
+    public function invalidateTokens($user, $action): void
     {
         CcSubjsTokenQuery::create()
             ->filterByDbAction($action)
@@ -46,7 +54,7 @@ class Application_Model_Auth
             ->delete();
     }
 
-    public function checkToken($user_id, $token, $action)
+    public function checkToken($user_id, $token, $action): bool
     {
         $salt = md5('pro');
 
@@ -115,10 +123,8 @@ class Application_Model_Auth
      *
      * @param int    $length
      * @param string $allowed_chars
-     *
-     * @return string
      */
-    final public function generateRandomString($length = 12, $allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
+    final public function generateRandomString($length = 12, $allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'): string
     {
         $string = '';
         for ($i = 0; $i < $length; ++$i) {
@@ -134,7 +140,7 @@ class Application_Model_Auth
      *
      * @param Zend_Auth $auth get this with Zend_Auth::getInstance()
      */
-    public static function pinSessionToClient($auth)
+    public static function pinSessionToClient($auth): void
     {
         $auth->setStorage(new Zend_Auth_Storage_Session('libretime'));
     }

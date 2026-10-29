@@ -2,7 +2,7 @@
 
 class DashboardController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('switch-source', 'json')
@@ -12,7 +12,7 @@ class DashboardController extends Zend_Controller_Action
 
     public function indexAction() {}
 
-    public function disconnectSourceAction()
+    public function disconnectSourceAction(): void
     {
         $request = $this->getRequest();
         $sourcename = $request->getParam('sourcename');
@@ -36,7 +36,7 @@ class DashboardController extends Zend_Controller_Action
         }
     }
 
-    public function switchSourceAction()
+    public function switchSourceAction(): void
     {
         $sourcename = $this->_getParam('sourcename');
         $current_status = $this->_getParam('status');
@@ -89,7 +89,7 @@ class DashboardController extends Zend_Controller_Action
         }
     }
 
-    public function streamPlayerAction()
+    public function streamPlayerAction(): void
     {
         $this->view->headLink()->appendStylesheet(Assets::url('js/jplayer/skin/jplayer.blue.monday.css'));
         $this->_helper->layout->setLayout('livestream');
@@ -98,19 +98,19 @@ class DashboardController extends Zend_Controller_Action
         $this->view->logo = 'data:image/png;base64,' . $logo;
     }
 
-    public function helpAction()
+    public function helpAction(): void
     {
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Help');
     }
 
-    public function aboutAction()
+    public function aboutAction(): void
     {
         $config = Config::getConfig();
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Help');
         $this->view->airtime_version = $config['airtime_version'];
     }
 
-    public function tableTestAction()
+    public function tableTestAction(): void
     {
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Help');
 

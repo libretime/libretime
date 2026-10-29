@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from django.db import DataError, connection
 
@@ -22,13 +22,11 @@ def get_schema_version():
         return None
 
     with connection.cursor() as cursor:
-        cursor.execute(
-            """
+        cursor.execute("""
             SELECT valstr AS version
             FROM cc_pref
             WHERE (keystr = 'schema_version') OR (keystr = 'system_version' AND valstr = '2.5.1')
-            """
-        )
+        """)
         row = cursor.fetchone()
         if row and row[0]:
             return row[0]
@@ -56,9 +54,9 @@ def set_schema_version(cursor, version: str):
 
 def legacy_migration_factory(
     target: str,
-    before: Optional[Callable] = None,
-    sql: Optional[str] = None,
-    after: Optional[Callable] = None,
+    before: Callable | None = None,
+    sql: str | None = None,
+    after: Callable | None = None,
     reverse: bool = False,
 ):
     target_version = parse_version(target)

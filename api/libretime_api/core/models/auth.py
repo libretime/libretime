@@ -25,3 +25,14 @@ class LoginAttempt(models.Model):
     class Meta:
         managed = False
         db_table = "cc_login_attempts"
+
+
+class Session(models.Model):
+    id = models.CharField(primary_key=True, max_length=32)
+    updated_at = models.IntegerField(null=True, db_column="modified")
+    lifetime = models.IntegerField(null=True)
+    data = models.TextField(null=True)
+
+    class Meta:
+        managed = False
+        db_table = "sessions"

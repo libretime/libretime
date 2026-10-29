@@ -3,13 +3,13 @@
 /** This class displays the Language and Timezone setup popup dialog that you see on first run. */
 class SetupController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('setup-language-timezone', 'json');
     }
 
-    public function setupLanguageTimezoneAction()
+    public function setupLanguageTimezoneAction(): void
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);

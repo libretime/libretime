@@ -2,7 +2,7 @@
 
 class Application_Form_AddTracktype extends Zend_Form
 {
-    public function init()
+    public function init(): void
     {
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
 

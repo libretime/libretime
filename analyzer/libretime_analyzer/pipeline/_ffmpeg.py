@@ -2,7 +2,6 @@ import re
 from math import inf
 from os import getenv
 from pathlib import Path
-from typing import List, Optional, Tuple
 
 from ._utils import run_
 
@@ -32,7 +31,7 @@ _PROBE_REPLAYGAIN_RE = re.compile(
 )
 
 
-def probe_replaygain(filepath: Path) -> Optional[float]:
+def probe_replaygain(filepath: Path) -> float | None:
     """
     Probe replaygain will probe the given audio file and return the replaygain if available.
     """
@@ -50,7 +49,7 @@ _COMPUTE_REPLAYGAIN_RE = re.compile(
 )
 
 
-def compute_replaygain(filepath: Path) -> Optional[float]:
+def compute_replaygain(filepath: Path) -> float | None:
     """
     Compute replaygain will analyse the given audio file and return the replaygain if available.
     """
@@ -68,7 +67,7 @@ _SILENCE_DETECT_RE = re.compile(
 )
 
 
-def compute_silences(filepath: Path) -> List[Tuple[float, float]]:
+def compute_silences(filepath: Path) -> list[tuple[float, float]]:
     """
     Compute silence will analyse the given audio file and return a list of silences.
     """

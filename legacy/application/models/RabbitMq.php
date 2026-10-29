@@ -10,12 +10,12 @@ class Application_Model_RabbitMq
     /**
      * Sets a flag to push the schedule at the end of the request.
      */
-    public static function PushSchedule()
+    public static function PushSchedule(): void
     {
         self::$doPush = true;
     }
 
-    private static function sendMessage($exchange, $exchangeType, $autoDeleteExchange, $data, $queue = '')
+    private static function sendMessage($exchange, $exchangeType, $autoDeleteExchange, $data, $queue = ''): void
     {
         $CC_CONFIG = Config::getConfig();
 
@@ -51,7 +51,7 @@ class Application_Model_RabbitMq
         $conn->close();
     }
 
-    public static function SendMessageToPypo($event_type, $md)
+    public static function SendMessageToPypo($event_type, $md): void
     {
         $md['event_type'] = $event_type;
 
@@ -60,7 +60,7 @@ class Application_Model_RabbitMq
         self::sendMessage($exchange, 'fanout', true, $data);
     }
 
-    public static function SendMessageToMediaMonitor($event_type, $md)
+    public static function SendMessageToMediaMonitor($event_type, $md): void
     {
         $md['event_type'] = $event_type;
 
@@ -69,7 +69,7 @@ class Application_Model_RabbitMq
         self::sendMessage($exchange, 'direct', true, $data);
     }
 
-    public static function SendMessageToShowRecorder($event_type)
+    public static function SendMessageToShowRecorder($event_type): void
     {
         $exchange = 'playout';
 
@@ -97,7 +97,7 @@ class Application_Model_RabbitMq
         $originalFilename,
         $fileId,
         $fileTrackTypeId
-    ) {
+    ): void {
         $config = Config::getConfig();
 
         $conn = new AMQPStreamConnection(

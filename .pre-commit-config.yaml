@@ -28,43 +28,38 @@ repos:
       - id: name-tests-test
         exclude: ^api
 
-  - repo: local
+  - repo: https://github.com/jooola/pre-commit-prettier
+    rev: 3.9.10
     hooks:
       - id: prettier
-        name: prettier
-        entry: prettier --write --ignore-unknown
-        language: node
-        types: [text]
-        additional_dependencies: [prettier@3.6.2]
-
         files: \.(md|mdx|yml|yaml|js|jsx|ts|tsx|json|css)$
         exclude: ^(legacy/public(?!/js/airtime)|CHANGELOG.md$|.github/release-please-manifest.json)
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.20.0
+    rev: v3.22.0
     hooks:
       - id: pyupgrade
-        args: [--py38-plus]
+        args: [--py311-plus]
 
   - repo: https://github.com/adamchainz/django-upgrade
-    rev: 1.28.0
+    rev: 1.33.0
     hooks:
       - id: django-upgrade
-        args: [--target-version, "4.2"]
+        args: [--target-version, "5.2"]
 
   - repo: https://github.com/pycqa/isort
-    rev: 6.0.1
+    rev: 9.0.2
     hooks:
       - id: isort
         args: [--resolve-all-configs]
 
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 25.1.0
+    rev: 26.10.1
     hooks:
       - id: black
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+    rev: v2.4.3
     hooks:
       - id: codespell
         args: [--ignore-words=.codespellignore]

@@ -9,17 +9,17 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
 
     public function init() {}
 
-    public function setPrefix($prefix)
+    public function setPrefix($prefix): void
     {
         $this->prefix = $prefix;
     }
 
-    public function setSetting($setting)
+    public function setSetting($setting): void
     {
         $this->setting = $setting;
     }
 
-    public function startForm()
+    public function startForm(): void
     {
         $prefix = 's' . $this->prefix;
         $stream_number = $this->prefix;

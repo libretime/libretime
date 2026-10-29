@@ -14,13 +14,24 @@ class Application_Service_HistoryService
         $this->timezone = Application_Model_Preference::GetTimezone();
     }
 
-    public function getSupportedTemplateTypes()
+    /**
+     * @return array<int, string>
+     */
+    public function getSupportedTemplateTypes(): array
     {
         return [self::TEMPLATE_TYPE_ITEM, self::TEMPLATE_TYPE_FILE];
     }
 
     // opts is from datatables.
-    public function getPlayedItemData($startDT, $endDT, $opts, $instanceId = null)
+    /**
+     * @param mixed      $startDT
+     * @param mixed      $endDT
+     * @param mixed      $opts
+     * @param null|mixed $instanceId
+     *
+     * @return array<string, null|int|mixed[]>
+     */
+    public function getPlayedItemData($startDT, $endDT, $opts, $instanceId = null): array
     {
         $mainSqlQuery = '';
         $paramMap = [];
@@ -38,7 +49,7 @@ class Application_Service_HistoryService
         $fields_general = [];
         $general_keys = [];
 
-        foreach ($fields as $index => $field) {
+        foreach ($fields as $field) {
             if (in_array($field['name'], $required)) {
                 continue;
             }
@@ -253,13 +264,13 @@ class Application_Service_HistoryService
         $timezoneLocal = new DateTimeZone($this->timezone);
 
         $boolCast = [];
-        foreach ($fields as $index => $field) {
+        foreach ($fields as $field) {
             if ($field['type'] == TEMPLATE_BOOLEAN) {
                 $boolCast[] = $field;
             }
         }
 
-        foreach ($rows as $index => &$result) {
+        foreach ($rows as &$result) {
             foreach ($boolCast as $field) {
                 $result[$field['label']] = (bool) $result[$field['name']];
             }
@@ -298,7 +309,14 @@ class Application_Service_HistoryService
         ];
     }
 
-    public function getFileSummaryData($startDT, $endDT, $opts)
+    /**
+     * @param mixed $startDT
+     * @param mixed $endDT
+     * @param mixed $opts
+     *
+     * @return array<string, int|mixed[]>
+     */
+    public function getFileSummaryData($startDT, $endDT, $opts): array
     {
         $select = [
             'summary.played',
@@ -319,7 +337,7 @@ class Application_Service_HistoryService
         $fields = $template['fields'];
         $required = $this->mandatoryFileFields();
 
-        foreach ($fields as $index => $field) {
+        foreach ($fields as $field) {
             $key = $field['name'];
 
             if (in_array($field['name'], $required)) {
@@ -487,7 +505,7 @@ class Application_Service_HistoryService
         return $filteredShows;
     }
 
-    public function insertWebstreamMetadata($schedId, $startDT, $data)
+    public function insertWebstreamMetadata($schedId, $startDT, $data): void
     {
         $this->con->beginTransaction();
 
@@ -528,7 +546,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function insertPlayedItem($schedId)
+    public function insertPlayedItem($schedId): void
     {
         $this->con->beginTransaction();
 
@@ -626,7 +644,7 @@ class Application_Service_HistoryService
                 $prefix = Application_Form_EditHistoryItem::ID_PREFIX;
                 $formValues["{$prefix}id"] = $id;
 
-                foreach ($template['fields'] as $index => $field) {
+                foreach ($template['fields'] as $field) {
                     $key = $field['name'];
                     $value = '';
 
@@ -679,7 +697,7 @@ class Application_Service_HistoryService
             $formValues = [];
             $formValues["{$prefix}id"] = $id;
 
-            foreach ($template['fields'] as $index => $field) {
+            foreach ($template['fields'] as $field) {
                 $key = $field['name'];
 
                 if (in_array($key, $required)) {
@@ -700,7 +718,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function populateTemplateFile($values, $id)
+    public function populateTemplateFile($values, $id): void
     {
         $this->con->beginTransaction();
 
@@ -727,7 +745,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function populateTemplateItem($values, $id = null, $instance_id = null)
+    public function populateTemplateItem($values, $id = null, $instance_id = null): void
     {
         $this->con->beginTransaction();
 
@@ -820,7 +838,13 @@ class Application_Service_HistoryService
     }
 
     // start,end timestamp strings in local timezone.
-    public function populateShowInstances($start, $end)
+    /**
+     * @param mixed $start
+     * @param mixed $end
+     *
+     * @return mixed[]
+     */
+    public function populateShowInstances($start, $end): array
     {
         $timezoneLocal = new DateTimeZone($this->timezone);
 
@@ -968,7 +992,7 @@ class Application_Service_HistoryService
     }
 
     // id is an id in cc_playout_history
-    public function deletePlayedItem($id)
+    public function deletePlayedItem($id): void
     {
         $this->con->beginTransaction();
 
@@ -986,7 +1010,7 @@ class Application_Service_HistoryService
     }
 
     // id is an id in cc_playout_history
-    public function deletePlayedItems($ids)
+    public function deletePlayedItems($ids): void
     {
         $this->con->beginTransaction();
 
@@ -1004,8 +1028,10 @@ class Application_Service_HistoryService
     }
 
     // ---------------- Following code is for History Templates --------------------------//
-
-    public function getFieldTypes()
+    /**
+     * @return array<int, string>
+     */
+    public function getFieldTypes(): array
     {
         return [
             // TEMPLATE_DATE,
@@ -1018,7 +1044,10 @@ class Application_Service_HistoryService
         ];
     }
 
-    private function getPhpCasts()
+    /**
+     * @return array<string, string>
+     */
+    private function getPhpCasts(): array
     {
         return [
             TEMPLATE_DATE => 'strval',
@@ -1031,7 +1060,10 @@ class Application_Service_HistoryService
         ];
     }
 
-    private function getSqlTypes()
+    /**
+     * @return array<string, string>
+     */
+    private function getSqlTypes(): array
     {
         return [
             TEMPLATE_DATE => 'date',
@@ -1044,7 +1076,10 @@ class Application_Service_HistoryService
         ];
     }
 
-    public function getFileMetadataTypes()
+    /**
+     * @return array<int, array<string, string>>
+     */
+    public function getFileMetadataTypes(): array
     {
         return [
             ['name' => MDATA_KEY_TITLE, 'label' => _('Title'), 'type' => TEMPLATE_STRING],
@@ -1065,17 +1100,23 @@ class Application_Service_HistoryService
         ];
     }
 
-    public function mandatoryItemFields()
+    /**
+     * @return array<int, string>
+     */
+    public function mandatoryItemFields(): array
     {
         return ['starts', 'ends'];
     }
 
-    public function mandatoryFileFields()
+    /**
+     * @return array<int, string>
+     */
+    public function mandatoryFileFields(): array
     {
         return ['played'];
     }
 
-    private function defaultItemTemplate()
+    private function defaultItemTemplate(): array
     {
         $template = [];
         $fields = [];
@@ -1092,7 +1133,7 @@ class Application_Service_HistoryService
     }
 
     // Default File Summary Template. Taken from The Czech radio requirements (customer requested this in the past).
-    private function defaultFileTemplate()
+    private function defaultFileTemplate(): array
     {
         $template = [];
         $fields = [];
@@ -1163,7 +1204,12 @@ class Application_Service_HistoryService
         return $template;
     }
 
-    public function getTemplates($type)
+    /**
+     * @param mixed $type
+     *
+     * @return mixed[]
+     */
+    public function getTemplates($type): array
     {
         $list = [];
 
@@ -1197,7 +1243,7 @@ class Application_Service_HistoryService
         return $this->getTemplates(self::TEMPLATE_TYPE_FILE);
     }
 
-    private function datatablesColumns($fields)
+    private function datatablesColumns($fields): array
     {
         $columns = [];
 
@@ -1267,7 +1313,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function setConfiguredItemTemplate($id)
+    public function setConfiguredItemTemplate($id): void
     {
         try {
             Application_Model_Preference::SetHistoryItemTemplate($id);
@@ -1293,7 +1339,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function setConfiguredFileTemplate($id)
+    public function setConfiguredFileTemplate($id): void
     {
         try {
             Application_Model_Preference::SetHistoryFileTemplate($id);
@@ -1302,7 +1348,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function setConfiguredTemplate($id)
+    public function setConfiguredTemplate($id): void
     {
         try {
             $template = $this->loadTemplate($id);
@@ -1316,6 +1362,9 @@ class Application_Service_HistoryService
         }
     }
 
+    /**
+     * @return float[]|int[]|numeric-string[]
+     */
     public function getConfiguredTemplateIds()
     {
         try {
@@ -1386,7 +1435,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function updateItemTemplate($id, $name, $fields, $doSetDefault = false)
+    public function updateItemTemplate($id, $name, $fields, $doSetDefault = false): void
     {
         $this->con->beginTransaction();
 
@@ -1428,7 +1477,7 @@ class Application_Service_HistoryService
         }
     }
 
-    public function deleteTemplate($id)
+    public function deleteTemplate($id): void
     {
         $this->con->beginTransaction();
 

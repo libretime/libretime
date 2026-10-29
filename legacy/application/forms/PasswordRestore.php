@@ -2,7 +2,7 @@
 
 class Application_Form_PasswordRestore extends Zend_Form
 {
-    public function init()
+    public function init(): void
     {
         $this->setDecorators([
             ['ViewScript', ['viewScript' => 'form/password-restore.phtml']],

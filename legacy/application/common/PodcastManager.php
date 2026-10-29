@@ -13,7 +13,7 @@ class PodcastManager
      *
      * @return bool true if $_PODCAST_POLL_INTERVAL_SECONDS has passed since the last check
      */
-    public static function hasPodcastPollIntervalPassed()
+    public static function hasPodcastPollIntervalPassed(): bool
     {
         $lastPolled = Application_Model_Preference::getPodcastPollLock();
 
@@ -27,7 +27,7 @@ class PodcastManager
      * @throws InvalidPodcastException
      * @throws PodcastNotFoundException
      */
-    public static function downloadNewestEpisodes()
+    public static function downloadNewestEpisodes(): void
     {
         $autoIngestPodcasts = static::_getAutoIngestPodcasts();
         $service = new Application_Service_PodcastEpisodeService();
@@ -56,11 +56,11 @@ class PodcastManager
      *
      * @return array array of episodes to append be downloaded
      */
-    protected static function _findUningestedEpisodes($podcast, $service)
+    protected static function _findUningestedEpisodes($podcast, $service): array
     {
         $episodeList = $service->getPodcastEpisodes($podcast->getDbPodcastId());
         $episodes = [];
-        usort($episodeList, [__CLASS__, '_sortByEpisodePubDate']);
+        usort($episodeList, [self::class, '_sortByEpisodePubDate']);
         for ($i = 0; $i < count($episodeList); ++$i) {
             $episodeData = $episodeList[$i];
             $ts = $podcast->getDbAutoIngestTimestamp();
@@ -68,7 +68,7 @@ class PodcastManager
             //  episodes in the list of episodes to ingest, don't skip this episode - we should try to ingest the
             //  most recent episode when the user first sets the podcast to automatic ingest.
             // If the publication date of this episode is before the ingest timestamp, we don't need to ingest it
-            if ((empty($ts) && ($i > 0)) || strtotime($episodeData['pub_date']) < strtotime($ts)) {
+            if ((empty($ts) && ($i > 0)) || (!empty($ts) && strtotime((string) $episodeData['pub_date']) < strtotime($ts))) {
                 continue;
             }
             $episode = PodcastEpisodesQuery::create()->findOneByDbEpisodeGuid($episodeData['guid']);
@@ -103,12 +103,12 @@ class PodcastManager
      *
      * @return bool boolean for ordering
      */
-    protected static function _sortByEpisodePubDate($a, $b)
+    protected static function _sortByEpisodePubDate($a, $b): int
     {
         if ($a['pub_date'] == $b['pub_date']) {
             return 0;
         }
 
-        return (strtotime($a['pub_date']) < strtotime($b['pub_date'])) ? 1 : -1;  // Descending order
+        return (strtotime((string) $a['pub_date']) < strtotime((string) $b['pub_date'])) ? 1 : -1;  // Descending order
     }
 }

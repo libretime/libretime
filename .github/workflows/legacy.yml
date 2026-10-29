@@ -26,21 +26,37 @@ concurrency:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - php-version: "7.4" # Focal, Bullseye
-
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
+          php-version: "8.2"
 
       - name: Lint
         run: make lint
         working-directory: legacy
+
+      - name: Run rector
+        run: make rector-check
+        working-directory: legacy
+
+  propel-gen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+
+      - name: Run propel-gen
+        run: make propel-gen format
+        working-directory: legacy
+
+      - name: Check diff
+        run: git diff --exit-code
+
+      - if: failure()
+        run: echo "::error::Check failed, please run 'make -C legacy propel-gen format' and commit the changes."
 
   test:
     runs-on: ubuntu-latest
@@ -48,12 +64,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php-version: "7.4" # Focal, Bullseye
+          - php-version: "8.2" # Bookworm
+          - php-version: "8.3" # Noble
+          - php-version: "8.4" # Trixie
+          - php-version: "8.5" # Resolute
 
     env:
       ENVIRONMENT: testing
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Setup PostgreSQL
         run: |
@@ -75,7 +94,7 @@ jobs:
         run: |
           echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -86,6 +105,14 @@ jobs:
         run: make test
         working-directory: legacy
 
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: legacy-test-logs-php${{ matrix.php-version }}
+          path: legacy/tests/log/*.log
+          if-no-files-found: ignore
+
   locale:
     runs-on: ubuntu-latest
 
@@ -95,7 +122,7 @@ jobs:
         github.event_name == 'workflow_dispatch'
       )
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           token: ${{ secrets.LIBRETIME_BOT_TOKEN }}
 

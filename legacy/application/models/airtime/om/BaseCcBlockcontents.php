@@ -56,7 +56,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
     /**
      * The value for the trackoffset field.
      * Note: this column has a database default value of: 0.0
-     * @var        double
+     * @var        float
      */
     protected $trackoffset;
 
@@ -201,7 +201,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
     /**
      * Get the [trackoffset] column value.
      *
-     * @return double
+     * @return float
      */
     public function getDbTrackOffset()
     {
@@ -421,13 +421,13 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
     /**
      * Set the value of [trackoffset] column.
      *
-     * @param  double $v new value
+     * @param  float $v new value
      * @return CcBlockcontents The current object (for fluent API support)
      */
     public function setDbTrackOffset($v)
     {
         if ($v !== null && is_numeric($v)) {
-            $v = (double) $v;
+            $v = (float) $v;
         }
 
         if ($this->trackoffset !== $v) {
@@ -612,7 +612,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
             $this->block_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
             $this->file_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
             $this->position = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
-            $this->trackoffset = ($row[$startcol + 4] !== null) ? (double) $row[$startcol + 4] : null;
+            $this->trackoffset = ($row[$startcol + 4] !== null) ? (float) $row[$startcol + 4] : null;
             $this->cliplength = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->cuein = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
             $this->cueout = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
@@ -668,7 +668,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -710,7 +710,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -753,7 +753,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1432,7 +1432,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
      * @return CcBlockcontents The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcFiles(CcFiles $v = null)
+    public function setCcFiles(?CcFiles $v = null)
     {
         if ($v === null) {
             $this->setDbFileId(NULL);
@@ -1461,7 +1461,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
      * @return CcFiles The associated CcFiles object.
      * @throws PropelException
      */
-    public function getCcFiles(PropelPDO $con = null, $doQuery = true)
+    public function getCcFiles(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcFiles === null && ($this->file_id !== null) && $doQuery) {
             $this->aCcFiles = CcFilesQuery::create()->findPk($this->file_id, $con);
@@ -1484,7 +1484,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
      * @return CcBlockcontents The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcBlock(CcBlock $v = null)
+    public function setCcBlock(?CcBlock $v = null)
     {
         // aggregate_column_relation behavior
         if (null !== $this->aCcBlock && $v !== $this->aCcBlock) {
@@ -1517,7 +1517,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
      * @return CcBlock The associated CcBlock object.
      * @throws PropelException
      */
-    public function getCcBlock(PropelPDO $con = null, $doQuery = true)
+    public function getCcBlock(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcBlock === null && ($this->block_id !== null) && $doQuery) {
             $this->aCcBlock = CcBlockQuery::create()->findPk($this->block_id, $con);

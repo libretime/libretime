@@ -3,9 +3,10 @@
 
 import logging
 from argparse import ArgumentParser
+from collections.abc import Generator
 from os import environ
 from subprocess import check_output
-from typing import Any, Generator, List, Tuple
+from typing import Any
 
 from requests import Session
 
@@ -23,7 +24,7 @@ EXCLUDED_CONTRIBUTORS = {
 }
 
 
-def extract_date_range(commit_range: str) -> Tuple[str, str]:
+def extract_date_range(commit_range: str) -> tuple[str, str]:
     output = check_output(
         ["git", "log", "--reverse", "--format=%cI", commit_range], text=True
     )
@@ -52,7 +53,7 @@ def gh_get_commits(
             timeout=5,
         ) as resp:
             resp.raise_for_status()
-            commits: List[dict] = resp.json()
+            commits: list[dict] = resp.json()
             yield from commits
 
             if len(commits) < per_page:

@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Annotated, Any
 
 from pydantic import (
     AfterValidator,
@@ -11,7 +11,6 @@ from pydantic import (
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import Url
 from pydantic_core.core_schema import CoreSchema, no_info_after_validator_function
-from typing_extensions import Annotated
 
 StrNoTrailingSlash = Annotated[str, AfterValidator(lambda x: str(x).rstrip("/"))]
 StrNoLeadingSlash = Annotated[str, AfterValidator(lambda x: str(x).lstrip("/"))]
@@ -53,15 +52,15 @@ class AnyUrlStr(str):
         return self.obj.scheme
 
     @property
-    def host(self) -> Optional[str]:
+    def host(self) -> str | None:
         return self.obj.host
 
     @property
-    def port(self) -> Optional[int]:
+    def port(self) -> int | None:
         return self.obj.port
 
     @property
-    def path(self) -> Optional[str]:
+    def path(self) -> str | None:
         return self.obj.path
 
 

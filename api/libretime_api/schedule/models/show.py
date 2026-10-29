@@ -143,7 +143,7 @@ class ShowDays(models.Model):
     duration = models.CharField(max_length=1024)
 
     record_enabled = models.SmallIntegerField(
-        choices=Record.choices,
+        choices=Record,
         default=Record.NO,
         blank=True,
         null=True,
@@ -219,7 +219,7 @@ class ShowInstance(models.Model):
     auto_playlist_built = models.BooleanField(db_column="autoplaylist_built")
 
     record_enabled = models.SmallIntegerField(
-        choices=Record.choices,
+        choices=Record,
         default=Record.NO,
         blank=True,
         null=True,

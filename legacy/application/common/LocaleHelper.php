@@ -7,9 +7,9 @@ class Application_Common_LocaleHelper
     /**
      * Return an array of all ISO 639-1 language codes and their corresponding translated language names.
      *
-     * @return array the array of language codes to names
+     * @return array<string, string> the array of language codes to names
      */
-    public static function getISO6391LanguageCodes()
+    public static function getISO6391LanguageCodes(): array
     {
         /*
          * From: https://www.binarytides.com/php-array-of-iso-639-1-language-codes-and-names/

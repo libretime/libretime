@@ -2,7 +2,7 @@ ARG LIBRETIME_VERSION
 #======================================================================================#
 # Python Builder                                                                       #
 #======================================================================================#
-FROM python:3.10-slim-bullseye AS python-builder
+FROM python:3.11-slim-bookworm AS python-builder
 
 WORKDIR /build
 
@@ -18,7 +18,7 @@ RUN pip wheel --wheel-dir . --no-deps .
 #======================================================================================#
 # Python base                                                                          #
 #======================================================================================#
-FROM python:3.10-slim-bullseye AS python-base
+FROM python:3.11-slim-bookworm AS python-base
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -41,7 +41,7 @@ COPY shared/packages.ini /tmp/packages.ini
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
+    $(python3 /tmp/packages.py --format=line --exclude=python bookworm /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
 
@@ -67,7 +67,7 @@ COPY analyzer/packages.ini /tmp/packages.ini
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
+    $(python3 /tmp/packages.py --format=line --exclude=python bookworm /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
 
@@ -105,7 +105,7 @@ COPY playout/packages.ini /tmp/packages.ini
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
+    $(python3 /tmp/packages.py --format=line --exclude=python bookworm /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
 
@@ -124,10 +124,6 @@ COPY playout .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --editable .[sentry]
 
-RUN set -eux \
-    && _vine_site=$(python3 -c "import site; print(site.getsitepackages()[0])") \
-    && patch -p1 --forward --reject-file=- -d "$_vine_site" < vine-python311.patch || true
-
 # Run
 USER ${UID}:${GID}
 WORKDIR /app
@@ -138,9 +134,9 @@ ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 
 #======================================================================================#
-# API                                                                                  #
+# API Base                                                                             #
 #======================================================================================#
-FROM python-base AS libretime-api
+FROM python-base AS libretime-api-base
 
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
@@ -159,12 +155,18 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile -r requirements.txt
 
 COPY --from=python-builder /build/shared/*.whl .
+COPY --from=python-builder /build/api-client/*.whl .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-compile *.whl && rm -Rf *.whl
 
 COPY api .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --editable .[prod,sentry]
+
+#======================================================================================#
+# API                                                                                  #
+#======================================================================================#
+FROM libretime-api-base AS libretime-api
 
 # Run
 USER ${UID}:${GID}
@@ -185,22 +187,7 @@ HEALTHCHECK CMD ["curl", "--fail", "http://localhost:9001/api/v2/version"]
 #======================================================================================#
 # Worker                                                                               #
 #======================================================================================#
-FROM python-base AS libretime-worker
-
-WORKDIR /src
-
-COPY worker/requirements.txt .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-compile -r requirements.txt
-
-COPY --from=python-builder /build/shared/*.whl .
-COPY --from=python-builder /build/api-client/*.whl .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-compile *.whl && rm -Rf *.whl
-
-COPY worker .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --editable .[sentry]
+FROM libretime-api-base AS libretime-worker
 
 # Run
 USER ${UID}:${GID}
@@ -213,7 +200,7 @@ ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 #======================================================================================#
 # Legacy                                                                               #
 #======================================================================================#
-FROM php:7.4-fpm AS libretime-legacy
+FROM php:8.2-fpm AS libretime-legacy
 
 ENV LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
 ENV LIBRETIME_LOG_FILEPATH=php://stderr
@@ -292,6 +279,8 @@ FROM nginx AS libretime-nginx
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=libretime-legacy /var/www/html /var/www/html
+
+VOLUME /var/lib/nginx/cache
 
 ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION

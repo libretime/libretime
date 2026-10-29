@@ -84,7 +84,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         );
     }
 
-    public function _initPlugins()
+    public function _initPlugins(): void
     {
         $front = Zend_Controller_Front::getInstance();
         $front->registerPlugin(new Zend_Controller_Plugin_Maintenance());

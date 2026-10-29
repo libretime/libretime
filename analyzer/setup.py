@@ -20,20 +20,19 @@ setup(
             "libretime-analyzer=libretime_analyzer.main:cli",
         ]
     },
-    python_requires=">=3.8",
+    python_requires=">=3.11",
     install_requires=[
-        "mutagen>=1.45.1,<1.48",
-        "pika>=1.0.0,<1.4",
-        "requests>=2.32.2,<2.33",
+        "mutagen>=1.45.1,<1.49",
+        "pika>=1.0.0,<1.5",
+        "requests>=2.32.2,<2.35",
         "typing_extensions",
     ],
     extras_require={
         "dev": [
-            "distro>=1.8.0,<2",
             "types-requests>=2.31.0,<3",
         ],
         "sentry": [
-            "sentry-sdk>=1.15.0,<2",
+            "sentry-sdk>=1.15.0,<3",
         ],
     },
     zip_safe=False,

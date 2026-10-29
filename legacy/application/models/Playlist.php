@@ -84,7 +84,7 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
      *
      * @param string $p_newname
      */
-    public function setName($p_newname)
+    public function setName($p_newname): void
     {
         $this->pl->setDbName($p_newname);
         $this->pl->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
@@ -101,7 +101,7 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
         return $this->pl->getDbName();
     }
 
-    public function setDescription($p_description)
+    public function setDescription($p_description): void
     {
         $this->pl->setDbDescription($p_description);
         $this->pl->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
@@ -123,7 +123,7 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
         return $this->pl->getCcSubjs()->getDbId();
     }
 
-    public function setCreator($p_id)
+    public function setCreator($p_id): void
     {
         $this->pl->setDbCreatorId($p_id);
         $this->pl->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
@@ -296,7 +296,7 @@ SQL;
      *
      * @param mixed $fade
      */
-    public function normalizeFade($fade)
+    public function normalizeFade($fade): string
     {
         // First get rid of the first six characters 00:00: which will be added back later for db update
         $fade = substr($fade, 6);
@@ -316,7 +316,7 @@ SQL;
     }
 
     // returns true/false and ids of dynamic blocks
-    public function hasDynamicBlock()
+    public function hasDynamicBlock(): bool
     {
         $ids = $this->getIdsOfDynamicBlocks();
         if (count($ids) > 0) {
@@ -355,7 +355,7 @@ SQL;
         return $this->pl->getDbLength();
     }
 
-    private function insertPlaylistElement($info)
+    private function insertPlaylistElement($info): void
     {
         $row = new CcPlaylistcontents();
         $row->setDbPlaylistId($this->id);
@@ -451,7 +451,7 @@ SQL;
      * @param string (before|after) $addAfter
      *      whether to add the clips before or after the selected item.
      */
-    public function addAudioClips($p_items, $p_afterItem = null, $addType = 'after')
+    public function addAudioClips($p_items, $p_afterItem = null, $addType = 'after'): void
     {
         $this->con->beginTransaction();
         $contentsToUpdate = [];
@@ -528,7 +528,7 @@ SQL;
      * @param int   $p_afterItem
      *                           unique id of the item to move the clip after
      */
-    public function moveAudioClips($p_items, $p_afterItem = null)
+    public function moveAudioClips($p_items, $p_afterItem = null): void
     {
         $this->con->beginTransaction();
 
@@ -599,7 +599,7 @@ SQL;
      * @param array $p_items
      *                       array of unique item ids to remove from the playlist..
      */
-    public function delAudioClips($p_items)
+    public function delAudioClips($p_items): void
     {
         $this->con->beginTransaction();
 
@@ -641,7 +641,7 @@ SQL;
         }
     }
 
-    public function getFadeInfo($pos)
+    public function getFadeInfo($pos): ?array
     {
         $row = CcPlaylistcontentsQuery::create()
             ->joinWith(CcFilesPeer::OM_CLASS)
@@ -667,7 +667,7 @@ SQL;
      * $fadeIn length of fade in in seconds of $id2
      * $offset time in seconds from end of $id1 that $id2 will begin to play.
      */
-    public function createCrossfade($id1, $fadeOut, $id2, $fadeIn, $offset)
+    public function createCrossfade($id1, $fadeOut, $id2, $fadeIn, $offset): void
     {
         $this->con->beginTransaction();
 
@@ -704,7 +704,7 @@ SQL;
      *
      * @return bool
      */
-    public function changeFadeInfo($id, $fadeIn, $fadeOut, $offset = null)
+    public function changeFadeInfo($id, $fadeIn, $fadeOut, $offset = null): array
     {
         // See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
         // For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
@@ -756,7 +756,7 @@ SQL;
         return ['fadeIn' => $fadeIn, 'fadeOut' => $fadeOut];
     }
 
-    public function setfades($fadein, $fadeout)
+    public function setfades($fadein, $fadeout): void
     {
         if (isset($fadein)) {
             Logging::info("Setting playlist fade in {$fadein}");
@@ -789,7 +789,7 @@ SQL;
      *
      * @return bool or pear error object
      */
-    public function changeClipLength($id, $cueIn, $cueOut)
+    public function changeClipLength($id, $cueIn, $cueOut): array
     {
         $this->con->beginTransaction();
 
@@ -920,7 +920,10 @@ SQL;
         ];
     }
 
-    public function getAllPLMetaData()
+    /**
+     * @return mixed[]
+     */
+    public function getAllPLMetaData(): array
     {
         $categories = $this->categories;
         $md = [];
@@ -941,7 +944,7 @@ SQL;
         return $this->{$method}();
     }
 
-    public function setMetadata($category, $value)
+    public function setMetadata($category, $value): void
     {
         $cat = $this->categories[$category];
 
@@ -965,7 +968,7 @@ SQL;
      *
      * @param string $p_fileId
      */
-    public static function DeleteFileFromAllPlaylists($p_fileId)
+    public static function DeleteFileFromAllPlaylists($p_fileId): void
     {
         CcPlaylistcontentsQuery::create()->filterByDbFileId($p_fileId)->delete();
     }
@@ -976,7 +979,7 @@ SQL;
      * @param array $p_ids
      * @param mixed $p_userId
      */
-    public static function deletePlaylists($p_ids, $p_userId)
+    public static function deletePlaylists($p_ids, $p_userId): void
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -1032,7 +1035,7 @@ SQL;
     /**
      * Delete all files from playlist.
      */
-    public function deleteAllFilesFromPlaylist()
+    public function deleteAllFilesFromPlaylist(): void
     {
         // get only the files from the playlist
         // we are about to clear out
@@ -1055,7 +1058,10 @@ SQL;
         $this->con->commit();
     }
 
-    public function shuffle()
+    /**
+     * @return array<string, int>
+     */
+    public function shuffle(): array
     {
         $sql = <<<'SQL'
 SELECT max(position) from cc_playlistcontents WHERE playlist_id=:p1
@@ -1078,7 +1084,10 @@ SQL;
         return ['result' => 0];
     }
 
-    public static function getAllPlaylistFiles()
+    /**
+     * @return mixed[]
+     */
+    public static function getAllPlaylistFiles(): array
     {
         $sql = <<<'SQL'
 SELECT distinct(file_id)
@@ -1094,7 +1103,10 @@ SQL;
         return $real_files;
     }
 
-    public static function getAllPlaylistStreams()
+    /**
+     * @return mixed[]
+     */
+    public static function getAllPlaylistStreams(): array
     {
         $sql = <<<'SQL'
 SELECT distinct(stream_id)
@@ -1116,7 +1128,7 @@ SQL;
      *
      * @return bool true if there are missing files in this playlist, false otherwise
      */
-    public function containsMissingFiles()
+    public function containsMissingFiles(): bool
     {
         $playlistContents = $this->pl->getCcPlaylistcontentss('type = 0'); // type=0 is only files, not other types of media
 

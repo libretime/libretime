@@ -1,10 +1,10 @@
 from subprocess import CalledProcessError
-from typing import Any, Dict
+from typing import Any
 
 from ._ffmpeg import compute_replaygain, probe_replaygain
 
 
-def analyze_replaygain(filepath: str, metadata: Dict[str, Any]):
+def analyze_replaygain(filepath: str, metadata: dict[str, Any]):
     """
     Extracts the Replaygain loudness normalization factor of a track using ffmpeg.
     """

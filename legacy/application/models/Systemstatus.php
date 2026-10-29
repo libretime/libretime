@@ -2,7 +2,7 @@
 
 class Application_Model_Systemstatus
 {
-    public static function GetMonitStatus($p_ip)
+    public static function GetMonitStatus($p_ip): ?DOMElement
     {
         $CC_CONFIG = Config::getConfig();
         //         $monit_user = $CC_CONFIG['monit_user'];
@@ -33,7 +33,7 @@ class Application_Model_Systemstatus
         return $docRoot;
     }
 
-    public static function ExtractServiceInformation($p_docRoot, $p_serviceName)
+    public static function ExtractServiceInformation($p_docRoot, $p_serviceName): array
     {
         $starting = [
             'name' => '',
@@ -122,7 +122,7 @@ class Application_Model_Systemstatus
         return $data;
     }
 
-    public static function GetPlatformInfo()
+    public static function GetPlatformInfo(): array
     {
         $keys = ['release', 'machine', 'memory', 'swap'];
         $data = [];
@@ -145,7 +145,7 @@ class Application_Model_Systemstatus
         return $data;
     }
 
-    public static function GetPypoStatus()
+    public static function GetPypoStatus(): ?array
     {
         $component = CcServiceRegisterQuery::create()->findOneByDbName('pypo');
         if (is_null($component)) {
@@ -158,7 +158,7 @@ class Application_Model_Systemstatus
         return self::ExtractServiceInformation($docRoot, 'libretime-playout');
     }
 
-    public static function GetLiquidsoapStatus()
+    public static function GetLiquidsoapStatus(): ?array
     {
         $component = CcServiceRegisterQuery::create()->findOneByDbName('pypo');
         if (is_null($component)) {
@@ -171,7 +171,7 @@ class Application_Model_Systemstatus
         return self::ExtractServiceInformation($docRoot, 'libretime-liquidsoap');
     }
 
-    public static function GetMediaMonitorStatus()
+    public static function GetMediaMonitorStatus(): ?array
     {
         $component = CcServiceRegisterQuery::create()->findOneByDbName('media-monitor');
         if (is_null($component)) {
@@ -191,7 +191,10 @@ class Application_Model_Systemstatus
         return self::ExtractServiceInformation($docRoot, 'icecast2');
     }
 
-    public static function GetRabbitMqStatus()
+    /**
+     * @return mixed[]
+     */
+    public static function GetRabbitMqStatus(): array
     {
         if (isset($_SERVER['RABBITMQ_HOST'])) {
             $rabbitmq_host = $_SERVER['RABBITMQ_HOST'];
@@ -219,7 +222,7 @@ class Application_Model_Systemstatus
         return array_values($partitions);
     }
 
-    public static function isDiskOverQuota()
+    public static function isDiskOverQuota(): bool
     {
         $diskInfo = self::GetDiskInfo();
         $diskInfo = $diskInfo[0];

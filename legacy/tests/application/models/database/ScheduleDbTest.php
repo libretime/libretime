@@ -8,8 +8,9 @@
 class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 {
     private $_connectionMock;
+    private $application;
 
-    public function setUp()
+    public function setUp(): void
     {
         TestHelper::installTestDatabase();
 
@@ -18,7 +19,7 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         parent::setUp();
     }
 
-    public function appBootstrap()
+    public function appBootstrap(): void
     {
         $this->application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH . '/configs/application.ini');
         $this->application->bootstrap();
@@ -51,7 +52,7 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testCheckOverlappingShows()
+    public function testCheckOverlappingShows(): void
     {
         TestHelper::loginUser();
 

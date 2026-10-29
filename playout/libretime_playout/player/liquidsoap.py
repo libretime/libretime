@@ -1,7 +1,6 @@
 import logging
 import time
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Set
 
 from ..liquidsoap.client import LiquidsoapClient
 from ..utils import seconds_between
@@ -43,12 +42,12 @@ def create_liquidsoap_annotation(file_event: FileEvent) -> str:
 
 
 class TelnetLiquidsoap:
-    current_prebuffering_stream_id: Optional[int] = None
+    current_prebuffering_stream_id: int | None = None
 
     def __init__(
         self,
         liq_client: LiquidsoapClient,
-        queues: List[int],
+        queues: list[int],
     ):
         self.liq_client = liq_client
         self.queues = queues
@@ -128,7 +127,7 @@ class TelnetLiquidsoap:
 
 class Liquidsoap:
     def __init__(self, liq_client: LiquidsoapClient):
-        self.liq_queue_tracker: Dict[int, Optional[FileEvent]] = {
+        self.liq_queue_tracker: dict[int, FileEvent | None] = {
             0: None,
             1: None,
             2: None,
@@ -210,7 +209,7 @@ class Liquidsoap:
         return available_queue
 
     # pylint: disable=too-many-branches
-    def verify_correct_present_media(self, scheduled_now: List[AnyEvent]) -> None:
+    def verify_correct_present_media(self, scheduled_now: list[AnyEvent]) -> None:
         """
         verify whether Liquidsoap is currently playing the correct files.
         if we find an item that Liquidsoap is not playing, then push it
@@ -233,27 +232,27 @@ class Liquidsoap:
         },
         """
 
-        scheduled_now_files: List[FileEvent] = [
+        scheduled_now_files: list[FileEvent] = [
             x for x in scheduled_now if x.type == EventKind.FILE  # type: ignore
         ]
 
-        scheduled_now_webstream: List[WebStreamEvent] = [
+        scheduled_now_webstream: list[WebStreamEvent] = [
             x  # type: ignore
             for x in scheduled_now
             if x.type == EventKind.WEB_STREAM_OUTPUT_START
         ]
 
-        schedule_ids: Set[int] = {x.row_id for x in scheduled_now_files}
+        schedule_ids: set[int] = {x.row_id for x in scheduled_now_files}
 
-        row_id_map: Dict[int, FileEvent] = {}
-        liq_queue_ids: Set[int] = set()
+        row_id_map: dict[int, FileEvent] = {}
+        liq_queue_ids: set[int] = set()
         for queue_item in self.liq_queue_tracker.values():
             if queue_item is not None and not queue_item.ended():
                 liq_queue_ids.add(queue_item.row_id)
                 row_id_map[queue_item.row_id] = queue_item
 
-        to_be_removed: Set[int] = set()
-        to_be_added: Set[int] = set()
+        to_be_removed: set[int] = set()
+        to_be_added: set[int] = set()
 
         # Iterate over the new files, and compare them to currently scheduled
         # tracks. If already in liquidsoap queue still need to make sure they don't

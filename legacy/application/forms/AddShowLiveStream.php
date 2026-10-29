@@ -4,7 +4,7 @@ require_once 'customvalidators/ConditionalNotEmpty.php';
 
 class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         $cb_airtime_auth = new Zend_Form_Element_Checkbox('cb_airtime_auth');
         $cb_airtime_auth->setLabel(sprintf(_('Use %s Authentication:'), PRODUCT_NAME))
@@ -90,7 +90,7 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
         return $isValid;
     }
 
-    public function disable()
+    public function disable(): void
     {
         $elements = $this->getElements();
         foreach ($elements as $element) {

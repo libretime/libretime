@@ -29,20 +29,8 @@ jobs:
     with:
       context: api-client
 
-  test-focal:
+  test-bookworm:
     uses: ./.github/workflows/_python-test.yml
     with:
       context: api-client
-      release: focal
-
-  test-bullseye:
-    uses: ./.github/workflows/_python-test.yml
-    with:
-      context: api-client
-      release: bullseye
-
-  test-jammy:
-    uses: ./.github/workflows/_python-test.yml
-    with:
-      context: api-client
-      release: jammy
+      release: bookworm

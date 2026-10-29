@@ -2,7 +2,31 @@
 
 class BlockModelData
 {
-    public static function getCriteriaSingleNewestLabelNada()
+    /**
+     * Criteria of a smart block matching every file of album1, limited by the
+     * given modifier and value, exactly like the smart block builder posts them.
+     *
+     * @return array<int, array<string, int|string>|array<string, string>>
+     */
+    public static function getLimitCriteria(string $modifier, string $value): array
+    {
+        return [
+            ['name' => 'sp_type', 'value' => 0],
+            ['name' => 'sp_repeat_tracks', 'value' => 0],
+            ['name' => 'sp_sort_options', 'value' => 'random'],
+            ['name' => 'sp_limit_options', 'value' => $modifier],
+            ['name' => 'sp_limit_value', 'value' => $value],
+            ['name' => 'sp_overflow_tracks', 'value' => 0],
+            ['name' => 'sp_criteria_field_0_0', 'value' => 'album_title'],
+            ['name' => 'sp_criteria_modifier_0_0', 'value' => 'is'],
+            ['name' => 'sp_criteria_value_0_0', 'value' => 'album1'],
+        ];
+    }
+
+    /**
+     * @return array<int, array<string, int|string>|array<string, string>>
+     */
+    public static function getCriteriaSingleNewestLabelNada(): array
     {
         return [
             ['name' => 'sp_type', 'value' => 0],
@@ -18,7 +42,10 @@ class BlockModelData
         ];
     }
 
-    public static function getCriteriaMultiTrackAndAlbum1Hour()
+    /**
+     * @return array<int, array<string, int|string>|array<string, string>>
+     */
+    public static function getCriteriaMultiTrackAndAlbum1Hour(): array
     {
         return [
             ['name' => 'sp_type', 'value' => 1],
@@ -46,5 +73,41 @@ class BlockModelData
             ['name' => 'sp_criteria_modifier_2_0', 'value' => 'is greater than'],
             ['name' => 'sp_criteria_value_2_0', 'value' => '00:01:00'],
         ];
+    }
+
+    /**
+     * Description contains alpha AND (Description contains beta OR Description contains gamma).
+     *
+     * @param bool $orGroupFirst place the OR group before the single criteria
+     */
+    public static function getCriteriaDescriptionAndOrGroup($orGroupFirst = false)
+    {
+        $andGroup = static fn ($i): array => [
+            ['name' => "sp_criteria_field_{$i}_0", 'value' => 'description'],
+            ['name' => "sp_criteria_modifier_{$i}_0", 'value' => 'contains'],
+            ['name' => "sp_criteria_value_{$i}_0", 'value' => 'alpha'],
+        ];
+        $orGroup = static fn ($i): array => [
+            ['name' => "sp_criteria_field_{$i}_0", 'value' => 'description'],
+            ['name' => "sp_criteria_modifier_{$i}_0", 'value' => 'contains'],
+            ['name' => "sp_criteria_value_{$i}_0", 'value' => 'beta'],
+            ['name' => "sp_criteria_field_{$i}_1", 'value' => 'description'],
+            ['name' => "sp_criteria_modifier_{$i}_1", 'value' => 'contains'],
+            ['name' => "sp_criteria_value_{$i}_1", 'value' => 'gamma'],
+        ];
+
+        return array_merge(
+            [
+                ['name' => 'sp_type', 'value' => 0],
+                ['name' => 'sp_repeat_tracks', 'value' => 0],
+                ['name' => 'sp_sort_options', 'value' => 'oldest'],
+                ['name' => 'sp_limit_value', 'value' => 10],
+                ['name' => 'sp_limit_options', 'value' => 'items'],
+                ['name' => 'sp_overflow_tracks', 'value' => 0],
+            ],
+            $orGroupFirst
+                ? array_merge($orGroup(0), $andGroup(1))
+                : array_merge($andGroup(0), $orGroup(1))
+        );
     }
 }

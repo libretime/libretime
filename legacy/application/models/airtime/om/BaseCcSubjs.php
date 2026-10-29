@@ -850,7 +850,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -906,7 +906,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -949,7 +949,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1997,7 +1997,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcFiles[] List of CcFiles objects
      * @throws PropelException
      */
-    public function getCcFilessRelatedByDbOwnerId($criteria = null, PropelPDO $con = null)
+    public function getCcFilessRelatedByDbOwnerId($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcFilessRelatedByDbOwnerIdPartial && !$this->isNew();
         if (null === $this->collCcFilessRelatedByDbOwnerId || null !== $criteria  || $partial) {
@@ -2052,7 +2052,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcSubjs The current object (for fluent API support)
      */
-    public function setCcFilessRelatedByDbOwnerId(PropelCollection $ccFilessRelatedByDbOwnerId, PropelPDO $con = null)
+    public function setCcFilessRelatedByDbOwnerId(PropelCollection $ccFilessRelatedByDbOwnerId, ?PropelPDO $con = null)
     {
         $ccFilessRelatedByDbOwnerIdToDelete = $this->getCcFilessRelatedByDbOwnerId(new Criteria(), $con)->diff($ccFilessRelatedByDbOwnerId);
 
@@ -2083,7 +2083,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return int             Count of related CcFiles objects.
      * @throws PropelException
      */
-    public function countCcFilessRelatedByDbOwnerId(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcFilessRelatedByDbOwnerId(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcFilessRelatedByDbOwnerIdPartial && !$this->isNew();
         if (null === $this->collCcFilessRelatedByDbOwnerId || null !== $criteria || $partial) {
@@ -2247,7 +2247,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcFiles[] List of CcFiles objects
      * @throws PropelException
      */
-    public function getCcFilessRelatedByDbEditedby($criteria = null, PropelPDO $con = null)
+    public function getCcFilessRelatedByDbEditedby($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcFilessRelatedByDbEditedbyPartial && !$this->isNew();
         if (null === $this->collCcFilessRelatedByDbEditedby || null !== $criteria  || $partial) {
@@ -2302,7 +2302,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcSubjs The current object (for fluent API support)
      */
-    public function setCcFilessRelatedByDbEditedby(PropelCollection $ccFilessRelatedByDbEditedby, PropelPDO $con = null)
+    public function setCcFilessRelatedByDbEditedby(PropelCollection $ccFilessRelatedByDbEditedby, ?PropelPDO $con = null)
     {
         $ccFilessRelatedByDbEditedbyToDelete = $this->getCcFilessRelatedByDbEditedby(new Criteria(), $con)->diff($ccFilessRelatedByDbEditedby);
 
@@ -2333,7 +2333,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return int             Count of related CcFiles objects.
      * @throws PropelException
      */
-    public function countCcFilessRelatedByDbEditedby(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcFilessRelatedByDbEditedby(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcFilessRelatedByDbEditedbyPartial && !$this->isNew();
         if (null === $this->collCcFilessRelatedByDbEditedby || null !== $criteria || $partial) {
@@ -2497,7 +2497,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcShowHosts[] List of CcShowHosts objects
      * @throws PropelException
      */
-    public function getCcShowHostss($criteria = null, PropelPDO $con = null)
+    public function getCcShowHostss($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcShowHostssPartial && !$this->isNew();
         if (null === $this->collCcShowHostss || null !== $criteria  || $partial) {
@@ -2552,7 +2552,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcSubjs The current object (for fluent API support)
      */
-    public function setCcShowHostss(PropelCollection $ccShowHostss, PropelPDO $con = null)
+    public function setCcShowHostss(PropelCollection $ccShowHostss, ?PropelPDO $con = null)
     {
         $ccShowHostssToDelete = $this->getCcShowHostss(new Criteria(), $con)->diff($ccShowHostss);
 
@@ -2583,7 +2583,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return int             Count of related CcShowHosts objects.
      * @throws PropelException
      */
-    public function countCcShowHostss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcShowHostss(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcShowHostssPartial && !$this->isNew();
         if (null === $this->collCcShowHostss || null !== $criteria || $partial) {
@@ -2747,7 +2747,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcPlaylist[] List of CcPlaylist objects
      * @throws PropelException
      */
-    public function getCcPlaylists($criteria = null, PropelPDO $con = null)
+    public function getCcPlaylists($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcPlaylistsPartial && !$this->isNew();
         if (null === $this->collCcPlaylists || null !== $criteria  || $partial) {
@@ -2802,7 +2802,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcSubjs The current object (for fluent API support)
      */
-    public function setCcPlaylists(PropelCollection $ccPlaylists, PropelPDO $con = null)
+    public function setCcPlaylists(PropelCollection $ccPlaylists, ?PropelPDO $con = null)
     {
         $ccPlaylistsToDelete = $this->getCcPlaylists(new Criteria(), $con)->diff($ccPlaylists);
 
@@ -2833,7 +2833,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return int             Count of related CcPlaylist objects.
      * @throws PropelException
      */
-    public function countCcPlaylists(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcPlaylists(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcPlaylistsPartial && !$this->isNew();
         if (null === $this->collCcPlaylists || null !== $criteria || $partial) {
@@ -2972,7 +2972,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcBlock[] List of CcBlock objects
      * @throws PropelException
      */
-    public function getCcBlocks($criteria = null, PropelPDO $con = null)
+    public function getCcBlocks($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcBlocksPartial && !$this->isNew();
         if (null === $this->collCcBlocks || null !== $criteria  || $partial) {
@@ -3027,7 +3027,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcSubjs The current object (for fluent API support)
      */
-    public function setCcBlocks(PropelCollection $ccBlocks, PropelPDO $con = null)
+    public function setCcBlocks(PropelCollection $ccBlocks, ?PropelPDO $con = null)
     {
         $ccBlocksToDelete = $this->getCcBlocks(new Criteria(), $con)->diff($ccBlocks);
 
@@ -3058,7 +3058,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return int             Count of related CcBlock objects.
      * @throws PropelException
      */
-    public function countCcBlocks(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcBlocks(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcBlocksPartial && !$this->isNew();
         if (null === $this->collCcBlocks || null !== $criteria || $partial) {
@@ -3197,7 +3197,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcPref[] List of CcPref objects
      * @throws PropelException
      */
-    public function getCcPrefs($criteria = null, PropelPDO $con = null)
+    public function getCcPrefs($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcPrefsPartial && !$this->isNew();
         if (null === $this->collCcPrefs || null !== $criteria  || $partial) {
@@ -3252,7 +3252,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcSubjs The current object (for fluent API support)
      */
-    public function setCcPrefs(PropelCollection $ccPrefs, PropelPDO $con = null)
+    public function setCcPrefs(PropelCollection $ccPrefs, ?PropelPDO $con = null)
     {
         $ccPrefsToDelete = $this->getCcPrefs(new Criteria(), $con)->diff($ccPrefs);
 
@@ -3283,7 +3283,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return int             Count of related CcPref objects.
      * @throws PropelException
      */
-    public function countCcPrefs(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcPrefs(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcPrefsPartial && !$this->isNew();
         if (null === $this->collCcPrefs || null !== $criteria || $partial) {
@@ -3422,7 +3422,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return PropelObjectCollection|CcSubjsToken[] List of CcSubjsToken objects
      * @throws PropelException
      */
-    public function getCcSubjsTokens($criteria = null, PropelPDO $con = null)
+    public function getCcSubjsTokens($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collCcSubjsTokensPartial && !$this->isNew();
         if (null === $this->collCcSubjsTokens || null !== $criteria  || $partial) {
@@ -3477,7 +3477,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcSubjs The current object (for fluent API support)
      */
-    public function setCcSubjsTokens(PropelCollection $ccSubjsTokens, PropelPDO $con = null)
+    public function setCcSubjsTokens(PropelCollection $ccSubjsTokens, ?PropelPDO $con = null)
     {
         $ccSubjsTokensToDelete = $this->getCcSubjsTokens(new Criteria(), $con)->diff($ccSubjsTokens);
 
@@ -3508,7 +3508,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return int             Count of related CcSubjsToken objects.
      * @throws PropelException
      */
-    public function countCcSubjsTokens(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countCcSubjsTokens(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collCcSubjsTokensPartial && !$this->isNew();
         if (null === $this->collCcSubjsTokens || null !== $criteria || $partial) {
@@ -3647,7 +3647,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return PropelObjectCollection|Podcast[] List of Podcast objects
      * @throws PropelException
      */
-    public function getPodcasts($criteria = null, PropelPDO $con = null)
+    public function getPodcasts($criteria = null, ?PropelPDO $con = null)
     {
         $partial = $this->collPodcastsPartial && !$this->isNew();
         if (null === $this->collPodcasts || null !== $criteria  || $partial) {
@@ -3702,7 +3702,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @param PropelPDO $con Optional connection object
      * @return CcSubjs The current object (for fluent API support)
      */
-    public function setPodcasts(PropelCollection $podcasts, PropelPDO $con = null)
+    public function setPodcasts(PropelCollection $podcasts, ?PropelPDO $con = null)
     {
         $podcastsToDelete = $this->getPodcasts(new Criteria(), $con)->diff($podcasts);
 
@@ -3733,7 +3733,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @return int             Count of related Podcast objects.
      * @throws PropelException
      */
-    public function countPodcasts(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countPodcasts(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
     {
         $partial = $this->collPodcastsPartial && !$this->isNew();
         if (null === $this->collPodcasts || null !== $criteria || $partial) {

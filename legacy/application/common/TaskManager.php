@@ -24,16 +24,31 @@ final class TaskManager
     public const TASK_INTERVAL_SECONDS = 30;
 
     /**
+     * @var int TASK_LOCK_KEY postgres advisory lock key used to serialize the TaskManager runs
+     */
+    public const TASK_LOCK_KEY = 1_634_952_052;
+
+    /**
      * @var PDO Propel connection object
      */
     private $_con;
+
+    /**
+     * @var bool whether this request holds the TaskManager advisory lock
+     */
+    private $_locked = false;
+
+    /**
+     * @var bool whether unlock() was registered as a shutdown function
+     */
+    private $_unlockRegistered = false;
 
     /**
      * Private constructor so class is uninstantiable.
      */
     private function __construct()
     {
-        foreach (TaskFactory::getTasks() as $k => $task) {
+        foreach (TaskFactory::getTasks() as $task) {
             $this->_taskList[$task] = false;
         }
     }
@@ -57,7 +72,7 @@ final class TaskManager
      *
      * @param string $taskName the ENUM name of the task to be run
      */
-    public function runTask($taskName)
+    public function runTask($taskName): void
     {
         $task = TaskFactory::getTask($taskName);
         if ($task && $task->shouldBeRun()) {
@@ -75,12 +90,16 @@ final class TaskManager
      * Run all tasks that need to be run.
      *
      * To prevent blocking and making too many requests to the database,
-     * we implement a row-level, non-blocking, read-protected lock on a
-     * timestamp that we check each time the application is bootstrapped,
+     * we acquire a non-blocking session-level advisory lock before
+     * checking a timestamp each time the application is bootstrapped,
      * which, assuming enough time has passed, is updated before running
      * the tasks.
+     *
+     * The lock is held until the tasks are done, so that a task taking longer
+     * than TASK_INTERVAL_SECONDS (e.g. a large autoplaylist build) is never run
+     * concurrently by another request.
      */
-    public function runTasks()
+    public function runTasks(): void
     {
         // If there is data in auth storage, this could be a user request
         // so we should just return to avoid blocking
@@ -88,35 +107,71 @@ final class TaskManager
             return;
         }
         $this->_con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
-        $this->_con->beginTransaction();
 
         try {
-            $lock = $this->_getLock();
-            if ($lock && (microtime(true) < ($lock['valstr'] + self::TASK_INTERVAL_SECONDS))) {
-                // Propel caches the database connection and uses it persistently, so if we don't
-                // use commit() here, we end up blocking other queries made within this request
-                $this->_con->commit();
-
+            if (!$this->_tryLock()) {
+                // Another request is already checking/running the tasks
                 return;
             }
-            $this->_updateLock($lock);
-            $this->_con->commit();
         } catch (PDOException $e) {
-            // We get here if there are simultaneous requests trying to fetch the lock row
-            $this->_con->rollBack();
-
-            // Do not log 'could not obtain lock' exception
-            // SQLSTATE[55P03]: Lock not available: 7 ERROR:  could not obtain lock on row in relation "cc_pref"
-            if ($e->getCode() != '55P03') {
-                Logging::warn($e->getMessage());
-            }
+            Logging::warn($e->getMessage());
 
             return;
         }
-        foreach ($this->_taskList as $task => $hasTaskRun) {
-            if (!$hasTaskRun) {
-                $this->runTask($task);
+
+        try {
+            $this->_con->beginTransaction();
+
+            try {
+                $lock = $this->_getLock();
+                if ($lock && (microtime(true) < ($lock['valstr'] + self::TASK_INTERVAL_SECONDS))) {
+                    // Propel caches the database connection and uses it persistently, so if we don't
+                    // use commit() here, we end up blocking other queries made within this request
+                    $this->_con->commit();
+
+                    return;
+                }
+                $this->_updateLock($lock);
+                $this->_con->commit();
+            } catch (PDOException $e) {
+                $this->_con->rollBack();
+                Logging::warn($e->getMessage());
+
+                return;
             }
+            foreach ($this->_taskList as $task => $hasTaskRun) {
+                if (!$hasTaskRun) {
+                    $this->runTask($task);
+                }
+            }
+        } finally {
+            $this->unlock();
+        }
+    }
+
+    /**
+     * Release the TaskManager advisory lock, if held.
+     *
+     * Public so it can be registered as a shutdown function: Propel uses persistent
+     * connections, so a session-level lock is not released when the request dies
+     * (e.g. max_execution_time) and would block the TaskManager in every other worker.
+     */
+    public function unlock(): void
+    {
+        if (!$this->_locked) {
+            return;
+        }
+
+        try {
+            // A failed task may have left an aborted transaction behind
+            if ($this->_con->isInTransaction()) {
+                $this->_con->forceRollBack();
+            }
+            $st = $this->_con->prepare('SELECT pg_advisory_unlock(:key)');
+            $st->execute([':key' => self::TASK_LOCK_KEY]);
+            $this->_locked = false;
+        } catch (Throwable $e) {
+            Logging::error('could not release the task manager lock: ' . $e->getMessage());
         }
     }
 
@@ -126,7 +181,7 @@ final class TaskManager
      * @return bool true if there is a Zend_Auth object in the current session,
      *              otherwise false
      */
-    private function _isUserSessionRequest()
+    private function _isUserSessionRequest(): bool
     {
         if (!Zend_Session::isStarted()) {
             return false;
@@ -138,17 +193,41 @@ final class TaskManager
     }
 
     /**
-     * Get the task_manager_lock from cc_pref with a row-level lock for atomicity.
+     * Try to acquire the TaskManager advisory lock without blocking.
      *
-     * The lock is exclusive (prevent reads) and will only last for the duration
-     * of the transaction. We add NOWAIT so reads on the row during the transaction
-     * won't block
+     * The lock is held by the database session until unlock() is called. Unlike a
+     * row-level lock with NOWAIT, failing to acquire the lock does not raise an error
+     * (which would abort the transaction and be logged by postgres).
+     *
+     * @return bool true if the lock was acquired, otherwise false
+     */
+    private function _tryLock(): bool
+    {
+        $st = $this->_con->prepare('SELECT pg_try_advisory_lock(:key)');
+        $st->execute([':key' => self::TASK_LOCK_KEY]);
+        if (!$st->fetchColumn()) {
+            return false;
+        }
+
+        $this->_locked = true;
+        if (!$this->_unlockRegistered) {
+            register_shutdown_function([$this, 'unlock']);
+            $this->_unlockRegistered = true;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the task_manager_lock from cc_pref.
+     *
+     * Must be called while holding the TaskManager advisory lock.
      *
      * @return array|bool an array containing the row values, or false on failure
      */
     private function _getLock()
     {
-        $sql = "SELECT * FROM cc_pref WHERE keystr='task_manager_lock' LIMIT 1 FOR UPDATE NOWAIT";
+        $sql = "SELECT * FROM cc_pref WHERE keystr='task_manager_lock' LIMIT 1";
         $st = $this->_con->prepare($sql);
         $st->execute();
 
@@ -160,7 +239,7 @@ final class TaskManager
      *
      * @param $lock array cc_pref lock row values
      */
-    private function _updateLock($lock)
+    private function _updateLock($lock): void
     {
         $sql = empty($lock) ? "INSERT INTO cc_pref (keystr, valstr) VALUES ('task_manager_lock', :value)"
             : "UPDATE cc_pref SET valstr=:value WHERE keystr='task_manager_lock'";
@@ -188,32 +267,6 @@ interface AirtimeTask
 }
 
 /**
- * Class CeleryTask.
- *
- * Checks the Celery broker task queue and runs callbacks for completed tasks
- */
-class CeleryTask implements AirtimeTask
-{
-    /**
-     * Check the ThirdPartyTrackReferences table to see if there are any pending tasks.
-     *
-     * @return bool true if there are pending tasks in ThirdPartyTrackReferences
-     */
-    public function shouldBeRun()
-    {
-        return !CeleryManager::isBrokerTaskQueueEmpty();
-    }
-
-    /**
-     * Poll the task queue for any completed Celery tasks.
-     */
-    public function run()
-    {
-        CeleryManager::pollBrokerTaskQueue();
-    }
-}
-
-/**
  * Class AutoPlaylistTask.
  *
  * Checks for shows with an autoplaylist that needs to be filled in
@@ -233,7 +286,7 @@ class AutoPlaylistTask implements AirtimeTask
     /**
      *  Schedule the autoplaylist for the shows.
      */
-    public function run()
+    public function run(): void
     {
         AutoPlaylistManager::buildAutoPlaylist();
     }
@@ -252,7 +305,7 @@ class PodcastTask implements AirtimeTask
      *
      * @return bool true if the podcast polling interval has passed
      */
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         $overQuota = Application_Model_Systemstatus::isDiskOverQuota();
 
@@ -262,7 +315,7 @@ class PodcastTask implements AirtimeTask
     /**
      * Download the latest episode for all podcasts flagged for automatic ingest.
      */
-    public function run()
+    public function run(): void
     {
         PodcastManager::downloadNewestEpisodes();
     }
@@ -288,7 +341,7 @@ class ImportCleanupTask implements AirtimeTask
     /**
      * Clean up stuck imports by changing their import status to Failed.
      */
-    public function run()
+    public function run(): void
     {
         Application_Service_MediaService::clearStuckPendingImports();
     }
@@ -309,7 +362,7 @@ class StationPodcastTask implements AirtimeTask
      *
      * @return bool true if enough time has passed
      */
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         $lastReset = Application_Model_Preference::getStationPodcastDownloadResetTimer();
 
@@ -319,7 +372,7 @@ class StationPodcastTask implements AirtimeTask
     /**
      * Reset the station podcast download counter.
      */
-    public function run()
+    public function run(): void
     {
         Application_Model_Preference::resetStationPodcastDownloadCounter();
         Application_Model_Preference::setStationPodcastDownloadResetTimer(microtime(true));
@@ -338,7 +391,7 @@ class TaskFactory
      *
      * @return bool true if the class $c implements AirtimeTask
      */
-    private static function _isTask($c)
+    private static function _isTask($c): bool
     {
         return array_key_exists('AirtimeTask', class_implements($c));
     }
@@ -350,7 +403,7 @@ class TaskFactory
      */
     public static function getTasks()
     {
-        return array_filter(get_declared_classes(), [__CLASS__, '_isTask']);
+        return array_filter(get_declared_classes(), [self::class, '_isTask']);
     }
 
     /**
@@ -360,7 +413,7 @@ class TaskFactory
      *
      * @return null|AirtimeTask return a task of the given type or null if no corresponding task exists
      */
-    public static function getTask($task)
+    public static function getTask($task): ?AirtimeTask
     {
         // Try to get a valid class name from the given string
         if (!class_exists($task)) {

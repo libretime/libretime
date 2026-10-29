@@ -1,7 +1,7 @@
 import logging
 from datetime import timedelta
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import mutagen
 from libretime_shared.files import compute_md5
@@ -23,7 +23,7 @@ def comment_get(id3, _):
 EasyID3.RegisterKey("comment", comment_get)
 
 
-def analyze_metadata(filepath_: str, metadata: Dict[str, Any]):
+def analyze_metadata(filepath_: str, metadata: dict[str, Any]):
     """
     Extract audio metadata from tags embedded in the file using mutagen.
     """

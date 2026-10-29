@@ -7,7 +7,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
      */
     protected $_service;
 
-    public function init()
+    public function init(): void
     {
         $this->view->layout()->disableLayout();
 
@@ -19,12 +19,12 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
     /**
      * headAction is needed as it is defined as an abstract function in the base controller.
      */
-    public function headAction()
+    public function headAction(): void
     {
         Logging::info('HEAD action received');
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         // podcast ID
         $id = $this->getId();
@@ -59,7 +59,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         }
     }
 
-    public function getAction()
+    public function getAction(): void
     {
         // podcast ID
         $id = $this->getId();
@@ -88,7 +88,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         }
     }
 
-    public function postAction()
+    public function postAction(): void
     {
         // If we do get an episode ID on a POST, then that doesn't make any sense
         // since POST is only for creating.
@@ -119,7 +119,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         }
     }
 
-    public function deleteAction()
+    public function deleteAction(): void
     {
         $id = $this->getId();
         if (!$id) {
@@ -172,21 +172,21 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         return $episodeId;
     }
 
-    private function unknownErrorResponse()
+    private function unknownErrorResponse(): void
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(400);
         $resp->appendBody('An unknown error occurred.');
     }
 
-    private function podcastNotFoundResponse()
+    private function podcastNotFoundResponse(): void
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(404);
         $resp->appendBody('ERROR: Podcast not found.');
     }
 
-    private function podcastEpisodeNotFoundResponse()
+    private function podcastEpisodeNotFoundResponse(): void
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(404);

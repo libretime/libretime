@@ -2,7 +2,7 @@
 
 class UsersettingsController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         // Initialize action controller here
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
@@ -19,7 +19,7 @@ class UsersettingsController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function setNowPlayingScreenSettingsAction()
+    public function setNowPlayingScreenSettingsAction(): void
     {
         $request = $this->getRequest();
         $settings = $request->getParam('settings');
@@ -27,7 +27,7 @@ class UsersettingsController extends Zend_Controller_Action
         Application_Model_Preference::setNowPlayingScreenSettings($settings);
     }
 
-    public function getNowPlayingScreenSettingsAction()
+    public function getNowPlayingScreenSettingsAction(): void
     {
         $data = Application_Model_Preference::getNowPlayingScreenSettings();
         if (!is_null($data)) {
@@ -35,7 +35,7 @@ class UsersettingsController extends Zend_Controller_Action
         }
     }
 
-    public function setLibraryDatatableAction()
+    public function setLibraryDatatableAction(): void
     {
         $request = $this->getRequest();
         $settings = $request->getParam('settings');
@@ -43,7 +43,7 @@ class UsersettingsController extends Zend_Controller_Action
         Application_Model_Preference::setCurrentLibraryTableSetting($settings);
     }
 
-    public function getLibraryDatatableAction()
+    public function getLibraryDatatableAction(): void
     {
         $data = Application_Model_Preference::getCurrentLibraryTableSetting();
         if (!is_null($data)) {
@@ -53,7 +53,7 @@ class UsersettingsController extends Zend_Controller_Action
         }
     }
 
-    public function setTimelineDatatableAction()
+    public function setTimelineDatatableAction(): void
     {
         $request = $this->getRequest();
         $settings = $request->getParam('settings');
@@ -61,7 +61,7 @@ class UsersettingsController extends Zend_Controller_Action
         Application_Model_Preference::setTimelineDatatableSetting($settings);
     }
 
-    public function getTimelineDatatableAction()
+    public function getTimelineDatatableAction(): void
     {
         $data = Application_Model_Preference::getTimelineDatatableSetting();
         if (!is_null($data)) {
@@ -69,7 +69,7 @@ class UsersettingsController extends Zend_Controller_Action
         }
     }
 
-    public function remindmeAction()
+    public function remindmeAction(): void
     {
         // unset session
         SessionHelper::reopenSessionForWriting();
@@ -77,7 +77,7 @@ class UsersettingsController extends Zend_Controller_Action
         Application_Model_Preference::SetRemindMeDate();
     }
 
-    public function remindmeNeverAction()
+    public function remindmeNeverAction(): void
     {
         SessionHelper::reopenSessionForWriting();
         Zend_Session::namespaceUnset('referrer');
@@ -85,14 +85,14 @@ class UsersettingsController extends Zend_Controller_Action
         Application_Model_Preference::SetRemindMeDate(true);
     }
 
-    public function donotshowregistrationpopupAction()
+    public function donotshowregistrationpopupAction(): void
     {
         // unset session
         SessionHelper::reopenSessionForWriting();
         Zend_Session::namespaceUnset('referrer');
     }
 
-    public function setLibraryScreenSettingsAction()
+    public function setLibraryScreenSettingsAction(): void
     {
         $request = $this->getRequest();
         $settings = $request->getParam('settings');

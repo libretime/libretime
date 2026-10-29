@@ -15,7 +15,7 @@
  */
 class Rest_ShowImageController extends Zend_Rest_Controller
 {
-    public function init()
+    public function init(): void
     {
         // Remove layout dependencies
         $this->view->layout()->disableLayout();
@@ -26,22 +26,22 @@ class Rest_ShowImageController extends Zend_Rest_Controller
     /**
      * headAction is needed as it is defined as an abstract function in the base controller.
      */
-    public function headAction()
+    public function headAction(): void
     {
         Logging::info('HEAD action received');
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         Logging::info('INDEX action received');
     }
 
-    public function getAction()
+    public function getAction(): void
     {
         Logging::info('GET action received');
     }
 
-    public function putAction()
+    public function putAction(): void
     {
         Logging::info('PUT action received');
     }
@@ -49,7 +49,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
     /**
      * RESTful POST endpoint; used when uploading show images.
      */
-    public function postAction()
+    public function postAction(): void
     {
         $showId = $this->getShowId();
 
@@ -96,7 +96,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
     /**
      * RESTful DELETE endpoint; used when deleting show images.
      */
-    public function deleteAction()
+    public function deleteAction(): void
     {
         $showId = $this->getShowId();
 
@@ -152,7 +152,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
      *                   - when a file with an unsupported file extension is uploaded or an
      *                   error occurs in copyFileToStor
      */
-    private function processUploadedImage($showId, $tempFilePath)
+    private function processUploadedImage($showId, $tempFilePath): string
     {
         $ownerId = RestAuth::getOwnerId();
 
@@ -185,7 +185,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
      *
      * @return string the file extension for the new file based on its MIME type
      */
-    private function getFileExtension($tempFilePath)
+    private function getFileExtension($tempFilePath): string
     {
         // Don't trust the extension - get the MIME-type instead
         $fileInfo = finfo_open();
@@ -201,7 +201,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
      *
      * @return string the file extension based on the given MIME type
      */
-    private function getExtensionFromMime($mime)
+    private function getExtensionFromMime($mime): string
     {
         $extensions = [
             'image/jpeg' => 'jpg',
@@ -226,7 +226,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
      *                   enabled, or the user's hard drive does not have enough space to
      *                   store the file
      */
-    private function copyFileToStor($tempFilePath, $importedStorageDirectory, $fileExtension)
+    private function copyFileToStor($tempFilePath, $importedStorageDirectory, $fileExtension): string
     {
         $image_file = $tempFilePath;
 
@@ -271,7 +271,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
      *
      * @return bool true if the images were successfully deleted, otherwise false
      */
-    public static function deleteShowImagesFromStor($showId)
+    public static function deleteShowImagesFromStor($showId): bool
     {
         $ownerId = RestAuth::getOwnerId();
 
@@ -290,7 +290,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
     }
 
     // from a note @ https://php.net/manual/en/function.rmdir.php
-    private static function delTree($dir)
+    private static function delTree($dir): bool
     {
         $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {

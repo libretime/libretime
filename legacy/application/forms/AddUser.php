@@ -2,7 +2,7 @@
 
 class Application_Form_AddUser extends Zend_Form
 {
-    public function init()
+    public function init(): void
     {
         /*
         $this->addElementPrefixPath('Application_Validate',
@@ -109,7 +109,7 @@ class Application_Form_AddUser extends Zend_Form
         $this->addElement($saveBtn);
     }
 
-    public function validateLogin($data)
+    public function validateLogin($data): bool
     {
         if (strlen($data['user_id']) == 0) {
             $count = CcSubjsQuery::create()->filterByDbLogin($data['login'])->count();

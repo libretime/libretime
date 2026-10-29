@@ -4,36 +4,8 @@ class PodcastEpisodeNotFoundException extends Exception {}
 
 class DuplicatePodcastEpisodeException extends Exception {}
 
-class Application_Service_PodcastEpisodeService extends Application_Service_ThirdPartyCeleryService implements Publish
+class Application_Service_PodcastEpisodeService implements Publish
 {
-    /**
-     * Arbitrary constant identifiers for the internal tasks array.
-     */
-    public const DOWNLOAD = 'download';
-
-    public const PENDING_EPISODE_TIMEOUT_SECONDS = 900;
-
-    /**
-     * @var string service name to store in ThirdPartyTrackReferences database
-     */
-    protected static $_SERVICE_NAME = PODCAST_SERVICE_NAME;  // Service name constant from constants.php
-
-    /**
-     * @var string exchange name for Podcast tasks
-     */
-    protected static $_CELERY_EXCHANGE_NAME = 'podcast';
-
-    /**
-     * @var array map of constant identifiers to Celery task names
-     */
-    protected static $_CELERY_TASKS = [
-        self::DOWNLOAD => 'podcast-download',
-    ];
-
-    private static $privateFields = [
-        'id',
-    ];
-
     /**
      * Utility function to import and download a single episode.
      *
@@ -60,7 +32,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      *
      * @return array the stored PodcastEpisodes objects
      */
-    public function addPodcastEpisodePlaceholders($podcastId, $episodes)
+    public function addPodcastEpisodePlaceholders($podcastId, $episodes): array
     {
         $storedEpisodes = [];
         foreach ($episodes as $episode) {
@@ -117,7 +89,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @throws Exception
      * @throws PropelException
      */
-    private function _buildEpisode($podcastId, $url, $guid, $publicationDate, $title = null, $description = null)
+    private function _buildEpisode($podcastId, $url, $guid, $publicationDate, $title = null, $description = null): PodcastEpisodes
     {
         $e = new PodcastEpisodes();
         $e->setDbPodcastId($podcastId);
@@ -136,7 +108,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      *
      * @param array $episodes array of podcast episodes
      */
-    public function downloadEpisodes($episodes)
+    public function downloadEpisodes($episodes): void
     {
         /** @var PodcastEpisodes $episode */
         foreach ($episodes as $episode) {
@@ -174,63 +146,15 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @param bool       $album_override should we override the album name when downloading
      * @param null|mixed $track_title
      */
-    private function _download($id, $url, $title, $album_override, $track_title = null)
+    private function _download($id, $url, $title, $album_override, $track_title = null): void
     {
-        $data = [
+        Celery::sendTask('libretime_api.podcasts.tasks.import_episode', [], [
             'episode_id' => $id,
             'episode_url' => $url,
             'episode_title' => $track_title,
             'podcast_name' => $title,
             'override_album' => $album_override,
-        ];
-        $task = $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
-        // Get the created ThirdPartyTaskReference and set the episode ID so
-        // we can remove the placeholder if the import ends up stuck in a pending state
-        $ref = ThirdPartyTrackReferencesQuery::create()->findPk($task->getDbTrackReference());
-        $ref->setDbForeignId($id)->save();
-    }
-
-    /**
-     * Update a ThirdPartyTrackReferences object for a completed upload.
-     *
-     * @param $task      CeleryTasks the completed CeleryTasks object
-     * @param $episodeId int         PodcastEpisodes identifier
-     * @param $episode   stdClass    simple object containing Podcast episode information
-     * @param $status    string      Celery task status
-     *
-     * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
-     *
-     * @throws Exception
-     * @throws PropelException
-     */
-    public function updateTrackReference($task, $episodeId, $episode, $status)
-    {
-        $ref = parent::updateTrackReference($task, $episodeId, $episode, $status);
-        $ref->setDbForeignId($episode->episodeid)->save();
-        $dbEpisode = PodcastEpisodesQuery::create()->findOneByDbId($episode->episodeid);
-
-        try {
-            // If the placeholder for the episode is somehow removed, return with a warning
-            if (!$dbEpisode) {
-                Logging::warn("Celery task {$task} episode {$episode->episodeid} unsuccessful: episode placeholder removed");
-
-                return $ref;
-            }
-
-            // Even if the task itself succeeds, the download could have failed, so check the status
-            if ($status == CELERY_SUCCESS_STATUS && $episode->status == 1) {
-                $dbEpisode->setDbFileId($episode->fileid)->save();
-            } else {
-                Logging::warn("Celery task {$task} episode {$episode->episodeid} unsuccessful with message {$episode->error}");
-                $dbEpisode->delete();
-            }
-        } catch (Exception $e) {
-            $dbEpisode->delete();
-            Logging::warn("Catastrophic failure updating from task {$task}, recovering by deleting episode row.\n
-                           This can occur if the episode's corresponding CcFile is deleted before being processed.");
-        }
-
-        return $ref;
+        ]);
     }
 
     /**
@@ -238,7 +162,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      *
      * @param int $fileId ID of the file to be published
      */
-    public function publish($fileId)
+    public function publish($fileId): void
     {
         $id = Application_Model_Preference::getStationPodcastId();
         $url = $guid = Config::getPublicUrl() . "rest/media/{$fileId}/download";
@@ -255,7 +179,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      *
      * @param int $fileId ID of the file to be unpublished
      */
-    public function unpublish($fileId)
+    public function unpublish($fileId): void
     {
         $id = Application_Model_Preference::getStationPodcastId();
         PodcastEpisodesQuery::create()
@@ -274,43 +198,12 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      *             -1 if the file is in a pending state,
      *             2 if the source is unreachable (disconnected)
      */
-    public function getPublishStatus($fileId)
+    public function getPublishStatus($fileId): int
     {
         $stationPodcast = StationPodcastQuery::create()
             ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId());
 
         return (int) $stationPodcast->hasEpisodeForFile($fileId);
-    }
-
-    /**
-     * Find any episode placeholders that have been stuck pending (empty file ID) for over
-     * PENDING_EPISODE_TIMEOUT_SECONDS.
-     *
-     * @see Application_Service_PodcastEpisodeService::PENDING_EPISODE_TIMEOUT_SECONDS
-     *
-     * @return array the episode imports stuck in pending
-     */
-    public static function getStuckPendingImports()
-    {
-        $timeout = gmdate(DEFAULT_TIMESTAMP_FORMAT, intval(microtime(true)) - self::PENDING_EPISODE_TIMEOUT_SECONDS);
-        $episodes = PodcastEpisodesQuery::create()
-            ->filterByDbFileId()
-            ->find();
-        $stuckImports = [];
-        foreach ($episodes as $episode) {
-            $ref = ThirdPartyTrackReferencesQuery::create()
-                ->findOneByDbForeignId(strval($episode->getDbId()));
-            if (!empty($ref)) {
-                $task = CeleryTasksQuery::create()
-                    ->filterByDbDispatchTime($timeout, Criteria::LESS_EQUAL)
-                    ->findOneByDbTrackReference($ref->getDbId());
-                if (!empty($task)) {
-                    array_push($stuckImports, $episode);
-                }
-            }
-        }
-
-        return $stuckImports;
     }
 
     /**
@@ -339,8 +232,6 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @param string $sortDir    "ASC" || "DESC"
      * @param mixed  $podcastId
      *
-     * @return array
-     *
      * @throws PodcastNotFoundException
      */
     public function getPodcastEpisodes(
@@ -349,7 +240,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         $limit = 10,
         $sortColumn = PodcastEpisodesPeer::PUBLICATION_DATE,
         $sortDir = 'ASC'
-    ) {
+    ): array {
         $podcast = PodcastQuery::create()->findPk($podcastId);
         if (!$podcast) {
             throw new PodcastNotFoundException();
@@ -379,10 +270,8 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * convert the episode data into array form.
      *
      * @param array $episodes array of PodcastEpisodes to convert
-     *
-     * @return array
      */
-    private function _getStationPodcastEpisodeArray($episodes)
+    private function _getStationPodcastEpisodeArray($episodes): array
     {
         $episodesArray = [];
         foreach ($episodes as $episode) {
@@ -408,7 +297,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      *
      * @throws CcFiles/LibreTimeFileNotFoundException
      */
-    public function _getImportedPodcastEpisodeArray($podcast, $episodes)
+    public function _getImportedPodcastEpisodeArray($podcast, $episodes): array
     {
         $rss = Application_Service_PodcastService::getPodcastFeed($podcast->getDbUrl());
         $episodeIds = [];
@@ -511,7 +400,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         return $authorString;
     }
 
-    public function deletePodcastEpisodeById($episodeId)
+    public function deletePodcastEpisodeById($episodeId): void
     {
         $episode = PodcastEpisodesQuery::create()->findByDbId($episodeId);
 
@@ -519,13 +408,6 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             $episode->delete();
         } else {
             throw new PodcastEpisodeNotFoundException();
-        }
-    }
-
-    private function removePrivateFields(&$data)
-    {
-        foreach (self::$privateFields as $key) {
-            unset($data[$key]);
         }
     }
 }

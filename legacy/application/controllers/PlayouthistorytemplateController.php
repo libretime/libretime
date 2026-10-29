@@ -2,7 +2,7 @@
 
 class PlayouthistorytemplateController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext
@@ -13,7 +13,7 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Config::getBasePath();
@@ -29,7 +29,7 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
         $this->view->configured = $historyService->getConfiguredTemplateIds();
     }
 
-    public function configureTemplateAction()
+    public function configureTemplateAction(): void
     {
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Config::getBasePath();
@@ -72,7 +72,7 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
         }
     }
 
-    public function createTemplateAction()
+    public function createTemplateAction(): void
     {
         $templateType = $this->_getParam('type', null);
 
@@ -98,7 +98,7 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
         }
     }
 
-    public function setTemplateDefaultAction()
+    public function setTemplateDefaultAction(): void
     {
         $templateId = $this->_getParam('id', null);
 
@@ -111,7 +111,7 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
         }
     }
 
-    public function updateTemplateAction()
+    public function updateTemplateAction(): void
     {
         $templateId = $this->_getParam('id', null);
         $name = $this->_getParam('name', null);
@@ -126,7 +126,7 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
         }
     }
 
-    public function deleteTemplateAction()
+    public function deleteTemplateAction(): void
     {
         $templateId = $this->_getParam('id');
 

@@ -15,7 +15,7 @@ class SecurityHelper
         return $arr;
     }
 
-    public static function verifyCSRFToken($observedToken)
+    public static function verifyCSRFToken($observedToken): bool
     {
         $current_namespace = new Zend_Session_Namespace('csrf_namespace');
         $observed_csrf_token = $observedToken;

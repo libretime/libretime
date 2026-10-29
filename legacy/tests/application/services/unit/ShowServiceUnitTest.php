@@ -14,14 +14,14 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
 
     protected $_showService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->_reflectionOfShowService = new ReflectionClass('Application_Service_ShowService');
 
         $this->_showService = new Application_Service_ShowService();
     }
 
-    public function testFormatShowDuration()
+    public function testFormatShowDuration(): void
     {
         $duration = Application_Service_ShowService::formatShowDuration('01h 00m');
         $this->assertEquals('01:00', $duration);
@@ -33,10 +33,9 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('03:55', $duration);
     }
 
-    public function testCalculateEndDate()
+    public function testCalculateEndDate(): void
     {
         $method = $this->_reflectionOfShowService->getMethod('calculateEndDate');
-        $method->setAccessible(true);
 
         $end = $method->invokeArgs($this->_showService, [ShowServiceData::getNoRepeatNoRRData()]);
         $this->assertEquals(null, $end);
@@ -48,10 +47,9 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(null, $end);
     }
 
-    public function testGetMonthlyWeeklyRepeatInterval()
+    public function testGetMonthlyWeeklyRepeatInterval(): void
     {
         $method = $this->_reflectionOfShowService->getMethod('getMonthlyWeeklyRepeatInterval');
-        $method->setAccessible(true);
 
         $repeatInterval = $method->invokeArgs($this->_showService, [new DateTime('2044-01-01'), new DateTimeZone('UTC')]);
         $this->assertEquals(['first', 'Friday'], $repeatInterval);
@@ -69,10 +67,9 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['fifth', 'Saturday'], $repeatInterval);
     }
 
-    public function testGetNextMonthlyMonthlyRepeatDate()
+    public function testGetNextMonthlyMonthlyRepeatDate(): void
     {
         $method = $this->_reflectionOfShowService->getMethod('getNextMonthlyMonthlyRepeatDate');
-        $method->setAccessible(true);
 
         $next = $method->invokeArgs($this->_showService, [new DateTime('2044-01-01'), 'UTC', '00:00']);
         $this->assertEquals(new DateTime('2044-02-01', new DateTimeZone('UTC')), $next);
@@ -81,10 +78,9 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('2044-03-30', new DateTimeZone('UTC')), $next);
     }
 
-    public function testGetNextMonthlyWeeklyRepeatDate()
+    public function testGetNextMonthlyWeeklyRepeatDate(): void
     {
         $method = $this->_reflectionOfShowService->getMethod('getNextMonthlyWeeklyRepeatDate');
-        $method->setAccessible(true);
 
         $next = $method->invokeArgs($this->_showService, [
             new DateTime('2044-02-01'), 'UTC', '00:00', 'first', 'Friday',
@@ -102,10 +98,9 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('2044-02-22', new DateTimeZone('UTC')), $next);
     }
 
-    public function testCreateUTCStartEndDateTime()
+    public function testCreateUTCStartEndDateTime(): void
     {
         $method = $this->_reflectionOfShowService->getMethod('createUTCStartEndDateTime');
-        $method->setAccessible(true);
 
         $utcTimezone = new DateTimeZone('UTC');
 

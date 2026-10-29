@@ -27,12 +27,12 @@ class Application_Model_ShowInstance
         return $this->_instanceId;
     }
 
-    public function getShow()
+    public function getShow(): Application_Model_Show
     {
         return new Application_Model_Show($this->getShowId());
     }
 
-    public function deleteRebroadcasts()
+    public function deleteRebroadcasts(): void
     {
         $timestamp = gmdate(DEFAULT_TIMESTAMP_FORMAT);
         $instance_id = $this->getShowInstanceId();
@@ -128,7 +128,7 @@ SQL;
         return $this->_showInstance->getDbEnds($format);
     }
 
-    public function getStartDate()
+    public function getStartDate(): string
     {
         $showStart = $this->getShowInstanceStart();
         $showStartExplode = explode(' ', $showStart);
@@ -136,7 +136,7 @@ SQL;
         return $showStartExplode[0];
     }
 
-    public function getStartTime()
+    public function getStartTime(): string
     {
         $showStart = $this->getShowInstanceStart();
         $showStartExplode = explode(' ', $showStart);
@@ -162,33 +162,33 @@ SQL;
         return null;
     }
 
-    public function setShowStart($start)
+    public function setShowStart($start): void
     {
         $this->_showInstance->setDbStarts($start)
             ->save();
         Application_Model_RabbitMq::PushSchedule();
     }
 
-    public function setShowEnd($end)
+    public function setShowEnd($end): void
     {
         $this->_showInstance->setDbEnds($end)
             ->save();
         Application_Model_RabbitMq::PushSchedule();
     }
 
-    public function setAutoPlaylistBuilt($bool)
+    public function setAutoPlaylistBuilt($bool): void
     {
         $this->_showInstance->setDbAutoPlaylistBuilt($bool)
             ->save();
     }
 
-    public function updateScheduledTime()
+    public function updateScheduledTime(): void
     {
         $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
         $this->_showInstance->updateDbTimeFilled($con);
     }
 
-    public function isDeleted()
+    public function isDeleted(): void
     {
         $this->_showInstance->getDbModifiedInstance();
     }
@@ -206,7 +206,7 @@ SQL;
      * @return $newDateTime
      *      php DateTime, $dateTime with the added time deltas.
      */
-    public static function addDeltas($dateTime, $deltaDay, $deltaMin)
+    public static function addDeltas($dateTime, $deltaDay, $deltaMin): DateTime
     {
         $newDateTime = clone $dateTime;
 
@@ -237,7 +237,7 @@ SQL;
      * @param mixed $pl_id
      * @param mixed $checkUserPerm
      */
-    public function addPlaylistToShow($pl_id, $checkUserPerm = true)
+    public function addPlaylistToShow($pl_id, $checkUserPerm = true): void
     {
         $ts = intval($this->_showInstance->getDbLastScheduled('U')) ?: 0;
         $id = $this->_showInstance->getDbId();
@@ -258,7 +258,7 @@ SQL;
      * @param mixed $pl_id
      * @param mixed $checkUserPerm
      */
-    public function addPlaylistToShowStart($pl_id, $checkUserPerm = true)
+    public function addPlaylistToShowStart($pl_id, $checkUserPerm = true): void
     {
         $ts = intval($this->_showInstance->getDbLastScheduled('U')) ?: 0;
         $id = $this->_showInstance->getDbId();
@@ -278,7 +278,7 @@ SQL;
      * @param int   $file_id
      * @param mixed $checkUserPerm
      */
-    public function addFileToShow($file_id, $checkUserPerm = true)
+    public function addFileToShow($file_id, $checkUserPerm = true): void
     {
         $ts = intval($this->_showInstance->getDbLastScheduled('U')) ?: 0;
         $id = $this->_showInstance->getDbId();
@@ -297,14 +297,14 @@ SQL;
      * @param array $plIds
      *                     An array of playlist IDs
      */
-    public function scheduleShow($plIds)
+    public function scheduleShow($plIds): void
     {
         foreach ($plIds as $plId) {
             $this->addPlaylistToShow($plId);
         }
     }
 
-    public function clearShow()
+    public function clearShow(): void
     {
         CcScheduleQuery::create()
             ->filterByDbInstanceId($this->_instanceId)
@@ -313,7 +313,7 @@ SQL;
         $this->updateScheduledTime();
     }
 
-    private function checkToDeleteShow($showId)
+    private function checkToDeleteShow($showId): bool
     {
         // UTC DateTime object
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
@@ -388,7 +388,7 @@ SQL;
         return false;
     }
 
-    public function delete($rabbitmqPush = true)
+    public function delete($rabbitmqPush = true): void
     {
         // see if it was recording show
         $recording = $this->isRecorded();
@@ -441,7 +441,7 @@ SQL;
         }
     }
 
-    public function setRecordedFile($file_id)
+    public function setRecordedFile($file_id): void
     {
         $showInstance = CcShowInstancesQuery::create()
             ->findPK($this->_instanceId);
@@ -462,7 +462,7 @@ SQL;
         }
     }
 
-    public function getTimeScheduled()
+    public function getTimeScheduled(): string
     {
         $time = $this->_showInstance->getDbTimeFilled();
 
@@ -482,14 +482,14 @@ SQL;
         return $time;
     }
 
-    public function getTimeScheduledSecs()
+    public function getTimeScheduledSecs(): float
     {
         $time_filled = $this->getTimeScheduled();
 
         return Application_Common_DateHelper::playlistTimeToSeconds($time_filled);
     }
 
-    public function getDurationSecs()
+    public function getDurationSecs(): int
     {
         $ends = $this->getShowInstanceEnd(null);
         $starts = $this->getShowInstanceStart(null);
@@ -498,7 +498,7 @@ SQL;
     }
 
     // should return the amount of seconds remaining to be scheduled in a show instance
-    public function getSecondsRemaining()
+    public function getSecondsRemaining(): float
     {
         return $this->getDurationSecs() - $this->getTimeScheduledSecs();
     }
@@ -517,7 +517,7 @@ SQL;
         return $percent;
     }
 
-    public function getShowLength()
+    public function getShowLength(): string
     {
         $start = $this->getShowInstanceStart(null);
         $end = $this->getShowInstanceEnd(null);
@@ -537,7 +537,13 @@ SQL;
         return $returnStr;
     }
 
-    public static function getContentCount($p_start, $p_end)
+    /**
+     * @param mixed $p_start
+     * @param mixed $p_end
+     *
+     * @return mixed[]
+     */
+    public static function getContentCount($p_start, $p_end): array
     {
         $sql = <<<'SQL'
 SELECT instance_id,
@@ -561,7 +567,13 @@ SQL;
         return $real_counts;
     }
 
-    public static function getIsFull($p_start, $p_end)
+    /**
+     * @param mixed $p_start
+     * @param mixed $p_end
+     *
+     * @return mixed[]
+     */
+    public static function getIsFull($p_start, $p_end): array
     {
         $sql = <<<'SQL'
 SELECT id, ends-starts-'00:00:05' < time_filled as filled
@@ -609,7 +621,7 @@ SQL;
         }
     }
 
-    public function showEmpty()
+    public function showEmpty(): bool
     {
         $sql = <<<'SQL'
 SELECT s.starts
@@ -744,7 +756,7 @@ SQL;
         return ($query !== false) ? $query : null;
     }
 
-    public static function GetLastShowInstance($p_timeNow)
+    public static function GetLastShowInstance($p_timeNow): ?Application_Model_ShowInstance
     {
         $sql = <<<'SQL'
 SELECT si.id
@@ -760,7 +772,7 @@ SQL;
         return $id ? new Application_Model_ShowInstance($id) : null;
     }
 
-    public static function GetCurrentShowInstance($p_timeNow)
+    public static function GetCurrentShowInstance($p_timeNow): ?Application_Model_ShowInstance
     {
         /* Orderby si.starts descending, because in some cases
          * we can have multiple shows overlapping each other. In
@@ -785,7 +797,7 @@ SQL;
         return $id ? new Application_Model_ShowInstance($id) : null;
     }
 
-    public static function GetNextShowInstance($p_timeNow)
+    public static function GetNextShowInstance($p_timeNow): ?Application_Model_ShowInstance
     {
         $sql = <<<'SQL'
 SELECT si.id

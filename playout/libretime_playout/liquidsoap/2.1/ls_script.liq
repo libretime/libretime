@@ -5,7 +5,7 @@ web_stream_id = ref( '-1')
 
 show_name = interactive.string("show_name", "")
 
-dynamic_metadata_callback = ref (fun (~new_track=false, s) -> begin () end)
+dynamic_metadata_callback = ref (fun (~new_track=false, _) -> begin ignore(new_track) end)
 
 just_switched = ref (false)
 
@@ -28,14 +28,14 @@ def create_source()
     l = fade.in(l)
     l = fade.out(l)
 
-    l = map_metadata(notify_queue,l)
+    l = metadata.map(notify_queue,l)
     l = cross_http(http_input_id="http",l)
     l = http_fallback(http_input_id="http", http=l, default=l)
-    l = map_metadata(id="map_metadata:schedule", update=false, append_title, l)
+    l = metadata.map(id="map_metadata:schedule", update=false, append_title, l)
     sources := list.append([l], !sources)
     server.register(namespace="queues",
                 "s#{this_source_id}_skip",
-                fun (s) -> begin log("queues.s#{this_source_id}_skip")
+                fun (_) -> begin log("queues.s#{this_source_id}_skip")
                     clear_queue(l)
                     "Done"
                 end)
@@ -72,13 +72,13 @@ end
 server.register(namespace="sources",
                 description="Start webstream source",
                 "start_web_stream",
-                fun (s) -> begin log("sources.start_web_stream")
+                fun (_) -> begin log("sources.start_web_stream")
                     notify([("schedule_table_id", !web_stream_id)])
                     web_stream_enabled := true "enabled" end)
 server.register(namespace="sources",
                 description="Stop webstream source",
                 "stop_web_stream",
-                fun (s) -> begin log("sources.stop_web_stream") web_stream_enabled := false "disabled" end)
+                fun (_) -> begin log("sources.stop_web_stream") web_stream_enabled := false "disabled" end)
 
 server.register(namespace="web_stream",
                 description="Set the web stream id",
@@ -88,15 +88,15 @@ server.register(namespace="web_stream",
 server.register(namespace="web_stream",
                 description="Get the web stream id",
                 "get_id",
-                fun (s) -> begin log("web_stream.get_id") web_stream_get_id() end)
+                fun (_) -> begin log("web_stream.get_id") web_stream_get_id() end)
 
 default = amplify(id="silence_src", 0.00001, noise())
 
-def map_message_offline(m) =
+def map_message_offline(_) =
   [("title", message_offline())]
 end
 
-default = map_metadata(id="map_metadata:offline", map_message_offline, default)
+default = metadata.map(id="map_metadata:offline", map_message_offline, default)
 ignore(output.dummy(default, fallible=true))
 
 input_main_streaming = ref (false)
@@ -114,9 +114,9 @@ def update_source_status(sourcename, status) =
     gateway("live '#{sourcename}' '#{status}'")
 end
 
-def input_main_on_connect(header) update_source_status("master_dj", true) end
+def input_main_on_connect(_) update_source_status("master_dj", true) end
 def input_main_on_disconnect() update_source_status("master_dj", false) end
-def input_show_on_connect(header) update_source_status("live_dj", true) end
+def input_show_on_connect(_) update_source_status("live_dj", true) end
 def input_show_on_disconnect() update_source_status("live_dj", false) end
 
 def make_input_auth_handler(input_name)
@@ -190,29 +190,29 @@ server.register(namespace="sources",
     description="Stop main input source.",
     usage="stop_input_main",
     "stop_input_main",
-    fun (s) -> begin log("sources.stop_input_main") stop_input_main() "Done" end)
+    fun (_) -> begin log("sources.stop_input_main") stop_input_main() "Done" end)
 server.register(namespace="sources",
     description="Start main input source.",
     usage="start_input_main",
     "start_input_main",
-    fun (s) -> begin log("sources.start_input_main") start_input_main() "Done" end)
+    fun (_) -> begin log("sources.start_input_main") start_input_main() "Done" end)
 server.register(namespace="sources",
     description="Stop show input source.",
     usage="stop_input_show",
     "stop_input_show",
-    fun (s) -> begin log("sources.stop_input_show") stop_input_show() "Done" end)
+    fun (_) -> begin log("sources.stop_input_show") stop_input_show() "Done" end)
 server.register(namespace="sources",
     description="Start show input source.",
     usage="start_input_show",
     "start_input_show",
-    fun (s) -> begin log("sources.start_input_show") start_input_show() "Done" end)
+    fun (_) -> begin log("sources.start_input_show") start_input_show() "Done" end)
 server.register(namespace="sources",
     description="Stop schedule source.",
     usage="stop_schedule",
     "stop_schedule",
-    fun (s) -> begin log("sources.stop_schedule") stop_schedule() "Done" end)
+    fun (_) -> begin log("sources.stop_schedule") stop_schedule() "Done" end)
 server.register(namespace="sources",
     description="Start schedule source.",
     usage="start_schedule",
     "start_schedule",
-    fun (s) -> begin log("sources.start_schedule") start_schedule() "Done" end)
+    fun (_) -> begin log("sources.start_schedule") start_schedule() "Done" end)

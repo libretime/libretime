@@ -43,7 +43,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return $this->webstream->getDbMtime();
     }
 
-    public function getDefaultLength()
+    public function getDefaultLength(): string
     {
         $dateString = $this->webstream->getDbLength();
         $arr = explode(':', $dateString);
@@ -57,7 +57,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return '';
     }
 
-    public function getLength()
+    public function getLength(): string
     {
         return $this->getDefaultLength();
     }
@@ -72,7 +72,10 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return $this->webstream->getDbUrl();
     }
 
-    public function getMetadata()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getMetadata(): array
     {
         $subjs = CcSubjsQuery::create()->findPK($this->webstream->getDbCreatorId());
 
@@ -87,7 +90,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         ];
     }
 
-    public static function deleteStreams($p_ids, $p_userId)
+    public static function deleteStreams($p_ids, $p_userId): void
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -120,7 +123,12 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return array_diff($p_ids, $ownedStreams);
     }
 
-    public static function analyzeFormData($parameters)
+    /**
+     * @param mixed $parameters
+     *
+     * @return array<int, mixed>
+     */
+    public static function analyzeFormData($parameters): array
     {
         $valid = [
             'length' => [true, ''],
@@ -212,9 +220,9 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return [$valid, $mime, $mediaUrl, $di];
     }
 
-    public static function isValid($analysis)
+    public static function isValid($analysis): bool
     {
-        foreach ($analysis as $k => $v) {
+        foreach ($analysis as $v) {
             if ($v[0] === false) {
                 return false;
             }
@@ -230,12 +238,12 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         throw new Exception('Not implemented.');
     }
 
-    public function setName($name)
+    public function setName($name): void
     {
         $this->webstream->setDbName($name);
     }
 
-    public function setLastPlayed($timestamp)
+    public function setLastPlayed($timestamp): void
     {
         $this->webstream->setDbLPtime($timestamp);
         $this->webstream->save();
@@ -277,7 +285,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         throw new Exception(_('Could not parse XSPF playlist'));
     }
 
-    private static function getPlsUrl($url)
+    private static function getPlsUrl($url): string
     {
         $content = self::getUrlData($url);
 
@@ -298,7 +306,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         throw new Exception(_('Could not parse PLS playlist'));
     }
 
-    private static function getM3uUrl($url)
+    private static function getM3uUrl($url): string
     {
         $content = self::getUrlData($url);
 
@@ -375,7 +383,12 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return array_slice($headers, $position);
     }
 
-    private static function discoverStreamMime($url)
+    /**
+     * @param mixed $url
+     *
+     * @return array<int, null|bool|string>
+     */
+    private static function discoverStreamMime($url): array
     {
         try {
             $headers = @get_headers($url);

@@ -1,0 +1,67 @@
+# serializer version: 1
+# name: test_liq_conn_help[socket-2.1]
+  '''
+  Available commands:
+  | dummy.metadata
+  | dummy.remaining
+  | dummy.skip
+  | exit
+  | help [<command>]
+  | quit
+  | request.alive
+  | request.all
+  | request.metadata <rid>
+  | request.on_air
+  | request.resolving
+  | request.trace <rid>
+  | uptime
+  | var.get
+  | var.list
+  | var.set <name> = <value>
+  | version
+  
+  Type "help <command>" for more information.
+  '''
+# ---
+# name: test_liq_conn_help[telnet-2.1]
+  '''
+  Available commands:
+  | dummy.metadata
+  | dummy.remaining
+  | dummy.skip
+  | exit
+  | help [<command>]
+  | quit
+  | request.alive
+  | request.all
+  | request.metadata <rid>
+  | request.on_air
+  | request.resolving
+  | request.trace <rid>
+  | uptime
+  | var.get
+  | var.list
+  | var.set <name> = <value>
+  | version
+  
+  Type "help <command>" for more information.
+  '''
+# ---
+# name: test_liq_conn_vars[socket-2.1]
+  'default'
+# ---
+# name: test_liq_conn_vars[socket-2.1].1
+  'Variable var1 set.'
+# ---
+# name: test_liq_conn_vars[socket-2.1].2
+  '"changed"'
+# ---
+# name: test_liq_conn_vars[telnet-2.1]
+  'default'
+# ---
+# name: test_liq_conn_vars[telnet-2.1].1
+  'Variable var1 set.'
+# ---
+# name: test_liq_conn_vars[telnet-2.1].2
+  '"changed"'
+# ---

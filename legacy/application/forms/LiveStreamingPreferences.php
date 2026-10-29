@@ -2,7 +2,7 @@
 
 class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         $defaultFade = Application_Model_Preference::GetDefaultTransitionFade();
 
@@ -98,7 +98,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $this->addElement($showSourceMount);
     }
 
-    public function updateVariables()
+    public function updateVariables(): void
     {
         $this->setDecorators(
             [

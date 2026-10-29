@@ -30,14 +30,14 @@
  * @method CcPlayoutHistoryTemplateFieldQuery rightJoinCcPlayoutHistoryTemplate($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPlayoutHistoryTemplate relation
  * @method CcPlayoutHistoryTemplateFieldQuery innerJoinCcPlayoutHistoryTemplate($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPlayoutHistoryTemplate relation
  *
- * @method CcPlayoutHistoryTemplateField findOne(PropelPDO $con = null) Return the first CcPlayoutHistoryTemplateField matching the query
- * @method CcPlayoutHistoryTemplateField findOneOrCreate(PropelPDO $con = null) Return the first CcPlayoutHistoryTemplateField matching the query, or a new CcPlayoutHistoryTemplateField object populated from the query conditions when no match is found
+ * @method CcPlayoutHistoryTemplateField findOne(?PropelPDO $con = null) Return the first CcPlayoutHistoryTemplateField matching the query
+ * @method CcPlayoutHistoryTemplateField findOneOrCreate(?PropelPDO $con = null) Return the first CcPlayoutHistoryTemplateField matching the query, or a new CcPlayoutHistoryTemplateField object populated from the query conditions when no match is found
  *
  * @method CcPlayoutHistoryTemplateField findOneByDbTemplateId(int $template_id) Return the first CcPlayoutHistoryTemplateField filtered by the template_id column
  * @method CcPlayoutHistoryTemplateField findOneByDbName(string $name) Return the first CcPlayoutHistoryTemplateField filtered by the name column
  * @method CcPlayoutHistoryTemplateField findOneByDbLabel(string $label) Return the first CcPlayoutHistoryTemplateField filtered by the label column
  * @method CcPlayoutHistoryTemplateField findOneByDbType(string $type) Return the first CcPlayoutHistoryTemplateField filtered by the type column
- * @method CcPlayoutHistoryTemplateField findOneByDbIsFileMD(boolean $is_file_md) Return the first CcPlayoutHistoryTemplateField filtered by the is_file_md column
+ * @method CcPlayoutHistoryTemplateField findOneByDbIsFileMD(bool $is_file_md) Return the first CcPlayoutHistoryTemplateField filtered by the is_file_md column
  * @method CcPlayoutHistoryTemplateField findOneByDbPosition(int $position) Return the first CcPlayoutHistoryTemplateField filtered by the position column
  *
  * @method array findByDbId(int $id) Return CcPlayoutHistoryTemplateField objects filtered by the id column
@@ -45,11 +45,12 @@
  * @method array findByDbName(string $name) Return CcPlayoutHistoryTemplateField objects filtered by the name column
  * @method array findByDbLabel(string $label) Return CcPlayoutHistoryTemplateField objects filtered by the label column
  * @method array findByDbType(string $type) Return CcPlayoutHistoryTemplateField objects filtered by the type column
- * @method array findByDbIsFileMD(boolean $is_file_md) Return CcPlayoutHistoryTemplateField objects filtered by the is_file_md column
+ * @method array findByDbIsFileMD(bool $is_file_md) Return CcPlayoutHistoryTemplateField objects filtered by the is_file_md column
  * @method array findByDbPosition(int $position) Return CcPlayoutHistoryTemplateField objects filtered by the position column
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcPlayoutHistoryTemplateFieldQuery extends ModelCriteria
 {
     /**

@@ -2,7 +2,10 @@
 
 class Airtime_View_Helper_SourceSwitchStatus extends Zend_View_Helper_Abstract
 {
-    public function SourceSwitchStatus()
+    /**
+     * @return array<string, mixed>
+     */
+    public function SourceSwitchStatus(): array
     {
         return [
             'live_dj' => Application_Model_Preference::GetSourceSwitchStatus('live_dj'),

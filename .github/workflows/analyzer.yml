@@ -29,20 +29,8 @@ jobs:
     with:
       context: analyzer
 
-  test-focal:
+  test-bookworm:
     uses: ./.github/workflows/_python-test.yml
     with:
       context: analyzer
-      release: focal
-
-  test-bullseye:
-    uses: ./.github/workflows/_python-test.yml
-    with:
-      context: analyzer
-      release: bullseye
-
-  test-jammy:
-    uses: ./.github/workflows/_python-test.yml
-    with:
-      context: analyzer
-      release: jammy
+      release: bookworm

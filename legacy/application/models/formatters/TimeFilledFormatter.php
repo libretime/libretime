@@ -13,7 +13,7 @@ class TimeFilledFormatter
         $this->_seconds = $seconds;
     }
 
-    public function format()
+    public function format(): string
     {
         $formatted = '';
         $sign = ($this->_seconds < 0) ? '-' : '+';

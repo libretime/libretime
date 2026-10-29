@@ -207,7 +207,7 @@ abstract class BaseCcBlockcontentsPeer
      * @param      PropelPDO $con
      * @return int Number of matching rows.
      */
-    public static function doCount(Criteria $criteria, $distinct = false, PropelPDO $con = null)
+    public static function doCount(Criteria $criteria, $distinct = false, ?PropelPDO $con = null)
     {
         // we may modify criteria, so copy it first
         $criteria = clone $criteria;
@@ -252,7 +252,7 @@ abstract class BaseCcBlockcontentsPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doSelectOne(Criteria $criteria, PropelPDO $con = null)
+    public static function doSelectOne(Criteria $criteria, ?PropelPDO $con = null)
     {
         $critcopy = clone $criteria;
         $critcopy->setLimit(1);
@@ -272,7 +272,7 @@ abstract class BaseCcBlockcontentsPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doSelect(Criteria $criteria, PropelPDO $con = null)
+    public static function doSelect(Criteria $criteria, ?PropelPDO $con = null)
     {
         return CcBlockcontentsPeer::populateObjects(CcBlockcontentsPeer::doSelectStmt($criteria, $con));
     }
@@ -289,7 +289,7 @@ abstract class BaseCcBlockcontentsPeer
      * @return PDOStatement The executed PDOStatement object.
      * @see        BasePeer::doSelect()
      */
-    public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
+    public static function doSelectStmt(Criteria $criteria, ?PropelPDO $con = null)
     {
         if ($con === null) {
             $con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
@@ -506,7 +506,7 @@ abstract class BaseCcBlockcontentsPeer
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
      * @return int Number of matching rows.
      */
-    public static function doCountJoinCcFiles(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doCountJoinCcFiles(Criteria $criteria, $distinct = false, ?PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         // we're going to modify criteria, so copy it first
         $criteria = clone $criteria;
@@ -557,7 +557,7 @@ abstract class BaseCcBlockcontentsPeer
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
      * @return int Number of matching rows.
      */
-    public static function doCountJoinCcBlock(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doCountJoinCcBlock(Criteria $criteria, $distinct = false, ?PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         // we're going to modify criteria, so copy it first
         $criteria = clone $criteria;
@@ -742,7 +742,7 @@ abstract class BaseCcBlockcontentsPeer
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
      * @return int Number of matching rows.
      */
-    public static function doCountJoinAll(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doCountJoinAll(Criteria $criteria, $distinct = false, ?PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         // we're going to modify criteria, so copy it first
         $criteria = clone $criteria;
@@ -887,7 +887,7 @@ abstract class BaseCcBlockcontentsPeer
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
      * @return int Number of matching rows.
      */
-    public static function doCountJoinAllExceptCcFiles(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doCountJoinAllExceptCcFiles(Criteria $criteria, $distinct = false, ?PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         // we're going to modify criteria, so copy it first
         $criteria = clone $criteria;
@@ -938,7 +938,7 @@ abstract class BaseCcBlockcontentsPeer
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
      * @return int Number of matching rows.
      */
-    public static function doCountJoinAllExceptCcBlock(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doCountJoinAllExceptCcBlock(Criteria $criteria, $distinct = false, ?PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         // we're going to modify criteria, so copy it first
         $criteria = clone $criteria;
@@ -1170,7 +1170,7 @@ abstract class BaseCcBlockcontentsPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doInsert($values, PropelPDO $con = null)
+    public static function doInsert($values, ?PropelPDO $con = null)
     {
         if ($con === null) {
             $con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -1213,7 +1213,7 @@ abstract class BaseCcBlockcontentsPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doUpdate($values, PropelPDO $con = null)
+    public static function doUpdate($values, ?PropelPDO $con = null)
     {
         if ($con === null) {
             $con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -1250,7 +1250,7 @@ abstract class BaseCcBlockcontentsPeer
      * @return int             The number of affected rows (if supported by underlying database driver).
      * @throws PropelException
      */
-    public static function doDeleteAll(PropelPDO $con = null)
+    public static function doDeleteAll(?PropelPDO $con = null)
     {
         if ($con === null) {
             $con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -1286,7 +1286,7 @@ abstract class BaseCcBlockcontentsPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-     public static function doDelete($values, PropelPDO $con = null)
+     public static function doDelete($values, ?PropelPDO $con = null)
      {
         if ($con === null) {
             $con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -1378,7 +1378,7 @@ abstract class BaseCcBlockcontentsPeer
      * @param      PropelPDO $con the connection to use
      * @return CcBlockcontents
      */
-    public static function retrieveByPK($pk, PropelPDO $con = null)
+    public static function retrieveByPK($pk, ?PropelPDO $con = null)
     {
 
         if (null !== ($obj = CcBlockcontentsPeer::getInstanceFromPool((string) $pk))) {
@@ -1406,7 +1406,7 @@ abstract class BaseCcBlockcontentsPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function retrieveByPKs($pks, PropelPDO $con = null)
+    public static function retrieveByPKs($pks, ?PropelPDO $con = null)
     {
         if ($con === null) {
             $con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);

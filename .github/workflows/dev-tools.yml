@@ -15,14 +15,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - distribution: ubuntu
-            release: focal
-          - distribution: debian
-            release: bullseye
-          - distribution: ubuntu
-            release: jammy
           - distribution: debian
             release: bookworm
+          - distribution: ubuntu
+            release: noble
+          - distribution: debian
+            release: trixie
+          - distribution: ubuntu
+            release: resolute
 
     env:
       REGISTRY: ghcr.io
@@ -30,10 +30,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Login to the Container registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -55,13 +55,6 @@ jobs:
           COPY packages.list packages.list
           EOF
 
-          [[ "${{ matrix.release }}" == "focal" ]] && \
-          cat <<EOF >> Dockerfile
-          RUN DEBIAN_FRONTEND=noninteractive apt-get --quiet update && \
-              DEBIAN_FRONTEND=noninteractive apt-get --quiet install -y software-properties-common && \
-              add-apt-repository -y ppa:libretime/libretime
-          EOF
-
           cat <<EOF >> Dockerfile
           RUN DEBIAN_FRONTEND=noninteractive apt-get --quiet update && \
               DEBIAN_FRONTEND=noninteractive apt-get --quiet install -y \
@@ -72,13 +65,16 @@ jobs:
               sudo \
               $(cat packages.list)
 
+          RUN if id -u ubuntu ; then deluser --remove-home ubuntu; fi
+          RUN adduser --disabled-password --gecos '' --uid 1000 user
+          RUN adduser user sudo
           RUN adduser --disabled-password --gecos '' --uid 1001 runner
           RUN adduser runner sudo
           RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
           EOF
 
       - name: Build and push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: ${{ github.repository_owner == 'libretime' }}

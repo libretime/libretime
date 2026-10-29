@@ -9,12 +9,12 @@
  */
 class CcShowDays extends BaseCcShowDays
 {
-    public function isRepeating()
+    public function isRepeating(): bool
     {
         return $this->getDbRepeatType() != -1;
     }
 
-    public function getUTCStartDateAndTime()
+    public function getUTCStartDateAndTime(): DateTime
     {
         $dt = new DateTime(
             "{$this->getDbFirstShow()} {$this->getDbStartTime()}",
@@ -26,7 +26,7 @@ class CcShowDays extends BaseCcShowDays
     }
 
     // Returns the start of a show in the timezone it was created in
-    public function getLocalStartDateAndTime()
+    public function getLocalStartDateAndTime(): DateTime
     {
         return new DateTime(
             "{$this->getDbFirstShow()} {$this->getDbStartTime()}",
@@ -48,12 +48,12 @@ class CcShowDays extends BaseCcShowDays
         return $startDateTime->add(new DateInterval('PT' . $duration[0] . 'H' . $duration[1] . 'M'));
     }
 
-    public function isShowStartInPast()
+    public function isShowStartInPast(): bool
     {
         return $this->getUTCStartDateAndTime()->format('Y-m-d H:i:s') < gmdate('Y-m-d H:i:s');
     }
 
-    public function formatDuration()
+    public function formatDuration(): string
     {
         $info = explode(':', $this->getDbDuration());
 

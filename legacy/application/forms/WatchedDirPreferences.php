@@ -2,7 +2,7 @@
 
 class Application_Form_WatchedDirPreferences extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         $this->setDecorators([
             ['ViewScript', ['viewScript' => 'form/preferences_watched_dirs.phtml']],
@@ -31,7 +31,7 @@ class Application_Form_WatchedDirPreferences extends Zend_Form_SubForm
         ]);
     }
 
-    public function verifyChosenFolder($p_form_element_id)
+    public function verifyChosenFolder($p_form_element_id): bool
     {
         $element = $this->getElement($p_form_element_id);
 

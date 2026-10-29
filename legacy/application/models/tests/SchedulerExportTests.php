@@ -7,7 +7,7 @@
  */
 class SchedulerExportTests extends PHPUnit_TestCase
 {
-    public function setup()
+    public function setup(): void
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
@@ -17,11 +17,11 @@ class SchedulerExportTests extends PHPUnit_TestCase
         $con->exec($sql);
 
         // Add a file
-        $values = ['filepath' => dirname(__FILE__) . '/test10001.mp3'];
+        $values = ['filepath' => __DIR__ . '/test10001.mp3'];
         $this->storedFile = Application_Model_StoredFile::Insert($values, false);
 
         // Add a file
-        $values = ['filepath' => dirname(__FILE__) . '/test10002.mp3'];
+        $values = ['filepath' => __DIR__ . '/test10002.mp3'];
         $this->storedFile2 = Application_Model_StoredFile::Insert($values, false);
 
         // Clear the schedule table
@@ -40,7 +40,7 @@ class SchedulerExportTests extends PHPUnit_TestCase
         $this->groupIdCreated = $i->add('2010-11-11 01:30:23', null, $playlist->getId());
     }
 
-    public function testExport()
+    public function testExport(): void
     {
         echo Application_Model_Schedule::ExportRangeAsJson('2010-01-01 00:00:00', '2011-01-01 00:00:00');
     }

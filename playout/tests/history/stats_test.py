@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 from unittest.mock import Mock, call
 
 import pytest
@@ -35,7 +34,7 @@ def outputs_fixture():
 
 def test_stats_collector_collect_server_stats(
     requests_mock,
-    outputs: List[AnyOutput],
+    outputs: list[AnyOutput],
 ):
     requests_mock.get(
         "http://localhost:8000/admin/stats.xml",
@@ -56,7 +55,7 @@ def test_stats_collector_collect_server_stats(
 
 def test_stats_collector_collect_server_stats_unauthorized(
     requests_mock,
-    outputs: List[AnyOutput],
+    outputs: list[AnyOutput],
 ):
     requests_mock.get(
         "http://localhost:8000/admin/stats.xml",
@@ -72,7 +71,7 @@ def test_stats_collector_collect_server_stats_unauthorized(
 
 def test_stats_collector_collect_server_stats_invalid_xml(
     requests_mock,
-    outputs: List[AnyOutput],
+    outputs: list[AnyOutput],
 ):
     requests_mock.get(
         "http://localhost:8000/admin/stats.xml",
@@ -88,7 +87,7 @@ def test_stats_collector_collect_server_stats_invalid_xml(
 
 def test_stats_collector_collect(
     requests_mock,
-    outputs: List[AnyOutput],
+    outputs: list[AnyOutput],
 ):
     requests_mock.get(
         "http://localhost:8000/admin/stats.xml",

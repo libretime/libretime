@@ -63,7 +63,7 @@ class Application_Service_MediaService
      * @throws Exception
      * @throws LibreTimeFileNotFoundException
      */
-    public static function streamFileDownload($fileId, $inline = false)
+    public static function streamFileDownload($fileId, $inline = false): void
     {
         $media = Application_Model_StoredFile::RecallById($fileId);
         if ($media == null) {
@@ -133,31 +133,25 @@ class Application_Service_MediaService
      * @return bool true if there are any files stuck pending,
      *              otherwise false
      */
-    public static function areFilesStuckInPending()
+    public static function areFilesStuckInPending(): bool
     {
         $oneHourAgo = gmdate(DEFAULT_TIMESTAMP_FORMAT, intval(microtime(true)) - self::PENDING_FILE_TIMEOUT_SECONDS);
         self::$_pendingFiles = CcFilesQuery::create()
             ->filterByDbImportStatus(CcFiles::IMPORT_STATUS_PENDING)
             ->filterByDbUtime($oneHourAgo, Criteria::LESS_EQUAL)
             ->find();
-        $pendingEpisodes = Application_Service_PodcastEpisodeService::getStuckPendingImports();
 
-        return !self::$_pendingFiles->isEmpty() || !empty($pendingEpisodes);
+        return !self::$_pendingFiles->isEmpty();
     }
 
     /**
      * Clean up stuck imports by changing their import status to Failed.
      */
-    public static function clearStuckPendingImports()
+    public static function clearStuckPendingImports(): void
     {
-        $pendingEpisodes = Application_Service_PodcastEpisodeService::getStuckPendingImports();
         foreach (self::$_pendingFiles as $file) {
             // @var $file CcFiles
             $file->setDbImportStatus(CcFiles::IMPORT_STATUS_FAILED)->save();
-        }
-        foreach ($pendingEpisodes as $episode) {
-            // @var $episode PodcastEpisodes
-            $episode->delete();
         }
     }
 }

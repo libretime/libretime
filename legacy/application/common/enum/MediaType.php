@@ -10,7 +10,7 @@ final class MediaType
     public const WEBSTREAM = 4;
     public const PODCAST = 5;
 
-    public static function getDefault()
+    public static function getDefault(): int
     {
         return self::__default;
     }

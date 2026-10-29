@@ -18,7 +18,7 @@ class StationPodcast extends BaseStationPodcast
      * @return bool true if the station podcast contains an episode with
      *              the given file ID, otherwise false
      */
-    public function hasEpisodeForFile($fileId)
+    public function hasEpisodeForFile($fileId): bool
     {
         $episodes = PodcastEpisodesQuery::create()
             ->filterByDbPodcastId($this->getDbPodcastId())

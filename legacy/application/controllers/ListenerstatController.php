@@ -2,7 +2,7 @@
 
 class ListenerstatController extends Zend_Controller_Action
 {
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext
@@ -10,7 +10,7 @@ class ListenerstatController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         $request = $this->getRequest();
 
@@ -52,7 +52,7 @@ class ListenerstatController extends Zend_Controller_Action
         $this->view->date_form = $form;
     }
 
-    public function showAction()
+    public function showAction(): void
     {
         $request = $this->getRequest();
         $headScript = $this->view->headScript();
@@ -91,7 +91,7 @@ class ListenerstatController extends Zend_Controller_Action
         $this->view->date_form = $form;
     }
 
-    public function getDataAction()
+    public function getDataAction(): void
     {
         [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
         $data = Application_Model_ListenerStat::getDataPointsWithinRange(
@@ -101,7 +101,7 @@ class ListenerstatController extends Zend_Controller_Action
         $this->_helper->json->sendJson($data);
     }
 
-    public function getShowDataAction()
+    public function getShowDataAction(): void
     {
         [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
         $show_id = $this->getRequest()->getParam('show_id', null);
@@ -123,7 +123,7 @@ class ListenerstatController extends Zend_Controller_Action
         );
     }
 
-    public function getAllShowDataAction()
+    public function getAllShowDataAction(): void
     {
         [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
         $show_id = $this->getRequest()->getParam('show_id', null);

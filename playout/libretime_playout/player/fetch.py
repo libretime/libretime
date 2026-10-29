@@ -6,7 +6,7 @@ from pathlib import Path
 from queue import Empty, Queue
 from subprocess import DEVNULL, PIPE, run
 from threading import Thread, Timer
-from typing import Any, Dict, Union
+from typing import Any, Dict
 
 from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_api_client.v2 import ApiClient
@@ -65,7 +65,7 @@ class PypoFetch(Thread):
     # Handle a message from RabbitMQ, put it into our yucky global var.
     # Hopefully there is a better way to do this.
 
-    def handle_message(self, message: Dict[str, Any]) -> None:
+    def handle_message(self, message: dict[str, Any]) -> None:
         try:
             command = message["event_type"]
             logger.debug("handling event %s: %s", command, message)
@@ -158,7 +158,7 @@ class PypoFetch(Thread):
 
     def update_liquidsoap_stream_format(
         self,
-        stream_format: Union[MessageFormatKind, int],
+        stream_format: MessageFormatKind | int,
     ) -> None:
         try:
             self.liq_client.settings_update(message_format=stream_format)

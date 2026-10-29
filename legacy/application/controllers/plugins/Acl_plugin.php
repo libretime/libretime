@@ -43,7 +43,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      *
      * @param mixed $aclData
      */
-    public function setAcl(Zend_Acl $aclData)
+    public function setAcl(Zend_Acl $aclData): void
     {
         $this->_acl = $aclData;
     }
@@ -70,7 +70,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         return $this->_roleName;
     }
 
-    public function setRoleName($type)
+    public function setRoleName($type): void
     {
         $this->_roleName = $type;
     }
@@ -82,7 +82,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      * @param string $controller
      * @param string $module
      */
-    public function setErrorPage($action, $controller = 'error', $module = 'default')
+    public function setErrorPage($action, $controller = 'error', $module = 'default'): void
     {
         $this->_errorPage = [
             'module' => $module,
@@ -106,7 +106,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      * Checks if the current user identified by roleName has rights to the requested url (module/controller/action)
      * If not, it will call denyAccess to be redirected to errorPage.
      */
-    public function preDispatch(Zend_Controller_Request_Abstract $request)
+    public function preDispatch(Zend_Controller_Request_Abstract $request): void
     {
         $controller = strtolower($request->getControllerName());
 
@@ -217,7 +217,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         }
     }
 
-    private function verifyAuth()
+    private function verifyAuth(): bool
     {
         if ($this->verifyAPIKey() || $this->isVerifiedDownload()) {
             return true;
@@ -236,10 +236,8 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      *  * request path is /rest/media/:id/download
      *  * download key is correct
      *  * requested file belongs to the station podcast.
-     *
-     * @return bool
      */
-    private function isVerifiedDownload()
+    private function isVerifiedDownload(): bool
     {
         $request = $this->getRequest();
         $fileId = $request->getParam('id');
@@ -260,7 +258,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         return SecurityHelper::verifyCSRFToken($token);
     }
 
-    private function verifyAPIKey()
+    private function verifyAPIKey(): bool
     {
         // The API key is passed in via HTTP "basic authentication":
         // https://en.wikipedia.org/wiki/Basic_access_authentication
@@ -278,7 +276,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      * Deny Access Function
      * Redirects to errorPage, this can be called from an action using the action helper.
      */
-    public function denyAccess()
+    public function denyAccess(): void
     {
         $this->_request->setModuleName($this->_errorPage['module']);
         $this->_request->setControllerName($this->_errorPage['controller']);

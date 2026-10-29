@@ -16,35 +16,35 @@ class Application_Model_Show
         return $show->getDbName();
     }
 
-    public function setName($name)
+    public function setName($name): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbName($name);
         Application_Model_RabbitMq::PushSchedule();
     }
 
-    public function setAirtimeAuthFlag($flag)
+    public function setAirtimeAuthFlag($flag): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbLiveStreamUsingAirtimeAuth($flag);
         $show->save();
     }
 
-    public function setCustomAuthFlag($flag)
+    public function setCustomAuthFlag($flag): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbLiveStreamUsingCustomAuth($flag);
         $show->save();
     }
 
-    public function setCustomUsername($username)
+    public function setCustomUsername($username): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbLiveStreamUser($username);
         $show->save();
     }
 
-    public function setCustomPassword($password)
+    public function setCustomPassword($password): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbLiveStreamPass($password);
@@ -58,7 +58,7 @@ class Application_Model_Show
         return $show->getDbDescription();
     }
 
-    public function setDescription($description)
+    public function setDescription($description): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbDescription($description);
@@ -71,7 +71,7 @@ class Application_Model_Show
         return $show->getDbColor();
     }
 
-    public function setColor($color)
+    public function setColor($color): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbColor($color);
@@ -88,7 +88,7 @@ class Application_Model_Show
         can safely remove it and probably many other superfluous methods.
         --RG*/
 
-    public function setUrl($p_url)
+    public function setUrl($p_url): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbUrl($p_url);
@@ -101,7 +101,7 @@ class Application_Model_Show
         return $show->getDbGenre();
     }
 
-    public function setGenre($p_genre)
+    public function setGenre($p_genre): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbGenre($p_genre);
@@ -119,7 +119,7 @@ class Application_Model_Show
         return $color;
     }
 
-    public function setBackgroundColor($backgroundColor)
+    public function setBackgroundColor($backgroundColor): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbBackgroundColor($backgroundColor);
@@ -144,13 +144,13 @@ class Application_Model_Show
         return $show->getDbAutoPlaylistRepeat();
     }
 
-    public function setAutoPlaylistRepeat($value)
+    public function setAutoPlaylistRepeat($value): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbAutoPlaylistRepeat($value);
     }
 
-    public function setHasAutoPlaylist($value)
+    public function setHasAutoPlaylist($value): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbHasAutoPlaylist($value);
@@ -163,7 +163,7 @@ class Application_Model_Show
         return $show->getDbAutoPlaylistId();
     }
 
-    public function setAutoPlaylistId($playlistid)
+    public function setAutoPlaylistId($playlistid): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
         $show->setDbAutoPlaylistId($playlistid);
@@ -187,7 +187,7 @@ class Application_Model_Show
         return 0;
     }
 
-    public function setIntroPlaylistId($playlistid)
+    public function setIntroPlaylistId($playlistid): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
 
@@ -213,7 +213,7 @@ class Application_Model_Show
         return 0;
     }
 
-    public function setOutroPlaylistId($playlistid)
+    public function setOutroPlaylistId($playlistid): void
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
 
@@ -221,7 +221,10 @@ class Application_Model_Show
         $show->setDbOutroPlaylistId($playlistid);
     }
 
-    public function getHosts()
+    /**
+     * @return string[]
+     */
+    public function getHosts(): array
     {
         $sql = <<<'SQL'
 SELECT first_name,
@@ -263,7 +266,7 @@ SQL;
     /**
      * remove everything about this show.
      */
-    public function delete()
+    public function delete(): void
     {
         // usually we hide the show-instance, but in this case we are deleting the show template
         // so delete all show-instances as well.
@@ -464,7 +467,7 @@ SQL;
         Application_Model_RabbitMq::PushSchedule();
     }
 
-    public function cancelShow($day_timestamp)
+    public function cancelShow($day_timestamp): void
     {
         $timeinfo = explode(' ', $day_timestamp);
 
@@ -502,7 +505,7 @@ SQL;
      * @return bool
      *              true if originated from recording, otherwise false
      */
-    public function isRecorded()
+    public function isRecorded(): bool
     {
         $showInstancesRow = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->getId())
@@ -520,7 +523,7 @@ SQL;
      * @return bool
      *              true if show has rebroadcasts, otherwise false
      */
-    public function isRebroadcast()
+    public function isRebroadcast(): bool
     {
         $showInstancesRow = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->_showId)
@@ -563,7 +566,7 @@ SQL;
      * @return bool
      *              true if repeating shows, otherwise false
      */
-    public function isRepeating()
+    public function isRepeating(): bool
     {
         $showDaysRow = CcShowDaysQuery::create()
             ->filterByDbShowId($this->_showId)
@@ -634,7 +637,7 @@ SQL;
      * it cause any scheduled playlists within those show instances to
      * be gone for good.
      */
-    public function deleteAllInstances()
+    public function deleteAllInstances(): void
     {
         $sql = <<<'SQL'
 DELETE
@@ -656,7 +659,7 @@ SQL;
      * Deletes all future rebroadcast instances of the current
      * show object from the show_instances table.
      */
-    public function deleteAllRebroadcasts()
+    public function deleteAllRebroadcasts(): void
     {
         $sql = <<<'SQL'
 DELETE
@@ -682,7 +685,7 @@ SQL;
      *                The start date in the format YYYY-MM-DD or empty string in case
      *                start date could not be found
      */
-    public function getStartDateAndTime()
+    public function getStartDateAndTime(): string
     {
         $con = Propel::getConnection();
 
@@ -716,7 +719,7 @@ SQL;
      * @return string
      *                The start date in the format YYYY-MM-DD
      */
-    public function getStartDate()
+    public function getStartDate(): string
     {
         [$date] = explode(' ', $this->getStartDateAndTime());
 
@@ -729,7 +732,7 @@ SQL;
      * @return string
      *                The start time in the format HH:MM
      */
-    public function getStartTime()
+    public function getStartTime(): string
     {
         [, $time] = explode(' ', $this->getStartDateAndTime());
 
@@ -743,7 +746,7 @@ SQL;
      * @return string
      *                The end date in the format YYYY-MM-DD
      */
-    public function getEndDate()
+    public function getEndDate(): string
     {
         $startDate = $this->getStartDate();
         $startTime = $this->getStartTime();
@@ -763,7 +766,7 @@ SQL;
      * @return string
      *                The start time in the format HH:MM:SS
      */
-    public function getEndTime()
+    public function getEndTime(): string
     {
         $startDate = $this->getStartDate();
         $startTime = $this->getStartTime();
@@ -784,7 +787,7 @@ SQL;
      * @return bool
      *              true if the StartDate is in the past, false otherwise
      */
-    public function isStartDateTimeInPast()
+    public function isStartDateTimeInPast(): bool
     {
         return gmdate(DEFAULT_TIMESTAMP_FORMAT) > ($this->getStartDate() . ' ' . $this->getStartTime());
     }
@@ -796,7 +799,7 @@ SQL;
      *               A simple array containing all ID's of show instance
      *               scheduled in the future
      */
-    public function getAllFutureInstanceIds()
+    public function getAllFutureInstanceIds(): array
     {
         $sql = <<<'SQL'
 SELECT id
@@ -829,7 +832,7 @@ SQL;
      *      browser.
      *
      */
-    private function updateDurationTime($p_data)
+    private function updateDurationTime($p_data): void
     {
         // need to update cc_show_instances, cc_show_days
         $con = Propel::getConnection();
@@ -868,7 +871,10 @@ SQL;
         return str_pad(intval($info[0]), 2, '0', STR_PAD_LEFT) . 'h ' . str_pad(intval($info[1]), 2, '0', STR_PAD_LEFT) . 'm';
     }
 
-    public function getShowDays()
+    /**
+     * @return mixed[]
+     */
+    public function getShowDays(): array
     {
         $showDays = CcShowDaysQuery::create()->filterByDbShowId(
             $this->getId()
@@ -884,7 +890,7 @@ SQL;
     /* Only used for shows that aren't repeating.
      *
      * @return Boolean: true if show has an instance, otherwise false. */
-    public function hasInstance()
+    public function hasInstance(): bool
     {
         return !is_null($this->getInstance());
     }
@@ -902,8 +908,10 @@ SQL;
 
     /**
      *  returns info about live stream override info.
+     *
+     * @return mixed[]
      */
-    public function getLiveStreamInfo()
+    public function getLiveStreamInfo(): array
     {
         $info = [];
         if ($this->getId() == null) {
@@ -929,7 +937,7 @@ SQL;
      *
      * @return Boolean: true if show has an instance on $p_dateTime,
      *      otherwise false. */
-    public function hasInstanceOnDate($p_dateTime)
+    public function hasInstanceOnDate($p_dateTime): bool
     {
         return !is_null($this->getInstanceOnDate($p_dateTime));
     }
@@ -981,7 +989,7 @@ SQL;
      *
      * @param mixed $needScheduleUntil
      */
-    public static function createAndFillShowInstancesPastPopulatedUntilDate($needScheduleUntil)
+    public static function createAndFillShowInstancesPastPopulatedUntilDate($needScheduleUntil): void
     {
         $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
 
@@ -1091,7 +1099,7 @@ SQL;
         return Application_Common_Database::prepareAndExecute($sql, $params, 'all');
     }
 
-    private static function setNextPop($next_date, $show_id, $day)
+    private static function setNextPop($next_date, $show_id, $day): void
     {
         $nextInfo = explode(' ', $next_date);
 
@@ -1109,7 +1117,7 @@ SQL;
      * @param mixed $p_end
      * @param mixed $p_editable
      */
-    public static function &getFullCalendarEvents($p_start, $p_end, $p_editable = false)
+    public static function &getFullCalendarEvents($p_start, $p_end, $p_editable = false): array
     {
         $events = [];
         $interval = $p_start->diff($p_end);
@@ -1230,7 +1238,7 @@ SQL;
     }
 
     /** Get a palettized colour for the show. */
-    private static function getDefaultBackgroundColor($date)
+    private static function getDefaultBackgroundColor($date): string
     {
         $basePalette = ['A22BE8', '2FFF8D', 'FF743C', '2ED4FF', 'E8D82B'];
         // 'B23F11', 'FF7E4A', 'FF6C31'
@@ -1653,7 +1661,10 @@ SQL;
         return Application_Common_Database::prepareAndExecute($sql, $params, 'all');
     }
 
-    public static function getMaxLengths()
+    /**
+     * @return mixed[]
+     */
+    public static function getMaxLengths(): array
     {
         $sql = <<<'SQL'
 SELECT column_name, character_maximum_length FROM information_schema.columns
@@ -1668,7 +1679,10 @@ SQL;
         return $assocArray;
     }
 
-    public static function getStartEndCurrentMonthView()
+    /**
+     * @return DateTime[]
+     */
+    public static function getStartEndCurrentMonthView(): array
     {
         $utcTimeZone = new DateTimeZone('UTC');
 
@@ -1687,8 +1701,10 @@ SQL;
      *
      *  FullCalendar displays 6 weeks, starting on a Sunday, for a total of 42 days. This function returns 42 days worth
      *  of data (a few days before, and a few days after.)
+     *
+     * @return DateTime[]
      */
-    public static function getStartEndCurrentMonthPlusView()
+    public static function getStartEndCurrentMonthPlusView(): array
     {
         $utcTimeZone = new DateTimeZone('UTC');
 
@@ -1706,7 +1722,10 @@ SQL;
         return [$start, $end];
     }
 
-    public static function getStartEndCurrentWeekView()
+    /**
+     * @return DateTime[]
+     */
+    public static function getStartEndCurrentWeekView(): array
     {
         $weekStartDayNum = Application_Model_Preference::GetWeekStartDay();
         $utcTimeZone = new DateTimeZone('UTC');
@@ -1723,7 +1742,10 @@ SQL;
         return [$start, $end];
     }
 
-    public static function getStartEndCurrentDayView()
+    /**
+     * @return DateTime[]
+     */
+    public static function getStartEndCurrentDayView(): array
     {
         $utcTimeZone = new DateTimeZone('UTC');
 

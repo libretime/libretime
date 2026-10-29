@@ -4,7 +4,7 @@ require_once 'customfilters/ImageSize.php';
 
 class Application_Form_AddShowStyle extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         // Add show background-color input
         $this->addElement('text', 'add_show_background_color', [
@@ -102,7 +102,7 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         $this->addElement($csrf_element);
     }
 
-    public function disable()
+    public function disable(): void
     {
         $elements = $this->getElements();
         foreach ($elements as $element) {
@@ -116,7 +116,7 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         }
     }
 
-    public function hideShowLogo()
+    public function hideShowLogo(): void
     {
         $this->removeElement('add_show_logo');
         $this->removeElement('add_show_logo_preview');

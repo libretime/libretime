@@ -423,11 +423,13 @@ class Config
         $version = LIBRETIME_MAJOR_VERSION;
 
         foreach ([ROOT_PATH, dirname(ROOT_PATH)] as $path) {
-            $content = @file_get_contents($path . '/VERSION');
-            if ($content) {
-                $version = trim($content);
+            if (file_exists($path . '/VERSION')) {
+                $content = @file_get_contents($path . '/VERSION');
+                if ($content) {
+                    $version = trim($content);
 
-                break;
+                    break;
+                }
             }
         }
 

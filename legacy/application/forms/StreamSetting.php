@@ -6,12 +6,12 @@ class Application_Form_StreamSetting extends Zend_Form
 
     public function init() {}
 
-    public function setSetting($setting)
+    public function setSetting($setting): void
     {
         $this->setting = $setting;
     }
 
-    public function startFrom()
+    public function startFrom(): void
     {
         $this->setDecorators([
             ['ViewScript', ['viewScript' => 'preference/stream-setting.phtml']],

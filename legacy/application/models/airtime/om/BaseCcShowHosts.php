@@ -266,7 +266,7 @@ abstract class BaseCcShowHosts extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -308,7 +308,7 @@ abstract class BaseCcShowHosts extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -351,7 +351,7 @@ abstract class BaseCcShowHosts extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -916,7 +916,7 @@ abstract class BaseCcShowHosts extends BaseObject implements Persistent
      * @return CcShowHosts The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcShow(CcShow $v = null)
+    public function setCcShow(?CcShow $v = null)
     {
         if ($v === null) {
             $this->setDbShow(NULL);
@@ -945,7 +945,7 @@ abstract class BaseCcShowHosts extends BaseObject implements Persistent
      * @return CcShow The associated CcShow object.
      * @throws PropelException
      */
-    public function getCcShow(PropelPDO $con = null, $doQuery = true)
+    public function getCcShow(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcShow === null && ($this->show_id !== null) && $doQuery) {
             $this->aCcShow = CcShowQuery::create()->findPk($this->show_id, $con);
@@ -968,7 +968,7 @@ abstract class BaseCcShowHosts extends BaseObject implements Persistent
      * @return CcShowHosts The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcSubjs(CcSubjs $v = null)
+    public function setCcSubjs(?CcSubjs $v = null)
     {
         if ($v === null) {
             $this->setDbHost(NULL);
@@ -997,7 +997,7 @@ abstract class BaseCcShowHosts extends BaseObject implements Persistent
      * @return CcSubjs The associated CcSubjs object.
      * @throws PropelException
      */
-    public function getCcSubjs(PropelPDO $con = null, $doQuery = true)
+    public function getCcSubjs(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcSubjs === null && ($this->subjs_id !== null) && $doQuery) {
             $this->aCcSubjs = CcSubjsQuery::create()->findPk($this->subjs_id, $con);

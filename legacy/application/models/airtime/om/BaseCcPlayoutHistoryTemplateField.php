@@ -62,7 +62,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
     /**
      * The value for the is_file_md field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $is_file_md;
 
@@ -176,7 +176,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
     /**
      * Get the [is_file_md] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbIsFileMD()
     {
@@ -320,7 +320,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -395,7 +395,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
             $this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->label = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->type = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->is_file_md = ($row[$startcol + 5] !== null) ? (boolean) $row[$startcol + 5] : null;
+            $this->is_file_md = ($row[$startcol + 5] !== null) ? (bool) $row[$startcol + 5] : null;
             $this->position = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
             $this->resetModified();
 
@@ -444,7 +444,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -485,7 +485,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -528,7 +528,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1141,7 +1141,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
      * @return CcPlayoutHistoryTemplateField The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcPlayoutHistoryTemplate(CcPlayoutHistoryTemplate $v = null)
+    public function setCcPlayoutHistoryTemplate(?CcPlayoutHistoryTemplate $v = null)
     {
         if ($v === null) {
             $this->setDbTemplateId(NULL);
@@ -1170,7 +1170,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
      * @return CcPlayoutHistoryTemplate The associated CcPlayoutHistoryTemplate object.
      * @throws PropelException
      */
-    public function getCcPlayoutHistoryTemplate(PropelPDO $con = null, $doQuery = true)
+    public function getCcPlayoutHistoryTemplate(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aCcPlayoutHistoryTemplate === null && ($this->template_id !== null) && $doQuery) {
             $this->aCcPlayoutHistoryTemplate = CcPlayoutHistoryTemplateQuery::create()->findPk($this->template_id, $con);

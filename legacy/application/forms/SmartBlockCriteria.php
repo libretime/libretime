@@ -69,7 +69,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     public function init() {}
 
     // converts UTC timestamp citeria into user timezone strings.
-    private function convertTimestamps(&$criteria)
+    private function convertTimestamps(&$criteria): void
     {
         $columns = ['utime', 'mtime', 'lptime'];
 
@@ -99,7 +99,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
      *
      */
 
-    public function startForm($p_blockId, $p_isValid = false)
+    public function startForm($p_blockId, $p_isValid = false): void
     {
         // load type
         $out = CcBlockQuery::create()->findPk($p_blockId);
@@ -432,12 +432,17 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     }
 
     // This is a simple function that determines if a modValue should enable a datetime
-    public function enableDateTimeUnit($modValue)
+    public function enableDateTimeUnit($modValue): bool
     {
         return preg_match('/before|after|between/', $modValue) == 1;
     }
 
-    public function preValidation($params)
+    /**
+     * @param mixed $params
+     *
+     * @return mixed[]
+     */
+    public function preValidation($params): array
     {
         $data = Application_Model_Block::organizeSmartPlaylistCriteria($params['data']);
         // add elements that needs to be added
@@ -595,7 +600,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         if ($data['etc']['sp_limit_options'] == 'hours') {
             $multiplier = 60;
         }
-        if ($data['etc']['sp_limit_options'] == 'hours' || $data['etc']['sp_limit_options'] == 'mins') {
+        if ($data['etc']['sp_limit_options'] == 'hours' || $data['etc']['sp_limit_options'] == 'minutes') {
             $element = $this->getElement('sp_limit_value');
             if ($data['etc']['sp_limit_value'] == '' || floatval($data['etc']['sp_limit_value']) <= 0) {
                 $element->addError(_('Limit cannot be empty or smaller than 0'));

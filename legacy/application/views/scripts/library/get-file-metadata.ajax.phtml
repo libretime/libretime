@@ -1,6 +1,6 @@
 <?php
 //XSS exploit prevention
-foreach ($this->md as $key => &$value) {
+foreach ($this->md as &$value) {
     $value = $this->escape($value);
 }
 ?>

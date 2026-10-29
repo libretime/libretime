@@ -45,7 +45,7 @@
                     <select id="select_type" class="form-control" <?php echo $hasTracktypes; ?>>
                         <?php
                         echo "<option value=''>Select Track Type</option>";
-                        foreach ($tracktypes as $key => $tt) {
+                        foreach ($tracktypes as $tt) {
                             $selected = "";
                             if ($ttsaved == $tt['id']) {
                                 $selected = "selected";
@@ -63,7 +63,7 @@
         <?php
         if ($showTracktypesDropdown) {
             $ttTitle = "";
-            foreach ($tracktypes as $key => $tt) {
+            foreach ($tracktypes as $tt) {
                 if ($ttsaved == $tt['id']) {
                     $ttTitle = $tt['type_name'];
                 }

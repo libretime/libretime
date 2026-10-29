@@ -2,7 +2,7 @@
 
 class FeedsController extends Zend_Controller_Action
 {
-    public function stationRssAction()
+    public function stationRssAction(): void
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);

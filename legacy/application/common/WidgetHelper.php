@@ -159,7 +159,7 @@ class WidgetHelper
      *
      * @param unknown $arr the array to search
      */
-    public static function findAndConvertPaths(&$arr)
+    public static function findAndConvertPaths(&$arr): void
     {
         foreach ($arr as &$a) {
             if (is_array($a)) {

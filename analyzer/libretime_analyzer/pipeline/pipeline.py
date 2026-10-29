@@ -1,7 +1,7 @@
 import logging
 from enum import Enum
 from queue import Queue
-from typing import Any, Dict, Protocol
+from typing import Any, Protocol
 
 from pydantic import BaseModel
 
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class Step(Protocol):
     @staticmethod
-    def __call__(filename: str, metadata: Dict[str, Any]): ...
+    def __call__(filename: str, metadata: dict[str, Any]): ...
 
 
 class PipelineStatus(int, Enum):

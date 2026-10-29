@@ -17,7 +17,7 @@ class Application_Model_ServiceRegister
         return $ip;
     }
 
-    public static function Register($p_componentName, $p_ipAddress)
+    public static function Register($p_componentName, $p_ipAddress): void
     {
         $component = CcServiceRegisterQuery::create()->findOneByDbName($p_componentName);
 

@@ -4,7 +4,6 @@ import time
 from datetime import datetime
 from queue import Queue
 from threading import Thread
-from typing import List, Tuple
 
 from ..config import PUSH_INTERVAL, Config
 from .events import AnyEvent, Events, FileEvent
@@ -63,10 +62,10 @@ class PypoPush(Thread):
                 loops = 0
             loops += 1
 
-    def separate_present_future(self, events: Events) -> Tuple[List[AnyEvent], Events]:
+    def separate_present_future(self, events: Events) -> tuple[list[AnyEvent], Events]:
         now = datetime.utcnow()
 
-        present: List[AnyEvent] = []
+        present: list[AnyEvent] = []
         future: Events = {}
 
         for key in sorted(events.keys()):

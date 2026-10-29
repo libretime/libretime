@@ -4,7 +4,13 @@ class Application_Model_ListenerStat
 {
     public function __construct() {}
 
-    public static function getDataPointsWithinRange($p_start, $p_end)
+    /**
+     * @param mixed $p_start
+     * @param mixed $p_end
+     *
+     * @return non-empty-list[]
+     */
+    public static function getDataPointsWithinRange($p_start, $p_end): array
     {
         $sql = <<<'SQL'
 SELECT mount_name, count(*)
@@ -59,7 +65,7 @@ SQL;
     }
 
     // this will currently log the average number of listeners to a specific show during a certain range
-    public static function getShowDataPointsWithinRange($p_start, $p_end, $show_id)
+    public static function getShowDataPointsWithinRange($p_start, $p_end, $show_id): array
     {
         $showData = [];
         $ccShow = CcShowQuery::create()->findPk($show_id);
@@ -106,7 +112,13 @@ SQL;
         return $showData;
     }
 
-    public static function getAllShowDataPointsWithinRange($p_start, $p_end)
+    /**
+     * @param mixed $p_start
+     * @param mixed $p_end
+     *
+     * @return mixed[]
+     */
+    public static function getAllShowDataPointsWithinRange($p_start, $p_end): array
     {
         // this query selects the id of all show instances that aired in this date range
         $all_show_data = [];
@@ -132,7 +144,7 @@ SQL;
         return $all_show_data;
     }
 
-    public static function insertDataPoints($p_dataPoints)
+    public static function insertDataPoints($p_dataPoints): void
     {
         $timestamp_sql = 'INSERT INTO cc_timestamp (timestamp) VALUES
             (:ts::TIMESTAMP) RETURNING id;';

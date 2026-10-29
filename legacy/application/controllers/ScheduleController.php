@@ -4,7 +4,7 @@ class ScheduleController extends Zend_Controller_Action
 {
     protected $sched_sess;
 
-    public function init()
+    public function init(): void
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('event-feed', 'json')
@@ -40,7 +40,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->sched_sess = new Zend_Session_Namespace('schedule');
     }
 
-    public function indexAction()
+    public function indexAction(): void
     {
         // Embed the schedule in our page response so we don't have to make an AJAX request to get this data after the page load.
         $scheduleController = new ScheduleController($this->getRequest(), $this->getResponse());
@@ -114,7 +114,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->addNewShow = true;
     }
 
-    public function eventFeedAction()
+    public function eventFeedAction(): void
     {
         $service_user = new Application_Service_UserService();
         $currentUser = $service_user->getCurrentUser();
@@ -135,7 +135,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->events = $events;
     }
 
-    public function eventFeedPreloadAction()
+    public function eventFeedPreloadAction(): void
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -156,7 +156,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->events = $events;
     }
 
-    public function getCurrentShowAction()
+    public function getCurrentShowAction(): void
     {
         $currentShow = Application_Model_Show::getCurrentShow();
         if (!empty($currentShow)) {
@@ -179,7 +179,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['params']['instance id'] = $this->_getParam('showInstanceId');
         $log_vars['params']['delta day'] = $deltaDay;
         $log_vars['params']['delta minute'] = $deltaMin;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         try {
             $service_calendar = new Application_Service_CalendarService(
@@ -211,7 +211,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['params']['instance id'] = $instanceId;
         $log_vars['params']['delta day'] = $deltaDay;
         $log_vars['params']['delta minute'] = $deltaMin;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -232,7 +232,7 @@ class ScheduleController extends Zend_Controller_Action
         }
     }
 
-    public function deleteShowInstanceAction()
+    public function deleteShowInstanceAction(): void
     {
         $instanceId = $this->_getParam('id');
 
@@ -241,7 +241,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/delete-show-instance';
         $log_vars['params'] = [];
         $log_vars['params']['instance id'] = $instanceId;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $service_show = new Application_Service_ShowService();
         $showId = $service_show->deleteShow($instanceId, true);
@@ -252,7 +252,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->show_id = $showId;
     }
 
-    public function makeContextMenuAction()
+    public function makeContextMenuAction(): void
     {
         $instanceId = $this->_getParam('instanceId');
 
@@ -270,7 +270,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/clear-show';
         $log_vars['params'] = [];
         $log_vars['params']['instance id'] = $instanceId;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $service_scheduler = new Application_Service_SchedulerService();
 
@@ -284,7 +284,7 @@ class ScheduleController extends Zend_Controller_Action
     /** This is a nasty hack to let us embed the the data the dashboard needs into the HTML response for each page.
      *  This was originally loaded AFTER page load by AJAX, which is needlessly slow. This should have been templated in.
      */
-    public static function printCurrentPlaylistForEmbedding()
+    public static function printCurrentPlaylistForEmbedding(): void
     {
         $front = Zend_Controller_Front::getInstance();
         $scheduleController = new ScheduleController($front->getRequest(), $front->getResponse());
@@ -292,7 +292,7 @@ class ScheduleController extends Zend_Controller_Action
         echo json_encode($scheduleController->view);
     }
 
-    public function getCurrentPlaylistAction()
+    public function getCurrentPlaylistAction(): void
     {
         $range = Application_Model_Schedule::GetPlayOrderRangeOld();
 
@@ -401,7 +401,7 @@ class ScheduleController extends Zend_Controller_Action
         unset($this->view->showContent);
     }
 
-    public function populateRepeatingShowInstanceFormAction()
+    public function populateRepeatingShowInstanceFormAction(): void
     {
         $showId = $this->_getParam('showId');
         $instanceId = $this->_getParam('instanceId');
@@ -416,7 +416,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
     }
 
-    public function populateShowFormAction()
+    public function populateShowFormAction(): void
     {
         $service_user = new Application_Service_UserService();
         $currentUser = $service_user->getCurrentUser();
@@ -442,7 +442,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->entries = 5;
     }
 
-    public function getFormAction()
+    public function getFormAction(): void
     {
         $service_user = new Application_Service_UserService();
         $currentUser = $service_user->getCurrentUser();
@@ -454,7 +454,7 @@ class ScheduleController extends Zend_Controller_Action
         }
     }
 
-    public function editRepeatingShowInstanceAction()
+    public function editRepeatingShowInstanceAction(): void
     {
         $js = $this->_getParam('data');
         $data = [];
@@ -471,7 +471,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/edit-repeating-show-instance';
         $log_vars['params'] = [];
         $log_vars['params']['form_data'] = $data;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $service_showForm = new Application_Service_ShowFormService(
             $data['add_show_id'],
@@ -509,7 +509,7 @@ class ScheduleController extends Zend_Controller_Action
         }
     }
 
-    public function editShowAction()
+    public function editShowAction(): void
     {
         $js = $this->_getParam('data');
         $data = [];
@@ -537,7 +537,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/edit-show';
         $log_vars['params'] = [];
         $log_vars['params']['form_data'] = $data;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $forms = $this->createShowFormAction();
 
@@ -571,7 +571,7 @@ class ScheduleController extends Zend_Controller_Action
         }
     }
 
-    public function addShowAction()
+    public function addShowAction(): void
     {
         $service_showForm = new Application_Service_ShowFormService(null);
 
@@ -598,7 +598,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/add-show';
         $log_vars['params'] = [];
         $log_vars['params']['form_data'] = $data;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $forms = $this->createShowFormAction();
 
@@ -630,7 +630,12 @@ class ScheduleController extends Zend_Controller_Action
         }
     }
 
-    public function createShowFormAction($populateDefaults = false)
+    /**
+     * @param mixed $populateDefaults
+     *
+     * @return mixed[]
+     */
+    public function createShowFormAction($populateDefaults = false): array
     {
         $service_showForm = new Application_Service_ShowFormService();
 
@@ -659,7 +664,7 @@ class ScheduleController extends Zend_Controller_Action
         return $forms;
     }
 
-    public function deleteShowAction()
+    public function deleteShowAction(): void
     {
         $instanceId = $this->_getParam('id');
 
@@ -668,7 +673,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars['action'] = 'schedule/delete-show';
         $log_vars['params'] = [];
         $log_vars['params']['instance id'] = $instanceId;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $service_show = new Application_Service_ShowService();
         $showId = $service_show->deleteShow($instanceId);
@@ -679,14 +684,14 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->show_id = $showId;
     }
 
-    public function cancelCurrentShowAction()
+    public function cancelCurrentShowAction(): void
     {
         $log_vars = [];
         $log_vars['url'] = $_SERVER['HTTP_HOST'];
         $log_vars['action'] = 'schedule/cancel-current-show';
         $log_vars['params'] = [];
         $log_vars['params']['instance id'] = $this->_getParam('id');
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         $user = Application_Model_User::getCurrentUser();
 
@@ -702,12 +707,12 @@ class ScheduleController extends Zend_Controller_Action
                 Application_Model_RabbitMq::SendMessageToPypo('disconnect_source', $data);
             } catch (Exception $e) {
                 $this->view->error = $e->getMessage();
-                Logging::info($e->getMessage());
+                Logging::error($e->getMessage());
             }
         }
     }
 
-    public function contentContextMenuAction()
+    public function contentContextMenuAction(): void
     {
         $id = $this->_getParam('id');
 
@@ -737,7 +742,7 @@ class ScheduleController extends Zend_Controller_Action
      * Sets the user specific preference for which time scale to use in Calendar.
      * This is only being used by schedule.js at the moment.
      */
-    public function setTimeScaleAction()
+    public function setTimeScaleAction(): void
     {
         Application_Model_Preference::SetCalendarTimeScale($this->_getParam('timeScale'));
     }
@@ -746,12 +751,12 @@ class ScheduleController extends Zend_Controller_Action
      * Sets the user specific preference for which time interval to use in Calendar.
      * This is only being used by schedule.js at the moment.
      */
-    public function setTimeIntervalAction()
+    public function setTimeIntervalAction(): void
     {
         Application_Model_Preference::SetCalendarTimeInterval($this->_getParam('timeInterval'));
     }
 
-    public function calculateDurationAction()
+    public function calculateDurationAction(): void
     {
         $start = $this->_getParam('startTime');
         $end = $this->_getParam('endTime');
@@ -765,7 +770,7 @@ class ScheduleController extends Zend_Controller_Action
         exit;
     }
 
-    public function updateFutureIsScheduledAction()
+    public function updateFutureIsScheduledAction(): void
     {
         $schedId = $this->_getParam('schedId');
 
@@ -775,7 +780,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->_helper->json->sendJson(['redrawLibTable' => $redrawLibTable]);
     }
 
-    public function localizeStartEndTimeAction()
+    public function localizeStartEndTimeAction(): void
     {
         $newTimezone = $this->_getParam('newTimezone');
         $oldTimezone = $this->_getParam('oldTimezone');

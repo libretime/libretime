@@ -54,7 +54,7 @@ class Podcast extends BasePodcast
      * @throws Exception
      * @throws PropelException
      */
-    public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
+    public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME): void
     {
         parent::fromArray($arr, $keyType);
 

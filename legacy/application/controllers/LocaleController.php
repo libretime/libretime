@@ -2,7 +2,7 @@
 
 final class LocaleController extends Zend_Controller_Action
 {
-    public function datatablesTranslationTableAction()
+    public function datatablesTranslationTableAction(): void
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -13,14 +13,14 @@ final class LocaleController extends Zend_Controller_Action
             . file_get_contents(
                 Application_Common_OsPath::join(
                     // $_SERVER["DOCUMENT_ROOT"],
-                    dirname(__FILE__) . '/../../public/', // Fixing this... -- Albert
+                    __DIR__ . '/../../public/', // Fixing this... -- Albert
                     'js/datatables/i18n/',
                     $locale . '.txt'
                 )
             );
     }
 
-    public function generalTranslationTableAction()
+    public function generalTranslationTableAction(): void
     {
         $translations = [
             // common/common.js

@@ -38,7 +38,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     /**
      * The value for the auto_ingest field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $auto_ingest;
 
@@ -51,7 +51,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     /**
      * The value for the album_override field.
      * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        bool
      */
     protected $album_override;
 
@@ -122,7 +122,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     /**
      * Get the [auto_ingest] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbAutoIngest()
     {
@@ -175,7 +175,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     /**
      * Get the [album_override] column value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDbAlbumOverride()
     {
@@ -231,7 +231,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -283,7 +283,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
             if (is_string($v)) {
                 $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
             } else {
-                $v = (boolean) $v;
+                $v = (bool) $v;
             }
         }
 
@@ -362,9 +362,9 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->auto_ingest = ($row[$startcol + 1] !== null) ? (boolean) $row[$startcol + 1] : null;
+            $this->auto_ingest = ($row[$startcol + 1] !== null) ? (bool) $row[$startcol + 1] : null;
             $this->auto_ingest_timestamp = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->album_override = ($row[$startcol + 3] !== null) ? (boolean) $row[$startcol + 3] : null;
+            $this->album_override = ($row[$startcol + 3] !== null) ? (bool) $row[$startcol + 3] : null;
             $this->podcast_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
             $this->resetModified();
 
@@ -413,7 +413,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
      * @return void
      * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, PropelPDO $con = null)
+    public function reload($deep = false, ?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -454,7 +454,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
      * @see        BaseObject::setDeleted()
      * @see        BaseObject::isDeleted()
      */
-    public function delete(PropelPDO $con = null)
+    public function delete(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -497,7 +497,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
      * @throws Exception
      * @see        doSave()
      */
-    public function save(PropelPDO $con = null)
+    public function save(?PropelPDO $con = null)
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -1078,7 +1078,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
      * @return ImportedPodcast The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setPodcast(Podcast $v = null)
+    public function setPodcast(?Podcast $v = null)
     {
         if ($v === null) {
             $this->setDbPodcastId(NULL);
@@ -1107,7 +1107,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
      * @return Podcast The associated Podcast object.
      * @throws PropelException
      */
-    public function getPodcast(PropelPDO $con = null, $doQuery = true)
+    public function getPodcast(?PropelPDO $con = null, $doQuery = true)
     {
         if ($this->aPodcast === null && ($this->podcast_id !== null) && $doQuery) {
             $this->aPodcast = PodcastQuery::create()->findPk($this->podcast_id, $con);

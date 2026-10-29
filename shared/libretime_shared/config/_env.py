@@ -2,14 +2,14 @@ from collections import ChainMap
 from functools import reduce
 from operator import getitem
 from os import environ
-from typing import Any, Dict, List, Optional, TypeVar
+from typing import Any, TypeVar
 
 __all__ = [
     "EnvLoader",
 ]
 
 
-def filter_env(env: Dict[str, str], prefix: str) -> Dict[str, str]:
+def filter_env(env: dict[str, str], prefix: str) -> dict[str, str]:
     """
     Filter a environment variables dict by key prefix.
 
@@ -23,7 +23,7 @@ def filter_env(env: Dict[str, str], prefix: str) -> Dict[str, str]:
     return {k: v for k, v in env.items() if k.startswith(prefix)}
 
 
-def guess_env_array_indexes(env: Dict[str, str], prefix: str) -> List[int]:
+def guess_env_array_indexes(env: dict[str, str], prefix: str) -> list[int]:
     """
     Guess environment variables indexes from the environment variables keys.
 
@@ -51,7 +51,7 @@ def guess_env_array_indexes(env: Dict[str, str], prefix: str) -> List[int]:
 T = TypeVar("T")
 
 
-def index_dict_to_none_list(base: Dict[int, T]) -> List[Optional[T]]:
+def index_dict_to_none_list(base: dict[int, T]) -> list[T | None]:
     """
     Convert a dict to a list by associating the dict keys to the list
     indexes and filling the missing indexes with None.
@@ -65,7 +65,7 @@ def index_dict_to_none_list(base: Dict[int, T]) -> List[Optional[T]]:
     if not base:
         return []
 
-    result: List[Optional[T]] = [None] * (max(base.keys()) + 1)
+    result: list[T | None] = [None] * (max(base.keys()) + 1)
 
     for index, value in base.items():
         result[index] = value
@@ -80,12 +80,12 @@ class EnvLoader:
     env_prefix: str
     env_delimiter: str
 
-    _env: Dict[str, str]
+    _env: dict[str, str]
 
     def __init__(
         self,
         schema: dict,
-        env_prefix: Optional[str] = None,
+        env_prefix: str | None = None,
         env_delimiter: str = "_",
     ) -> None:
         self.schema = schema
@@ -96,7 +96,7 @@ class EnvLoader:
         if self.env_prefix:
             self._env = filter_env(self._env, self.env_prefix)
 
-    def load(self) -> Dict[str, Any]:
+    def load(self) -> dict[str, Any]:
         if not self._env:
             return {}
 
@@ -105,15 +105,15 @@ class EnvLoader:
     def _resolve_ref(
         self,
         path: str,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         _, *parts = path.split("/")
         return reduce(getitem, parts, self.schema)
 
     def _get_mapping(
         self,
         env_name: str,
-        *schemas: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        *schemas: dict[str, Any],
+    ) -> dict[str, Any]:
         """
         Get a mapping of each subtypes with the data.
 
@@ -125,7 +125,7 @@ class EnvLoader:
         Returns:
             Mapping of each subtypes, with associated data as value.
         """
-        mapping: Dict[str, Any] = {}
+        mapping: dict[str, Any] = {}
 
         for schema in schemas:
             if "$ref" in schema:
@@ -144,7 +144,7 @@ class EnvLoader:
     def _get(
         self,
         env_name: str,
-        schema: Dict[str, Any],
+        schema: dict[str, Any],
     ) -> Any:
         """
         Get a value from the environment.
@@ -211,8 +211,8 @@ class EnvLoader:
     def _get_object(
         self,
         env_name: str,
-        schema: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        schema: dict[str, Any],
+    ) -> dict[str, Any]:
         """
         Get an object from the environment.
 
@@ -223,7 +223,7 @@ class EnvLoader:
         Returns:
             Value retrieved from the environment.
         """
-        result: Dict[str, Any] = {}
+        result: dict[str, Any] = {}
 
         if env_name != "":
             env_name += self.env_delimiter
@@ -241,8 +241,8 @@ class EnvLoader:
     def _get_array(
         self,
         env_parent: str,
-        schema: Dict[str, Any],
-    ) -> Optional[List[Any]]:
+        schema: dict[str, Any],
+    ) -> list[Any] | None:
         """
         Get an array from the environment.
 
@@ -253,7 +253,7 @@ class EnvLoader:
         Returns:
             Value retrieved from the environment.
         """
-        result: Dict[int, Any] = {}
+        result: dict[int, Any] = {}
 
         schema_items = schema["items"]
         if "$ref" in schema_items:

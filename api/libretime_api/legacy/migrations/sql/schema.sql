@@ -581,42 +581,6 @@ CREATE TABLE "cc_playout_history_template_field"
 );
 
 -----------------------------------------------------------------------
--- third_party_track_references
------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS "third_party_track_references" CASCADE;
-
-CREATE TABLE "third_party_track_references"
-(
-    "id" serial NOT NULL,
-    "service" VARCHAR(256) NOT NULL,
-    "foreign_id" VARCHAR(256),
-    "file_id" INTEGER DEFAULT 0,
-    "upload_time" TIMESTAMP,
-    "status" VARCHAR(256),
-    PRIMARY KEY ("id"),
-    CONSTRAINT "foreign_id_unique" UNIQUE ("foreign_id")
-);
-
------------------------------------------------------------------------
--- celery_tasks
------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS "celery_tasks" CASCADE;
-
-CREATE TABLE "celery_tasks"
-(
-    "id" serial NOT NULL,
-    "task_id" VARCHAR(256) NOT NULL,
-    "track_reference" INTEGER NOT NULL,
-    "name" VARCHAR(256),
-    "dispatch_time" TIMESTAMP,
-    "status" VARCHAR(256) NOT NULL,
-    PRIMARY KEY ("id"),
-    CONSTRAINT "id_unique" UNIQUE ("id")
-);
-
------------------------------------------------------------------------
 -- podcast
 -----------------------------------------------------------------------
 
@@ -687,6 +651,7 @@ CREATE TABLE "podcast_episodes"
     "episode_guid" VARCHAR(4096) NOT NULL,
     "episode_title" VARCHAR(4096) NOT NULL,
     "episode_description" TEXT NOT NULL,
+    "created_at" TIMESTAMP DEFAULT (now() AT TIME ZONE 'UTC') NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -865,16 +830,6 @@ ALTER TABLE "cc_playout_history_metadata" ADD CONSTRAINT "cc_playout_history_met
 ALTER TABLE "cc_playout_history_template_field" ADD CONSTRAINT "cc_playout_history_template_template_fkey"
     FOREIGN KEY ("template_id")
     REFERENCES "cc_playout_history_template" ("id")
-    ON DELETE CASCADE;
-
-ALTER TABLE "third_party_track_references" ADD CONSTRAINT "track_reference_fkey"
-    FOREIGN KEY ("file_id")
-    REFERENCES "cc_files" ("id")
-    ON DELETE CASCADE;
-
-ALTER TABLE "celery_tasks" ADD CONSTRAINT "celery_service_fkey"
-    FOREIGN KEY ("track_reference")
-    REFERENCES "third_party_track_references" ("id")
     ON DELETE CASCADE;
 
 ALTER TABLE "podcast" ADD CONSTRAINT "podcast_owner_fkey"

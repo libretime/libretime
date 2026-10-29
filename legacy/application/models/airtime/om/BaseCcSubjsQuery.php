@@ -70,8 +70,8 @@
  * @method CcSubjsQuery rightJoinPodcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Podcast relation
  * @method CcSubjsQuery innerJoinPodcast($relationAlias = null) Adds a INNER JOIN clause to the query using the Podcast relation
  *
- * @method CcSubjs findOne(PropelPDO $con = null) Return the first CcSubjs matching the query
- * @method CcSubjs findOneOrCreate(PropelPDO $con = null) Return the first CcSubjs matching the query, or a new CcSubjs object populated from the query conditions when no match is found
+ * @method CcSubjs findOne(?PropelPDO $con = null) Return the first CcSubjs matching the query
+ * @method CcSubjs findOneOrCreate(?PropelPDO $con = null) Return the first CcSubjs matching the query, or a new CcSubjs object populated from the query conditions when no match is found
  *
  * @method CcSubjs findOneByDbLogin(string $login) Return the first CcSubjs filtered by the login column
  * @method CcSubjs findOneByDbPass(string $pass) Return the first CcSubjs filtered by the pass column
@@ -102,6 +102,7 @@
  *
  * @package    propel.generator.airtime.om
  */
+#[\AllowDynamicProperties]
 abstract class BaseCcSubjsQuery extends ModelCriteria
 {
     /**

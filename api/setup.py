@@ -19,38 +19,43 @@ setup(
         "libretime_api": ["legacy/migrations/sql/*.sql"],
     },
     include_package_data=True,
-    python_requires=">=3.8",
+    python_requires=">=3.11",
     entry_points={
         "console_scripts": [
             "libretime-api=libretime_api.manage:main",
+            "libretime-worker=libretime_worker.main:cli",
         ]
     },
     install_requires=[
-        "django-cors-headers>=3.14.0,<4.5",
-        "django-filter>=2.4.0,<24.4",
-        "django>=4.2.0,<4.3",
-        "djangorestframework>=3.14.0,<3.16",
-        "drf-spectacular>=0.22.1,<0.29",
-        "requests>=2.32.2,<2.33",
+        "django-celery-results>=2.4.0,<2.7",
+        "django-cors-headers>=3.14.0,<4.10",
+        "django-filter>=2.4.0,<26.2",
+        "django>=5.2.0,<6",
+        "djangorestframework>=3.17.2,<3.19",
+        "drf-spectacular>=0.22.1,<0.31",
+        # Worker
+        "celery>=5.5.0,<5.7",
+        "mutagen>=1.45.1,<1.49",
+        "requests>=2.32.2,<2.35",
     ],
     extras_require={
         "prod": [
-            "gunicorn>=22.0.0,<23.1",
-            "psycopg[c]>=3.1.8,<3.3",
-            "uvicorn[standard]>=0.17.6,<0.36.0",
+            "gunicorn>=22.0.0,<26.3",
+            "psycopg[c]>=3.1.8,<3.4",
+            "uvicorn[standard]>=0.17.6,<0.55.0",
         ],
         "dev": [
             "django-coverage-plugin>=3.0.0,<4",
             "django-stubs>=5.1.0,<6",
             "djangorestframework-stubs>=1.8.0,<4",
             "model_bakery>=1.10.1,<2",
-            "psycopg[binary]>=3.1.8,<3.3",
+            "psycopg[binary]>=3.1.8,<3.4",
             "pylint-django>=2.5.3,<3",
             "pytest-django>=4.5.2,<5",
             "requests-mock>=1.10.0,<2",
         ],
         "sentry": [
-            "sentry-sdk[django]>=1.15.0,<2",
+            "sentry-sdk[django]>=1.15.0,<3",
         ],
     },
 )

@@ -2,7 +2,7 @@
 
 class Application_Form_AddShowWho extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         // Add hosts autocomplete
         $this->addElement('text', 'add_show_hosts_autocomplete', [
@@ -26,7 +26,7 @@ class Application_Form_AddShowWho extends Zend_Form_SubForm
         $this->addElement($hosts);
     }
 
-    public function disable()
+    public function disable(): void
     {
         $elements = $this->getElements();
         foreach ($elements as $element) {

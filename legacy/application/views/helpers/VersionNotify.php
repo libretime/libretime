@@ -31,7 +31,7 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract
      * it against the versions available from github using the semver code from
      * the composer project.
      */
-    public function versionNotify()
+    public function versionNotify(): string
     {
         $config = Config::getConfig();
 

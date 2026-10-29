@@ -23,7 +23,7 @@ class Application_Service_CalendarService
     /**
      * Enter description here ...
      */
-    public function makeContextMenu()
+    public function makeContextMenu(): array
     {
         $menu = [];
         $now = time();
@@ -233,7 +233,7 @@ class Application_Service_CalendarService
      * @param int      $deltaDay delta days show moved
      * @param int      $deltaMin delta minutes show moved
      */
-    public static function addDeltas($dateTime, $deltaDay, $deltaMin)
+    public static function addDeltas($dateTime, $deltaDay, $deltaMin): DateTime
     {
         $newDateTime = clone $dateTime;
 
@@ -258,7 +258,13 @@ class Application_Service_CalendarService
         return $newDateTime;
     }
 
-    private function validateShowMove($deltaDay, $deltaMin)
+    /**
+     * @param mixed $deltaDay
+     * @param mixed $deltaMin
+     *
+     * @return array<int, mixed>
+     */
+    private function validateShowMove($deltaDay, $deltaMin): array
     {
         if (!$this->currentUser->isAdminOrPM()) {
             throw new Exception(_('Permission denied'));

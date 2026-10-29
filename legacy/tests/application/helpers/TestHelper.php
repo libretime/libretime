@@ -2,7 +2,7 @@
 
 class TestHelper
 {
-    public static function loginUser()
+    public static function loginUser(): void
     {
         $authAdapter = Application_Model_Auth::getAuthAdapter();
 
@@ -22,7 +22,7 @@ class TestHelper
         }
     }
 
-    public static function getDbZendConfig()
+    public static function getDbZendConfig(): Zend_Config
     {
         $config = Config::getConfig();
 
@@ -37,7 +37,7 @@ class TestHelper
         );
     }
 
-    public static function installTestDatabase()
+    public static function installTestDatabase(): void
     {
         // We need to load the config before our app bootstrap runs. The config
         // is normally
@@ -53,7 +53,7 @@ class TestHelper
         AirtimeInstall::CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost, $dbport);
     }
 
-    public static function setupZendBootstrap()
+    public static function setupZendBootstrap(): Zend_Application
     {
         $application = new Zend_Application(APPLICATION_ENV, CONFIG_PATH . '/application.ini');
         $application->bootstrap();

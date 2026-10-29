@@ -36,9 +36,9 @@
             if (count($ids) > 0) {
                 $id = $ids[0];
                 $streamData = Application_Model_StreamSetting::getStreamData($id);
-                $url = $streamData["${id}_public_url"];
-                $type = $streamData["${id}_type"];
-                $serverType = $streamData["${id}_output"];
+                $url = $streamData["{$id}_public_url"];
+                $type = $streamData["{$id}_type"];
+                $serverType = $streamData["{$id}_output"];
                 if ($type == "ogg" || $type == "opus")
                     $type = "oga";
                 if ($type == "aac")
@@ -70,15 +70,15 @@
                 <?php
                 foreach ($ids as $id) {
                     $streamData = Application_Model_StreamSetting::getStreamData($id);
-                    $url = $streamData["${id}_public_url"];
-                    $type = $streamData["${id}_type"];
-                    $serverType = $streamData["${id}_output"];
+                    $url = $streamData["{$id}_public_url"];
+                    $type = $streamData["{$id}_type"];
+                    $serverType = $streamData["{$id}_output"];
                     if ($type == "ogg" || $type == "opus")
                         $type = "oga";
                     if ($type == "aac")
                         $type = "m4a";
 
-                    $label = "(" . $streamData["${id}_host"] . ") " . $streamData["${id}_description"] . " - " . $streamData["${id}_bitrate"] . " kbit/s";
+                    $label = "(" . $streamData["{$id}_host"] . ") " . $streamData["{$id}_description"] . " - " . $streamData["{$id}_bitrate"] . " kbit/s";
                     echo sprintf("<option class='stream' value='%s' data-url='%s' data-type='%s' server-type='%s'>%s</option>", $id, $url, $type, $serverType, $label);
                 }
                 ?>

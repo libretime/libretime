@@ -2,7 +2,7 @@
 
 class Application_Form_AddShowWhen extends Zend_Form_SubForm
 {
-    public function init()
+    public function init(): void
     {
         $this->setDecorators([
             ['ViewScript', ['viewScript' => 'form/add-show-when.phtml']],
@@ -402,7 +402,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         return $overlapping;
     }
 
-    public function disable()
+    public function disable(): void
     {
         $elements = $this->getElements();
         foreach ($elements as $element) {
@@ -412,7 +412,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         }
     }
 
-    public function disableRepeatCheckbox()
+    public function disableRepeatCheckbox(): void
     {
         $element = $this->getElement('add_show_repeats');
         if ($element->getType() != 'Zend_Form_Element_Hidden') {
@@ -420,7 +420,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         }
     }
 
-    public function disableStartDateAndTime()
+    public function disableStartDateAndTime(): void
     {
         $elements = [$this->getElement('add_show_start_date'), $this->getElement('add_show_start_time')];
         foreach ($elements as $element) {

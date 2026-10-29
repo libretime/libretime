@@ -1,4 +1,4 @@
-.PHONY: setup
+.PHONY: setup dev-shell
 
 SHELL = bash
 
@@ -48,7 +48,6 @@ tarball: VERSION
 		libretime/playout \
 		libretime/shared \
 		libretime/tools \
-		libretime/worker \
 		libretime/CHANGELOG.md \
 		libretime/install \
 		libretime/LICENSE \

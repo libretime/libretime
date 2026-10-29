@@ -2,7 +2,10 @@
 
 class FileDataHelper
 {
-    public static function getAudioMimeTypeArray()
+    /**
+     * @return array<string, string>
+     */
+    public static function getAudioMimeTypeArray(): array
     {
         return [
             'audio/ogg' => 'ogg',
@@ -27,7 +30,10 @@ class FileDataHelper
         ];
     }
 
-    public static function getUploadAudioMimeTypeArray()
+    /**
+     * @return mixed[]
+     */
+    public static function getUploadAudioMimeTypeArray(): array
     {
         $mimes = self::getAudioMimeTypeArray();
         unset($mimes['audio/x-ms-wma']);
@@ -45,7 +51,7 @@ class FileDataHelper
      *
      * @param array $data array containing new file metadata
      */
-    public static function sanitizeData(&$data)
+    public static function sanitizeData(&$data): void
     {
         if (array_key_exists('track_number', $data)) {
             // If the track number isn't numeric, this will return 0
@@ -75,7 +81,7 @@ class FileDataHelper
      *
      * @throws Exception
      */
-    public static function getFileExtensionFromMime($mime)
+    public static function getFileExtensionFromMime($mime): string
     {
         $mime = trim(strtolower($mime));
 
@@ -129,7 +135,7 @@ class FileDataHelper
      *
      * @return string Path to artwork
      */
-    public static function saveArtworkData($analyzeFile, $filename, $importDir = null, $DbPath = null)
+    public static function saveArtworkData($analyzeFile, $filename, $importDir = null, $DbPath = null): string
     {
         if (class_exists('getID3')) {
             $getID3 = new getID3();
@@ -188,7 +194,7 @@ class FileDataHelper
      *
      * @return string $get_img Path to artwork
      */
-    public static function resetArtwork($trackid)
+    public static function resetArtwork($trackid): string
     {
         $file = Application_Model_StoredFile::RecallById($trackid);
         $md = $file->getMetadata();
@@ -251,7 +257,7 @@ class FileDataHelper
      *
      * @return string Path to artwork
      */
-    public static function setArtwork($trackid, $data)
+    public static function setArtwork($trackid, $data): string
     {
         $file = Application_Model_StoredFile::RecallById($trackid);
         $md = $file->getMetadata();
@@ -302,7 +308,7 @@ class FileDataHelper
      *
      * @param mixed $trackid
      */
-    public static function removeArtwork($trackid)
+    public static function removeArtwork($trackid): string
     {
         $file = Application_Model_StoredFile::RecallById($trackid);
         $md = $file->getMetadata();
@@ -345,7 +351,7 @@ class FileDataHelper
      * @param string $file
      * @param string $ext
      */
-    public static function resizeGroup($file, $ext)
+    public static function resizeGroup($file, $ext): void
     {
         if (file_exists($file)) {
             self::resizeImage($file, $file . '-32.jpg', $ext, 32, 100);
@@ -368,7 +374,7 @@ class FileDataHelper
      *
      * @param string $file
      */
-    public static function renderImage($file)
+    public static function renderImage($file): void
     {
         if ($file && file_exists($file)) {
             $im = @imagecreatefromjpeg($file);
@@ -388,7 +394,7 @@ class FileDataHelper
      *
      * @param string $dataFile
      */
-    public static function renderDataURI($dataFile)
+    public static function renderDataURI($dataFile): void
     {
         if ($filecontent = file_get_contents($dataFile) !== false) {
             $image = @file_get_contents($dataFile);
@@ -416,7 +422,7 @@ class FileDataHelper
      * @param string $size               Default: 500
      * @param string $quality            Default: 75
      */
-    public static function resizeImage($orig_filename, $converted_filename, $ext, $size = 500, $quality = 75)
+    public static function resizeImage($orig_filename, $converted_filename, $ext, $size = 500, $quality = 75): void
     {
         $get_cont = file_get_contents($orig_filename);
         if ($ext == 'png') {
@@ -452,7 +458,7 @@ class FileDataHelper
      * @param string $orig_filename
      * @param string $conv_filename
      */
-    public static function imgToDataURI($orig_filename, $conv_filename)
+    public static function imgToDataURI($orig_filename, $conv_filename): void
     {
         $file = file_get_contents($orig_filename);
         $Image = 'data:image/jpeg;charset=utf-8;base64,' . base64_encode($file);

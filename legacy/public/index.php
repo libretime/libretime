@@ -11,7 +11,7 @@ $configRun = false;
 $extensions = get_loaded_extensions();
 $airtimeSetup = false;
 
-function showConfigCheckPage()
+function showConfigCheckPage(): void
 {
     global $configRun;
     if (!$configRun) {
@@ -25,7 +25,7 @@ function showConfigCheckPage()
     exit;
 }
 
-function isApiCall()
+function isApiCall(): bool
 {
     $path = $_SERVER['PHP_SELF'];
 

@@ -207,7 +207,7 @@ abstract class BaseCcWebstreamPeer
      * @param      PropelPDO $con
      * @return int Number of matching rows.
      */
-    public static function doCount(Criteria $criteria, $distinct = false, PropelPDO $con = null)
+    public static function doCount(Criteria $criteria, $distinct = false, ?PropelPDO $con = null)
     {
         // we may modify criteria, so copy it first
         $criteria = clone $criteria;
@@ -252,7 +252,7 @@ abstract class BaseCcWebstreamPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doSelectOne(Criteria $criteria, PropelPDO $con = null)
+    public static function doSelectOne(Criteria $criteria, ?PropelPDO $con = null)
     {
         $critcopy = clone $criteria;
         $critcopy->setLimit(1);
@@ -272,7 +272,7 @@ abstract class BaseCcWebstreamPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doSelect(Criteria $criteria, PropelPDO $con = null)
+    public static function doSelect(Criteria $criteria, ?PropelPDO $con = null)
     {
         return CcWebstreamPeer::populateObjects(CcWebstreamPeer::doSelectStmt($criteria, $con));
     }
@@ -289,7 +289,7 @@ abstract class BaseCcWebstreamPeer
      * @return PDOStatement The executed PDOStatement object.
      * @see        BasePeer::doSelect()
      */
-    public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
+    public static function doSelectStmt(Criteria $criteria, ?PropelPDO $con = null)
     {
         if ($con === null) {
             $con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_READ);
@@ -542,7 +542,7 @@ abstract class BaseCcWebstreamPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doInsert($values, PropelPDO $con = null)
+    public static function doInsert($values, ?PropelPDO $con = null)
     {
         if ($con === null) {
             $con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -585,7 +585,7 @@ abstract class BaseCcWebstreamPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doUpdate($values, PropelPDO $con = null)
+    public static function doUpdate($values, ?PropelPDO $con = null)
     {
         if ($con === null) {
             $con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -622,7 +622,7 @@ abstract class BaseCcWebstreamPeer
      * @return int             The number of affected rows (if supported by underlying database driver).
      * @throws PropelException
      */
-    public static function doDeleteAll(PropelPDO $con = null)
+    public static function doDeleteAll(?PropelPDO $con = null)
     {
         if ($con === null) {
             $con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -658,7 +658,7 @@ abstract class BaseCcWebstreamPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-     public static function doDelete($values, PropelPDO $con = null)
+     public static function doDelete($values, ?PropelPDO $con = null)
      {
         if ($con === null) {
             $con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -750,7 +750,7 @@ abstract class BaseCcWebstreamPeer
      * @param      PropelPDO $con the connection to use
      * @return CcWebstream
      */
-    public static function retrieveByPK($pk, PropelPDO $con = null)
+    public static function retrieveByPK($pk, ?PropelPDO $con = null)
     {
 
         if (null !== ($obj = CcWebstreamPeer::getInstanceFromPool((string) $pk))) {
@@ -778,7 +778,7 @@ abstract class BaseCcWebstreamPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function retrieveByPKs($pks, PropelPDO $con = null)
+    public static function retrieveByPKs($pks, ?PropelPDO $con = null)
     {
         if ($con === null) {
             $con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_READ);

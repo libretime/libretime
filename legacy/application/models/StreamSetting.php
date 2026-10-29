@@ -4,12 +4,12 @@ define('MAX_NUM_STREAMS', 4);
 
 class Application_Model_StreamConfig
 {
-    private static function toOutputKey($id)
+    private static function toOutputKey($id): string
     {
         return 's' . $id;
     }
 
-    private static function toOutputId($key)
+    private static function toOutputId($key): int
     {
         return intval(trim($key, 's'));
     }
@@ -83,7 +83,10 @@ class Application_Model_StreamConfig
         return $result;
     }
 
-    public static function getOutputEnabledKeys()
+    /**
+     * @return mixed[]
+     */
+    public static function getOutputEnabledKeys(): array
     {
         $keys = [];
 
@@ -99,7 +102,7 @@ class Application_Model_StreamConfig
 
 class Application_Model_StreamSetting
 {
-    public static function getEnabledStreamData()
+    public static function getEnabledStreamData(): array
     {
         $streams = [];
         $streamIds = self::getEnabledStreamIds();
@@ -138,7 +141,10 @@ class Application_Model_StreamSetting
         return Application_Model_StreamConfig::getOutput($p_streamId, false);
     }
 
-    public static function getStreamSetting()
+    /**
+     * @return mixed[]
+     */
+    public static function getStreamSetting(): array
     {
         $settings = [];
         $numStreams = MAX_NUM_STREAMS;
@@ -157,7 +163,7 @@ class Application_Model_StreamSetting
         return $settings;
     }
 
-    public static function getStreamEnabled($stream_id)
+    public static function getStreamEnabled($stream_id): bool
     {
         return in_array('s' . $stream_id, self::getEnabledStreamIds());
     }
@@ -166,7 +172,10 @@ class Application_Model_StreamSetting
      * Only returns info that is needed for data collection
      * returns array('s1'=>array(keyname=>value))
      */
-    public static function getStreamInfoForDataCollection()
+    /**
+     * @return mixed[][]
+     */
+    public static function getStreamInfoForDataCollection(): array
     {
         $result = [];
         $stream_ids = self::getEnabledStreamIds();
