@@ -61,13 +61,26 @@ class BlockLptimeDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      */
     private static function extractIds(array $files): array
     {
-        $ids = [];
-        foreach ($files as $file) {
-            $ids[] = (int) $file['id'];
-        }
+        $ids = array_map('intval', array_column($files, 'id'));
         sort($ids);
 
         return $ids;
+    }
+
+    private static function scheduleFile104(int $playoutStatus): void
+    {
+        $sched = new CcSchedule();
+        $sched->setDbStarts('2024-01-10 11:30:00')
+            ->setDbEnds('2024-01-10 11:31:00')
+            ->setDbFileId(104)
+            ->setDbCueIn('00:00:00')
+            ->setDbCueOut('00:01:00')
+            ->setDbClipLength('00:01:00')
+            ->setDbInstanceId(1)
+            ->setDbPlayoutStatus($playoutStatus)
+            ->setDbBroadcasted(0)
+            ->setDbPosition(0)
+            ->save();
     }
 
     /**
@@ -144,18 +157,7 @@ class BlockLptimeDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     {
         TestHelper::loginUser();
 
-        $sched = new CcSchedule();
-        $sched->setDbStarts('2024-01-10 11:30:00')
-            ->setDbEnds('2024-01-10 11:31:00')
-            ->setDbFileId(104)
-            ->setDbCueIn('00:00:00')
-            ->setDbCueOut('00:01:00')
-            ->setDbClipLength('00:01:00')
-            ->setDbInstanceId(1)
-            ->setDbPlayoutStatus(1)
-            ->setDbBroadcasted(0)
-            ->setDbPosition(0)
-            ->save();
+        self::scheduleFile104(1);
 
         $block = $this->buildBlock(BlockModelData::getCriteriaLptimeBefore1Hour());
         $files = $block->getListOfFilesUnderLimit(null, self::slotStart());
@@ -171,18 +173,7 @@ class BlockLptimeDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     {
         TestHelper::loginUser();
 
-        $sched = new CcSchedule();
-        $sched->setDbStarts('2024-01-10 11:30:00')
-            ->setDbEnds('2024-01-10 11:31:00')
-            ->setDbFileId(104)
-            ->setDbCueIn('00:00:00')
-            ->setDbCueOut('00:01:00')
-            ->setDbClipLength('00:01:00')
-            ->setDbInstanceId(1)
-            ->setDbPlayoutStatus(-1)
-            ->setDbBroadcasted(0)
-            ->setDbPosition(0)
-            ->save();
+        self::scheduleFile104(-1);
 
         $block = $this->buildBlock(BlockModelData::getCriteriaLptimeBefore1Hour());
         $files = $block->getListOfFilesUnderLimit(null, self::slotStart());

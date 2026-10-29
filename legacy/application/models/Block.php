@@ -1505,21 +1505,15 @@ SQL;
      */
     private static function parseRelativeOrAbsoluteDate($value, ?DateTime $base): DateTime
     {
-        $trimmed = is_string($value) ? trim($value) : $value;
-
-        $isRelative = is_string($trimmed) && (
-            preg_match('/\bago\b\s*$/i', $trimmed)
-            || preg_match('/^[+\-]/', $trimmed)
-        );
-
-        if ($isRelative && $base instanceof DateTime) {
+        $value = trim((string) $value);
+        if ($base && preg_match('/\bago\s*$|^[+-]/i', $value)) {
             $dt = clone $base;
-            $dt->modify($trimmed);
+            $dt->modify($value);
 
             return $dt;
         }
 
-        return new DateTime($trimmed);
+        return new DateTime($value);
     }
 
     private function resolveDate($value, ?DateTime $resolveTo, string $timeZone)
@@ -1636,11 +1630,8 @@ SQL;
                         $dt = $relativedate->format(DateTime::ISO8601);
                         $spCriteriaValue = "COALESCE({$spCriteria}, DATE '-infinity') <= '{$dt}'";
 
-                        if ($spCriteria === 'lptime') {
-                            if ($lptimeEarliestThreshold === null
-                                || $relativedate < $lptimeEarliestThreshold) {
-                                $lptimeEarliestThreshold = $relativedate;
-                            }
+                        if ($spCriteria === 'lptime' && ($lptimeEarliestThreshold === null || $relativedate < $lptimeEarliestThreshold)) {
+                            $lptimeEarliestThreshold = $relativedate;
                         }
                     } elseif ($spCriteriaModifier == CriteriaModifier::AFTER) {
                         $relativedate = self::parseRelativeOrAbsoluteDate($spCriteriaValue, $showStartTime);
@@ -1702,10 +1693,9 @@ SQL;
         // Duplicate-prevention is gated on an active lptime BEFORE criterion.
         // In-pass picks and queued cc_schedule rows are filtered by the same
         // [threshold, slot) window as the lptime SQL predicate.
-        $hasLptimeCriterion = isset($storedCrit['crit']['lptime']);
         $lptimeScopedExcludes = [];
 
-        if ($hasLptimeCriterion && $lptimeEarliestThreshold !== null) {
+        if ($lptimeEarliestThreshold !== null) {
             $slotBoundary = $showStartTime instanceof DateTime
                 ? clone $showStartTime
                 : new DateTime('now', new DateTimeZone('UTC'));
@@ -1715,16 +1705,8 @@ SQL;
             $thresholdUtc->setTimezone(new DateTimeZone('UTC'));
 
             foreach ($inPassPicks as $pick) {
-                if (!is_array($pick) || !isset($pick['id'], $pick['slot'])) {
-                    continue;
-                }
-                if (!$pick['slot'] instanceof DateTime) {
-                    continue;
-                }
-                $pickSlotUtc = clone $pick['slot'];
-                $pickSlotUtc->setTimezone(new DateTimeZone('UTC'));
-                if ($pickSlotUtc >= $thresholdUtc && $pickSlotUtc < $slotBoundary) {
-                    $lptimeScopedExcludes[] = (int) $pick['id'];
+                if ($pick['slot'] >= $thresholdUtc && $pick['slot'] < $slotBoundary) {
+                    $lptimeScopedExcludes[] = $pick['id'];
                 }
             }
 
@@ -1743,9 +1725,7 @@ SQL;
                     ':slot' => $slotBoundary->format(DEFAULT_MICROTIME_FORMAT),
                 ]
             );
-            foreach ($scheduledRows as $scheduledRow) {
-                $lptimeScopedExcludes[] = (int) $scheduledRow['file_id'];
-            }
+            array_push($lptimeScopedExcludes, ...array_column($scheduledRows, 'file_id'));
         }
 
         if (!empty($lptimeScopedExcludes)) {
