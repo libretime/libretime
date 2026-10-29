@@ -143,11 +143,11 @@ liquidsoap:
   # Input harbor tls certificate password.
   harbor_ssl_password:
 
+  # Liquidsoap scripts included in the generated liquidsoap script.
   hooks:
-    # put path to j2 files here to have them included in the generated
-    # liquidsoap configuration. The files will be included in listed order.
-    # These files need to assume their stream handle is called 's' and also
-    # return the modified s handle.
+    # List of liquidsoap script paths included before the outputs, in the listed
+    # order. A script may modify the 's' source, e.g. 's = ladspa.plugin(s)'.
+    # > default is []
     before_outputs: []
 
 stream:

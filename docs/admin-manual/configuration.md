@@ -298,21 +298,38 @@ liquidsoap:
   # Input harbor tls certificate password.
   harbor_ssl_password:
 
+  # Liquidsoap scripts included in the generated liquidsoap script.
   hooks:
-    # put path to j2 files here to have them included in the generated
-    # liquidsoap configuration. The files will be included in listed order.
-    # These files need to assume their stream handle is called 's' and also
-    # return the modified s handle.
+    # List of liquidsoap script paths included before the outputs, in the listed
+    # order. A script may modify the 's' source, e.g. 's = ladspa.plugin(s)'.
+    # > default is []
     before_outputs: []
 ```
 
-An example file `/var/lib/libretime/before_output/stereotool.liq.j2` could look like this:
+### Hooks
+
+Hooks include your own liquidsoap scripts in the generated liquidsoap script, for example to process the audio with a [LADSPA plugin](https://www.liquidsoap.info/doc-dev/ladspa.html) such as [master_me](https://github.com/trummerschlunk/master_me) or Stereo Tool.
+
+The `before_outputs` scripts are included once the `s` source is built, right before it is sent to the outputs. Use absolute paths. Liquidsoap will not start if a script is missing or invalid.
+
+For example, with the following configuration:
+
+```yml
+liquidsoap:
+  hooks:
+    before_outputs:
+      - /etc/libretime/liquidsoap/processing.liq
+```
+
+The `/etc/libretime/liquidsoap/processing.liq` script could contain:
 
 ```liquidsoap
 s = ladspa.stereotool(s)
 ```
 
-Note that the default directory for LADSPA plugins on Debian type distros is `/usr/lib/ladspa`, so you need to put `stereotool_ladspa.so` there. This particular plugin expects a settings.sts file for configuration in the same directory.
+Liquidsoap loads LADSPA plugins from `/usr/lib64/ladspa`, `/usr/lib/ladspa` and `/usr/local/lib/ladspa`. Run `liquidsoap --list-plugins` to list the loaded plugins and `liquidsoap -h ladspa.<name>` to show the parameters of a plugin.
+
+When using Docker, the `./liquidsoap` directory next to the `docker-compose.yml` file is mounted to `/usr/local/lib/ladspa` in the liquidsoap container. Put both the plugin `.so` files and the hook scripts there, and reference the scripts as `/usr/local/lib/ladspa/<script>.liq`.
 
 ## Stream
 
