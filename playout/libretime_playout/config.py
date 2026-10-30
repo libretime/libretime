@@ -27,6 +27,10 @@ class PlayoutConfig(BaseModel):
     record_sample_size: int = 16
 
 
+class LiquidsoapHooksConfig(BaseModel):
+    before_outputs: list[Path] = []
+
+
 class LiquidsoapConfig(BaseModel):
     server_listen_address: str = "127.0.0.1"
     server_listen_port: int = 1234
@@ -36,6 +40,8 @@ class LiquidsoapConfig(BaseModel):
     harbor_ssl_certificate: str | None = None
     harbor_ssl_private_key: str | None = None
     harbor_ssl_password: str | None = None
+
+    hooks: LiquidsoapHooksConfig = LiquidsoapHooksConfig()
 
     @model_validator(mode="after")
     def _validate_harbor_ssl(self):
