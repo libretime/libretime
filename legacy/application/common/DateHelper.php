@@ -113,27 +113,6 @@ class Application_Common_DateHelper
     }
 
     /**
-     * @return DateTime - YYYY-MM-DD 00:00 in station timezone
-     */
-    public static function getWeekStartDateTime()
-    {
-        $now = self::getTodayStationStartDateTime();
-
-        // our week starts on monday, but php week starts on sunday.
-        $day = $now->format('w');
-        if ($day == 0) {
-            $day = 7;
-        }
-
-        $dayDiff = $day - 1;
-        if ($dayDiff > 0) {
-            $now->sub(new DateInterval("P{$dayDiff}D"));
-        }
-
-        return $now;
-    }
-
-    /**
      * This function formats a time by removing seconds.
      *
      * When we receive a time from the database we get the
