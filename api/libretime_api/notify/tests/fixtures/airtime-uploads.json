@@ -1,0 +1,24 @@
+{
+  "auto_delete": false,
+  "durable": true,
+  "exchange": "airtime-uploads",
+  "messages": [
+    {
+      "body": "{\"file_id\":42,\"tmp_file_path\":\"\\/tmp\\/libretime-equivalence.mp3\",\"import_directory\":\"\\/path\\/to\\/storage\\/imported\\/\",\"original_filename\":\"Some Song.mp3\",\"options\":{\"analyze_cue_points\":false}}",
+      "case": "analyze_file_cue_points_false"
+    },
+    {
+      "body": "{\"file_id\":42,\"tmp_file_path\":\"\\/tmp\\/libretime-equivalence.mp3\",\"import_directory\":\"\\/path\\/to\\/storage\\/imported\\/\",\"original_filename\":\"Some Song.mp3\",\"options\":{\"analyze_cue_points\":true}}",
+      "case": "analyze_file_cue_points_true"
+    },
+    {
+      "body": "{\"file_id\":42,\"tmp_file_path\":\"\\/tmp\\/libretime-equivalence.mp3\",\"import_directory\":\"\\/path\\/to\\/storage\\/imported\\/\",\"original_filename\":\"Some Song.mp3\",\"options\":{}}",
+      "case": "analyze_file_without_track_type"
+    }
+  ],
+  "properties": {
+    "content_type": "text/plain"
+  },
+  "routing_key": "",
+  "type": "topic"
+}
