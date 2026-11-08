@@ -116,6 +116,66 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase // PHPUnit_Framewor
     }
 
     /**
+     * Test that an ordered sort stops at the first track that does not fit instead of
+     * pulling a later, shorter track out of order to fill the remaining time.
+     *
+     * Seed lengths: 3, 4, 5, 6, 7 are 1:30, 1 is 1:00, 2 is 5:00.
+     */
+    public function testGetListOfFilesUnderLimitKeepsSortOrder(): void
+    {
+        TestHelper::loginUser();
+        $this->setLastPlayedOrder([3, 4, 5, 1, 6, 7, 2]);
+        $bltest = new Application_Model_Block();
+        $bltest->saveSmartBlockCriteria(BlockModelData::getCriteriaLeastRecentlyPlayedLabelNada(4));
+
+        $this->assertEquals([3, 4], $this->getScheduledFileIds($bltest));
+    }
+
+    /**
+     * Test that a track longer than the whole block is skipped, so it cannot stall the block.
+     */
+    public function testGetListOfFilesUnderLimitSkipsTrackLongerThanBlock(): void
+    {
+        TestHelper::loginUser();
+        $this->setLastPlayedOrder([2, 3, 4, 5, 1, 6, 7]);
+        $bltest = new Application_Model_Block();
+        $bltest->saveSmartBlockCriteria(BlockModelData::getCriteriaLeastRecentlyPlayedLabelNada(4));
+
+        $this->assertEquals([3, 4], $this->getScheduledFileIds($bltest));
+    }
+
+    /**
+     * Give the files increasing last played times, least recently played first.
+     *
+     * Also cues each file to its full length, as the analyzer would, since the block
+     * limit is computed from the cue length.
+     *
+     * @param int[] $fileIds
+     */
+    private function setLastPlayedOrder(array $fileIds): void
+    {
+        // The dataset is reloaded for each test, don't get a cached Propel object
+        CcFilesPeer::clearInstancePool();
+        $lastPlayed = new DateTime('2020-01-01 00:00:00', new DateTimeZone('UTC'));
+        foreach ($fileIds as $fileId) {
+            $file = CcFilesQuery::create()->findPk($fileId);
+            $file->setDbCuein('00:00:00')
+                ->setDbCueout($file->getDbLength())
+                ->setDbLPtime(clone $lastPlayed)
+                ->save();
+            $lastPlayed->modify('+1 hour');
+        }
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getScheduledFileIds(Application_Model_Block $block): array
+    {
+        return array_map(fn (array $track): int => $track['id'], $block->getListOfFilesUnderLimit());
+    }
+
+    /**
      * @return mixed[]
      */
     private function getMatchingFileIds(Application_Model_Block $block): array
