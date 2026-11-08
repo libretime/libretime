@@ -45,6 +45,16 @@ class Schema implements ConfigurationInterface
             /**/->scalarNode('dev_env')->defaultValue('production')->end()
             /**/->scalarNode('auth')->defaultValue('local')->end()
             /**/->integerNode('cache_ahead_hours')->defaultValue(1)->end()
+            /**/->scalarNode('autoload_lead_time')->defaultValue('1 hour')
+            /*  */->validate()->ifTrue(function ($v) {
+                try {
+                    return DateInterval::createFromDateString($v) === false;
+                } catch (\Exception $e) {
+                    return true;
+                }
+            /*  */})->thenInvalid("Invalid autoload_lead_time interval string: %s. Should be something like '1 day' or '30 minutes'.")
+            /*  */->end()
+            /**/->end()
             ->end()->end()
 
             // Database schema
