@@ -39,6 +39,9 @@ input_fade_transition = interactive.float("input_fade_transition", {{ preference
 
 %include "{{ paths.lib_filepath }}"
 
+{% for filepath in config.liquidsoap.hooks.before_outputs -%}
+%include "{{ filepath }}"
+{% endfor -%}
 {% include "outputs.liq.j2" %}
 
 gateway("started")

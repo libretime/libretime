@@ -47,6 +47,7 @@ services:
       - rabbitmq
     volumes:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+      - ./liquidsoap:/usr/local/lib/ladspa:ro
       - libretime_playout:/app
     environment:
       LIBRETIME_GENERAL_PUBLIC_URL: http://nginx:8080
