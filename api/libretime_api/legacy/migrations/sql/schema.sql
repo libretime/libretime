@@ -356,6 +356,8 @@ CREATE TABLE "cc_schedule"
 
 CREATE INDEX "cc_schedule_instance_id_idx" ON "cc_schedule" ("instance_id");
 
+CREATE INDEX "cc_schedule_starts_idx" ON "cc_schedule" ("starts");
+
 -----------------------------------------------------------------------
 -- cc_subjs
 -----------------------------------------------------------------------
