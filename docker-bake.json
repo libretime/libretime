@@ -5,22 +5,31 @@
     }
   },
   "target": {
+    "_common": {
+      "platforms": ["linux/amd64", "linux/arm64"]
+    },
     "analyzer": {
+      "inherits": ["_common"],
       "target": "libretime-analyzer"
     },
     "playout": {
+      "inherits": ["_common"],
       "target": "libretime-playout"
     },
     "api": {
+      "inherits": ["_common"],
       "target": "libretime-api"
     },
     "worker": {
+      "inherits": ["_common"],
       "target": "libretime-worker"
     },
     "legacy": {
+      "inherits": ["_common"],
       "target": "libretime-legacy"
     },
     "nginx": {
+      "inherits": ["_common"],
       "target": "libretime-nginx"
     }
   }
