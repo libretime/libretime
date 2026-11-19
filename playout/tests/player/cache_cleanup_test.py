@@ -34,7 +34,7 @@ def make_file_event(
         type=EventKind.FILE,
         row_id=row_id,
         id=file_id,
-        show_name="trasitionally",
+        show_name="transitionally",
         start=start,
         end=start + timedelta(seconds=length),
         fade_in=0.0,
