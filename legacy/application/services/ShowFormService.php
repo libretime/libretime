@@ -628,7 +628,7 @@ class Application_Service_ShowFormService
             && $repeats && $absRebroadcast && $rebroadcast;
     }
 
-    public function calculateDuration($start, $end, $timezone)
+    public function calculateDuration($start, $end, $timezone): string
     {
         try {
             $tz = new DateTimeZone($timezone);
