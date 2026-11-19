@@ -143,6 +143,13 @@ liquidsoap:
   # Input harbor tls certificate password.
   harbor_ssl_password:
 
+  # Liquidsoap scripts included in the generated liquidsoap script.
+  hooks:
+    # List of liquidsoap script paths included before the outputs, in the listed
+    # order. A script may modify the 's' source, e.g. 's = ladspa.plugin(s)'.
+    # > default is []
+    before_outputs: []
+
 stream:
   # Inputs sources.
   inputs:
