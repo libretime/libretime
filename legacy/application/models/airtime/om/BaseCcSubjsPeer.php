@@ -415,6 +415,9 @@ abstract class BaseCcSubjsPeer
      */
     public static function clearRelatedInstancePool()
     {
+        // Invalidate objects in CcFilesPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        CcFilesPeer::clearInstancePool();
         // Invalidate objects in CcShowHostsPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         CcShowHostsPeer::clearInstancePool();

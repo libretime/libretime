@@ -426,12 +426,42 @@ SQL;
         // Update the user's disk usage
         Application_Model_Preference::updateDiskUsage(-1 * $filesize);
 
+        // Playlist and block rows are forward-looking templates: the old
+        // hard delete pruned them via ON DELETE CASCADE (fired by the row
+        // DELETE that used to end this function). Soft delete skips that
+        // cascade, so prune the references deliberately — before the
+        // length recomputation below, so totals stay honest. History and
+        // aired grid rows keep pointing at the surviving file row (#1163).
+        $con_prune = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
+        $stmt = $con_prune->prepare(
+            'DELETE FROM cc_playlistcontents WHERE file_id = :id'
+        );
+        $stmt->bindValue(':id', $this->_file->getDbId(), PDO::PARAM_INT);
+        $stmt->execute();
+
+        $stmt = $con_prune->prepare('DELETE FROM cc_blockcontents WHERE file_id = :id');
+        $stmt->bindValue(':id', $this->_file->getDbId(), PDO::PARAM_INT);
+        $stmt->execute();
+
         // Explicitly update any playlist's and block's length that contain
         // the file getting deleted
         self::updateBlockAndPlaylistLength($this->_file->getDbId());
 
-        // delete the file record from cc_files
-        $this->_file->delete();
+        // Soft-delete the record in cc_files (#1163): the row survives so
+        // playout history and calendar references stay resolvable, and the
+        // ON DELETE CASCADE that used to erase them never fires again.
+        // deleted_at/deleted_by are the human-intent markers; file_exists
+        // keeps storage truth in sync for the legacy library queries.
+        $deleting_user_id = isset($userInfo) ? intval($userInfo->id) : 'NULL';
+        $sql = "UPDATE cc_files
+                SET deleted_at = (now() AT TIME ZONE 'UTC'),
+                    deleted_by_id = {$deleting_user_id},
+                    file_exists = false
+                WHERE id = :id";
+        $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
+        $stmt = $con->prepare($sql);
+        $stmt->bindValue(':id', $this->_file->getDbId(), PDO::PARAM_INT);
+        $stmt->execute();
     }
 
     /*

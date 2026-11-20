@@ -15,6 +15,8 @@ CREATE TABLE "cc_files"
     "import_status" INTEGER DEFAULT 1 NOT NULL,
     "currentlyaccessing" INTEGER DEFAULT 0 NOT NULL,
     "editedby" INTEGER,
+    "deleted_at" TIMESTAMP,
+    "deleted_by_id" INTEGER,
     "mtime" TIMESTAMP(6),
     "utime" TIMESTAMP(6),
     "lptime" TIMESTAMP(6),
@@ -677,6 +679,11 @@ ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey"
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey"
     FOREIGN KEY ("editedby")
     REFERENCES "cc_subjs" ("id");
+
+ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_deleted_by_id_fkey"
+    FOREIGN KEY ("deleted_by_id")
+    REFERENCES "cc_subjs" ("id")
+    ON DELETE SET NULL;
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_track_type_fkey"
     FOREIGN KEY ("track_type_id")

@@ -47,6 +47,8 @@ class CcFilesTableMap extends TableMap
         $this->addColumn('import_status', 'DbImportStatus', 'INTEGER', true, null, 1);
         $this->addColumn('currentlyaccessing', 'DbCurrentlyaccessing', 'INTEGER', true, null, 0);
         $this->addForeignKey('editedby', 'DbEditedby', 'INTEGER', 'cc_subjs', 'id', false, null, null);
+        $this->addColumn('deleted_at', 'DbDeletedAt', 'TIMESTAMP', false, null, null);
+        $this->addForeignKey('deleted_by_id', 'DbDeletedById', 'INTEGER', 'cc_subjs', 'id', false, null, null);
         $this->addColumn('mtime', 'DbMtime', 'TIMESTAMP', false, 6, null);
         $this->addColumn('utime', 'DbUtime', 'TIMESTAMP', false, 6, null);
         $this->addColumn('lptime', 'DbLPtime', 'TIMESTAMP', false, 6, null);
@@ -117,6 +119,7 @@ class CcFilesTableMap extends TableMap
     {
         $this->addRelation('FkOwner', 'CcSubjs', RelationMap::MANY_TO_ONE, array('owner_id' => 'id', ), null, null);
         $this->addRelation('CcSubjsRelatedByDbEditedby', 'CcSubjs', RelationMap::MANY_TO_ONE, array('editedby' => 'id', ), null, null);
+        $this->addRelation('CcSubjsRelatedByDbDeletedById', 'CcSubjs', RelationMap::MANY_TO_ONE, array('deleted_by_id' => 'id', ), 'SET NULL', null);
         $this->addRelation('CcTracktypes', 'CcTracktypes', RelationMap::MANY_TO_ONE, array('track_type_id' => 'id', ), null, null);
         $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'CcShowInstancess');
         $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'CcPlaylistcontentss');

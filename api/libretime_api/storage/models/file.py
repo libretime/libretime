@@ -51,6 +51,21 @@ class File(models.Model):
         db_column="editedby",
     )
 
+    # Soft-delete lifecycle markers (#1163). Orthogonal to the two
+    # machine-owned visibility flags: ``exists``/file_exists is storage
+    # truth (fs monitors rewrite it), ``hidden`` is ingest-pipeline state
+    # (the analyzer flips it), while ``deleted_at`` is human intent and is
+    # only ever written by the delete endpoint. A row is library-visible
+    # when: file_exists AND NOT hidden AND deleted_at IS NULL.
+    deleted_at = models.DateTimeField(blank=True, null=True)
+    deleted_by = models.ForeignKey(
+        "core.User",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="deleted_files",
+    )
+
     # Audio
     bit_rate = models.IntegerField(blank=True, null=True)
     sample_rate = models.IntegerField(blank=True, null=True)
