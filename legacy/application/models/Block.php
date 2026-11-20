@@ -1375,6 +1375,13 @@ SQL;
             };
 
             foreach ($tracks as $track) {
+                // Keep the sort order: stop at the first track that doesn't fit, rather than
+                // pulling a later track forward. A track longer than the whole block can never
+                // fit, so skip it instead of letting it stall the block.
+                if (!$overflow && $track->length <= $blockTime && $totalTime + $track->length > $blockTime) {
+                    break;
+                }
+
                 $addTrack($track);
 
                 if ($isFull()) {
