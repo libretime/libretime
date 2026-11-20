@@ -46,6 +46,10 @@
  * @method CcSubjsQuery rightJoinCcFilesRelatedByDbEditedby($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcFilesRelatedByDbEditedby relation
  * @method CcSubjsQuery innerJoinCcFilesRelatedByDbEditedby($relationAlias = null) Adds a INNER JOIN clause to the query using the CcFilesRelatedByDbEditedby relation
  *
+ * @method CcSubjsQuery leftJoinCcFilesRelatedByDbDeletedById($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcFilesRelatedByDbDeletedById relation
+ * @method CcSubjsQuery rightJoinCcFilesRelatedByDbDeletedById($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcFilesRelatedByDbDeletedById relation
+ * @method CcSubjsQuery innerJoinCcFilesRelatedByDbDeletedById($relationAlias = null) Adds a INNER JOIN clause to the query using the CcFilesRelatedByDbDeletedById relation
+ *
  * @method CcSubjsQuery leftJoinCcShowHosts($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShowHosts relation
  * @method CcSubjsQuery rightJoinCcShowHosts($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowHosts relation
  * @method CcSubjsQuery innerJoinCcShowHosts($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShowHosts relation
@@ -873,6 +877,80 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
         return $this
             ->joinCcFilesRelatedByDbEditedby($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcFilesRelatedByDbEditedby', 'CcFilesQuery');
+    }
+
+    /**
+     * Filter the query by a related CcFiles object
+     *
+     * @param   CcFiles|PropelObjectCollection $ccFiles  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcSubjsQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCcFilesRelatedByDbDeletedById($ccFiles, $comparison = null)
+    {
+        if ($ccFiles instanceof CcFiles) {
+            return $this
+                ->addUsingAlias(CcSubjsPeer::ID, $ccFiles->getDbDeletedById(), $comparison);
+        } elseif ($ccFiles instanceof PropelObjectCollection) {
+            return $this
+                ->useCcFilesRelatedByDbDeletedByIdQuery()
+                ->filterByPrimaryKeys($ccFiles->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCcFilesRelatedByDbDeletedById() only accepts arguments of type CcFiles or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CcFilesRelatedByDbDeletedById relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcSubjsQuery The current query, for fluid interface
+     */
+    public function joinCcFilesRelatedByDbDeletedById($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CcFilesRelatedByDbDeletedById');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CcFilesRelatedByDbDeletedById');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CcFilesRelatedByDbDeletedById relation CcFiles object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   CcFilesQuery A secondary query class using the current class as primary query
+     */
+    public function useCcFilesRelatedByDbDeletedByIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCcFilesRelatedByDbDeletedById($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcFilesRelatedByDbDeletedById', 'CcFilesQuery');
     }
 
     /**

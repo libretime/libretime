@@ -126,6 +126,12 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
     protected $collCcFilessRelatedByDbEditedbyPartial;
 
     /**
+     * @var        PropelObjectCollection|CcFiles[] Collection to store aggregation of CcFiles objects.
+     */
+    protected $collCcFilessRelatedByDbDeletedById;
+    protected $collCcFilessRelatedByDbDeletedByIdPartial;
+
+    /**
      * @var        PropelObjectCollection|CcShowHosts[] Collection to store aggregation of CcShowHosts objects.
      */
     protected $collCcShowHostss;
@@ -192,6 +198,12 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @var		PropelObjectCollection
      */
     protected $ccFilessRelatedByDbEditedbyScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $ccFilessRelatedByDbDeletedByIdScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -881,6 +893,8 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
 
             $this->collCcFilessRelatedByDbEditedby = null;
 
+            $this->collCcFilessRelatedByDbDeletedById = null;
+
             $this->collCcShowHostss = null;
 
             $this->collCcPlaylists = null;
@@ -1047,6 +1061,24 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
 
             if ($this->collCcFilessRelatedByDbEditedby !== null) {
                 foreach ($this->collCcFilessRelatedByDbEditedby as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion !== null) {
+                if (!$this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion->isEmpty()) {
+                    foreach ($this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion as $ccFilesRelatedByDbDeletedById) {
+                        // need to save related object because we set the relation to null
+                        $ccFilesRelatedByDbDeletedById->save($con);
+                    }
+                    $this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCcFilessRelatedByDbDeletedById !== null) {
+                foreach ($this->collCcFilessRelatedByDbDeletedById as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1388,6 +1420,14 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
                     }
                 }
 
+                if ($this->collCcFilessRelatedByDbDeletedById !== null) {
+                    foreach ($this->collCcFilessRelatedByDbDeletedById as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collCcShowHostss !== null) {
                     foreach ($this->collCcShowHostss as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -1564,6 +1604,9 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
             }
             if (null !== $this->collCcFilessRelatedByDbEditedby) {
                 $result['CcFilessRelatedByDbEditedby'] = $this->collCcFilessRelatedByDbEditedby->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collCcFilessRelatedByDbDeletedById) {
+                $result['CcFilessRelatedByDbDeletedById'] = $this->collCcFilessRelatedByDbDeletedById->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collCcShowHostss) {
                 $result['CcShowHostss'] = $this->collCcShowHostss->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1812,6 +1855,12 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
                 }
             }
 
+            foreach ($this->getCcFilessRelatedByDbDeletedById() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCcFilesRelatedByDbDeletedById($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getCcShowHostss() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addCcShowHosts($relObj->copy($deepCopy));
@@ -1914,6 +1963,9 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
         }
         if ('CcFilesRelatedByDbEditedby' == $relationName) {
             $this->initCcFilessRelatedByDbEditedby();
+        }
+        if ('CcFilesRelatedByDbDeletedById' == $relationName) {
+            $this->initCcFilessRelatedByDbDeletedById();
         }
         if ('CcShowHosts' == $relationName) {
             $this->initCcShowHostss();
@@ -2433,6 +2485,256 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
         $query->joinWith('CcTracktypes', $join_behavior);
 
         return $this->getCcFilessRelatedByDbEditedby($query, $con);
+    }
+
+    /**
+     * Clears out the collCcFilessRelatedByDbDeletedById collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return CcSubjs The current object (for fluent API support)
+     * @see        addCcFilessRelatedByDbDeletedById()
+     */
+    public function clearCcFilessRelatedByDbDeletedById()
+    {
+        $this->collCcFilessRelatedByDbDeletedById = null; // important to set this to null since that means it is uninitialized
+        $this->collCcFilessRelatedByDbDeletedByIdPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collCcFilessRelatedByDbDeletedById collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialCcFilessRelatedByDbDeletedById($v = true)
+    {
+        $this->collCcFilessRelatedByDbDeletedByIdPartial = $v;
+    }
+
+    /**
+     * Initializes the collCcFilessRelatedByDbDeletedById collection.
+     *
+     * By default this just sets the collCcFilessRelatedByDbDeletedById collection to an empty array (like clearcollCcFilessRelatedByDbDeletedById());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCcFilessRelatedByDbDeletedById($overrideExisting = true)
+    {
+        if (null !== $this->collCcFilessRelatedByDbDeletedById && !$overrideExisting) {
+            return;
+        }
+        $this->collCcFilessRelatedByDbDeletedById = new PropelObjectCollection();
+        $this->collCcFilessRelatedByDbDeletedById->setModel('CcFiles');
+    }
+
+    /**
+     * Gets an array of CcFiles objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this CcSubjs is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|CcFiles[] List of CcFiles objects
+     * @throws PropelException
+     */
+    public function getCcFilessRelatedByDbDeletedById($criteria = null, ?PropelPDO $con = null)
+    {
+        $partial = $this->collCcFilessRelatedByDbDeletedByIdPartial && !$this->isNew();
+        if (null === $this->collCcFilessRelatedByDbDeletedById || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCcFilessRelatedByDbDeletedById) {
+                // return empty collection
+                $this->initCcFilessRelatedByDbDeletedById();
+            } else {
+                $collCcFilessRelatedByDbDeletedById = CcFilesQuery::create(null, $criteria)
+                    ->filterByCcSubjsRelatedByDbDeletedById($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collCcFilessRelatedByDbDeletedByIdPartial && count($collCcFilessRelatedByDbDeletedById)) {
+                      $this->initCcFilessRelatedByDbDeletedById(false);
+
+                      foreach ($collCcFilessRelatedByDbDeletedById as $obj) {
+                        if (false == $this->collCcFilessRelatedByDbDeletedById->contains($obj)) {
+                          $this->collCcFilessRelatedByDbDeletedById->append($obj);
+                        }
+                      }
+
+                      $this->collCcFilessRelatedByDbDeletedByIdPartial = true;
+                    }
+
+                    $collCcFilessRelatedByDbDeletedById->getInternalIterator()->rewind();
+
+                    return $collCcFilessRelatedByDbDeletedById;
+                }
+
+                if ($partial && $this->collCcFilessRelatedByDbDeletedById) {
+                    foreach ($this->collCcFilessRelatedByDbDeletedById as $obj) {
+                        if ($obj->isNew()) {
+                            $collCcFilessRelatedByDbDeletedById[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCcFilessRelatedByDbDeletedById = $collCcFilessRelatedByDbDeletedById;
+                $this->collCcFilessRelatedByDbDeletedByIdPartial = false;
+            }
+        }
+
+        return $this->collCcFilessRelatedByDbDeletedById;
+    }
+
+    /**
+     * Sets a collection of CcFilesRelatedByDbDeletedById objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $ccFilessRelatedByDbDeletedById A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return CcSubjs The current object (for fluent API support)
+     */
+    public function setCcFilessRelatedByDbDeletedById(PropelCollection $ccFilessRelatedByDbDeletedById, ?PropelPDO $con = null)
+    {
+        $ccFilessRelatedByDbDeletedByIdToDelete = $this->getCcFilessRelatedByDbDeletedById(new Criteria(), $con)->diff($ccFilessRelatedByDbDeletedById);
+
+
+        $this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion = $ccFilessRelatedByDbDeletedByIdToDelete;
+
+        foreach ($ccFilessRelatedByDbDeletedByIdToDelete as $ccFilesRelatedByDbDeletedByIdRemoved) {
+            $ccFilesRelatedByDbDeletedByIdRemoved->setCcSubjsRelatedByDbDeletedById(null);
+        }
+
+        $this->collCcFilessRelatedByDbDeletedById = null;
+        foreach ($ccFilessRelatedByDbDeletedById as $ccFilesRelatedByDbDeletedById) {
+            $this->addCcFilesRelatedByDbDeletedById($ccFilesRelatedByDbDeletedById);
+        }
+
+        $this->collCcFilessRelatedByDbDeletedById = $ccFilessRelatedByDbDeletedById;
+        $this->collCcFilessRelatedByDbDeletedByIdPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related CcFiles objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related CcFiles objects.
+     * @throws PropelException
+     */
+    public function countCcFilessRelatedByDbDeletedById(?Criteria $criteria = null, $distinct = false, ?PropelPDO $con = null)
+    {
+        $partial = $this->collCcFilessRelatedByDbDeletedByIdPartial && !$this->isNew();
+        if (null === $this->collCcFilessRelatedByDbDeletedById || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCcFilessRelatedByDbDeletedById) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCcFilessRelatedByDbDeletedById());
+            }
+            $query = CcFilesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCcSubjsRelatedByDbDeletedById($this)
+                ->count($con);
+        }
+
+        return count($this->collCcFilessRelatedByDbDeletedById);
+    }
+
+    /**
+     * Method called to associate a CcFiles object to this object
+     * through the CcFiles foreign key attribute.
+     *
+     * @param    CcFiles $l CcFiles
+     * @return CcSubjs The current object (for fluent API support)
+     */
+    public function addCcFilesRelatedByDbDeletedById(CcFiles $l)
+    {
+        if ($this->collCcFilessRelatedByDbDeletedById === null) {
+            $this->initCcFilessRelatedByDbDeletedById();
+            $this->collCcFilessRelatedByDbDeletedByIdPartial = true;
+        }
+
+        if (!in_array($l, $this->collCcFilessRelatedByDbDeletedById->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddCcFilesRelatedByDbDeletedById($l);
+
+            if ($this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion and $this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion->contains($l)) {
+                $this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion->remove($this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	CcFilesRelatedByDbDeletedById $ccFilesRelatedByDbDeletedById The ccFilesRelatedByDbDeletedById object to add.
+     */
+    protected function doAddCcFilesRelatedByDbDeletedById($ccFilesRelatedByDbDeletedById)
+    {
+        $this->collCcFilessRelatedByDbDeletedById[]= $ccFilesRelatedByDbDeletedById;
+        $ccFilesRelatedByDbDeletedById->setCcSubjsRelatedByDbDeletedById($this);
+    }
+
+    /**
+     * @param	CcFilesRelatedByDbDeletedById $ccFilesRelatedByDbDeletedById The ccFilesRelatedByDbDeletedById object to remove.
+     * @return CcSubjs The current object (for fluent API support)
+     */
+    public function removeCcFilesRelatedByDbDeletedById($ccFilesRelatedByDbDeletedById)
+    {
+        if ($this->getCcFilessRelatedByDbDeletedById()->contains($ccFilesRelatedByDbDeletedById)) {
+            $this->collCcFilessRelatedByDbDeletedById->remove($this->collCcFilessRelatedByDbDeletedById->search($ccFilesRelatedByDbDeletedById));
+            if (null === $this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion) {
+                $this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion = clone $this->collCcFilessRelatedByDbDeletedById;
+                $this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion->clear();
+            }
+            $this->ccFilessRelatedByDbDeletedByIdScheduledForDeletion[]= $ccFilesRelatedByDbDeletedById;
+            $ccFilesRelatedByDbDeletedById->setCcSubjsRelatedByDbDeletedById(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this CcSubjs is new, it will return
+     * an empty collection; or if this CcSubjs has previously
+     * been saved, it will retrieve related CcFilessRelatedByDbDeletedById from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in CcSubjs.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|CcFiles[] List of CcFiles objects
+     */
+    public function getCcFilessRelatedByDbDeletedByIdJoinCcTracktypes($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = CcFilesQuery::create(null, $criteria);
+        $query->joinWith('CcTracktypes', $join_behavior);
+
+        return $this->getCcFilessRelatedByDbDeletedById($query, $con);
     }
 
     /**
@@ -3861,6 +4163,11 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collCcFilessRelatedByDbDeletedById) {
+                foreach ($this->collCcFilessRelatedByDbDeletedById as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collCcShowHostss) {
                 foreach ($this->collCcShowHostss as $o) {
                     $o->clearAllReferences($deep);
@@ -3903,6 +4210,10 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
             $this->collCcFilessRelatedByDbEditedby->clearIterator();
         }
         $this->collCcFilessRelatedByDbEditedby = null;
+        if ($this->collCcFilessRelatedByDbDeletedById instanceof PropelCollection) {
+            $this->collCcFilessRelatedByDbDeletedById->clearIterator();
+        }
+        $this->collCcFilessRelatedByDbDeletedById = null;
         if ($this->collCcShowHostss instanceof PropelCollection) {
             $this->collCcShowHostss->clearIterator();
         }
