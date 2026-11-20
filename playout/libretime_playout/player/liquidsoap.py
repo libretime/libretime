@@ -247,7 +247,15 @@ class Liquidsoap:
         row_id_map: dict[int, FileEvent] = {}
         liq_queue_ids: set[int] = set()
         for queue_item in self.liq_queue_tracker.values():
-            if queue_item is not None and not queue_item.ended():
+            # NOTE: intentionally includes items past their wall-clock end.
+            # An item that was handed to Liquidsoap must never be pushed a
+            # second time just because its end time passed while it was
+            # still in the schedule (duplicate request accepted, #2471 —
+            # Liquidsoap then holds two requests for one schedule row and a
+            # cache miss on either one wedges the queue). Stale entries are
+            # reconciled out via stop() once their row leaves the schedule,
+            # which also clears queued-but-never-played items automatically.
+            if queue_item is not None:
                 liq_queue_ids.add(queue_item.row_id)
                 row_id_map[queue_item.row_id] = queue_item
 
