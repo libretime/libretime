@@ -1,0 +1,221 @@
+name: Equivalence
+
+# tools/<name>-equivalence/ runs one fixture through the legacy php service and
+# through its python port, then diffs the database rows both left behind. That
+# comparison is the only thing between "the endpoint returns 201" and "playout will
+# find what it expects in cc_schedule in an hour", so it belongs in CI: a comparison
+# nobody re-runs is a snapshot, not a guarantee.
+
+# Environment: nothing here is invented.
+#   php 8.2 + composer + make vendor + a postgres with a libretime role
+#       -> the same shape as the Legacy job (legacy.yml)
+#   make -C api install, and the harnesses run from that virtualenv (EQ_PY)
+#       -> the same shape as the API job (api.yml)
+#   NEW: a rabbitmq service. The ported code publishes to the same exchange and the
+#       same paths php does, and that publish is part of what is under test; without a
+#       broker the harness either fails for an environmental reason or stubs the thing
+#       it is supposed to prove.
+#   Not the libretime-dev container the API job uses: that image is built from the
+#       analyzer, playout and shared package lists (dev-tools.yml:43-48) and contains
+#       no php and no composer, which is the one thing a comparison needs two of.
+
+# When:
+#   pull_request  -> so a reviewer sees the comparison next to the diff.
+#   push          -> after a merge, the same checks against the real main.
+#   weekly        -> two modest reasons. (1) The fixtures are relative to today, so a
+#                    run on another date exercises different code: the DST changeover
+#                    Sundays and Feb 29 are inputs a run that only happens on PR days
+#                    may never see. (2) The path filters below mean a base-image or
+#                    php-patch change would otherwise run nothing at all.
+#   Not a required check yet, deliberately: this workflow has never run in CI. Make it
+#   required once it has been green for a few weeks, otherwise an environment problem
+#   blocks unrelated merges. Scheduled runs do not fire on forks, so reason (1) and (2)
+#   only start working once this is upstream.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, stable-*]
+    paths:
+      - .github/workflows/equivalence.yml
+      - tools/equivalence.py
+      - tools/*-equivalence/**
+      - api/**
+      - legacy/**
+
+  pull_request:
+    branches: [main, stable-*]
+    paths:
+      - .github/workflows/equivalence.yml
+      - tools/equivalence.py
+      - tools/*-equivalence/**
+      - api/**
+      - legacy/**
+
+  schedule:
+    - cron: 0 1 * * 1
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # One job per harness, discovered in the checkout. A hand-written matrix would be a
+  # file every branch touching a harness has to edit — and these branches are stacked,
+  # so it would either conflict on every rebase or claim to run harnesses that commit
+  # does not contain. Discovery means adding a directory is the whole integration, and a
+  # branch carrying several harnesses runs all of them, which is correct: it can break
+  # all of them.
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      harnesses: ${{ steps.find.outputs.harnesses }}
+      count: ${{ steps.find.outputs.count }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Find harnesses
+        id: find
+        run: |
+          # The driver prints the JSON itself, compact and on one line. Going through
+          # jq's defaults here produced a pretty-printed multi-line array, which is not
+          # a valid "name=value" line for GITHUB_OUTPUT - the workflow cannot even start
+          # the matrix if this output is malformed, so this stays dependency-free.
+          mapping=$(python3 tools/equivalence.py --list-json)
+          echo "harnesses=$mapping" >> "$GITHUB_OUTPUT"
+          echo "count=$(printf '%s' "$mapping" | jq 'length')" >> "$GITHUB_OUTPUT"
+
+          # Announced, not run: a branch carrying a harness with no run.sh should show a
+          # line saying what is missing, not a green tick that quietly left the
+          # comparison out. Only ab.sh directories are worth nagging about - a directory
+          # may be authoring tooling whose result was committed as a fixture instead.
+          for dir in tools/*-equivalence; do
+            [ -d "$dir" ] || continue
+            if [ -f "$dir/ab.sh" ] && [ ! -x "$dir/run.sh" ]; then
+              echo "::warning title=Harness not wired for CI::$(basename "$dir") has no executable run.sh — its comparison is not being run. See tools/EQUIVALENCE.md."
+            fi
+          done
+
+  equivalence:
+    needs: discover
+    if: needs.discover.outputs.count != '0'
+
+    runs-on: ubuntu-latest
+    strategy:
+      # Every harness reports, not just the first to fail: when php and the port
+      # disagree in two places, seeing one of them leaves the next one for the station
+      # to find.
+      fail-fast: false
+      matrix:
+        harness: ${{ fromJSON(needs.discover.outputs.harnesses) }}
+
+    env:
+      LIBRETIME_DATABASE_HOST: localhost
+
+    services:
+      # The port publishes to RabbitMQ on the same paths a station does — a show edit
+      # tells playout to rebuild, and the code under test is the code that publishes.
+      # Refusing to give it a broker would mean either a harness that fails for an
+      # environmental reason or a stub that quietly stops testing the behaviour.
+      rabbitmq:
+        image: rabbitmq:3.13-alpine
+        env:
+          RABBITMQ_DEFAULT_USER: libretime
+          RABBITMQ_DEFAULT_PASS: libretime
+          RABBITMQ_DEFAULT_VHOST: /libretime
+        ports:
+          - 5672:5672
+        options: >-
+          --health-cmd "rabbitmq-diagnostics check_port_connectivity"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+          # Named rather than left to the defaults, because these are what the legacy
+          # services under test actually call: bcmath (SchedulerService::findEndTime uses
+          # bcadd), yaml (Config::load parses the config with yaml_parse_file),
+          # pdo_pgsql, and the usual dom/xml/mbstring/curl. A harness that dies on a
+          # missing extension in a nightly run is a harness nobody reads the log of.
+          extensions: bcmath, curl, dom, intl, mbstring, pdo_pgsql, simplexml, xml, yaml
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      # The application role, not just the superuser: the harnesses connect as the same
+      # user a station does, because the grants on the legacy tables are part of what is
+      # being proved. CREATEDB is not needed by the harness itself — the driver creates
+      # databases as the superuser — but the legacy installer path checks for it.
+      - name: Setup database roles
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -v ON_ERROR_STOP=1 <<SQL
+          CREATE USER libretime WITH PASSWORD 'libretime' CREATEDB;
+          SQL
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('legacy/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      # The php side of a harness calls the real legacy service classes, which reach
+      # Propel and the generated Peer classes. Those are committed, but the vendor
+      # directory is not.
+      - name: Install legacy dependencies
+        run: make vendor
+        working-directory: legacy
+
+      - name: Install api dependencies
+        run: make install
+        working-directory: api
+
+      - name: Run harness
+        # EQ_PY is the venv the step above just built. Without it the driver would use
+        # the runner's python, which has no api in it - and the driver's first action is
+        # to refuse to continue when it cannot import the api, so this would fail loudly
+        # rather than quietly comparing nothing.
+        run: python3 tools/equivalence.py tools/${{ matrix.harness }}
+        env:
+          EQ_PY: ${{ github.workspace }}/api/.venv/bin/python
+          EQ_DB_SUPER_PASSWORD: postgres
+
+      # The dumps are the readable half of a failure: "test_weekly differs" is not an
+      # actionable sentence, a row-by-row diff is, and nobody should have to re-run
+      # anything to see which column.
+      - name: Upload harness output
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.harness }}
+          path: tools/equivalence-out/${{ matrix.harness }}
+          if-no-files-found: ignore

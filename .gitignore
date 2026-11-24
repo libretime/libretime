@@ -155,3 +155,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# equivalence harness output (tools/equivalence-run.sh)
+tools/equivalence-out/
