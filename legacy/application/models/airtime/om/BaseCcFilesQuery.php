@@ -14,6 +14,8 @@
  * @method CcFilesQuery orderByDbImportStatus($order = Criteria::ASC) Order by the import_status column
  * @method CcFilesQuery orderByDbCurrentlyaccessing($order = Criteria::ASC) Order by the currentlyaccessing column
  * @method CcFilesQuery orderByDbEditedby($order = Criteria::ASC) Order by the editedby column
+ * @method CcFilesQuery orderByDbDeletedAt($order = Criteria::ASC) Order by the deleted_at column
+ * @method CcFilesQuery orderByDbDeletedById($order = Criteria::ASC) Order by the deleted_by_id column
  * @method CcFilesQuery orderByDbMtime($order = Criteria::ASC) Order by the mtime column
  * @method CcFilesQuery orderByDbUtime($order = Criteria::ASC) Order by the utime column
  * @method CcFilesQuery orderByDbLPtime($order = Criteria::ASC) Order by the lptime column
@@ -83,6 +85,8 @@
  * @method CcFilesQuery groupByDbImportStatus() Group by the import_status column
  * @method CcFilesQuery groupByDbCurrentlyaccessing() Group by the currentlyaccessing column
  * @method CcFilesQuery groupByDbEditedby() Group by the editedby column
+ * @method CcFilesQuery groupByDbDeletedAt() Group by the deleted_at column
+ * @method CcFilesQuery groupByDbDeletedById() Group by the deleted_by_id column
  * @method CcFilesQuery groupByDbMtime() Group by the mtime column
  * @method CcFilesQuery groupByDbUtime() Group by the utime column
  * @method CcFilesQuery groupByDbLPtime() Group by the lptime column
@@ -156,6 +160,10 @@
  * @method CcFilesQuery rightJoinCcSubjsRelatedByDbEditedby($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
  * @method CcFilesQuery innerJoinCcSubjsRelatedByDbEditedby($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
  *
+ * @method CcFilesQuery leftJoinCcSubjsRelatedByDbDeletedById($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcSubjsRelatedByDbDeletedById relation
+ * @method CcFilesQuery rightJoinCcSubjsRelatedByDbDeletedById($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjsRelatedByDbDeletedById relation
+ * @method CcFilesQuery innerJoinCcSubjsRelatedByDbDeletedById($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjsRelatedByDbDeletedById relation
+ *
  * @method CcFilesQuery leftJoinCcTracktypes($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcTracktypes relation
  * @method CcFilesQuery rightJoinCcTracktypes($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcTracktypes relation
  * @method CcFilesQuery innerJoinCcTracktypes($relationAlias = null) Adds a INNER JOIN clause to the query using the CcTracktypes relation
@@ -194,6 +202,8 @@
  * @method CcFiles findOneByDbImportStatus(int $import_status) Return the first CcFiles filtered by the import_status column
  * @method CcFiles findOneByDbCurrentlyaccessing(int $currentlyaccessing) Return the first CcFiles filtered by the currentlyaccessing column
  * @method CcFiles findOneByDbEditedby(int $editedby) Return the first CcFiles filtered by the editedby column
+ * @method CcFiles findOneByDbDeletedAt(string $deleted_at) Return the first CcFiles filtered by the deleted_at column
+ * @method CcFiles findOneByDbDeletedById(int $deleted_by_id) Return the first CcFiles filtered by the deleted_by_id column
  * @method CcFiles findOneByDbMtime(string $mtime) Return the first CcFiles filtered by the mtime column
  * @method CcFiles findOneByDbUtime(string $utime) Return the first CcFiles filtered by the utime column
  * @method CcFiles findOneByDbLPtime(string $lptime) Return the first CcFiles filtered by the lptime column
@@ -263,6 +273,8 @@
  * @method array findByDbImportStatus(int $import_status) Return CcFiles objects filtered by the import_status column
  * @method array findByDbCurrentlyaccessing(int $currentlyaccessing) Return CcFiles objects filtered by the currentlyaccessing column
  * @method array findByDbEditedby(int $editedby) Return CcFiles objects filtered by the editedby column
+ * @method array findByDbDeletedAt(string $deleted_at) Return CcFiles objects filtered by the deleted_at column
+ * @method array findByDbDeletedById(int $deleted_by_id) Return CcFiles objects filtered by the deleted_by_id column
  * @method array findByDbMtime(string $mtime) Return CcFiles objects filtered by the mtime column
  * @method array findByDbUtime(string $utime) Return CcFiles objects filtered by the utime column
  * @method array findByDbLPtime(string $lptime) Return CcFiles objects filtered by the lptime column
@@ -431,7 +443,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "mime", "ftype", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description", "artwork", "track_type_id" FROM "cc_files" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "mime", "ftype", "filepath", "import_status", "currentlyaccessing", "editedby", "deleted_at", "deleted_by_id", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description", "artwork", "track_type_id" FROM "cc_files" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -804,6 +816,93 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcFilesPeer::EDITEDBY, $dbEditedby, $comparison);
+    }
+
+    /**
+     * Filter the query on the deleted_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbDeletedAt('2011-03-14'); // WHERE deleted_at = '2011-03-14'
+     * $query->filterByDbDeletedAt('now'); // WHERE deleted_at = '2011-03-14'
+     * $query->filterByDbDeletedAt(array('max' => 'yesterday')); // WHERE deleted_at < '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $dbDeletedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function filterByDbDeletedAt($dbDeletedAt = null, $comparison = null)
+    {
+        if (is_array($dbDeletedAt)) {
+            $useMinMax = false;
+            if (isset($dbDeletedAt['min'])) {
+                $this->addUsingAlias(CcFilesPeer::DELETED_AT, $dbDeletedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbDeletedAt['max'])) {
+                $this->addUsingAlias(CcFilesPeer::DELETED_AT, $dbDeletedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CcFilesPeer::DELETED_AT, $dbDeletedAt, $comparison);
+    }
+
+    /**
+     * Filter the query on the deleted_by_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbDeletedById(1234); // WHERE deleted_by_id = 1234
+     * $query->filterByDbDeletedById(array(12, 34)); // WHERE deleted_by_id IN (12, 34)
+     * $query->filterByDbDeletedById(array('min' => 12)); // WHERE deleted_by_id >= 12
+     * $query->filterByDbDeletedById(array('max' => 12)); // WHERE deleted_by_id <= 12
+     * </code>
+     *
+     * @see       filterByCcSubjsRelatedByDbDeletedById()
+     *
+     * @param     mixed $dbDeletedById The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function filterByDbDeletedById($dbDeletedById = null, $comparison = null)
+    {
+        if (is_array($dbDeletedById)) {
+            $useMinMax = false;
+            if (isset($dbDeletedById['min'])) {
+                $this->addUsingAlias(CcFilesPeer::DELETED_BY_ID, $dbDeletedById['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbDeletedById['max'])) {
+                $this->addUsingAlias(CcFilesPeer::DELETED_BY_ID, $dbDeletedById['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CcFilesPeer::DELETED_BY_ID, $dbDeletedById, $comparison);
     }
 
     /**
@@ -2849,6 +2948,82 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         return $this
             ->joinCcSubjsRelatedByDbEditedby($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcSubjsRelatedByDbEditedby', 'CcSubjsQuery');
+    }
+
+    /**
+     * Filter the query by a related CcSubjs object
+     *
+     * @param   CcSubjs|PropelObjectCollection $ccSubjs The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcFilesQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCcSubjsRelatedByDbDeletedById($ccSubjs, $comparison = null)
+    {
+        if ($ccSubjs instanceof CcSubjs) {
+            return $this
+                ->addUsingAlias(CcFilesPeer::DELETED_BY_ID, $ccSubjs->getDbId(), $comparison);
+        } elseif ($ccSubjs instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(CcFilesPeer::DELETED_BY_ID, $ccSubjs->toKeyValue('PrimaryKey', 'DbId'), $comparison);
+        } else {
+            throw new PropelException('filterByCcSubjsRelatedByDbDeletedById() only accepts arguments of type CcSubjs or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CcSubjsRelatedByDbDeletedById relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function joinCcSubjsRelatedByDbDeletedById($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CcSubjsRelatedByDbDeletedById');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CcSubjsRelatedByDbDeletedById');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CcSubjsRelatedByDbDeletedById relation CcSubjs object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   CcSubjsQuery A secondary query class using the current class as primary query
+     */
+    public function useCcSubjsRelatedByDbDeletedByIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCcSubjsRelatedByDbDeletedById($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcSubjsRelatedByDbDeletedById', 'CcSubjsQuery');
     }
 
     /**

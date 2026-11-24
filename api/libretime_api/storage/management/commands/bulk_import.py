@@ -82,7 +82,9 @@ class Importer:
     def _check_file_md5(self, filepath: Path) -> bool:
         file_md5 = compute_md5(filepath)
 
-        return File.objects.filter(md5=file_md5).exists()
+        # only live files are duplicates: a previously deleted identical
+        # file must be re-importable (#1163)
+        return File.objects.filter(md5=file_md5, deleted_at__isnull=True).exists()
 
     def _upload_file(self, filepath: Path, library_id: int | None) -> None:
         try:

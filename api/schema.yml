@@ -5080,6 +5080,10 @@ components:
           type: string
           format: date-time
           nullable: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
         bit_rate:
           type: integer
           maximum: 2147483647
@@ -5279,6 +5283,9 @@ components:
           type: integer
           nullable: true
         edited_by:
+          type: integer
+          nullable: true
+        deleted_by:
           type: integer
           nullable: true
       required:
@@ -5468,6 +5475,10 @@ components:
           type: string
           format: date-time
           nullable: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
         bit_rate:
           type: integer
           maximum: 2147483647
@@ -5667,6 +5678,9 @@ components:
           type: integer
           nullable: true
         edited_by:
+          type: integer
+          nullable: true
+        deleted_by:
           type: integer
           nullable: true
     PatchedImportedPodcast:

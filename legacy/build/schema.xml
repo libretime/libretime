@@ -10,6 +10,8 @@
     <column name="import_status" phpName="DbImportStatus" type="INTEGER" required="true" defaultValue="1" />
     <column name="currentlyaccessing" phpName="DbCurrentlyaccessing" type="INTEGER" required="true" defaultValue="0" />
     <column name="editedby" phpName="DbEditedby" type="INTEGER" required="false" />
+    <column name="deleted_at" phpName="DbDeletedAt" type="TIMESTAMP" required="false" />
+    <column name="deleted_by_id" phpName="DbDeletedById" type="INTEGER" required="false" />
     <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false" />
     <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="false" />
     <column name="lptime" phpName="DbLPtime" type="TIMESTAMP" size="6" required="false" />
@@ -75,6 +77,9 @@
     </foreign-key>
     <foreign-key foreignTable="cc_subjs" name="cc_files_editedby_fkey">
       <reference local="editedby" foreign="id" />
+    </foreign-key>
+    <foreign-key foreignTable="cc_subjs" name="cc_files_deleted_by_id_fkey" onDelete="SETNULL">
+      <reference local="deleted_by_id" foreign="id" />
     </foreign-key>
     <foreign-key foreignTable="cc_track_types" name="cc_files_track_type_fkey">
       <reference local="track_type_id" foreign="id" />
