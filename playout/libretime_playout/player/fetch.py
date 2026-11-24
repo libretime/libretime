@@ -23,6 +23,14 @@ logger = logging.getLogger(__name__)
 
 here = Path(__file__).parent
 
+# Cached files younger than this are never deleted by cleanup. Liquidsoap
+# resolves pushed requests asynchronously: a file can be in no schedule
+# payload yet (or already past its end time) while a live request still
+# points at its path. The lsof check cannot see the window between
+# "request accepted" and "decoder opened the file" — deleting there causes
+# "Finished with a non-existent file" wedges and dead air (see #2471).
+CACHE_FILE_GRACE_PERIOD = 15 * 60  # seconds
+
 
 # pylint: disable=too-many-instance-attributes
 class PypoFetch(Thread):
@@ -242,10 +250,23 @@ class PypoFetch(Thread):
         expired_files = cached_file_set - scheduled_file_set
 
         logger.debug("Files to remove %s", str(expired_files))
+        now = time.time()
         for expired_file in expired_files:
             try:
                 expired_filepath = os.path.join(self.cache_dir, expired_file)
                 logger.debug("Removing %s", expired_filepath)
+
+                # never delete freshly cached files: Liquidsoap may hold an
+                # outstanding request for this path even though no current
+                # schedule payload references it anymore
+                age = now - os.stat(expired_filepath).st_mtime
+                if age < CACHE_FILE_GRACE_PERIOD:
+                    logger.info(
+                        "File '%s' not removed. Cached %.0fs ago (grace period)!",
+                        expired_filepath,
+                        age,
+                    )
+                    continue
 
                 # check if this file is opened (sometimes Liquidsoap is still
                 # playing the file due to our knowledge of the track length
