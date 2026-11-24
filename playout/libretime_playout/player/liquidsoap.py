@@ -1,6 +1,6 @@
 import logging
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from ..liquidsoap.client import LiquidsoapClient
 from ..utils import seconds_between
@@ -288,8 +288,8 @@ class Liquidsoap:
 
             for item in scheduled_now_files:
                 if item.row_id in to_be_added:
-                    self.modify_cue_point(item)
-                    self.play(item)
+                    if self.modify_cue_point(item):
+                        self.play(item)
 
         # handle webstreams
         current_stream_id = self.telnet_liquidsoap.get_current_stream_id()
@@ -313,15 +313,49 @@ class Liquidsoap:
         for queue_id in self.liq_queue_tracker:
             self.liq_queue_tracker[queue_id] = None
 
-    def modify_cue_point(self, file_event: FileEvent) -> None:
+    def modify_cue_point(self, file_event: FileEvent) -> bool:
+        """
+        Adjust a late item so playback re-enters the file at the position the
+        schedule says the listener should be hearing.
+
+        The scheduled end (``cue_out``) is deliberately NOT shifted: the item
+        is truncated so it still *ends* on time instead of delaying every
+        item after it (preserving duration is how schedule creep is created).
+
+        Returns ``False`` when the lateness has eaten the whole remaining
+        cue range - the item is already over as far as the schedule is
+        concerned and the caller must NOT push it. Pushing a cue range at or
+        past end-of-file makes Liquidsoap accept the request and finish it
+        instantly ("End of track before cue-out point"), which historically
+        led to items replaying back-to-back while the queue chased a
+        wall-clock it could no longer catch (see #699: a 44-minute episode
+        scheduled 61 minutes late aired three times).
+        """
         assert file_event.type == EventKind.FILE
 
         lateness = seconds_between(file_event.start, datetime.utcnow())
 
-        if lateness > 0:
-            logger.debug("media item was supposed to start %ss ago", lateness)
-            cue_in_orig = timedelta(seconds=file_event.cue_in)
-            file_event.cue_in = cue_in_orig.total_seconds() + lateness
+        if lateness <= 0:
+            return True
+
+        cue_in = file_event.cue_in + lateness
+
+        if cue_in >= file_event.cue_out:
+            logger.warning(
+                "Item %s (%s) should have started %.1fs ago but its whole "
+                "cue range (%.3fs-%.3fs) is in the past; dropping instead "
+                "of pushing an empty cue range",
+                file_event.row_id,
+                file_event.local_filepath,
+                lateness,
+                file_event.cue_in,
+                file_event.cue_out,
+            )
+            return False
+
+        logger.debug("media item was supposed to start %ss ago", lateness)
+        file_event.cue_in = cue_in
+        return True
 
     def clear_all_queues(self) -> None:
         self.telnet_liquidsoap.queue_clear_all()
