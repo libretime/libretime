@@ -8,7 +8,7 @@ from libretime_playout.config import Config
 from libretime_playout.liquidsoap.entrypoint import generate_entrypoint
 from libretime_playout.liquidsoap.models import Info, StreamPreferences
 
-from .fixtures import TEST_STREAM_CONFIGS, make_config_with_stream
+from .fixtures import TEST_STREAM_CONFIGS, make_config, make_config_with_stream
 
 
 @pytest.mark.parametrize(
@@ -70,6 +70,33 @@ def test_liquidsoap_syntax(
         encoding="utf-8",
     )
 
+    check_call(["liquidsoap", "--check", str(entrypoint_filepath)])
+
+
+def test_liquidsoap_hooks_before_outputs(
+    tmp_path: Path,
+    stream_preferences: StreamPreferences,
+    liq_version,
+):
+    entrypoint_filepath = tmp_path / "radio.liq"
+    log_filepath = tmp_path / "radio.log"
+    hook_filepath = tmp_path / "hook.liq"
+    hook_filepath.write_text("s = amplify(1.0, s)\n", encoding="utf-8")
+
+    entrypoint = generate_entrypoint(
+        log_filepath=log_filepath,
+        config=make_config(
+            liquidsoap={"hooks": {"before_outputs": [str(hook_filepath)]}},
+        ),
+        preferences=stream_preferences,
+        info=Info(
+            station_name="LibreTime",
+        ),
+        version=liq_version,
+    )
+    assert f'%include "{hook_filepath}"\n' in entrypoint
+
+    entrypoint_filepath.write_text(entrypoint, encoding="utf-8")
     check_call(["liquidsoap", "--check", str(entrypoint_filepath)])
 
 
