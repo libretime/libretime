@@ -26,7 +26,7 @@ If you want to edit the playlist content or metadata later, you can find it by *
 
 ### Auto loading playlists
 
-LibreTime will schedule tracks from a selected playlist an hour before a show is scheduled to air. This is a great way to automatically schedule weekly shows which are received via. podcasts.
+By default, LibreTime will schedule tracks from a selected playlist an hour before a show is scheduled to air. This is a great way to automatically schedule weekly shows which are received via. podcasts. This can be configured with the `general.autoload_lead_time` configuration option.
 
 ## Creating a Smartblock
 
